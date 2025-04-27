@@ -1,6 +1,12 @@
 # Microblog Platform
 
-A lightweight, modern microblog platform with a clean interface and solid fundamentals. This project powers [maxua.com](https://maxua.com) and can be adapted to run your own personal blog.
+This project powers [maxua.com](https://maxua.com) and can be adapted to run your own personal blog.
+
+Built with Claude and other LLM tools. 
+
+Feedback, ideas, bug reports are always welcome!
+
+Email: ischenko@gmail.com or Tg @maxua.
 
 ## Features
 
