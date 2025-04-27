@@ -173,7 +173,7 @@ exports.handler = async (event, context) => {
     // Set the page title based on whether we're viewing a topic or the main timeline
     const pageTitle = topic 
       ? `${topic.name}: ${topic.description} - Max Ischenko` 
-      : 'Max Ischenko - Thoughts on startups, tech, and more';
+      : "Max Ischenko blog - Thoughts on startups, tech, and more";
     
     // Create a description for meta tags
     let pageDescription = topic
