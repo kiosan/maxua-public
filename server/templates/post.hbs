@@ -1,0 +1,160 @@
+<!-- functions/post.hbs - Updated with prev/next navigation -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{{postTitle}} | Max Ischenko</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  {{{metaTags}}}
+  {{{structuredData}}}
+
+  <link rel="preload" href="/css/main.css?v=1234" as="style">
+  <link rel="stylesheet" href="/css/main.css?v=1234">
+  
+  <!-- Prefetch previous and next posts for instant navigation -->
+  {{#if navigation.prevPostId}}
+  <link rel="prefetch" href="/p/{{navigation.prevPostId}}">
+  {{/if}}
+  {{#if navigation.nextPostId}}
+  <link rel="prefetch" href="/p/{{navigation.nextPostId}}">
+  {{/if}}
+</head>
+<body>
+  <main>
+    <section class="profile-section">
+      <a href="/"><img src="/images/mouse.jpeg" alt="don't move my cheese avatar" class="profile-image" /></a>
+      <div class="profile-info">
+        <h1>Max Ischenko</h1>
+        <div class="bio-content">
+          Спочатку ДОУ, тепер Djinni. Keep going &amp; підтримуй ЗСУ.
+        </div>
+        <div class="profile-nav">
+          <a href="/">Home</a>
+          <a href="/books">Books</a>
+          <a href="/podcast">Podcast</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- No topic header at the top of the page -->
+
+    <div class="single-post-container" id="single-post-container">
+      <div class="post-card" data-post-id="{{post.id}}">
+        <div class="post-content">{{{post.content}}}</div>
+
+        {{#if post.image_url}}
+        <div class="post-image-container">
+          <img src="{{post.image_url}}" alt="Post image" class="post-image">
+        </div>
+        {{/if}}
+        
+        <div class="post-meta">
+          <div class="post-date">{{post.formattedDate}}
+          <a href="#" class="translate-link" data-post-id="{{post.id}}" data-translated="false">Translate</a>
+          </div>
+          <div class="post-reactions"></div>
+        </div>
+
+    {{#if post.transistor_fm_code}}
+    <iframe width="100%" height="180" style="margin: 1rem 0 0 0"
+         frameborder="no" scrolling="no" seamless=""
+         src="https://share.transistor.fm/e/{{post.transistor_fm_code}}"></iframe>
+    {{/if}}
+
+        <!-- Always visible reaction toolbar -->
+        <div class="reaction-toolbar" data-post-id="{{post.id}}"
+                    style="display: none">
+          <div class="reaction-toolbar-label">React to this post:</div>
+          <div class="reaction-options">
+            <span class="reaction-option" data-emoji="🔥">🔥</span>
+            <span class="reaction-option" data-emoji="👍">👍</span>
+            <span class="reaction-option" data-emoji="🤯">🤯</span>
+            <span class="reaction-option" data-emoji="😂">😂</span>
+            <span class="reaction-option" data-emoji="👎">👎</span>
+            <span class="reaction-option" data-emoji="👀">👀</span>
+            <span class="reaction-option" data-emoji="❤️">❤️</span>
+            <span class="reaction-option" data-emoji="💯">💯</span>
+            <span class="reaction-option" data-emoji="👏">👏</span>
+            <span class="reaction-option" data-emoji="🎉">🎉</span>
+          </div>
+        </div>
+
+        <div class="post-topic">
+        {{#if post.topic_name}}
+        <p>
+          Posted in <a href="/t/{{post.topic_slug}}" class="topic-badge">#{{post.topic_name}}</a>
+        </p>
+        {{/if}}
+        </div>
+    </div>
+        
+
+    {{#if navigation}}
+    <div class="post-navigation">
+      <div class="post-nav-links">
+        {{#if navigation.prevPostId}}
+        <a href="/p/{{navigation.prevPostId}}" class="post-nav-link post-nav-prev" rel="prev" id="prev-post-link">
+          <span class="post-nav-arrow">←</span> <span class="post-nav-label">Older post</span> 
+        </a>
+        {{/if}}
+        {{#if navigation.nextPostId}} 
+        <a href="/" class="post-nav-link">⌂ Home</a>
+        <a href="/p/{{navigation.nextPostId}}" class="post-nav-link post-nav-next" rel="next" id="next-post-link">
+          <span class="post-nav-label">Newer post</span><span class="post-nav-arrow">→</span>
+        </a>
+        {{/if}}
+      </div>
+    </div>
+    {{/if}}
+
+
+    {{#if enableComments}}
+    <div id="comments-container">
+      {{{comments}}}
+    </div>
+    {{/if}}
+    
+  </main>
+
+  {{> footer}}
+
+  <script type="module" src="/js/app.js"></script>
+  <script type="module" src="/js/subscription.js"></script>
+  
+  {{#if enableComments}}
+  <script type="module" src="/js/comments.js"></script>
+  {{/if}}
+  
+  <!-- Keyboard navigation script -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Set up keyboard navigation
+      const prevLink = document.getElementById('prev-post-link'); // Older posts
+      const nextLink = document.getElementById('next-post-link'); // Newer posts
+      
+      document.addEventListener('keydown', function(e) {
+        // Skip if user is in a form field
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+          return;
+        }
+
+        // Check if Alt key is pressed (to avoid conflicting with browser's back/forward)
+        if (e.altKey) {
+          return;
+        }
+        
+        if (e.key === 'ArrowRight' && nextLink) {
+          e.preventDefault();
+          nextLink.click();
+        }
+        
+        if (e.key === 'ArrowLeft' && prevLink) {
+          e.preventDefault();
+          prevLink.click();
+        }
+      });
+    });
+  </script>
+</body>
+</html>

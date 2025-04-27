@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{pageTitle}}</title>
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+    <!-- Common Styles -->
+    <link rel="stylesheet" href="/css/main.css">
+    <!-- Page-specific styles -->
+    <link rel="stylesheet" href="/css/compose.css">
+    <script src="https://static.filestackapi.com/filestack-js/3.x.x/filestack.min.js"></script>
+    
+</head>
+<body>
+    <main>
+        <section class="profile-section">
+            <a href="/"><img src="/images/mouse.jpeg" alt="don't move my cheese avatar" class="profile-image" /></a>
+            <div class="profile-info">
+                <h1>Max Ischenko</h1>
+                <div class="bio-content">
+                    Спочатку ДОУ, тепер Djinni. Keep going &amp; підтримуй ЗСУ.
+                </div>
+                <div class="profile-nav">
+                    <a href="/">Home</a>
+                    <a href="/compose" class="active">Compose</a>
+                </div>
+            </div>
+        </section>
+
+        <div class="compose-container">
+            <div class="compose-card">
+                <div class="compose-header">
+                    <h2 class="compose-title">Compose a new post</h2>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                        <p class="compose-subtitle" style="margin: 0;">Share your thoughts, ideas, or updates</p>
+                    </div>
+                </div>
+                
+                <form id="compose-form">
+                    <textarea id="content"
+                      class="compose-textarea" placeholder="What's on your mind?"
+                      autofocus>{{#if currentDraft}}{{currentDraft.content}}{{/if}}</textarea>
+
+                    <div class="file-input-wrapper" style="display: none">
+                      <input type="file" name="image" id="fs_input" accept="image/*" />
+                      <input type="hidden" id="image_url" name="image_url" />
+                    </div>
+                    
+                    <!-- Buttons row with both Publish and Save Draft -->
+                    <div class="button-row">
+                        <div class="button-group-left">
+                            <button type="button" id="save-draft-button" class="save-draft-button">Save as Draft</button>
+                        </div>
+                        <div class="button-group-right">
+                          <div class="character-count" style="padding-right: 1rem; color: darkred; display: none">
+                            <span id="char-count">0</span> characters
+                          </div>
+                          <button type="submit" id="post-button" class="post-button">Publish</button>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="topic" class="form-label">Topic (optional)</label>
+                            <select id="topic" class="form-select">
+                                <option value="none">-- No Topic --</option>
+                                {{#each topics}}
+                                <option value="{{this.id}}" {{#if (eq ../currentDraft.topic_id this.id)}}selected{{/if}}>{{this.name}}</option>
+                                {{/each}}
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="sharing-options">
+                        <h3 class="sharing-title">Sharing options</h3>
+                        <div class="toggle-group">
+                            <label class="toggle-label">
+                                <input type="checkbox" id="share-telegram" {{#if currentDraft}}{{#if currentDraft.share_telegram}}checked{{/if}}{{else}}checked{{/if}}>
+                                <span class="toggle-slider"></span>
+                                <span class="toggle-text">Share to Telegram</span>
+                            </label>
+                            
+                            <label class="toggle-label">
+                                <input type="checkbox" id="share-bluesky" {{#if currentDraft}}{{#if currentDraft.share_bluesky}}checked{{/if}}{{/if}}>
+                                <span class="toggle-slider"></span>
+                                <span class="toggle-text">Share to Bluesky</span>
+                            </label>
+                        </div>
+                    </div>
+                </form>
+                
+                <div id="status-message" class="status-message"></div>
+                
+                <div class="shortcuts-help">
+                    <div>Keyboard shortcuts:</div>
+                    <div class="shortcuts-list">
+                        <span class="shortcut-item"><span class="shortcut-key">Ctrl</span> + <span class="shortcut-key">Enter</span> to publish</span>
+                        <span class="shortcut-item"><span class="shortcut-key">Ctrl</span> + <span class="shortcut-key">S</span> to save draft</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="drafts-section">
+                <div class="drafts-header">
+                    <h3 class="drafts-title">Your drafts</h3>
+                    {{#if drafts.length}}
+                    <button id="clear-drafts-button" class="clear-drafts-button">Clear all</button>
+                    {{/if}}
+                </div>
+                
+                <div id="drafts-list" class="drafts-card">
+                    {{#if drafts.length}}
+                        {{#each drafts}}
+                        <div class="draft-item" data-id="{{this.id}}">
+                            <div class="draft-content" onclick="loadDraft('{{this.id}}')">
+                                <div class="draft-preview">{{this.previewContent}}</div>
+                                <div class="draft-meta">
+                                    <span>{{this.topic_name}}</span>
+                                    <span>Updated: {{this.formattedDate}}</span>
+                                </div>
+                            </div>
+                            <div class="draft-actions">
+                                <button class="draft-edit-btn" onclick="loadDraft('{{this.id}}')">Edit</button>
+                                <button class="draft-delete-btn" onclick="confirmDeleteDraft('{{this.id}}')">Delete</button>
+                            </div>
+                        </div>
+                        {{/each}}
+                    {{else}}
+                        <div class="no-drafts">No saved drafts</div>
+                    {{/if}}
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <footer>
+        &copy; 2025 Max Ischenko
+    </footer>
+
+    <script type="module" src="/js/compose-ssr.js"></script>
+</body>
+</html>

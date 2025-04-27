@@ -1,0 +1,1112 @@
+/* main.css - Consolidated styles for maxua.com
+ * Combines: common.css, post.css, comments.css, audio-player.css, topic-tabs.css
+ */
+
+/* ========================================================================== */
+/* CORE VARIABLES AND BASE STYLES                                             */
+/* ========================================================================== */
+
+:root {
+    --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+    --color-bg: #fff;
+    --color-text: #222;
+    --color-secondary-text: #555;
+    --color-border: #eee;
+    --color-accent: #1a73e8;
+    --color-accent-hover: #1557b0;
+    --color-quote-border: #ddd;
+    --color-quote-bg: #f9f9f9;
+    --color-card-bg: #f9f9f9;
+    --color-card-border: #eee;
+    --color-button-bg: #f5f5f5;
+    --color-button-hover: #e8e8e8;
+    --color-muted-link: #777;
+    --color-muted-link-hover: #555;
+    --container-width: 650px;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html, body {
+    width: 100%;
+    overflow-x: hidden;
+}
+
+body {
+    font-family: var(--font-family);
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+main {
+    width: 100%;
+    max-width: var(--container-width);
+    margin: 0 auto;
+    padding: 0 1rem;
+    flex: 1;
+}
+
+/* ========================================================================== */
+/* TYPOGRAPHY & LINKS                                                         */
+/* ========================================================================== */
+
+h1, h2, h3, h4, h5, h6 {
+    margin-top: 1.5em;
+    margin-bottom: 0.75em;
+    line-height: 1.2;
+}
+
+h1 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+    line-height: 1.2;
+}
+
+h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+a {
+    color: var(--color-accent);
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+footer a {
+    color: var(--color-secondary-text);
+    text-decoration: none;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
+
+/* ========================================================================== */
+/* LAYOUT COMPONENTS                                                          */
+/* ========================================================================== */
+
+/* Profile Header Styles */
+.profile-section {
+    display: flex;
+    align-items: flex-start;
+    gap: 2rem;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: 0.5rem;
+}
+
+.profile-image {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin-top: 45px; 
+}
+
+.profile-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.bio-content {
+    margin-bottom: 0.5rem;
+    color: var(--color-secondary-text);
+}
+
+/* Compact styling for profile links with dot separators */
+.profile-nav {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 0.5rem;
+    align-items: center;
+}
+
+.profile-nav a {
+    color: var(--color-secondary-text);
+    text-decoration: none;
+    padding: 0 8px;
+    font-size: 0.85rem;
+    transition: color 0.2s ease;
+    position: relative;
+}
+
+.profile-nav a:first-child {
+    padding-left: 0;
+}
+
+.profile-nav a:not(:last-child)::after {
+    content: "•";
+    position: absolute;
+    right: -4px;
+    color: var(--color-secondary-text);
+    opacity: 0.5;
+}
+
+.profile-nav a:hover {
+    color: var(--color-accent);
+}
+
+.profile-nav a.active {
+    color: var(--color-accent);
+    font-weight: 500;
+}
+
+/* Footer + subscription form */
+
+footer {
+  margin-top: 3rem;
+  padding: 0;
+  text-align: center;
+  color: var(--color-secondary-text);
+  font-size: 0.9rem;
+  border-top: 1px solid var(--color-border);
+  width: 100%;
+}
+
+.footer-subscription {
+  background-color: lightyellow;
+  border-bottom: 1px solid var(--color-border);
+  padding: 2rem 1rem;
+}
+
+.footer-subscription-content {
+  max-width: var(--container-width);
+  margin: 0 auto;
+  text-align: left;
+}
+
+.footer-subscription-heading {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: var(--color-text);
+}
+
+.footer-subscription-form {
+  margin-bottom: 1rem;
+}
+
+.footer-subscription-form-row {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.footer-subscription-form input[type="email"] {
+  flex: 1;
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-family: var(--font-family);
+}
+
+.footer-subscription-form input[type="email"]:focus {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.1);
+}
+
+.footer-subscription-form button {
+  background-color: var(--color-muted-link);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.25rem;
+  border-radius: 4px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  white-space: nowrap;
+}
+
+.footer-subscription-form button:hover {
+  background-color: var(--color-muted-link-hover);
+}
+
+.footer-subscription-form button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.footer-subscription-links {
+  font-size: 0.9rem;
+  color: var(--color-secondary-text);
+}
+
+.footer-subscription-links a {
+  color: var(--color-accent);
+  text-decoration: none;
+  margin: 0 0.25rem;
+}
+
+.footer-subscription-links a:hover {
+  text-decoration: underline;
+}
+
+.footer-subscription-links .separator {
+  margin: 0;
+  color: var(--color-secondary-text);
+}
+
+.subscription-message {
+  margin-top: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  display: none;
+}
+
+.subscription-message.success {
+  background-color: #e6f7e6;
+  color: #2e7d32;
+  display: block;
+}
+
+.subscription-message.error {
+  background-color: #ffebee;
+  color: #c62828;
+  display: block;
+}
+
+.footer-copyright {
+  padding: 1.5rem;
+  background-color: #fff;
+  line-height: 1.6;
+  font-size: 0.85rem;
+  max-width: var(--container-width);
+  margin: 0 auto;
+  text-align: center;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .footer-subscription-form-row {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .footer-subscription-form button {
+    width: 100%;
+  }
+}
+
+/* ========================================================================== */
+/* POST CARDS & CONTENT                                                       */
+/* ========================================================================== */
+
+.post-card {
+    border: 1px solid var(--color-card-border);
+    padding: 1.25rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    background-color: var(--color-card-bg);
+}
+
+.post-content {
+    margin-bottom: 1rem;
+    font-size: 1rem;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+.post-content a {
+    color: var(--color-accent);
+    text-decoration: none;
+    word-break: break-word;
+}
+
+.post-content a:hover {
+    text-decoration: underline;
+}
+
+.post-image-container {
+  margin: 1rem 0;
+  max-width: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.post-image {
+  width: 100%;
+  max-height: 500px;
+  object-fit: contain;
+  background-color: #f8f8f8;
+  display: block;
+}
+
+@media (max-width: 600px) {
+  .post-image {
+    max-height: 300px;
+  }
+}
+
+.post-meta {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+  color: var(--color-secondary-text);
+}
+
+.post-date {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.permalink-date {
+    color: var(--color-secondary-text);
+    text-decoration: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+}
+
+.permalink-date:hover {
+    color: var(--color-accent);
+    text-decoration: underline;
+}
+
+.link-icon {
+    margin-left: 4px;
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+}
+
+.permalink-date:hover .link-icon {
+    opacity: 1;
+}
+
+/* Topic badge styles */
+.topic-badge {
+    font-size: 0.9rem;
+    padding: 0.25rem 0.6rem;
+    background-color: #f0f4f8;
+    color: var(--color-accent);
+    border-radius: 12px;
+    text-decoration: none;
+    display: inline-block;
+    transition: background-color 0.2s ease;
+    font-weight: 500;
+    font-style: normal;
+}
+
+.topic-badge:hover {
+    background-color: #e0e8f0;
+    text-decoration: none;
+}
+
+.post-topic {
+    margin-top: 1.5rem 0 0 0;
+    font-size: 0.95rem;
+    color: var(--color-secondary-text);
+}
+
+/* Single post page styles */
+.single-post-container {
+    margin: 2rem 0;
+    display: block; /* Ensure it's always visible */
+}
+
+.single-post-container .post-content {
+    font-size: 1.15rem;
+    line-height: 1.5;
+}
+
+.post-topic-header {
+    font-size: 1.2rem;
+    margin: 2rem 0 1.5rem 0;
+    color: var(--color-text);
+    font-weight: 500;
+}
+
+/* Post navigation */
+.post-navigation {
+    margin: 1rem 0;
+}
+
+.post-nav-links {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.post-nav-link {
+    border-radius: 6px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--color-accent);
+    text-decoration: none;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+}
+
+.post-nav-link:hover {
+    background-color: rgba(26, 115, 232, 0.1);
+    text-decoration: none;
+}
+
+.post-nav-link small {
+    color: var(--color-secondary-text);
+    font-size: 0.75rem;
+    margin: 0 4px;
+    opacity: 0.7;
+}
+
+.post-nav-arrow {
+    font-size: 1.1rem;
+    line-height: 1;
+    margin: 0 4px;
+}
+
+.post-nav-disabled {
+    color: var(--color-secondary-text);
+    opacity: 0.5;
+    cursor: default;
+}
+
+.topic-tag.active {
+    color: var(--color-accent);
+    font-weight: 500;
+}
+
+/* Translate button */
+
+.translate-link {
+  background: none;
+  border: none;
+  color: var(--color-secondary-text);
+  font-size: 0.85rem;
+  cursor: pointer;
+  padding: 0;
+  margin-left: 8px;
+  margin-right: 4px;
+  text-decoration: underline;
+}
+
+.translate-link:hover {
+  background-color: var(--color-border);
+  color: var(--color-accent);
+}
+
+.translation-loading {
+  font-style: italic;
+  opacity: 0.7;
+  margin-top: 8px;
+  font-size: 0.9rem;
+}
+
+/* ========================================================================== */
+/* REACTION STYLES                                                            */
+/* ========================================================================== */
+
+/* Post reactions container */
+.post-reactions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-left: 15px;
+}
+
+/* Individual reaction */
+.reaction {
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+    user-select: none;
+}
+
+.reaction:hover {
+    transform: scale(1.15);
+    opacity: 0.8;
+}
+
+.reaction.placeholder {
+    opacity: 0.5;
+    font-size: 0.9rem;
+    padding: 2px 4px;
+}
+
+/* Highlight user's own reactions */
+.reaction.user-reacted {
+    text-shadow: 0 0 3px rgba(0, 133, 255, 0.5);
+}
+
+/* Reaction Toolbar */
+.reaction-toolbar {
+    margin-top: 15px;
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: var(--color-card-bg);
+    border: 1px solid var(--color-card-border);
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.reaction-toolbar-label {
+    font-size: 0.9rem;
+    color: var(--color-secondary-text);
+    margin-bottom: 12px;
+}
+
+.reaction-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
+}
+
+.reaction-option {
+    font-size: 1.4rem;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    user-select: none;
+}
+
+.reaction-option:hover {
+    transform: scale(1.2);
+}
+
+.reaction-option.user-reacted {
+    opacity: 0.6;
+}
+
+/* ========================================================================== */
+/* COMMENTS SECTION                                                           */
+/* ========================================================================== */
+
+/* Comments Section Container */
+.comments-section {
+    margin-top: 3rem;
+}
+
+/* Section Headings */
+.comments-heading {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 1.25rem;
+    color: var(--color-text);
+}
+
+.add-comment-heading {
+    margin-top: 3rem;
+}
+
+/* Individual Comment Card */
+.comment-card {
+    border: 1px solid var(--color-card-border);
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    background-color: white;
+}
+
+.comment-meta {
+    margin-bottom: 0.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.comment-author {
+    font-weight: 500;
+}
+
+.comment-date {
+    font-size: 0.8rem;
+    color: var(--color-secondary-text);
+}
+
+.comment-content {
+    font-size: 0.95rem;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+/* comments author reply */
+
+.author-reply {
+  position: relative;
+  padding-left: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.author-reply-content {
+  font-style: italic;
+  font-size: 0.9rem;
+}
+
+/* comments form */
+
+.comment-form {
+    padding: 1.5rem;
+    /* background-color: lightgoldenrodyellow; */
+    border-radius: 12px;
+    border: 1px solid var(--color-card-border);
+}
+
+.comment-form .form-group {
+    border: none;
+    padding: 0;
+    background: none;
+    box-shadow: none;
+}
+
+.comment-form textarea {
+    background-color: white;
+    border: 1px solid var(--color-card-border);
+    border-radius: 8px;
+    padding: 0.75rem;
+    font-size: 1rem;
+    width: 100%;
+    resize: vertical;
+    min-height: 120px;
+    font-family: var(--font-family);
+}
+
+.comment-form textarea:focus {
+    background-color: white;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.2);
+}
+
+/* Character Counter */
+.character-count {
+    font-size: 0.8rem;
+    color: var(--color-secondary-text);
+    text-align: right;
+    margin-top: 0.25rem;
+}
+
+/* Submit Button */
+.comment-form button[type="submit"] {
+    margin-top: 1rem;
+    padding: 0.75rem 1.25rem;
+    font-size: 1rem;
+    font-weight: 500;
+    border-radius: 6px;
+    background-color: var(--color-accent);
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.comment-form button[type="submit"]:hover {
+    background-color: #1669d1;
+    color: white;
+}
+
+/* Better styling for name/email fields in comment form */
+#commenter-fields {
+  margin-top: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+#commenter-fields .form-group {
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+}
+
+#commenter-fields label {
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+#commenter-fields input[type="text"],
+#commenter-fields input[type="email"] {
+  padding: 0.75rem;
+  border: 1px solid var(--color-card-border);
+  border-radius: 8px;
+  font-family: var(--font-family);
+  font-size: 1rem;
+  width: 100%;
+}
+
+#commenter-fields input:focus {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.1);
+}
+
+.pending-message {
+    background-color: #fff8e1;
+    border: 1px solid #ffe082;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    display: none;
+}
+
+.pending-message.active {
+    display: block;
+}
+
+.verified-commenter-note {
+    font-size: 0.85rem;
+    color: green;
+    margin: 0.25rem 0 1rem;
+    display: block;
+    padding: 5px 0;
+}
+
+.comments-badge {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.85rem;
+  color: var(--color-secondary-text);
+  text-decoration: none;
+  transition: color 0.2s ease;
+  margin-left: auto; /* Push to the right */
+}
+
+.comments-badge:hover {
+  color: var(--color-secondary-text);
+  text-decoration: none;
+}
+
+/* ========================================================================== */
+/* TOPIC TABS                                                                 */
+/* ========================================================================== */
+
+.topics-nav {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid var(--color-border);
+    overflow-x: auto;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE/Edge */
+}
+
+.topics-nav::-webkit-scrollbar {
+    display: none; /* Chrome/Safari/Opera */
+}
+
+.topic-tab {
+    padding: 0.75rem 1rem;
+    color: var(--color-secondary-text);
+    text-decoration: none;
+    position: relative;
+    white-space: nowrap;
+    transition: color 0.2s ease;
+}
+
+.topic-tab:hover {
+    color: var(--color-accent);
+    text-decoration: none;
+}
+
+.topic-tab.active {
+    color: var(--color-accent);
+    font-weight: 500;
+}
+
+.topic-tab.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: var(--color-accent);
+}
+
+/* Topic header styles */
+.topic-header {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--color-border);
+    overflow-x: auto;
+    white-space: nowrap;
+    -ms-overflow-style: none; /* Hide scrollbar in IE and Edge */
+    scrollbar-width: none; /* Hide scrollbar in Firefox */
+}
+
+.topic-header::-webkit-scrollbar {
+    display: none; /* Hide scrollbar in Chrome, Safari and Opera */
+}
+
+.topic-tag {
+    color: var(--color-secondary-text);
+    text-decoration: none;
+    transition: color 0.2s;
+    font-weight: 400;
+    padding: 0.1rem 0.3rem;
+}
+
+.topic-tag:hover {
+    color: var(--color-accent);
+    text-decoration: none;
+}
+
+.topic-tag.active {
+    color: var(--color-accent);
+    font-weight: 500;
+}
+
+/* ========================================================================== */
+/* BUTTONS & FORM ELEMENTS                                                    */
+/* ========================================================================== */
+
+button {
+    background-color: var(--color-accent);
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: var(--color-accent-hover);
+}
+
+button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+.load-more {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    text-align: center;
+    background-color: #f2f2f2;
+    border: 1px solid #ddd;
+    color: #666;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+textarea#post-content {
+    height: auto;
+    resize: none; 
+    overflow-y: hidden;  
+    transition: height 0.1s ease;
+}
+
+/* Status messages */
+.status {
+    margin-top: 20px;
+    padding: 12px;
+    border-radius: 4px;
+    display: none;
+}
+
+.success {
+    background-color: #e6f7e6;
+    color: #2e7d32;
+}
+
+.error {
+    background-color: #ffebee;
+    color: #c62828;
+}
+
+.loading-text {
+    color: #666;
+    font-style: italic;
+    text-align: center;
+    padding: 20px;
+}
+
+.section-divider {
+    height: 1px;
+    background-color: var(--color-border);
+    margin: 1.8rem 0;
+}
+
+/* Admin mode profile image styling */
+.admin-profile-link .profile-image {
+  box-shadow: 0 0 0 3px yellow;
+}
+
+.admin-profile-link .profile-image:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 0 4px yellow, 0 0 15px rgba(26, 115, 232, 0.5);
+}
+
+/* ========================================================================== */
+/* RESPONSIVE DESIGN                                                          */
+/* ========================================================================== */
+
+/* Large phones and tablets */
+@media (max-width: 768px) {
+    .profile-section {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 1rem;
+    }
+    
+    .profile-image {
+        width: 70px;
+        height: 70px;
+    }
+    
+    h1 {
+        font-size: 1.5rem;
+        margin-top: 0.2rem;
+    }
+    
+    .post-card, .post-form {
+        padding: 1rem;
+    }
+}
+
+/* Mid-sized mobile screens */
+@media (max-width: 600px) {
+    .profile-nav {
+        justify-content: center;
+        margin-top: 1rem;
+    }
+    
+    .profile-nav a {
+        padding: 0.4rem 0.6rem; /* Larger touch targets */
+    }
+    
+    /* Slightly larger base font for small screens */
+    body {
+        font-size: 1.05rem;
+    }
+    
+    .post-meta {
+        flex-wrap: wrap;
+    }
+    
+    .post-reactions {
+        margin-left: 0;
+        margin-top: 5px;
+    }
+    
+    .comment-meta {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .comment-date {
+        margin-top: 0.25rem;
+    }
+    
+    .comment-form button[type="submit"] {
+        width: 100%;
+    }
+    
+    .topic-header {
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+    }
+    
+    .topic-tag {
+        font-size: 0.9rem;
+    }
+    
+    .topics-nav {
+        padding-bottom: 0.5rem;
+    }
+    
+    .topic-tab {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.9rem;
+    }
+    
+    .single-post-container .post-content {
+        font-size: 1.1rem;
+    }
+    
+    .reaction-options {
+        gap: 20px; /* Larger touch targets on mobile */
+    }
+    
+    .reaction-option {
+        font-size: 1.5rem; /* Larger emoji on mobile */
+    }
+    
+    /* Adjust navigation for mobile */
+    .post-nav-links {
+        flex-direction: row;
+        gap: 8px;
+    }
+    
+    .post-nav-link {
+        padding: 8px 12px;
+        font-size: 0.9rem;
+    }
+    
+    .post-nav-arrow,
+    .post-nav-home-icon {
+        margin: 0;
+        font-size: 1.4rem;
+    }
+}
+
+/* Small screens */
+@media (max-width: 480px) {
+    /* Stack navigation vertically if extremely narrow */
+    .post-meta {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.3rem;
+    }
+    
+    /* Audio player adjustments */
+    .audio-player {
+        padding: 12px;
+    }
+    
+    .speed-control {
+        flex-wrap: wrap;
+    }
+    
+    .speed-control span {
+        width: 100%;
+        margin-bottom: 4px;
+    }
+}
+
+/* Very small screens */
+@media (max-width: 320px) {
+    .profile-nav {
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .profile-nav a {
+        padding: 0.3rem 0;
+    }
+    
+    .profile-nav a:not(:last-child)::after {
+        display: none;
+    }
+}

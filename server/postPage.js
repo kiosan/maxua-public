@@ -1,0 +1,213 @@
+// functions/postPage.js
+const { pool, escapeHTML, linkify, formatDate, getCorsHeaders, getETagHeaders } = require('./utils');
+const templateEngine = require('./templateEngine');
+const { 
+  generateMetaTags,
+  generateBlogPostSchema,
+  generateBreadcrumbsSchema,
+  generatePersonSchema,
+  extractDescription
+} = require('./seo');
+
+// Register partials for reuse
+templateEngine.registerPartial('comments', 'comments');
+templateEngine.registerPartial('subscription-form', 'subscription-form');
+
+console.log("postPage loaded");
+
+/**
+ * Handler for post page requests
+ */
+exports.handler = async (event) => {
+
+  try {
+    const postId = extractPostIdFromPath(event.path);
+    
+    if (!postId) {
+      return createErrorResponse(400, 'Bad Request');
+    }
+    
+    const post = await fetchPost(postId);
+    
+    if (!post) {
+      return createErrorResponse(404, 'Post Not Found');
+    }
+    
+    // Fetch previous and next post IDs for navigation
+    const navLinks = await fetchPrevNextPostIds(postId);
+    
+    // Prepare the template data
+    const templateData = await prepareTemplateData(post, event, navLinks);
+    
+    // Render the page
+    const html = templateEngine.render('post', templateData);
+    
+    return {
+      statusCode: 200,
+      headers: {
+        ...getCorsHeaders(),
+        ...getETagHeaders(post),
+      },
+      body: html
+    };
+  } catch (error) {
+    console.error('Error rendering post page:', error);
+    return createErrorResponse(500, 'Server Error');
+  }
+};
+
+/**
+ * Extract post ID from the request path
+ */
+function extractPostIdFromPath(path) {
+  const match = path.match(/\/p\/(\d+)/);
+  return match ? match[1] : null;
+}
+
+/**
+ * Fetch post data from the database
+ */
+async function fetchPost(postId) {
+  const result = await pool.query(`
+    SELECT p.*, t.id as topic_id, t.name as topic_name, t.slug as topic_slug 
+    FROM posts p
+    LEFT JOIN topics t ON p.topic_id = t.id
+    WHERE p.id = $1
+  `, [postId]);
+  
+  return result.rows.length ? result.rows[0] : null;
+}
+
+/**
+ * Fetch previous and next post IDs for navigation
+ * Uses global timeline regardless of topic
+ * Note: "next" means newer post, "prev" means older post
+ */
+async function fetchPrevNextPostIds(currentPostId) {
+  const query = `
+    WITH current_post AS (
+      SELECT created_at FROM posts WHERE id = $1
+    )
+    SELECT 
+      (SELECT id FROM posts WHERE created_at < (SELECT created_at FROM current_post) AND id != $1 ORDER BY created_at DESC LIMIT 1) AS prev_post_id,
+      (SELECT id FROM posts WHERE created_at > (SELECT created_at FROM current_post) AND id != $1 ORDER BY created_at ASC LIMIT 1) AS next_post_id
+  `;
+  
+  const result = await pool.query(query, [currentPostId]);
+  
+  if (!result.rows.length) {
+    return { prevPost: null, nextPost: null };
+  }
+  
+  return {
+    prevPost: result.rows[0].prev_post_id,
+    nextPost: result.rows[0].next_post_id
+  };
+}
+
+/**
+ * Prepare data for template rendering
+ */
+async function prepareTemplateData(post, event, navLinks) {
+  // Format and process the post content
+  const postContent = linkify(post.content);
+  
+  // Create a clean preview for the title (up to 50 chars)
+  const previewContent = post.content.replace(/\n/g, ' ').trim();
+  const previewTitle = previewContent.length > 50 
+    ? previewContent.substring(0, 47) + '...'
+    : previewContent;
+  
+  // Format the date
+  const formattedDate = formatDate(post.created_at);
+  
+  // Get comments template
+  const commentsHtml = templateEngine.render('comments');
+  
+  // Extract description for meta tags
+  const description = extractDescription(post.content, 160);
+  
+  // Build the full canonical URL
+  const domain = 'https://maxua.com';
+  const canonicalUrl = `${domain}/p/${post.id}`;
+  
+  // Generate meta tags for SEO
+  const metaTags = generateMetaTags({
+    title: previewTitle,
+    description,
+    url: canonicalUrl,
+    type: 'article',
+    publishedTime: post.created_at,
+    modifiedTime: post.created_at,
+    // Add topic as a keyword if available
+    keywords: post.topic_name 
+      ? `${post.topic_name}, startups, tech, Max Ischenko` 
+      : 'startups, tech, Max Ischenko'
+  });
+  
+  // Generate breadcrumb structured data
+  const breadcrumbItems = [
+    { name: 'Home', url: '/' },
+    { name: previewTitle, url: `/p/${post.id}` }
+  ];
+  
+  // If post has a topic, add it to breadcrumbs
+  if (post.topic_name && post.topic_slug) {
+    breadcrumbItems.splice(1, 0, { 
+      name: post.topic_name, 
+      url: `/t/${post.topic_slug}` 
+    });
+  }
+  
+  // Generate structured data for this post
+  const structuredData = [
+    generateBlogPostSchema(post, domain),
+    generateBreadcrumbsSchema(breadcrumbItems, domain),
+    generatePersonSchema({
+      sameAs: [
+        'https://www.linkedin.com/in/maksim/',
+        // Add your other profiles here
+      ]
+    })
+  ].join('\n');
+  
+  return {
+    post: {
+      ...post,
+      content: postContent,
+      formattedDate
+    },
+    postTitle: previewTitle,
+    comments: commentsHtml,
+    enableComments: true,
+    metaTags,
+    structuredData,
+    
+    // Add navigation data for previous/next links
+    navigation: {
+      prevPostId: navLinks.prevPost,
+      nextPostId: navLinks.nextPost,
+    }
+  };
+}
+
+/**
+ * Create a standardized error response
+ */
+function createErrorResponse(statusCode, message) {
+  return {
+    statusCode,
+    headers: { 'Content-Type': 'text/html' },
+    body: `<h1>${statusCode} - ${message}</h1>`
+  };
+}
+
+/**
+ * Format duration in MM:SS
+ */
+function formatDuration(seconds) {
+  if (!seconds) return '0:00';
+  const minutes = Math.floor(seconds / 60);
+  const secs = Math.floor(seconds % 60);
+  return `${minutes}:${secs.toString().padStart(2, '0')}`;
+}

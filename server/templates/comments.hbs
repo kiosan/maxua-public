@@ -1,0 +1,34 @@
+<div class="comments-section">
+  <a name="comments"></a>
+  <div id="existing-comments" style="display:none">
+    <h2 class="comments-heading comments-count">Comments (0)</h2>
+    <div class="comments-list"></div>
+  </div>
+
+  <h2 class="comments-heading add-comment-heading" id="add-comment-heading">💬 Be the first to leave a comment</h2>
+
+  <div class="comment-form">
+    <form id="comment-form">
+      <!-- This div will be populated dynamically if user is verified -->
+      <div id="verified-commenter-info" style="display:none;"></div>
+      
+      <div class="form-group">
+        <textarea id="comment-content" placeholder="Макс, ти неправий" required></textarea>
+      </div>
+      
+      <!-- These fields will be shown only for new commenters -->
+      <div id="commenter-fields" style="display:none;">
+        <div class="form-group">
+          <label for="comment-name">Name</label>
+          <input type="text" id="comment-name" placeholder="Your name" required>
+        </div>
+        <div class="form-group">
+          <label for="comment-email">Email</label>
+          <input type="email" id="comment-email" placeholder="name@example.com">
+        </div>
+      </div>
+      
+      <button type="submit">Post Comment</button>
+    </form>
+  </div>
+</div>

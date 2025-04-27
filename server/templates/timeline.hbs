@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{pageTitle}}</title>
+
+  {{{metaTags}}}
+  {{{structuredData}}}
+
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="preload" href="/css/main.css" as="style">
+  <link rel="stylesheet" href="/css/main.css">
+  <script src="https://unpkg.com/htmx.org@1.9.10" integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC" crossorigin="anonymous"></script>
+  <style>
+
+button.load-more {
+  background-color: #f2f2f2;
+  color: #666;
+  border: 1px solid #ddd;
+}
+
+.post-card {
+  animation: fadeInUp 0.3s ease-out forwards;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Post card styles */
+.post-card-link {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.post-card-link:hover {
+  text-decoration: none;
+}
+
+.post-card-link:hover .post-content {
+  opacity: 0.95;
+}
+
+.post-date-text {
+  color: var(--color-secondary-text);
+}
+
+.post-url {
+  color: var(--color-accent);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.post-url:hover {
+  text-decoration: underline;
+}
+  </style>
+</head>
+<body>
+  <main>
+    <section class="profile-section">
+      <a href="/"><img src="/images/mouse.jpeg" alt="don't move my cheese avatar" class="profile-image" /></a>
+      <div class="profile-info">
+        <h1>Max Ischenko</h1>
+        <div class="bio-content">
+          Спочатку ДОУ, тепер Djinni. Keep going &amp; підтримуй ЗСУ.
+        </div>
+        <div class="profile-nav">
+          <a href="/" class="active">Home</a>
+          <a href="/books">Books</a>
+          <a href="/podcast">Podcast</a>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Timeline / Posts -->
+    <div class="timeline">
+
+      {{#if topics}}
+      <div class="topic-header">
+        <a href="/" class="topic-tag {{#unless currentTopic}}active{{/unless}}">Everything</a>
+        {{#each topics}}
+        <a href="/t/{{this.slug}}" class="topic-tag {{#if (eq ../currentTopic.id this.id)}}active{{/if}}">#{{this.name}}</a>
+        {{/each}}
+        <a href="/search" class="topic-tag">🔍 Search</a>
+      </div>
+      {{/if}}
+
+      <h2>{{#if currentTopic}}
+        {{currentTopic.name}}: {{currentTopic.description}}{{else}}What's on my mind{{/if}}
+      </h2>
+      
+      <div id="posts-container">
+        {{#if posts.length}}
+          {{#each posts}}
+          <div class="post-card" data-post-id="{{this.id}}">
+            <!-- Make the main content clickable -->
+            <a href="/p/{{this.id}}" class="post-card-link">
+              <div class="post-content">{{{this.content_html}}}</div>
+              {{#if this.image_url}}
+              <div class="post-image-container">
+                <img src="{{this.image_url}}" alt="Post image" class="post-image">
+              </div>
+              {{/if}}
+            </a>
+            
+            <div class="post-meta">
+              <div class="post-date">
+                <!-- Date as simple text, not a link -->
+                <span class="post-date-text">{{this.formatted_date}}</span>
+                <a href="#" class="translate-link" data-post-id="{{this.id}}" data-translated="false">Translate</a>
+                {{#if this.topic_slug}}
+                {{#neq ../currentTopic.id this.topic_id}}
+                  <a href="/t/{{this.topic_slug}}" class="topic-badge">#{{this.topic_name}}</a>
+                {{/neq}}
+                {{/if}}
+
+                {{#if this.comment_count}}
+                {{#if (neq this.comment_count 0)}}
+                <a href="/p/{{this.id}}#comments" class="comments-badge">
+                  💬 {{this.comment_count}}
+                </a>
+                {{/if}}
+                {{/if}}
+              </div>
+            </div>
+          </div>
+          {{/each}}
+        {{else}}
+          <p class="empty-message">{{#if currentTopic}}No posts in this topic yet.{{else}}No posts yet.{{/if}}</p>
+        {{/if}}
+      </div>
+      
+      {{#if pagination.hasMore}}
+      <div id="load-more-container">
+        <button id="load-more-button"
+           hx-get="{{#if currentTopic}}/t/{{currentTopic.slug}}{{else}}/{{/if}}?offset={{add pagination.offset pagination.limit}}&htmx=true"
+           hx-target="#posts-container"
+           hx-swap="beforeend"
+           class="load-more">
+           Load more posts
+           <span class="htmx-indicator loading-spinner"></span>
+        </button>
+      </div>
+      {{/if}}
+    </div>
+  </main>
+  
+  <footer>
+    {{> subscription-form}}
+    
+    <div class="footer-copyright">
+      Welcome to my little side project I am working on with my LLM
+      co-workers. ;)<br>
+      Notice a bug or have an idea? Ping me via 
+      <a href="mailto:ischenko@gmail.com">email</a> or Tg (@maxua).
+      To be continued.
+    </div>
+  </footer>
+
+  <!-- Handle clicks on URL spans -->
+  <script>
+    // Handle clicks on URL spans in post content
+    document.addEventListener('click', function(e) {
+      // Check if the clicked element is a URL span
+      if (e.target.classList.contains('post-url')) {
+        // Get the URL from the data attribute
+        const url = e.target.dataset.url;
+        if (url) {
+          // Stop the event from bubbling up to the post card link
+          e.preventDefault();
+          e.stopPropagation();
+          
+          // Open the URL in a new tab
+          window.open(url, '_blank', 'noopener,noreferrer');
+        }
+      }
+    });
+  </script>
+  
+  <script type="module" src="/js/app.js"></script>
+  <script type="module" src="/js/subscription.js"></script>
+</body>
+</html>

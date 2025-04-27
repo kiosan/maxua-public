@@ -1,0 +1,33 @@
+{
+  "name": "maxua-blog",
+  "version": "1.0.0",
+  "description": "Substack killer ;-)",
+  "main": "server/index.js",
+  "scripts": {
+    "start": "node server/index.js",
+    "dev": "nodemon --ext js,hbs server/index.js",
+    "migrate": "node scripts/migrate.js",
+    "deploy": "fly deploy"
+  },
+  "dependencies": {
+    "@atproto/api": "^0.10.5",
+    "@sentry/node": "^9.14.0",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "handlebars": "^4.7.8",
+    "node-fetch": "^2.7.0",
+    "pg": "^8.11.3",
+    "resend": "^4.2.0",
+    "uuid": "^11.1.0"
+  },
+  "devDependencies": {
+    "@flydotio/dockerfile": "^0.7.10",
+    "nodemon": "^3.0.1"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "private": true
+}

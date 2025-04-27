@@ -1,0 +1,11 @@
+node_modules
+npm-debug.log
+.git
+.github
+.env.local
+.env.*.local
+*.md
+.DS_Store
+.netlify/
+dist/
+.cache/
