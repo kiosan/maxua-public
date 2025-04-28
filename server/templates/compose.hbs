@@ -15,19 +15,7 @@
 </head>
 <body>
     <main>
-        <section class="profile-section">
-            <a href="/"><img src="/images/mouse.jpeg" alt="don't move my cheese avatar" class="profile-image" /></a>
-            <div class="profile-info">
-                <h1>Max Ischenko</h1>
-                <div class="bio-content">
-                    Спочатку ДОУ, тепер Djinni. Keep going &amp; підтримуй ЗСУ.
-                </div>
-                <div class="profile-nav">
-                    <a href="/">Home</a>
-                    <a href="/compose" class="active">Compose</a>
-                </div>
-            </div>
-        </section>
+        {{> profile-header activePage="compose"}}
 
         <div class="compose-container">
             <div class="compose-card">
