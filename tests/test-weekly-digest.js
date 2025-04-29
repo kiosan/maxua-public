@@ -74,8 +74,11 @@ async function testWeeklyDigest() {
       console.log(`✅ Test email sent to ${testOptions.testEmail}`);
     }
 
+    process.exit(0); // so we don't mess with closing db connections
+
   } catch (error) {
     console.error('❌ Error testing weekly digest:', error);
+    process.exit(1);
   }
 }
 
