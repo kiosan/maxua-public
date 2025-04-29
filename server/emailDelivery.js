@@ -1,4 +1,4 @@
-// emailDelivery.js with batch sending
+// server/emailDelivery.js 
 const { Resend } = require('resend');
 const { pool, formatDate } = require('./utils');
 const { render } = require('./templateEngine');
@@ -17,10 +17,13 @@ async function sharePostToEmail(post) {
     throw new Error('Invalid post data');
   }
 
+  // Generate the delivery ID for this post
+  const deliveryId = `post#${post.id}`;
+
   // Check if this post has already been sent
   const existingDelivery = await pool.query(
-    'SELECT id FROM email_deliveries WHERE post_id = $1',
-    [post.id]
+    'SELECT id FROM email_deliveries WHERE delivery_id = $1',
+    [deliveryId]
   );
 
   if (existingDelivery.rows.length > 0) {
@@ -57,11 +60,11 @@ async function sharePostToEmail(post) {
 
   // Create a delivery record
   const deliveryResult = await pool.query(
-    'INSERT INTO email_deliveries (post_id, recipient_count, subject) VALUES ($1, $2, $3) RETURNING id',
-    [post.id, subscribers.length, subject]
+    'INSERT INTO email_deliveries (delivery_id, recipient_count, subject) VALUES ($1, $2, $3) RETURNING id',
+    [deliveryId, subscribers.length, subject]
   );
   
-  const deliveryId = deliveryResult.rows[0].id;
+  const deliveryDbId = deliveryResult.rows[0].id;
 
   try {
     // Prepare common data for all emails
@@ -113,7 +116,7 @@ To unsubscribe: ${unsubscribeUrl}`;
           html: html,
           text: text,
           metadata: {
-            post_id: post.id,
+            delivery_id: deliveryId,
             subscriber_id: subscriber.id
           }
         };
@@ -131,8 +134,8 @@ To unsubscribe: ${unsubscribeUrl}`;
         
         // Count successful sends in this batch
         const batchSuccessCount = data.data && Array.isArray(data.data)
-      ? data.data.filter(item => item.id).length
-      : 0;
+          ? data.data.filter(item => item.id).length
+          : 0;
         successCount += batchSuccessCount;
         
         console.log(`Batch ${Math.floor(i/BATCH_SIZE) + 1}: Sent ${batchSuccessCount}/${batchSubscribers.length} emails`);
@@ -154,12 +157,12 @@ To unsubscribe: ${unsubscribeUrl}`;
     // Update delivery record with actual count
     await pool.query(
       'UPDATE email_deliveries SET recipient_count = $1 WHERE id = $2',
-      [successCount, deliveryId]
+      [successCount, deliveryDbId]
     );
     
     return {
       success: successCount > 0,
-      deliveryId,
+      deliveryId: deliveryDbId,
       sentCount: successCount,
       errorCount: errorCount
     };
@@ -170,13 +173,13 @@ To unsubscribe: ${unsubscribeUrl}`;
     // Update delivery record to reflect failure
     await pool.query(
       'UPDATE email_deliveries SET recipient_count = 0 WHERE id = $1',
-      [deliveryId]
+      [deliveryDbId]
     );
     
     return {
       success: false,
       error: error.message,
-      deliveryId
+      deliveryId: deliveryDbId
     };
   }
 }

@@ -1,6 +1,6 @@
-// server/weeklyDigest.js
+// server/weeklyDigest.js - updated with delivery_id approach
 const { Resend } = require('resend');
-const { pool, formatDate, escapeHTML, linkify } = require('./utils');
+const { pool, formatDate, escapeHTML } = require('./utils');
 const { render } = require('./templateEngine');
 
 // Initialize Resend with API key
@@ -71,17 +71,40 @@ async function sendWeeklyDigest(options = {}) {
     // 3. Format posts data for template
     const formattedPosts = formatPostsForEmail(posts);
     
-    // 4. Create delivery record
-    let deliveryId = null;
-
-    // XXX: using post_id -1 won't work because of FK. need something different
+    // Generate a unique ID for this digest (using date in format YYYYMMDD)
+    const today = new Date();
+    const digestDate = today.toISOString().slice(0, 10).replace(/-/g, '');
+    const digestId = `digest#${digestDate}`;
     
+    const subj = `maxua.com weekly digest (${today.toLocaleDateString()})`;
+    
+    // Check if this digest was already sent today
+    if (!dryRun && !testEmail) {
+      const existingDelivery = await pool.query(
+        'SELECT id FROM email_deliveries WHERE delivery_id = $1',
+        [digestId]
+      );
+      
+      if (existingDelivery.rows.length > 0) {
+        console.log(`Digest for ${digestDate} has already been sent`);
+        return { 
+          success: false, 
+          status: 'skipped', 
+          reason: 'already_sent_today',
+          digestId
+        };
+      }
+    }
+    
+    // 4. Create delivery record
+    let deliveryDbId = null;
+
     if (!dryRun && !testEmail) {
       const deliveryResult = await pool.query(
-        'INSERT INTO email_deliveries (post_id, sent_at, recipient_count, subject) VALUES ($1, NOW(), $2, $3) RETURNING id',
-        [-1, subscribers.length, 'Weekly digest for maxua.com'] // Using post_id = -1 to indicate a digest
+        'INSERT INTO email_deliveries (delivery_id, sent_at, recipient_count, subject) VALUES ($1, NOW(), $2, $3) RETURNING id',
+        [digestId, subscribers.length, subj]
       );
-      deliveryId = deliveryResult.rows[0].id;
+      deliveryDbId = deliveryResult.rows[0].id;
     }
     
     // 5. Generate template once
@@ -94,6 +117,7 @@ async function sendWeeklyDigest(options = {}) {
         status: 'dry_run',
         subscriberCount: subscribers.length,
         posts: formattedPosts,
+        digestId,
         htmlPreview: baseHtml.replace('%%unsubscribeUrl%%', 'test-token')
       };
     }
@@ -116,19 +140,20 @@ async function sendWeeklyDigest(options = {}) {
         const html = baseHtml.replace('%%unsubscribeUrl%%', unsubscribeUrl);
         
         // Plain text version (simplified)
-        const text = `Weekly Digest from maxua.com\n\n${posts.map(p => 
-          `${p.content.substring(0, 100)}... \nRead more: https://maxua.com/p/${p.id}\n`
-        ).join('\n')}\n\nUnsubscribe: https://maxua.com/api/unsubscribe?token=${unsubscribeUrl}`;
+        const text = `${subj}\n\n` +
+          `This digest includes ${posts.length} recent posts from the past week.\n` +
+          `Visit https://maxua.com to read all posts.\n\n` +
+          `To unsubscribe: https://maxua.com/api/unsubscribe?token=${unsubscribeUrl}`;
         
         return {
           from: 'Max Ischenko <hello@maxua.com>',
           to: [subscriber.email],
           reply_to: 'ischenko@gmail.com',
-          subject: 'Weekly digest for maxua.com',
+          subject: subj,
           html: html,
           text: text,
           metadata: {
-            digest_id: deliveryId || 'test',
+            digest_id: digestId,
             subscriber_id: subscriber.id
           }
         };
@@ -167,16 +192,17 @@ async function sendWeeklyDigest(options = {}) {
     }
     
     // 7. Update delivery record with actual count
-    if (deliveryId) {
+    if (deliveryDbId) {
       await pool.query(
         'UPDATE email_deliveries SET recipient_count = $1 WHERE id = $2',
-        [successCount, deliveryId]
+        [successCount, deliveryDbId]
       );
     }
     
     return {
       success: successCount > 0,
-      deliveryId,
+      deliveryId: digestId,
+      deliveryDbId,
       sentCount: successCount,
       errorCount: errorCount
     };
