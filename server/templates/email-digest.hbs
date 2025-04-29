@@ -16,6 +16,9 @@
 <!-- Eliminate all default margins -->
 <body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; color: #222; text-align: left;">
 
+  <br>
+  <br>
+
   <!-- Wrap entire content in table with zero margins -->
   <table cellpadding="0" cellspacing="0" border="0" width="100%" style="margin: 0; padding: 0;">
     <tr>
@@ -53,10 +56,11 @@
                         {{#if this.topic_name}}
                         <a href="https://maxua.com/t/{{this.topic_slug}}" style="display: inline-block; font-size: 0.9rem; padding: 0.25rem 0.6rem; background-color: #f0f4f8; color: #1a73e8; border-radius: 12px; text-decoration: none; margin-left: 8px; font-weight: 500;">#{{this.topic_name}}</a>
                         {{/if}}
-                        
+                      </td>
+                      <td align="right" valign="middle" style="text-align: right;">
                         {{#if this.comment_count}}
                         {{#if (neq this.comment_count 0)}}
-                        <a href="https://maxua.com/p/{{this.id}}#comments" style="display: inline-block; font-size: 0.85rem; color: #555; text-decoration: none; margin-left: 8px;">
+                        <a href="https://maxua.com/p/{{this.id}}#comments" style="display: inline-block; font-size: 0.85rem; color: #555; text-decoration: none; text-align: right;">
                           💬 {{this.comment_count}}
                         </a>
                         {{/if}}
