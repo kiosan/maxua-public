@@ -207,6 +207,10 @@ function captureError(error, contextData = {}) {
   }
 }
 
+function closePool() {
+  return pool.end();
+}
+
 module.exports = { 
   pool, 
   wrap, 
@@ -218,5 +222,6 @@ module.exports = {
   formatDate,
   getIdFromPath, 
   isDevEnvironment,
-  captureError
+  captureError,
+  closePool
 };

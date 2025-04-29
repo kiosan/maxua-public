@@ -3,6 +3,7 @@
 // Script to send weekly digest email - designed to be called by a cron job
 
 require('dotenv').config();
+
 const { sendWeeklyDigest } = require('../server/weeklyDigest');
 
 /**
@@ -38,15 +39,16 @@ async function main() {
     // Send the digest
     const result = await sendWeeklyDigest(options);
     
-    console.log('Weekly digest result:', result);
+    // console.log('Weekly digest result:', result);
 
-    if (result.success) {
-      console.log(`✅ Weekly digest sent successfully to ${result.sentCount} subscribers`);
-      process.exit(0);
-    } else {
+    if (!result.success) {
       console.error(`❌ Failed to send weekly digest: ${result.error || 'Unknown error'}`);
       process.exit(1);
     }
+
+    console.log(`✅ Weekly digest sent successfully to ${result.sentCount} subscribers`);
+    process.exit(0);
+
   } catch (error) {
     console.error('❌ Error in weekly digest:', error);
     process.exit(1);
