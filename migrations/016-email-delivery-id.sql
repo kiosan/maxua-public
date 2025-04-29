@@ -19,3 +19,8 @@ COMMENT ON COLUMN email_deliveries.delivery_id IS 'Identifier for email delivery
 ALTER TABLE subscribers
 ADD COLUMN preferences TEXT DEFAULT 'single-post',
 ADD CONSTRAINT preferences_check CHECK (preferences IN ('single-post', 'digest'));
+
+-- we also need to change/replace our UNIQUE constraint
+ALTER TABLE subscribers DROP CONSTRAINT subscribers_email_key;
+ALTER TABLE subscribers ADD CONSTRAINT unique_email_preferences UNIQUE (email, preferences);
+

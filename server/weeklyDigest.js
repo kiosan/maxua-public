@@ -52,9 +52,11 @@ async function sendWeeklyDigest(options = {}) {
       console.log(`Test mode: Will send only to ${testEmail}`);
     } else {
       // Get actual subscribers
-      const subscribersResult = await pool.query(
-        'SELECT id, email, name, unsubscribe_token FROM subscribers WHERE confirmed = true'
-      );
+      const subscribersResult = await pool.query(`
+        SELECT id, email, name, unsubscribe_token 
+        FROM subscribers 
+        WHERE confirmed = true AND preferences = 'digest'
+      `);
       subscribers = subscribersResult.rows;
       console.log(`Found ${subscribers.length} confirmed subscribers`);
     }

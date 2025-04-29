@@ -32,9 +32,11 @@ async function sharePostToEmail(post) {
   }
 
   // Get confirmed subscribers
-  const subscribersResult = await pool.query(
-    'SELECT id, email, name, unsubscribe_token FROM subscribers WHERE confirmed = true'
-  );
+  const subscribersResult = await pool.query(`
+    SELECT id, email, name, unsubscribe_token 
+    FROM subscribers 
+    WHERE confirmed = true AND preferences = 'single-post'
+  `);
   
   const subscribers = subscribersResult.rows;
   
