@@ -239,7 +239,7 @@ function linkifyContent(text) {
   // Convert URLs to actual clickable links (for email)
   const urlRegex = /(https?:\/\/[^\s]+)/g;
   return text.replace(urlRegex, url => 
-    `<a href="${url}" target="_blank" style="color: #1a73e8; text-decoration: none;">${url}</a>`
+    `<a href="${url}" target="_blank" style="color: #1a73e8; text-decoration: underline; display: inline-block;">${url}</a>`
   );
 }
 

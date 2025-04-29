@@ -7,147 +7,89 @@
   <title>Weekly Digest - Max Ischenko</title>
   <style>
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-      line-height: 1.6;
-      color: #222;
       margin: 0;
       padding: 0;
       -webkit-text-size-adjust: 100%;
     }
-    
-    .container {
-      max-width: 600px;
-      margin: 0 auto;
-      padding: 0;
-    }
-    
-    .post-card {
-      border: 1px solid #eee;
-      padding: 1.25rem;
-      border-radius: 8px;
-      margin-bottom: 1.5rem;
-      background-color: #f9f9f9;
-    }
-    
-    .post-content {
-      margin-bottom: 1rem;
-      font-size: 1rem;
-      white-space: pre-wrap;
-      word-wrap: break-word;
-    }
-    
-    .post-meta {
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 0.85rem;
-      color: #555;
-    }
-    
-    .post-date {
-      color: #555;
-    }
-    
-    .topic-badge {
-      font-size: 0.9rem;
-      padding: 0.25rem 0.6rem;
-      background-color: #f0f4f8;
-      color: #1a73e8;
-      border-radius: 12px;
-      text-decoration: none;
-      display: inline-block;
-      margin-left: 8px;
-      font-weight: 500;
-    }
-    
-    .post-link {
-      text-decoration: none;
-      color: inherit;
-      display: block;
-    }
-    
-    .post-image-container {
-      margin: 1rem 0;
-      max-width: 100%;
-      border-radius: 8px;
-      overflow: hidden;
-    }
-    
-    .post-image {
-      width: 100%;
-      max-height: 300px;
-      object-fit: contain;
-      background-color: #f8f8f8;
-      display: block;
-    }
-    
-    .footer {
-      margin-top: 2rem;
-      padding-top: 1rem;
-      border-top: 1px solid #eee;
-      font-size: 0.85rem;
-      color: #666;
-      text-align: center;
-    }
-    
-    .footer a {
-      color: #1a73e8;
-      text-decoration: none;
-    }
-    
-    .comments-badge {
-      display: inline-flex;
-      align-items: center;
-      font-size: 0.85rem;
-      color: #555;
-      text-decoration: none;
-      margin-left: auto;
-    }
   </style>
 </head>
-<body>
-  <div class="container">
-    {{#if posts.length}}
-      {{#each posts}}
-      <div class="post-card">
-        <a href="https://maxua.com/p/{{this.id}}" class="post-link">
-          <div class="post-content">{{{this.content_html}}}</div>
-          {{#if this.image_url}}
-          <div class="post-image-container">
-            <img src="{{this.image_url}}" alt="Post image" class="post-image">
-          </div>
+<!-- Eliminate all default margins -->
+<body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; color: #222; text-align: left;">
+
+  <!-- Wrap entire content in table with zero margins -->
+  <table cellpadding="0" cellspacing="0" border="0" width="100%" style="margin: 0; padding: 0;">
+    <tr>
+      <td align="left" valign="top" style="padding: 0;">
+        <!-- Main content container with proper padding -->
+        <div style="max-width: 600px; margin: 0; padding: 0;">
+          
+          {{#if posts.length}}
+            {{#each posts}}
+            <!-- Post Card -->
+            <table cellpadding="0" cellspacing="0" border="0" width="100%" style="margin: 0 0 1.5rem 0; padding: 0;">
+              <tr>
+                <td align="left" valign="top" style="background-color: #f9f9f9; border: 1px solid #eee; border-radius: 8px; padding: 1.25rem; text-align: left;">
+                  
+                  <!-- Post Content -->
+                  <div style="margin-bottom: 1rem; font-size: 1rem; line-height: 1.6; text-align: left;">
+                    <a href="https://maxua.com/p/{{this.id}}" style="color: #222; text-decoration: none; display: block; text-align: left;">{{{this.content_html}}}</a>
+                  </div>
+                  
+                  {{#if this.image_url}}
+                  <!-- Post Image -->
+                  <div style="margin: 1rem 0; max-width: 100%; border-radius: 8px; overflow: hidden;">
+                    <a href="https://maxua.com/p/{{this.id}}" style="color: #222; text-decoration: none;">
+                      <img src="{{this.image_url}}" alt="Post image" style="width: 100%; max-height: 300px; object-fit: contain; background-color: #f8f8f8; display: block;">
+                    </a>
+                  </div>
+                  {{/if}}
+                  
+                  <!-- Post Meta -->
+                  <table cellpadding="0" cellspacing="0" border="0" width="100%" style="margin: 0; padding: 0;">
+                    <tr>
+                      <td align="left" valign="middle" style="text-align: left; color: #555; font-size: 0.85rem;">
+                        <span style="display: inline-block; text-align: left;">{{this.formatted_date}}</span>
+                        
+                        {{#if this.topic_name}}
+                        <a href="https://maxua.com/t/{{this.topic_slug}}" style="display: inline-block; font-size: 0.9rem; padding: 0.25rem 0.6rem; background-color: #f0f4f8; color: #1a73e8; border-radius: 12px; text-decoration: none; margin-left: 8px; font-weight: 500;">#{{this.topic_name}}</a>
+                        {{/if}}
+                        
+                        {{#if this.comment_count}}
+                        {{#if (neq this.comment_count 0)}}
+                        <a href="https://maxua.com/p/{{this.id}}#comments" style="display: inline-block; font-size: 0.85rem; color: #555; text-decoration: none; margin-left: 8px;">
+                          💬 {{this.comment_count}}
+                        </a>
+                        {{/if}}
+                        {{/if}}
+                      </td>
+                    </tr>
+                  </table>
+                  
+                </td>
+              </tr>
+            </table>
+            {{/each}}
+          {{else}}
+            <p style="text-align: center; color: #555; padding: 20px;">No new posts this week.</p>
           {{/if}}
-        </a>
-        
-        <div class="post-meta">
-          <div class="post-date">
-            {{this.formatted_date}}
-            {{#if this.topic_name}}
-            <a href="https://maxua.com/t/{{this.topic_slug}}" class="topic-badge">#{{this.topic_name}}</a>
-            {{/if}}
-            
-            {{#if this.comment_count}}
-            {{#if (neq this.comment_count 0)}}
-            <a href="https://maxua.com/p/{{this.id}}#comments" class="comments-badge">
-              💬 {{this.comment_count}}
-            </a>
-            {{/if}}
-            {{/if}}
-          </div>
+          
+          <!-- Footer -->
+          <table cellpadding="0" cellspacing="0" border="0" width="100%" style="margin: 2rem 0 0 0; padding: 0;">
+            <tr>
+              <td align="center" valign="top" style="border-top: 1px solid #eee; padding-top: 1rem;">
+                <p style="margin: 0 0 10px 0; color: #666; font-size: 0.85rem; text-align: center;">
+                  You're receiving this email because you subscribed to weekly updates from <a href="https://maxua.com" style="color: #1a73e8; text-decoration: none;">maxua.com</a>.
+                </p>
+                <p style="margin: 0; color: #666; font-size: 0.85rem; text-align: center;">
+                  <a href="https://maxua.com/api/unsubscribe?token=%%unsubscribeUrl%%" style="color: #1a73e8; text-decoration: none;">Unsubscribe</a> from these emails.
+                </p>
+              </td>
+            </tr>
+          </table>
+          
         </div>
-      </div>
-      {{/each}}
-    {{else}}
-      <p style="text-align: center; color: #555; padding: 20px;">No new posts this week.</p>
-    {{/if}}
-    
-    <div class="footer">
-      <p>You're receiving this email because you subscribed to weekly updates from <a href="https://maxua.com">maxua.com</a>.</p>
-      <p>
-        <a href="https://maxua.com/api/unsubscribe?token=%%unsubscribeUrl%%">Unsubscribe</a> from these emails.
-      </p>
-    </div>
-  </div>
+      </td>
+    </tr>
+  </table>
 </body>
 </html>
