@@ -73,6 +73,8 @@ async function sendWeeklyDigest(options = {}) {
     
     // 4. Create delivery record
     let deliveryId = null;
+
+    // XXX: using post_id -1 won't work because of FK. need something different
     
     if (!dryRun && !testEmail) {
       const deliveryResult = await pool.query(
