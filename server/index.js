@@ -134,6 +134,12 @@ app.use('/images', express.static(path.join(__dirname, '../public/images'), {
 // Catch-all fallback for other static files (e.g. favicon, robots.txt)
 app.use(express.static(path.join(__dirname, '../public')));
 
+// My substack newsletter archive
+
+app.get(['/newsletter_archive/'], (req, res) => {
+  res.sendFile(path.join(__dirname, '../public/newsletter_archive/index.html'));
+});
+
 // Serve static HTML files from public directory
 app.get('/:page.html', (req, res, next) => {
   const page = req.params.page;
