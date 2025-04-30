@@ -7,7 +7,7 @@ const { isDevEnvironment, formatDate } = require('./utils');
 // Cache for compiled templates
 const templateCache = {};
 
-const TEMPLATES_DIR = path.join(__dirname, 'templates'); 
+const TEMPLATES_DIR = path.join(__dirname, '_templates'); 
 
 // Skip cache if we're in local development mode
 const isDev = isDevEnvironment();
