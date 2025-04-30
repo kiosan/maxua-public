@@ -71,7 +71,8 @@
                             </label>
                             
                             <label class="toggle-label">
-                                <input type="checkbox" id="share-bluesky" {{#if currentDraft}}{{#if currentDraft.share_bluesky}}checked{{/if}}{{/if}}>
+                                <input type="checkbox" id="share-bluesky"
+                                {{#if currentDraft}}{{#if currentDraft.share_bluesky}}checked{{/if}}{{else}}checked{{/if}}>
                                 <span class="toggle-slider"></span>
                                 <span class="toggle-text">Share to Bluesky</span>
                             </label>
