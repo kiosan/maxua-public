@@ -79,14 +79,114 @@ function getYear(dateString) {
   return new Date(dateString).getFullYear().toString();
 }
 
-// Copy HTML file with a new name
-function copyHtmlFile(sourcePath, destPath) {
+// Copy HTML file with a new name and apply template
+function copyHtmlFile(sourcePath, destPath, post) {
   try {
-    const content = fs.readFileSync(sourcePath, 'utf8');
-    fs.writeFileSync(destPath, content, 'utf8');
+    let content = fs.readFileSync(sourcePath, 'utf8');
+    
+    // Extract just the content part of the post
+    const contentMatch = content.match(/<body[^>]*>([\s\S]*)<\/body>/i);
+    let postContent = contentMatch ? contentMatch[1] : content;
+    
+    // Clean up content if needed - remove any Substack-specific elements
+    // This is a basic implementation - you might need to adjust based on your HTML structure
+    postContent = postContent.replace(/<div class="captioned-image-container">[\s\S]*?<\/figure>/gi, '');
+    
+    // Format post date for display
+    const postDate = new Date(post.post_date);
+    const formattedDate = postDate.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+    
+    // Apply our template
+    const wrappedContent = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${post.title || 'Untitled'} | Max Ischenko</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.6;
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 0 20px;
+      color: #333;
+    }
+    header {
+      margin-bottom: 2rem;
+    }
+    .back-link {
+      display: inline-block;
+      margin-bottom: 1rem;
+      color: #0366d6;
+      text-decoration: none;
+    }
+    .back-link:hover {
+      text-decoration: underline;
+    }
+    h1 {
+      margin-bottom: 0.5rem;
+      font-size: 2em;
+    }
+    .post-meta {
+      margin-bottom: 2rem;
+      color: #666;
+      font-size: 0.9rem;
+    }
+    .post-date {
+      font-style: italic;
+    }
+    .post-subtitle {
+      font-size: 1.2rem;
+      margin-bottom: 1.5rem;
+      color: #555;
+    }
+    .post-content {
+      margin-bottom: 3rem;
+    }
+    .post-content img {
+      max-width: 100%;
+      height: auto;
+    }
+    /* Additional styling for Substack content */
+    .captioned-image-container {
+      margin: 2rem 0;
+    }
+    .image-caption-container {
+      font-size: 0.85rem;
+      color: #666;
+      margin-top: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="index.html" class="back-link">← Back to Archive</a>
+    <h1>${post.title || 'Untitled'}</h1>
+    <div class="post-meta">
+      <span class="post-date">${formattedDate}</span>
+    </div>
+    ${post.subtitle ? `<div class="post-subtitle">${post.subtitle}</div>` : ''}
+  </header>
+  
+  <div class="post-content">
+    ${postContent}
+  </div>
+  
+  <footer>
+    <a href="index.html" class="back-link">← Back to Archive</a>
+  </footer>
+</body>
+</html>`;
+
+    fs.writeFileSync(destPath, wrappedContent, 'utf8');
     return true;
   } catch (error) {
-    console.error(`Error copying file ${sourcePath}: ${error.message}`);
+    console.error(`Error processing file ${sourcePath}: ${error.message}`);
     return false;
   }
 }
@@ -95,6 +195,19 @@ function copyHtmlFile(sourcePath, destPath) {
 function generateIndexHtml(posts, title) {
   // Sort posts by date in descending order
   posts.sort((a, b) => new Date(b.post_date) - new Date(a.post_date));
+  
+  // Group posts by year for display organization
+  const postsByYear = {};
+  posts.forEach(post => {
+    const year = getYear(post.post_date);
+    if (!postsByYear[year]) {
+      postsByYear[year] = [];
+    }
+    postsByYear[year].push(post);
+  });
+  
+  // Sort years in descending order
+  const sortedYears = Object.keys(postsByYear).sort().reverse();
   
   const html = `<!DOCTYPE html>
 <html lang="en">
@@ -112,6 +225,11 @@ function generateIndexHtml(posts, title) {
       color: #333;
     }
     h1 { margin-bottom: 1.5rem; }
+    h2 { 
+      margin-top: 2rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid #eee;
+    }
     .post-list {
       list-style: none;
       padding: 0;
@@ -161,32 +279,31 @@ function generateIndexHtml(posts, title) {
 <body>
   <h1>${title}</h1>
   <div id="content">
-    ${title === 'Newsletter Archive' ? generateYearsNav(posts) : ''}
-    <ul class="post-list">
-      ${posts.map(post => `
-        <li class="post-item">
-          <div class="post-date">${formatDate(post.post_date)}</div>
-          <h2 class="post-title">
-            <a href="${post.filename}">${post.title || 'Untitled'}</a>
-          </h2>
-          ${post.subtitle ? `<div class="post-subtitle">${post.subtitle}</div>` : ''}
-        </li>
-      `).join('')}
-    </ul>
+    <div class="years-nav">
+      ${sortedYears.map(year => `<a href="#year-${year}">${year}</a>`).join('')}
+    </div>
+    
+    ${sortedYears.map(year => `
+      <div id="year-${year}" class="year-section">
+        <h2>${year}</h2>
+        <ul class="post-list">
+          ${postsByYear[year].map(post => `
+            <li class="post-item">
+              <div class="post-date">${formatDate(post.post_date)}</div>
+              <h3 class="post-title">
+                <a href="${post.filename}">${post.title || 'Untitled'}</a>
+              </h3>
+              ${post.subtitle ? `<div class="post-subtitle">${post.subtitle}</div>` : ''}
+            </li>
+          `).join('')}
+        </ul>
+      </div>
+    `).join('')}
   </div>
 </body>
 </html>`;
 
   return html;
-}
-
-// Generate navigation links for years
-function generateYearsNav(posts) {
-  const years = [...new Set(posts.map(post => getYear(post.post_date)))].sort().reverse();
-  
-  return `<div class="years-nav">
-    ${years.map(year => `<a href="${year}/index.html">${year}</a>`).join('')}
-  </div>`;
 }
 
 // Main function to import Substack posts
@@ -237,15 +354,9 @@ async function importSubstack() {
     // Define the new filename
     const newFilename = `${postDate}-${slug}.html`;
     
-    // Create year directory if it doesn't exist
-    const yearDir = path.join(options.output, year);
-    if (!fs.existsSync(yearDir)) {
-      fs.mkdirSync(yearDir, { recursive: true });
-    }
-    
     // Define source and destination paths
     const sourcePath = path.join(options.input, 'posts', `${postId}.html`);
-    const destPath = path.join(yearDir, newFilename);
+    const destPath = path.join(options.output, newFilename);
     
     // Add to processed posts
     const processedPost = {
@@ -263,9 +374,9 @@ async function importSubstack() {
     
     // Copy the file
     if (fs.existsSync(sourcePath)) {
-      const success = copyHtmlFile(sourcePath, destPath);
+      const success = copyHtmlFile(sourcePath, destPath, post);
       if (success) {
-        console.log(`Processed: ${postDate} - ${title} -> ${year}/${newFilename}`);
+        console.log(`Processed: ${postDate} - ${title} -> ${newFilename}`);
       }
     } else {
       console.warn(`Warning: Source file not found for post: ${title} (${postId})`);
@@ -282,13 +393,7 @@ async function importSubstack() {
     fs.writeFileSync(mainIndexPath, mainIndexHtml, 'utf8');
     console.log(`Generated main index: ${mainIndexPath}`);
     
-    // Generate year indexes
-    Object.entries(postsByYear).forEach(([year, yearPosts]) => {
-      const yearIndexPath = path.join(options.output, year, 'index.html');
-      const yearIndexHtml = generateIndexHtml(yearPosts, `${year} Newsletter Archive`);
-      fs.writeFileSync(yearIndexPath, yearIndexHtml, 'utf8');
-      console.log(`Generated year index: ${yearIndexPath}`);
-    });
+    // We no longer generate year indexes since we're not using year folders
   }
   
   console.log('Import completed successfully!');
