@@ -52,17 +52,30 @@ function initComposePage() {
     if (contentField) autoResizeTextarea();
 }
 
+function autoSelectLinksTopic() {
+  const urlRegex = /(https?:\/\/[^\s]+)/g;
+  const content = contentField.value;
+  // Auto-select "Links" topic if a link is detected
+  if (topicSelect && urlRegex.test(content)) {
+    const linksOption = Array.from(topicSelect.options).find(option => 
+      option.textContent === "Links" || option.value === "1");
+    topicSelect.value = linksOption.value;
+  }
+}
+
 /**
  * Set up event listeners
  */
 function setupEventListeners() {
-    // Character count & textarea resize
-    if (contentField) {
-        contentField.addEventListener('input', () => {
-            updateCharCount();
-            autoResizeTextarea();
-        });
-    }
+
+  // Character count & textarea resize
+  if (contentField) {
+    contentField.addEventListener('input', () => {
+      updateCharCount();
+      autoResizeTextarea();
+      autoSelectLinksTopic();
+    });
+  }
     
     // File input change -> Filestack upload
     if (fileInput) {
