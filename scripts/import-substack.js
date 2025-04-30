@@ -214,7 +214,7 @@ function generateIndexHtml(posts, title) {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${title}</title>
+  <title>${title} | Max Ischenko</title>
   <style>
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -389,7 +389,7 @@ async function importSubstack() {
     
     // Generate main index
     const mainIndexPath = path.join(options.output, 'index.html');
-    const mainIndexHtml = generateIndexHtml(allProcessedPosts, 'Newsletter Archive');
+    const mainIndexHtml = generateIndexHtml(allProcessedPosts, 'My Substack Archive');
     fs.writeFileSync(mainIndexPath, mainIndexHtml, 'utf8');
     console.log(`Generated main index: ${mainIndexPath}`);
     
