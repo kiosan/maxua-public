@@ -31,3 +31,4 @@ pids
 # OS files
 Thumbs.db
 .DS_Store
+public/newsletter_archive
