@@ -1,24 +1,23 @@
-<!-- Enhanced subscription form integrated into footer -->
 <div class="footer-subscription">
   <div class="footer-subscription-content">
     <h3 class="footer-subscription-heading">Subscribe to new posts</h3>
     <form id="subscription-form" class="footer-subscription-form">
       <div class="footer-subscription-form-row">
-  <div class="email-field-container">
-    <input type="email" id="subscriber-email" placeholder="Your email address" required>
-    <div class="radio-toggle-group">
-      <label class="radio-option">
-        <input type="radio" name="preferences" value="single-post" checked>
-        <span>Every post</span>
-      </label>
-      <label class="radio-option">
-        <input type="radio" name="preferences" value="digest">
-        <span>Friday digest</span>
-      </label>
-    </div>
-  </div>
-  <button type="submit" id="subscribe-button">Subscribe</button>
-</div>
+        <div class="email-field-container">
+          <input type="email" id="subscriber-email" placeholder="Your email address" required>
+          <div class="radio-toggle-group">
+            <label class="radio-option">
+              <input type="radio" name="preferences" value="single-post" checked>
+              <span>Every post</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="preferences" value="digest">
+              <span>Friday digest</span>
+            </label>
+          </div>
+        </div>
+        <button type="submit" id="subscribe-button">Subscribe</button>
+      </div>
       <div id="subscription-message" class="subscription-message"></div>
     </form>
     <div class="footer-subscription-links">

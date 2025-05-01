@@ -21,6 +21,9 @@ function initSubscriptionForm() {
       showMessage('Please enter a valid email address.', 'error');
       return;
     }
+
+    // Get selected preference
+    const preferences = document.querySelector('input[name="preferences"]:checked').value;
     
     // Disable button and show loading state
     subscribeButton.disabled = true;
@@ -30,7 +33,7 @@ function initSubscriptionForm() {
       const response = await fetch('/api/subscribe', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email })
+        body: JSON.stringify({ email, preferences })
       });
       
       const result = await response.json();
