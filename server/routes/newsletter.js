@@ -10,6 +10,9 @@ const { sendEmail } = require('../sendEmail');
 router.post('/subscribe', rateLimiterMiddleware, async (req, res) => {
   try {
     const { email, name } = req.body;
+    
+    console.log("subscribe form", req.body);
+    return res.status(400).json({ error: 'Not implemented yet' });
 
     // Validate email
     if (!email || !isValidEmail(email)) {

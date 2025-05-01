@@ -294,6 +294,65 @@ footer {
   text-align: center;
 }
 
+.email-field-container {
+  flex: 1;
+  position: relative;
+}
+
+#subscriber-email {
+  width: 100%;
+  padding-right: 150px; /* Make room for the radio options */
+}
+
+.radio-toggle-group {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  gap: 8px;
+  background-color: #f5f5f5;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  padding: 2px;
+}
+
+.radio-option {
+  font-size: 0.8rem;
+  color: #555;
+  display: flex;
+  align-items: center;
+  padding: 2px 6px;
+  cursor: pointer;
+  border-radius: 3px;
+}
+
+.radio-option input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+/* Style for selected option */
+.radio-option input:checked + span {
+  color: #1a73e8;
+  font-weight: 500;
+}
+
+/* Highlight the label when selected */
+.radio-option input:checked {
+  background-color: #e8f0fe;
+}
+
+.radio-option:hover {
+  background-color: #eaeaea;
+}
+
+/* Make the entire container look like a toggle switch */
+.radio-option input:checked ~ .radio-option {
+  background-color: white;
+}
+
 /* Responsive adjustments */
 @media (max-width: 600px) {
   .footer-subscription-form-row {
