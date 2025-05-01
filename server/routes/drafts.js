@@ -1,8 +1,7 @@
 // routes/drafts.js
 const express = require('express');
 const router = express.Router();
-const { pool } = require('../utils');
-const { authMiddleware } = require('../middleware/auth');
+const { pool, authMiddleware } = require('../utils');
 
 console.log("drafts.js loaded");
 

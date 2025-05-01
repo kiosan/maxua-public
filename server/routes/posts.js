@@ -1,9 +1,7 @@
 // routes/posts.js
 const express = require('express');
 const router = express.Router();
-const { pool } = require('../utils');
-const { authMiddleware } = require('../middleware/authMiddleware');
-const { rateLimiterMiddleware } = require('../middleware/rateLimiter');
+const { pool, authMiddleware, rateLimiterMiddleware } = require('../utils');
 const { sharePostToTelegram } = require('../telegram');
 const { sharePostToBluesky } = require('../bluesky');
 const { sharePostToEmail } = require('../emailDelivery');

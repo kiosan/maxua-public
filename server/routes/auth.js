@@ -1,8 +1,7 @@
 // routes/auth.js
 const express = require('express');
 const router = express.Router();
-const { pool } = require('../utils');
-const { rateLimiterMiddleware } = require('../middleware/rateLimiter');
+const { pool, rateLimiterMiddleware } = require('../utils');
 
 // Login route
 router.post('/', rateLimiterMiddleware, async (req, res) => {

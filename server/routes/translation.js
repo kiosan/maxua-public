@@ -2,7 +2,7 @@
 const express = require('express');
 const router = express.Router();
 const fetch = require('node-fetch');
-const { rateLimiterMiddleware } = require('../middleware/rateLimiter');
+const { rateLimiterMiddleware } = require('../utils');
 
 router.post('/translate', rateLimiterMiddleware, async (req, res) => {
   try {

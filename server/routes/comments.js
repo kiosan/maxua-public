@@ -2,9 +2,8 @@
 const express = require('express');
 const router = express.Router();
 
-const { pool } = require('../utils');
+const { pool, rateLimiterMiddleware } = require('../utils');
 const { v4: uuidv4 } = require('uuid');
-const { rateLimiterMiddleware } = require('../middleware/rateLimiter');
 const { sendEmail } = require('../sendEmail');
 
 // Get comments for a post

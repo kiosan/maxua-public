@@ -4,7 +4,7 @@ const express = require('express');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const Sentry = require('@sentry/node');
-const { pool } = require('./utils');
+const { pool, rateLimiterMiddleware, authMiddleware } = require('./utils');
 
 // Import route modules
 const authRoutes = require('./routes/auth');
@@ -13,9 +13,6 @@ const draftsRoutes = require('./routes/drafts');
 const commentsRoutes = require('./routes/comments');
 const newsletterRoutes = require('./routes/newsletter');
 const feedsRoutes = require('./routes/feeds');
-
-// Import middleware if needed
-const { rateLimiterMiddleware } = require('./middleware/rateLimiter');
 
 // Import serverless adapters for SSR pages
 const postPage = require('./postPage');
