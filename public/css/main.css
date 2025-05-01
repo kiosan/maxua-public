@@ -1,5 +1,4 @@
 /* main.css - Consolidated styles for maxua.com
- * Combines: common.css, post.css, comments.css, audio-player.css, topic-tabs.css
  */
 
 /* ========================================================================== */
@@ -1049,20 +1048,6 @@ textarea#post-content {
         flex-direction: column;
         align-items: flex-start;
         gap: 0.3rem;
-    }
-    
-    /* Audio player adjustments */
-    .audio-player {
-        padding: 12px;
-    }
-    
-    .speed-control {
-        flex-wrap: wrap;
-    }
-    
-    .speed-control span {
-        width: 100%;
-        margin-bottom: 4px;
     }
 }
 
