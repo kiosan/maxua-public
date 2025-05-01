@@ -1,5 +1,5 @@
 // public/js/comments.js 
-import { getAnonId } from './reactions.js';
+import { getAnonId } from './app.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   const commentForm = document.getElementById('comment-form');

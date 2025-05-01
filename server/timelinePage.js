@@ -80,8 +80,7 @@ exports.handler = async (event, context) => {
       return {
         ...post,
         formatted_date: formatDate(post.created_at),
-        content_html: linkifyText(escapeHTML(post.content)),
-        reactions: null
+        content_html: linkifyText(escapeHTML(post.content))
       };
     });
     

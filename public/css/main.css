@@ -516,80 +516,6 @@ footer {
 }
 
 /* ========================================================================== */
-/* REACTION STYLES                                                            */
-/* ========================================================================== */
-
-/* Post reactions container */
-.post-reactions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-left: 15px;
-}
-
-/* Individual reaction */
-.reaction {
-    font-size: 0.9rem;
-    cursor: pointer;
-    transition: transform 0.2s ease, opacity 0.2s ease;
-    user-select: none;
-}
-
-.reaction:hover {
-    transform: scale(1.15);
-    opacity: 0.8;
-}
-
-.reaction.placeholder {
-    opacity: 0.5;
-    font-size: 0.9rem;
-    padding: 2px 4px;
-}
-
-/* Highlight user's own reactions */
-.reaction.user-reacted {
-    text-shadow: 0 0 3px rgba(0, 133, 255, 0.5);
-}
-
-/* Reaction Toolbar */
-.reaction-toolbar {
-    margin-top: 15px;
-    margin-bottom: 20px;
-    padding: 15px;
-    background-color: var(--color-card-bg);
-    border: 1px solid var(--color-card-border);
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-}
-
-.reaction-toolbar-label {
-    font-size: 0.9rem;
-    color: var(--color-secondary-text);
-    margin-bottom: 12px;
-}
-
-.reaction-options {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 18px;
-}
-
-.reaction-option {
-    font-size: 1.4rem;
-    cursor: pointer;
-    transition: transform 0.2s ease;
-    user-select: none;
-}
-
-.reaction-option:hover {
-    transform: scale(1.2);
-}
-
-.reaction-option.user-reacted {
-    opacity: 0.6;
-}
-
-/* ========================================================================== */
 /* COMMENTS SECTION                                                           */
 /* ========================================================================== */
 
@@ -1004,11 +930,6 @@ textarea#post-content {
         flex-wrap: wrap;
     }
     
-    .post-reactions {
-        margin-left: 0;
-        margin-top: 5px;
-    }
-    
     .comment-meta {
         flex-direction: column;
         align-items: flex-start;
@@ -1042,14 +963,6 @@ textarea#post-content {
     
     .single-post-container .post-content {
         font-size: 1.1rem;
-    }
-    
-    .reaction-options {
-        gap: 20px; /* Larger touch targets on mobile */
-    }
-    
-    .reaction-option {
-        font-size: 1.5rem; /* Larger emoji on mobile */
     }
     
     /* Adjust navigation for mobile */

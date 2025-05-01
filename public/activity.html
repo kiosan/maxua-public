@@ -54,7 +54,6 @@
 
 const baseSummary = {
   post: `✍️ New post: "${item.data?.snippet || '...'}"`,
-  reaction: `🔁 Reaction on post ${item.post_id}: ${item.data?.emoji}`,
   view: `👁️ View on post ${item.post_id}`,
   session: `🔐 New session from ${item.data?.device || 'Unknown'}`,
   timeline: `🗂️ Timeline opened${item.data?.referrer ? ` (ref: ${item.data.referrer})` : ''}`

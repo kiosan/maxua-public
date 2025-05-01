@@ -40,7 +40,6 @@
           <div class="post-date">{{post.formattedDate}}
           <a href="#" class="translate-link" data-post-id="{{post.id}}" data-translated="false">Translate</a>
           </div>
-          <div class="post-reactions"></div>
         </div>
 
     {{#if post.transistor_fm_code}}
@@ -48,24 +47,6 @@
          frameborder="no" scrolling="no" seamless=""
          src="https://share.transistor.fm/e/{{post.transistor_fm_code}}"></iframe>
     {{/if}}
-
-        <!-- Always visible reaction toolbar -->
-        <div class="reaction-toolbar" data-post-id="{{post.id}}"
-                    style="display: none">
-          <div class="reaction-toolbar-label">React to this post:</div>
-          <div class="reaction-options">
-            <span class="reaction-option" data-emoji="🔥">🔥</span>
-            <span class="reaction-option" data-emoji="👍">👍</span>
-            <span class="reaction-option" data-emoji="🤯">🤯</span>
-            <span class="reaction-option" data-emoji="😂">😂</span>
-            <span class="reaction-option" data-emoji="👎">👎</span>
-            <span class="reaction-option" data-emoji="👀">👀</span>
-            <span class="reaction-option" data-emoji="❤️">❤️</span>
-            <span class="reaction-option" data-emoji="💯">💯</span>
-            <span class="reaction-option" data-emoji="👏">👏</span>
-            <span class="reaction-option" data-emoji="🎉">🎉</span>
-          </div>
-        </div>
 
         <div class="post-topic">
         {{#if post.topic_name}}

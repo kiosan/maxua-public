@@ -1,8 +1,27 @@
 // public/js/app.js
 
 import { isDevBypassEnabled, isAuthenticated } from './auth.js';
-import { initReactions, getAnonId } from './reactions.js';
 import { log, isDev } from './logger.js';
+
+const ANON_ID_KEY = 'anon_id';
+
+/**
+ * Get or generate anonymous ID for the current user
+ * @returns {string} Anonymous user ID
+ */
+export function getAnonId() {
+  let id = localStorage.getItem(ANON_ID_KEY);
+  let legacy_id = localStorage.getItem('microblog_anon_id');
+  if (!id) {
+    if (legacy_id) {
+      id = legacy_id;
+    } else {
+      id = 'anon_' + Math.random().toString(36).substring(2, 12);
+    }
+    localStorage.setItem(ANON_ID_KEY, id);
+  }
+  return id;
+}
 
 /**
  * Track page view for analytics
