@@ -37,6 +37,7 @@ Sentry.init({
 // Basic Middleware
 app.use(express.json());
 app.use(cookieParser());
+app.use(express.urlencoded({ extended: true })); // for HTMX
 
 // CORS middleware
 app.use(cors({
