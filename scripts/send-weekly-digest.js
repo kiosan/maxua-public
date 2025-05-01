@@ -43,6 +43,7 @@ async function main() {
 
     if (!result.success) {
       console.error(`❌ Failed to send weekly digest: ${result.error || 'Unknown error'}`);
+      console.error(result);
       process.exit(1);
     }
 

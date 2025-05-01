@@ -78,7 +78,7 @@ async function sendWeeklyDigest(options = {}) {
     const digestDate = today.toISOString().slice(0, 10).replace(/-/g, '');
     const digestId = `digest#${digestDate}`;
     
-    const subj = `maxua.com weekly digest (${today.toLocaleDateString()})`;
+    const subj = `maxua.com Friday digest (${today.toLocaleDateString()})`;
     
     // Check if this digest was already sent today
     if (!dryRun && !testEmail) {
@@ -253,7 +253,7 @@ function formatPostsForEmail(posts) {
     return {
       ...post,
       formatted_date: formatDate(post.created_at),
-      content_html: linkifyContent(escapedContent)
+      content_html: linkifyContent(escapedContent).replace(/\n/g, '<br>')
     };
   });
 }
