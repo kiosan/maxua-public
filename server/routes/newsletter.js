@@ -9,10 +9,14 @@ const { sendEmail } = require('../sendEmail');
 // Subscribe to the newsletter
 router.post('/subscribe', rateLimiterMiddleware, async (req, res) => {
   try {
-    const { email, name } = req.body;
-    
-    console.log("subscribe form", req.body);
-    return res.status(400).json({ error: 'Not implemented yet' });
+    const { email, preferences } = req.body;
+
+    const preferenceType = preferences || 'single-post';
+
+    // Validate preference value
+    if (!['single-post', 'digest'].includes(preferenceType)) {
+      return res.status(400).json({ error: 'Invalid preference type' });
+    }
 
     // Validate email
     if (!email || !isValidEmail(email)) {
@@ -21,39 +25,53 @@ router.post('/subscribe', rateLimiterMiddleware, async (req, res) => {
 
     // Check if email already exists
     const existingResult = await pool.query(
-      'SELECT id, confirmed FROM subscribers WHERE email = $1',
+      'SELECT id, confirmed, preferences FROM subscribers WHERE email = $1',
       [email]
     );
-
+    
     if (existingResult.rows.length > 0) {
       const subscriber = existingResult.rows[0];
-      
-      // If already confirmed, just return success
+
       if (subscriber.confirmed) {
-        return res.json({ 
-          success: true, 
-          message: 'You are already subscribed to Max Ischenko\'s blog.',
-          alreadySubscribed: true
-        });
+        // If they're trying to subscribe to the same preference they already have
+        if (subscriber.preferences === preferenceType) {
+          return res.json({ 
+            success: true, 
+            message: 'You are already subscribed with this delivery preference.',
+            alreadySubscribed: true
+          });
+        } else {
+          await pool.query(
+            'UPDATE subscribers SET preferences = $1 WHERE id = $2',
+            [preferenceType, subscriber.id]
+          );
+
+          return res.json({ 
+            success: true, 
+            message: `Your subscription has been updated to ${preferenceType === 'digest' ? 'weekly digest' : 'every post'}.`,
+            preferenceUpdated: true
+          });
+        }
       }
       
       // If not confirmed, generate new confirmation token and send again
       const confirmationToken = uuidv4();
       
       await pool.query(
-        'UPDATE subscribers SET confirmation_token = $1, created_at = NOW() WHERE id = $2',
-        [confirmationToken, subscriber.id]
+        'UPDATE subscribers SET confirmation_token = $1, preferences = $2, created_at = NOW() WHERE id = $3',
+        [confirmationToken, preferenceType, subscriber.id]
       );
       
       // Send confirmation email
-      await sendConfirmationEmail(email, name || '', confirmationToken);
+      await sendConfirmationEmail(email, confirmationToken, preferenceType);
       
       return res.json({ 
         success: true, 
         message: 'Please check your email to confirm your subscription.',
         needsConfirmation: true
       });
-    }
+
+    } // already existing subscriber 
 
     // New subscriber - generate tokens
     const confirmationToken = uuidv4();
@@ -61,12 +79,12 @@ router.post('/subscribe', rateLimiterMiddleware, async (req, res) => {
 
     // Insert into subscribers table
     await pool.query(
-      'INSERT INTO subscribers (email, name, confirmation_token, unsubscribe_token) VALUES ($1, $2, $3, $4)',
-      [email, name || null, confirmationToken, unsubscribeToken]
+      'INSERT INTO subscribers (email, confirmation_token, unsubscribe_token, preferences) VALUES ($1, $2, $3, $4)',
+      [email, confirmationToken, unsubscribeToken, preferenceType]
     );
 
     // Send confirmation email
-    await sendConfirmationEmail(email, name || '', confirmationToken);
+    await sendConfirmationEmail(email, confirmationToken, preferenceType);
 
     return res.json({ 
       success: true, 
@@ -92,7 +110,7 @@ router.get('/confirmSubscription', async (req, res) => {
 
     // Look up the subscription by confirmation token
     const result = await pool.query(
-      'SELECT id, email, name FROM subscribers WHERE confirmation_token = $1',
+      'SELECT id, email FROM subscribers WHERE confirmation_token = $1',
       [token]
     );
 
@@ -112,7 +130,7 @@ router.get('/confirmSubscription', async (req, res) => {
     );
     
     // Send notification email to admin
-    await sendNotificationEmail(subscriber.email, subscriber.name);
+    await sendNotificationEmail(subscriber.email);
 
     return res.status(200).send(generateHtmlResponse(
       'Subscription Confirmed',
@@ -143,7 +161,7 @@ router.get('/unsubscribe', async (req, res) => {
 
     // Look up the subscription by unsubscribe token
     const result = await pool.query(
-      'SELECT id, email, name FROM subscribers WHERE unsubscribe_token = $1',
+      'SELECT id, email FROM subscribers WHERE unsubscribe_token = $1',
       [token]
     );
 
@@ -160,12 +178,6 @@ router.get('/unsubscribe', async (req, res) => {
     await pool.query(
       'DELETE FROM subscribers WHERE id = $1',
       [subscriber.id]
-    );
-
-    // Log the unsubscribe
-    await pool.query(
-      'INSERT INTO activity_log(type, data) VALUES ($1, $2)',
-      ['unsubscribe', { email: subscriber.email, name: subscriber.name || null }]
     );
 
     return res.status(200).send(generateHtmlResponse(
@@ -190,9 +202,14 @@ function isValidEmail(email) {
 }
 
 // Helper function to send confirmation email
-async function sendConfirmationEmail(email, name, token) {
+async function sendConfirmationEmail(email, token, preferenceType) {
   const confirmUrl = `https://maxua.com/api/confirmSubscription?token=${token}`;
-  const greeting = name ? `Hi ${name},` : 'Hi there,';
+  const greeting = 'Hi there,';
+
+  const preferenceText = preferenceType === 'digest' ? 
+    ' for weekly digest emails (sent every Friday)' : 
+    '';
+  
   
   const html = `
   <!DOCTYPE html>
@@ -212,7 +229,7 @@ async function sendConfirmationEmail(email, name, token) {
               
               <p style="margin: 0 0 20px 0; padding: 0; text-align: left;">${greeting}</p>
               
-              <p style="margin: 0 0 20px 0; padding: 0; text-align: left;">Thank you for subscribing to Max Ischenko's blog.</p>
+              <p style="margin: 0 0 20px 0; padding: 0; text-align: left;">Thank you for subscribing to Max Ischenko's blog${preferenceText}.</p>
               
               <p style="margin: 0 0 20px 0; padding: 0; text-align: left;">Please confirm your subscription by clicking the button below:</p>
               
@@ -248,11 +265,10 @@ async function sendConfirmationEmail(email, name, token) {
 }
 
 // Helper function to send notification email to admin
-async function sendNotificationEmail(subscriberEmail, subscriberName) {
+async function sendNotificationEmail(subscriberEmail) {
   try {
-    const nameInfo = subscriberName ? ` (${subscriberName})` : '';
     const subject = `New subscriber on maxua.com`;
-    const text = `\n\nEmail: ${subscriberEmail}${nameInfo}\n\nTime: ${new Date().toLocaleString()}`;
+    const text = `\n\nEmail: ${subscriberEmail}`;
     
     await sendEmail({
       to: 'ischenko@gmail.com', 

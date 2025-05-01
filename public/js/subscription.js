@@ -39,15 +39,8 @@ function initSubscriptionForm() {
       const result = await response.json();
       
       if (response.ok && result.success) {
-        // Show success message
-        if (result.alreadySubscribed) {
-          showMessage('You are already subscribed to this blog!', 'success');
-        } else {
-          showMessage('Please check your email to confirm your subscription.', 'success');
-        }
-        
-        // Clear the form
-        emailInput.value = '';
+        showMessage(result.message, 'success');
+        emailInput.value = ''; // Clear the form
       } else {
         throw new Error(result.error || 'Failed to subscribe');
       }
