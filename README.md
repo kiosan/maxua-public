@@ -4,7 +4,7 @@ This project powers [maxua.com](https://maxua.com) and can be adapted to run you
 
 Built with Claude and other LLM tools. 
 
-Feedback, ideas, bug reports are always welcome!
+Feedback, ideas, bug reports are always welcome! I also really really need some frontend help -- pls see [issues](https://github.com/imax/maxua-public/issues) page.
 
 Email: ischenko@gmail.com or Tg @maxua.
 
