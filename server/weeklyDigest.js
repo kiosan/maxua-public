@@ -78,7 +78,7 @@ async function sendWeeklyDigest(options = {}) {
     const digestDate = today.toISOString().slice(0, 10).replace(/-/g, '');
     const digestId = `digest#${digestDate}`;
     
-    const subj = `maxua.com Friday digest (${today.toLocaleDateString()})`;
+    const subj = `My weekly digest for ${today.toLocaleDateString()}`;
     
     // Check if this digest was already sent today
     if (!dryRun && !testEmail) {
