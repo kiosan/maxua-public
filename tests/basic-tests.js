@@ -95,6 +95,7 @@ async function runTests() {
   // Single post page
   if (await testEndpoint('/p/1', {
     contentChecks: [
+      'asdf dsaf', // post content
       '<div class="post-card"',
       'data-post-id="1"',
       'class="post-content"',
@@ -119,9 +120,10 @@ async function runTests() {
   })) passed++; else failed++;
   
   // Search with query
-  if (await testEndpoint('/search?q=Coming+out', {
+  if (await testEndpoint('/search?q=coming+out', {
     contentChecks: [
-      'Found 1 result for "Coming out"',
+      'Found 1 result',
+      'розповідаю над чим працюю',
       'href="/p/84' // Link to the post
     ]
   })) passed++; else failed++;

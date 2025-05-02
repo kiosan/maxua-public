@@ -10,7 +10,7 @@
     "deploy": "fly deploy",
     "test": "node tests/basic-tests.js",
     "test:verbose": "TEST_VERBOSE=true node tests/basic-tests.js",
-    "test:local": "TEST_BASE_URL=http://localhost:8080 node tests/basic-tests.js"
+    "test:local": "TEST_BASE_URL=http://localhost:8888 node tests/basic-tests.js"
   },
   "dependencies": {
     "@atproto/api": "^0.10.5",
