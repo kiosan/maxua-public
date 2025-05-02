@@ -87,7 +87,7 @@ a:hover {
 
 footer a {
     color: var(--color-secondary-text);
-    text-decoration: none;
+    text-decoration: underline;
 }
 
 footer a:hover {
