@@ -2,9 +2,8 @@
 const express = require('express');
 const router = express.Router();
 
-const { pool, rateLimiterMiddleware } = require('../utils');
+const { pool, rateLimiterMiddleware, sendEmail } = require('../utils');
 const { v4: uuidv4 } = require('uuid');
-const { sendEmail } = require('../sendEmail');
 
 // Add this endpoint to handle new comment submissions
 router.post('/', rateLimiterMiddleware, async (req, res) => {

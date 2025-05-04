@@ -1,7 +1,6 @@
 // functions/subscribe.js
-const { pool, wrap, getCorsHeaders } = require('./utils');
+const { pool, wrap, sendEmail } = require('./utils');
 const { v4: uuidv4 } = require('uuid');
-const { sendEmail } = require('./sendEmail');
 const { render } = require('./templateEngine');
 
 exports.handler = wrap(async (event, context, headers) => {

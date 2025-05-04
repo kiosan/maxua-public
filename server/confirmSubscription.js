@@ -1,6 +1,5 @@
 // functions/confirmSubscription.js
-const { pool, wrap, getCorsHeaders } = require('./utils');
-const { sendEmail } = require('./sendEmail');
+const { pool, wrap, sendEmail } = require('./utils');
 
 exports.handler = wrap(async (event, context, headers) => {
   // Only handle GET requests with a token

@@ -4,6 +4,9 @@ const crypto = require('crypto');
 const Sentry = require('@sentry/node');
 const { Pool } = require('pg');
 
+const { Resend } = require('resend');
+const resend = new Resend(process.env.RESEND_API_KEY);
+
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: { rejectUnauthorized: false },
@@ -258,9 +261,29 @@ function closePool() {
   return pool.end();
 }
 
+async function sendEmail({ to, subject, text, html = null, reply_to = null }) {
+  if (!to || !subject || !text) {
+    throw new Error('Missing required fields: to, subject or text');
+  }
+
+  const { data, error } = await resend.emails.send({
+    from: 'Max Ischenko <hello@maxua.com>',
+    to,
+    subject,
+    text,
+    html: html || `<p>${text}</p>`,
+    ...(reply_to && { reply_to: reply_to }),
+  });
+
+  if (error) throw new Error(error.message);
+  return data.id;
+}
+
+
 module.exports = { 
   pool, 
   wrap, 
+  sendEmail,
   rateLimit,
   getCorsHeaders, 
   getETagHeaders,

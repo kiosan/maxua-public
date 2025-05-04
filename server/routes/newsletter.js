@@ -2,8 +2,7 @@
 const express = require('express');
 const router = express.Router();
 const { v4: uuidv4 } = require('uuid');
-const { pool, rateLimiterMiddleware } = require('../utils');
-const { sendEmail } = require('../sendEmail');
+const { pool, rateLimiterMiddleware, sendEmail } = require('../utils');
 
 // Subscribe to the newsletter
 router.post('/subscribe', rateLimiterMiddleware, async (req, res) => {
