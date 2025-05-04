@@ -32,7 +32,7 @@ router.post('/publish', authMiddleware, async (req, res) => {
     
     // Insert post with topic_id if provided
     const result = await pool.query(
-      'INSERT INTO posts (content, topic_id, image_url) VALUES ($1, $2, $3, $4) RETURNING *', 
+      'INSERT INTO posts (content, preview_text, topic_id, image_url) VALUES ($1, $2, $3, $4) RETURNING *', 
       [content, previewText, topicId, image_url]
     );
 
