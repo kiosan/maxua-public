@@ -502,55 +502,76 @@ footer {
     font-weight: 500;
 }
 
+.topic-tag.active {
+    color: var(--color-accent);
+    font-weight: 500;
+}
+
 /* Post navigation */
+
 .post-navigation {
-    margin: 2rem 0 0 0;
+    margin: 2rem 0;
 }
 
 .post-nav-links {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    width: 100%;
 }
 
 .post-nav-link {
-    border-radius: 6px;
-    font-size: 0.95rem;
-    font-weight: 500;
+    padding: 1rem;
+    background-color: #f8f9fa;
+    border-radius: 8px;
     color: var(--color-accent);
     text-decoration: none;
-    transition: all 0.2s ease;
-    display: inline-flex;
-    align-items: center;
+    transition: background-color 0.2s;
+    max-width: 45%;
 }
 
 .post-nav-link:hover {
-    background-color: rgba(26, 115, 232, 0.1);
+    background-color: #eef1f5;
     text-decoration: none;
 }
 
-.post-nav-link small {
-    color: var(--color-secondary-text);
-    font-size: 0.75rem;
-    margin: 0 4px;
-    opacity: 0.7;
+.post-nav-prev {
+    text-align: left;
 }
 
-.post-nav-arrow {
-    font-size: 1.1rem;
-    line-height: 1;
-    margin: 0 4px;
+.post-nav-next {
+    text-align: right;
 }
 
-.post-nav-disabled {
-    color: var(--color-secondary-text);
-    opacity: 0.5;
-    cursor: default;
-}
-
-.topic-tag.active {
-    color: var(--color-accent);
+.post-nav-direction {
+    display: block;
+    font-size: 0.9rem;
     font-weight: 500;
+    color: var(--color-accent);
+    margin-bottom: 0.25rem;
+}
+
+.post-nav-text {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--color-secondary-text);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Mobile adjustments */
+@media (max-width: 600px) {
+    .post-nav-link {
+        padding: 0.75rem;
+    }
+    
+    .post-nav-text {
+        display: none;
+    }
+    
+    .post-nav-direction {
+        margin-bottom: 0;
+    }
 }
 
 /* Translate button */
@@ -944,23 +965,6 @@ textarea#post-content {
     
     .single-post-container .post-content {
         font-size: 1.1rem;
-    }
-    
-    /* Adjust navigation for mobile */
-    .post-nav-links {
-        flex-direction: row;
-        gap: 8px;
-    }
-    
-    .post-nav-link {
-        padding: 8px 12px;
-        font-size: 0.9rem;
-    }
-    
-    .post-nav-arrow,
-    .post-nav-home-icon {
-        margin: 0;
-        font-size: 1.4rem;
     }
 }
 
