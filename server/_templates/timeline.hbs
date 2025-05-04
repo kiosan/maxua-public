@@ -112,14 +112,6 @@ button.load-more {
                   <a href="/t/{{this.topic_slug}}" class="topic-badge">#{{this.topic_name}}</a>
                 {{/neq}}
                 {{/if}}
-
-                {{#if this.comment_count}}
-                {{#if (neq this.comment_count 0)}}
-                <a href="/p/{{this.id}}#comments" class="comments-badge">
-                  💬 {{this.comment_count}}
-                </a>
-                {{/if}}
-                {{/if}}
               </div>
             </div>
           </div>

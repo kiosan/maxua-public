@@ -85,23 +85,12 @@
     </div>
     {{/if}}
 
-
-    {{#if enableComments}}
-    <div id="comments-container">
-      {{{comments}}}
-    </div>
-    {{/if}}
-    
   </main>
 
   {{> footer}}
 
   <script type="module" src="/js/app.js"></script>
   <script type="module" src="/js/subscription.js"></script>
-  
-  {{#if enableComments}}
-  <script type="module" src="/js/comments.js"></script>
-  {{/if}}
   
   <!-- Keyboard navigation script -->
   <script>

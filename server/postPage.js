@@ -10,7 +10,6 @@ const {
 } = require('./seo');
 
 // Register partials for reuse
-templateEngine.registerPartial('comments', 'comments');
 templateEngine.registerPartial('subscription-form', 'subscription-form');
 
 console.log("postPage loaded");
@@ -142,9 +141,6 @@ async function prepareTemplateData(post, event, navLinks) {
   // Format the date
   const formattedDate = formatDate(post.created_at);
   
-  // Get comments template
-  const commentsHtml = templateEngine.render('comments');
-  
   // Extract description for meta tags
   const description = extractDescription(post.content, 160);
   
@@ -199,8 +195,6 @@ async function prepareTemplateData(post, event, navLinks) {
       formattedDate
     },
     postTitle: previewTitle,
-    comments: commentsHtml,
-    enableComments: true,
     metaTags,
     structuredData,
     navLinks
