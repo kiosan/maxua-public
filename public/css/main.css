@@ -520,17 +520,11 @@ footer {
 }
 
 .post-nav-link {
-    padding: 1rem;
-    background-color: #f8f9fa;
-    border-radius: 8px;
-    color: var(--color-accent);
     text-decoration: none;
-    transition: background-color 0.2s;
     max-width: 45%;
 }
 
 .post-nav-link:hover {
-    background-color: #eef1f5;
     text-decoration: none;
 }
 
