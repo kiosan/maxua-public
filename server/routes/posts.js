@@ -13,14 +13,27 @@ router.post('/publish', authMiddleware, async (req, res) => {
       return res.status(400).json({ error: 'Missing or invalid content' });
     }
 
+    // Generate preview text from content
+    const content = req.body.content;
+    let previewText = content;
+    
+    if (content.length > 40) {
+      // Try to cut at a space, not mid-word
+      const truncateAt = content.lastIndexOf(' ', 37);
+      previewText = content.substring(0, truncateAt > 0 ? truncateAt : 37) + '..';
+    }
+    
+    // Remove any newlines from preview text
+    previewText = previewText.replace(/\n/g, ' ').trim();
+
     // Check if a topic was specified
     const topicId = req.body.topic_id || null;
     const image_url = req.body.image_url || null;
     
     // Insert post with topic_id if provided
     const result = await pool.query(
-      'INSERT INTO posts (content, topic_id, image_url) VALUES ($1, $2, $3) RETURNING *', 
-      [req.body.content, topicId, image_url]
+      'INSERT INTO posts (content, topic_id, image_url) VALUES ($1, $2, $3, $4) RETURNING *', 
+      [content, previewText, topicId, image_url]
     );
 
     const newPost = result.rows[0];

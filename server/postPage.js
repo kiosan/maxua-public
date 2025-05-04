@@ -89,19 +89,40 @@ async function fetchPrevNextPostIds(currentPostId) {
       SELECT created_at FROM posts WHERE id = $1
     )
     SELECT 
-      (SELECT id FROM posts WHERE created_at < (SELECT created_at FROM current_post) AND id != $1 ORDER BY created_at DESC LIMIT 1) AS prev_post_id,
-      (SELECT id FROM posts WHERE created_at > (SELECT created_at FROM current_post) AND id != $1 ORDER BY created_at ASC LIMIT 1) AS next_post_id
+      prev.id AS prev_id, 
+      prev.preview_text AS prev_preview,
+      next.id AS next_id, 
+      next.preview_text AS next_preview
+    FROM current_post cp
+    LEFT JOIN LATERAL (
+      SELECT id, preview_text
+      FROM posts
+      WHERE created_at < cp.created_at
+      ORDER BY created_at DESC
+      LIMIT 1
+    ) prev ON true
+    LEFT JOIN LATERAL (
+      SELECT id, preview_text
+      FROM posts
+      WHERE created_at > cp.created_at
+      ORDER BY created_at ASC
+      LIMIT 1
+    ) next ON true
   `;
   
   const result = await pool.query(query, [currentPostId]);
-  
-  if (!result.rows.length) {
-    return { prevPost: null, nextPost: null };
+    
+  if (result.rows.length === 0) {
+    return {};
   }
-  
+
+  const data = result.rows[0];
+
   return {
-    prevPost: result.rows[0].prev_post_id,
-    nextPost: result.rows[0].next_post_id
+    prevPostId: data.prev_id || null,
+    prevPostText: data.prev_preview || null,
+    nextPostId: data.next_id || null,
+    nextPostText: data.next_preview || null
   };
 }
 
@@ -182,12 +203,7 @@ async function prepareTemplateData(post, event, navLinks) {
     enableComments: true,
     metaTags,
     structuredData,
-    
-    // Add navigation data for previous/next links
-    navigation: {
-      prevPostId: navLinks.prevPost,
-      nextPostId: navLinks.nextPost,
-    }
+    navLinks
   };
 }
 

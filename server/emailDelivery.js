@@ -48,13 +48,13 @@ async function sharePostToEmail(post) {
   console.log(`Preparing to send batch email to ${subscribers.length} subscribers`);
 
   // Format subject line
-  let subject = post.content;
+  let subject = post.preview_text || post.content;
   
   // Truncate to reasonable length for email subject
   if (subject.length > 40) {
     // Try to cut at a space, not mid-word
     const truncateAt = subject.lastIndexOf(' ', 37);
-    subject = subject.substring(0, truncateAt > 0 ? truncateAt : 37) + '...';
+    subject = subject.substring(0, truncateAt > 0 ? truncateAt : 37) + '..';
   }
   
   // Remove any newlines from subject

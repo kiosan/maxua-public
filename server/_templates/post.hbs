@@ -12,12 +12,13 @@
   <link rel="preload" href="/css/main.css?v=1235" as="style">
   <link rel="stylesheet" href="/css/main.css?v=1235">
   
+
   <!-- Prefetch previous and next posts for instant navigation -->
-  {{#if navigation.prevPostId}}
-  <link rel="prefetch" href="/p/{{navigation.prevPostId}}">
+  {{#if navLinks.prevPostId}}
+  <link rel="prefetch" href="/p/{{navLinks.prevPostId}}">
   {{/if}}
-  {{#if navigation.nextPostId}}
-  <link rel="prefetch" href="/p/{{navigation.nextPostId}}">
+  {{#if navLinks.nextPostId}}
+  <link rel="prefetch" href="/p/{{navLinks.nextPostId}}">
   {{/if}}
 </head>
 <body>
@@ -57,19 +58,27 @@
         </div>
     </div>
         
-
-    {{#if navigation}}
+    {{#if navLinks}}
     <div class="post-navigation">
       <div class="post-nav-links">
-        {{#if navigation.prevPostId}}
-        <a href="/p/{{navigation.prevPostId}}" class="post-nav-link post-nav-prev" rel="prev" id="prev-post-link">
-          <span class="post-nav-arrow">←</span> <span class="post-nav-label">Older post</span> 
+        {{#if navLinks.prevPostId}}
+        <a href="/p/{{navLinks.prevPostId}}" class="post-nav-link post-nav-prev" rel="prev" id="prev-post-link">
+          <span class="post-nav-arrow">←</span> <span class="post-nav-label">
+          {{#if navLinks.prevPostText}}
+      {{navLinks.prevPostText}}
+    {{else}}
+      Older post
+    {{/if}}</span> 
         </a>
         {{/if}}
-        {{#if navigation.nextPostId}} 
-        <a href="/" class="post-nav-link">⌂ Home</a>
-        <a href="/p/{{navigation.nextPostId}}" class="post-nav-link post-nav-next" rel="next" id="next-post-link">
-          <span class="post-nav-label">Newer post</span><span class="post-nav-arrow">→</span>
+        {{#if navLinks.nextPostId}} 
+        <a href="/p/{{navLinks.nextPostId}}" class="post-nav-link post-nav-next" rel="next" id="next-post-link">
+          <span class="post-nav-label">
+          {{#if navLinks.nextPostText}}
+      {{navLinks.nextPostText}}
+    {{else}} Newer post
+    {{/if}}</span> 
+          <span class="post-nav-arrow">→</span>
         </a>
         {{/if}}
       </div>
