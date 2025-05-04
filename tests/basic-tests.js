@@ -99,7 +99,7 @@ async function runTests() {
       '<div class="post-card"',
       'data-post-id="1"',
       'class="post-content"',
-      'class="comments-section"'
+      'class="comment-form"'
     ]
   })) passed++; else failed++;
   
