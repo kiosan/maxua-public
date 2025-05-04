@@ -9,9 +9,6 @@ const {
   extractDescription
 } = require('./seo');
 
-// Register partials for reuse
-templateEngine.registerPartial('subscription-form', 'subscription-form');
-
 console.log("postPage loaded");
 
 /**

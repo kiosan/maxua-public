@@ -20,6 +20,7 @@
   {{#if navLinks.nextPostId}}
   <link rel="prefetch" href="/p/{{navLinks.nextPostId}}">
   {{/if}}
+  <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
 <body>
   <main>
@@ -57,6 +58,91 @@
         {{/if}}
         </div>
     </div>
+
+<div class="comment-form-container" style="margin-top: 3rem;">
+  <h3>Leave a private comment</h3>
+  
+  <form 
+    x-data="{
+      postId: {{post.id}},
+      content: '',
+      author: localStorage.getItem('comment_author') || '',
+      email: localStorage.getItem('comment_email') || '',
+      status: '',
+      statusType: '',
+      loading: false,
+      
+      async submitComment() {
+        if (!this.content || !this.author) return;
+        
+        this.loading = true;
+        this.status = '';
+        
+        try {
+          const response = await fetch('/api/comments', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+              postId: this.postId, 
+              content: this.content, 
+              author: this.author, 
+              email: this.email 
+            })
+          });
+          
+          const result = await response.json();
+          
+          if (response.ok) {
+            this.status = 'Comment submitted successfully. Thank you!';
+            this.statusType = 'success';
+            this.content = '';
+            
+            // Save author info
+            localStorage.setItem('comment_author', this.author);
+            if (this.email) localStorage.setItem('comment_email', this.email);
+          } else {
+            this.status = result.error || 'Failed to submit comment';
+            this.statusType = 'error';
+          }
+        } catch (error) {
+          this.status = 'An error occurred. Please try again later.';
+          this.statusType = 'error';
+        } finally {
+          this.loading = false;
+        }
+      }
+    }"
+    @submit.prevent="submitComment"
+    class="comment-form"
+  >
+    <div class="comment-field-container">
+      <textarea 
+        x-model="content"
+        placeholder="Your message..." 
+        required
+      ></textarea>
+    </div>
+    
+    <div class="comment-author-fields">
+      <div class="input-row">
+        <input type="text" x-model="author" placeholder="Your name" required>
+        <input type="email" x-model="email" placeholder="Email (optional)">
+      </div>
+    </div>
+    
+    <button type="submit" :disabled="loading">
+      <span x-text="loading ? 'Submitting...' : 'Submit Comment'"></span>
+    </button>
+    
+    <div 
+      x-show="status" 
+      x-text="status" 
+      :class="`comment-status ${statusType}`"
+    ></div>
+  </form>
+  
+  <p class="comment-privacy-note">Comments are private by default and only visible to the blog author.</p>
+</div>
         
     {{#if navLinks}}
     <div class="post-navigation">

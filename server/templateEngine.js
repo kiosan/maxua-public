@@ -91,8 +91,9 @@ Handlebars.registerHelper('neq', function (a, b, options) {
 
 // pre-register common snippets available to all
 registerPartial('footer', 'footer'); 
-registerPartial('profile-header', 'profile-header');
 registerPartial('email-digest', 'email-digest');
+registerPartial('profile-header', 'profile-header');
+registerPartial('subscription-form', 'subscription-form');
 
 module.exports = {
   render,
