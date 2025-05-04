@@ -74,15 +74,8 @@ async function sharePostToTelegram(post) {
   // Format the message
   let message = escapedContent.split('\n').join('\n');
 
-  // Add post link and info at the end
-  // message += `\n\n<b>${postUrl}</b>`
-   message += `\n\n<a href="${postUrl}"><b>Обговорення</b></a>`;
-  // message += ` · <a href="${postUrl}#comments"><b>Comments</b></a>`;
-  
-  // If the post has a topic, include it
-  if (0 && post.topic_name) {
-    message += `\nTopic: ${post.topic_name}`;
-  }
+  // Add post link at the end
+  message += `\n\n<b>${postUrl}</b>`;
   
   // Send to Telegram
   const result = await sendTelegramMessage(message);
