@@ -59,6 +59,33 @@
         </div>
     </div>
 
+    {{#if navLinks}}
+    <div class="post-navigation">
+      <div class="post-nav-links">
+        {{#if navLinks.prevPostId}}
+        <a href="/p/{{navLinks.prevPostId}}" class="post-nav-link post-nav-prev" rel="prev" id="prev-post-link">
+          <span class="post-nav-arrow">←</span> <span class="post-nav-label">
+          {{#if navLinks.prevPostText}}
+      {{navLinks.prevPostText}}
+    {{else}}
+      Older post
+    {{/if}}</span> 
+        </a>
+        {{/if}}
+        {{#if navLinks.nextPostId}} 
+        <a href="/p/{{navLinks.nextPostId}}" class="post-nav-link post-nav-next" rel="next" id="next-post-link">
+          <span class="post-nav-label">
+          {{#if navLinks.nextPostText}}
+      {{navLinks.nextPostText}}
+    {{else}} Newer post
+    {{/if}}</span> 
+          <span class="post-nav-arrow">→</span>
+        </a>
+        {{/if}}
+      </div>
+    </div>
+    {{/if}}
+
 <div class="comment-form-container" style="margin-top: 3rem;">
   <h3>Share your thoughts</h3>
   
@@ -147,38 +174,12 @@
       x-text="status" 
       :class="`comment-status ${statusType}`"
     ></div>
-  </form>
   
-  <p class="comment-privacy-note">Comments are private by default and only visible to the blog author.</p>
+  <p class="comment-privacy-note">Comments are private by default--unless
+  pinned by the blog owner.</p>
+  </form>
 </div>
         
-    {{#if navLinks}}
-    <div class="post-navigation">
-      <div class="post-nav-links">
-        {{#if navLinks.prevPostId}}
-        <a href="/p/{{navLinks.prevPostId}}" class="post-nav-link post-nav-prev" rel="prev" id="prev-post-link">
-          <span class="post-nav-arrow">←</span> <span class="post-nav-label">
-          {{#if navLinks.prevPostText}}
-      {{navLinks.prevPostText}}
-    {{else}}
-      Older post
-    {{/if}}</span> 
-        </a>
-        {{/if}}
-        {{#if navLinks.nextPostId}} 
-        <a href="/p/{{navLinks.nextPostId}}" class="post-nav-link post-nav-next" rel="next" id="next-post-link">
-          <span class="post-nav-label">
-          {{#if navLinks.nextPostText}}
-      {{navLinks.nextPostText}}
-    {{else}} Newer post
-    {{/if}}</span> 
-          <span class="post-nav-arrow">→</span>
-        </a>
-        {{/if}}
-      </div>
-    </div>
-    {{/if}}
-
   </main>
 
   {{> footer}}
