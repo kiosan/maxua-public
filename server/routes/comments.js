@@ -43,9 +43,7 @@ router.post('/', rateLimiterMiddleware, async (req, res) => {
       // Generate email body
       const emailBody = `
 \n\n
-New comment on post #${postId}:
-\n\n
-From: ${author} ${email ? `<${email}>` : '(no email provided)'}
+${author} ${email} on post #${postId}:
 \n\n
 ${content}
 
