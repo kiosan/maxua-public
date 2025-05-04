@@ -266,17 +266,53 @@ async function sendEmail({ to, subject, text, html = null, reply_to = null }) {
     throw new Error('Missing required fields: to, subject or text');
   }
 
-  const { data, error } = await resend.emails.send({
+  // Generate better HTML from plain text if not provided
+  const generatedHtml = html || formatTextToHtml(text);
+
+  // Build the email payload
+  const emailPayload = {
     from: 'Max Ischenko <hello@maxua.com>',
     to,
     subject,
     text,
-    html: html || `<p>${text}</p>`,
-    ...(reply_to && { reply_to: reply_to }),
-  });
+    html: generatedHtml
+  };
+
+  // Add reply_to if provided 
+  if (reply_to) {
+    emailPayload.replyTo = reply_to;
+  }
+
+  const { data, error } = await resend.emails.send(emailPayload);
 
   if (error) throw new Error(error.message);
   return data.id;
+}
+
+/**
+ * Convert plain text with newlines to properly formatted HTML
+ * @param {string} text - Plain text content
+ * @returns {string} - Formatted HTML
+ */
+function formatTextToHtml(text) {
+  if (!text) return '';
+  
+  // Split by double newlines to identify paragraphs
+  const paragraphs = text.split(/\n\s*\n/);
+  
+  // Convert each paragraph to HTML and join
+  return paragraphs
+    .map(para => {
+      // Skip empty paragraphs
+      if (!para.trim()) return '';
+      
+      // Replace single newlines with <br> tags within paragraphs
+      const formattedPara = para.replace(/\n/g, '<br>');
+      
+      return `<p>${formattedPara}</p>`;
+    })
+    .filter(Boolean) // Remove empty paragraphs
+    .join('\n');
 }
 
 

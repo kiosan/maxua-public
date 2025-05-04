@@ -60,7 +60,7 @@
     </div>
 
 <div class="comment-form-container" style="margin-top: 3rem;">
-  <h3>Leave a private comment</h3>
+  <h3>Share your thoughts</h3>
   
   <form 
     x-data="{
@@ -118,20 +118,28 @@
     <div class="comment-field-container">
       <textarea 
         x-model="content"
-        placeholder="Your message..." 
+        placeholder="Макс, ти неправий" 
         required
+        x-init="
+          $el.style.height = 'auto'; 
+          $el.style.height = Math.min($el.scrollHeight, 600) + 'px'
+        "
+        @input="
+          $event.target.style.height = 'auto'; 
+          $event.target.style.height = Math.min($event.target.scrollHeight, 600) + 'px'
+        "
       ></textarea>
     </div>
     
     <div class="comment-author-fields">
       <div class="input-row">
         <input type="text" x-model="author" placeholder="Your name" required>
-        <input type="email" x-model="email" placeholder="Email (optional)">
+        <input type="email" x-model="email" placeholder="Email (for reply)">
       </div>
     </div>
     
     <button type="submit" :disabled="loading">
-      <span x-text="loading ? 'Submitting...' : 'Submit Comment'"></span>
+      <span x-text="loading ? 'Submitting...' : 'Add Your Comment'"></span>
     </button>
     
     <div 
