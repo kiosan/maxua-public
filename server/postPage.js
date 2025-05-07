@@ -155,9 +155,6 @@ async function prepareTemplateData(post, event, navLinks) {
     };
   }
 
-  console.log("prev", navLinks.prev);
-  console.log("next", navLinks.next);
-
   // Format the date
   const formattedDate = formatDate(post.created_at);
   
