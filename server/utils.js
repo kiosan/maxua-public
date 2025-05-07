@@ -383,7 +383,7 @@ async function translateText(text) {
   
   const result = await response.json();
   const translation = result[0]?.translations[0]?.text;
-  console.log(`trans: ${text} -> ${translation}`);
+
   return translation;
 }
 
