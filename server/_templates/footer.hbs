@@ -2,8 +2,12 @@
   {{> subscription-form}}
   
   <div class="footer-copyright">
-    Built with Claude.
-    <a href="https://github.com/imax/maxua-public/">Follow us on GitHub</a>
-    & contribute!
+    <a href="https://github.com/imax/maxua-public/">GitHub</a> • Built with
+    Claude.
+
+      {{#getQotd}}
+        <p class="quote-text"
+        style="font-style: italic; padding-top: 0.6rem;">QOTD: {{text}}</p>
+      {{/getQotd}}
   </div>
 </footer>

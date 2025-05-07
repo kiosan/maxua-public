@@ -2,7 +2,7 @@
 const fs = require('fs');
 const path = require('path');
 const Handlebars = require('handlebars');
-const { isDevEnvironment, formatDate } = require('./utils');
+const { isDevEnvironment, formatDate, pool } = require('./utils');
 
 // Cache for compiled templates
 const templateCache = {};
@@ -100,6 +100,38 @@ Handlebars.registerHelper('neq', function (a, b, options) {
   }
   // fallback for inline use: just return boolean
   return a != b;
+});
+
+// QOTD feature
+
+let allQuotes = [];
+async function loadAllQuotes() {
+  try {
+    const result = await pool.query('SELECT * FROM qotd');
+    allQuotes = result.rows;
+    console.log(`Loaded ${allQuotes.length} quotes from database`);
+  } catch (error) {
+    console.error('Error loading quotes:', error);
+  }
+}
+loadAllQuotes();
+
+Handlebars.registerHelper('getQotd', function(options) {
+  try {
+    if (allQuotes.length === 0) {
+      return options.inverse(this);
+    }
+    
+    // Get a random quote
+    const randomIndex = Math.floor(Math.random() * allQuotes.length);
+    const randomQuote = allQuotes[randomIndex];
+    
+    // Return the template with the quote as context
+    return options.fn(randomQuote);
+  } catch (error) {
+    console.error('Error in getQotd helper:', error);
+    return options.inverse(this);
+  }
 });
 
 // pre-register common snippets available to all
