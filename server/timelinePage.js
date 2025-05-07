@@ -112,10 +112,6 @@ exports.handler = async (event, context) => {
           <div class="post-card" data-post-id="${post.id}">
             <a href="/p/${post.id}" class="post-card-link">
               <div class="post-content">${post.content_html}</div>
-              ${post.image_url ? `
-              <div class="post-image-container">
-                <img src="${post.image_url}" alt="Post image" class="post-image">
-              </div>` : ''}
             </a>
             
             <div class="post-meta">

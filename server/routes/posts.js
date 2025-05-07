@@ -32,7 +32,6 @@ router.post('/publish', authMiddleware, async (req, res) => {
 
     // Check if a topic was specified
     const topicId = req.body.topic_id || null;
-    const image_url = req.body.image_url || null;
     
     // Insert post with topic_id if provided
     const result = await pool.query(

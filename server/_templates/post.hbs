@@ -31,12 +31,6 @@
       <div class="post-card" data-post-id="{{post.id}}">
         <div class="post-content">{{{post.content}}}</div>
 
-        {{#if post.image_url}}
-        <div class="post-image-container">
-          <img src="{{post.image_url}}" alt="Post image" class="post-image">
-        </div>
-        {{/if}}
-        
         <div class="post-meta">
           <div class="post-date">{{post.formattedDate}}
           <a href="#" class="translate-link" data-post-id="{{post.id}}" data-translated="false">Translate</a>

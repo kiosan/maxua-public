@@ -16,13 +16,6 @@ const statusMessage = document.getElementById('status-message');
 const clearButton = document.getElementById('clear-drafts-button');
 const draftsList = document.getElementById('drafts-list');
 
-// Filestack client 
-const fsClient = filestack.init('ADTiGNYucQYCpQgeF9OJPz');
-
-// File upload elements
-const fileInput = document.getElementById('fs_input');   
-const imgUrlField = document.getElementById('image_url');  
-
 // Extract current draft ID from the URL if present
 function extractDraftIdFromUrl() {
     const urlParams = new URLSearchParams(window.location.search);
@@ -77,48 +70,6 @@ function setupEventListeners() {
     });
   }
     
-    // File input change -> Filestack upload
-    if (fileInput) {
-        fileInput.addEventListener('change', async (e) => {
-            const file = e.target.files[0];
-            if (!file) return;
-
-            // Create or reset progress bar
-            let prog = document.getElementById('fs-progress');
-            if (!prog) {
-                prog = document.createElement('progress');
-                prog.id = 'fs-progress';
-                prog.max = 100;
-                prog.value = 0;
-                fileInput.parentNode.insertBefore(prog, fileInput.nextSibling);
-            }
-
-            try {
-                const result = await fsClient.upload(file, {
-                    onProgress: (evt) => { prog.value = evt.totalPercent; }
-                });
-                const url = result.url || (result.filesUploaded?.[0].url);
-                if (url) {
-                    imgUrlField.value = url;
-                    // render or update preview
-                    let img = document.getElementById('fs-preview');
-                    if (!img) {
-                        img = document.createElement('img');
-                        img.id = 'fs-preview';
-                        fileInput.parentNode.insertBefore(img, prog.nextSibling);
-                    }
-                    img.src = url;
-                }
-            } catch (err) {
-                console.error('Filestack upload error:', err);
-                showStatus('Image upload failed', 'error');
-            } finally {
-                // remove progress bar after a moment
-                setTimeout(() => prog.remove(), 500);
-            }
-        });
-    }
-
     // Form submission
     const composeForm = document.getElementById('compose-form');
     if (composeForm) {
@@ -206,8 +157,6 @@ async function publishPost() {
             topic_id: topicId,
             share_options: { telegram: shareTelegram, bluesky: shareBluesky, email: shareEmail }
         };
-        // attach image URL if uploaded
-        if (imgUrlField && imgUrlField.value) data.image_url = imgUrlField.value;
 
         const res = await fetch('/api/publish', {
             method: 'POST',
@@ -228,9 +177,7 @@ async function publishPost() {
         showStatus(successMessage, 'success');
 
         contentField.value = '';
-        if (fileInput) fileInput.value = '';
         const prev = document.getElementById('fs-preview'); if (prev) prev.remove();
-        if (imgUrlField) imgUrlField.value = '';
         updateCharCount();
         autoResizeTextarea();
 
@@ -261,8 +208,6 @@ async function saveDraft() {
         share_telegram: shareTelegram,
         share_bluesky: shareBluesky
     };
-    // include image URL in draft
-    if (imgUrlField && imgUrlField.value) data.image_url = imgUrlField.value;
 
     let apiUrl, method;
     if (currentDraftId) {

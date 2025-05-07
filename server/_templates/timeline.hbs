@@ -95,11 +95,6 @@ button.load-more {
             <!-- Make the main content clickable -->
             <a href="{{permalink this}}" class="post-card-link">
               <div class="post-content">{{{this.content_html}}}</div>
-              {{#if this.image_url}}
-              <div class="post-image-container">
-                <img src="{{this.image_url}}" alt="Post image" class="post-image">
-              </div>
-              {{/if}}
             </a>
             
             <div class="post-meta">

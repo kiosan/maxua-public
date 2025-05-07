@@ -10,8 +10,6 @@
     <link rel="stylesheet" href="/css/main.css">
     <!-- Page-specific styles -->
     <link rel="stylesheet" href="/css/compose.css">
-    <script src="https://static.filestackapi.com/filestack-js/3.x.x/filestack.min.js"></script>
-    
 </head>
 <body>
     <main>
@@ -31,11 +29,6 @@
                       class="compose-textarea" placeholder="What's on your mind?"
                       autofocus>{{#if currentDraft}}{{currentDraft.content}}{{/if}}</textarea>
 
-                    <div class="file-input-wrapper" style="display: none">
-                      <input type="file" name="image" id="fs_input" accept="image/*" />
-                      <input type="hidden" id="image_url" name="image_url" />
-                    </div>
-                    
                     <!-- Buttons row with both Publish and Save Draft -->
                     <div class="button-row">
                         <div class="button-group-left">
