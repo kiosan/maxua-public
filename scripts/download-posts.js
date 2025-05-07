@@ -1,11 +1,10 @@
 #!/usr/bin/env node
-// download-posts.js - Download posts from the last N days
+// download-posts.js - Download posts with date and slug information
 
 // Load environment variables
 require('dotenv').config();
 
 const fs = require('fs');
-const path = require('path');
 const { Pool } = require('pg');
 
 // Create PostgreSQL connection pool
@@ -14,7 +13,7 @@ const pool = new Pool({
   ssl: process.env.DATABASE_URL?.includes('localhost') ? false : { rejectUnauthorized: false }
 });
 
-// Function to format date as "Month Day, Year"
+// Format date as "Month Day, Year"
 function formatDate(dateStr) {
   const date = new Date(dateStr);
   return date.toLocaleDateString('en-US', { 
@@ -52,9 +51,9 @@ async function downloadPosts() {
     const { days, outputFile } = parseArgs();
     console.log(`Downloading posts from the last ${days} days...`);
 
-    // Query posts from the last N days
+    // Query posts from the last N days, including slug
     const result = await pool.query(`
-      SELECT content, created_at 
+      SELECT content, created_at, slug, id 
       FROM posts 
       WHERE created_at >= NOW() - INTERVAL '${days} days'
       ORDER BY created_at DESC
@@ -68,38 +67,21 @@ async function downloadPosts() {
 
     // Create output file stream
     const outputStream = fs.createWriteStream(outputFile);
-
-    // Group posts by date
-    const postsByDate = {};
     
-    result.rows.forEach(post => {
-      const date = formatDate(post.created_at);
-      if (!postsByDate[date]) {
-        postsByDate[date] = [];
+    // Process each post
+    result.rows.forEach((post, index) => {
+      const formattedDate = formatDate(post.created_at);
+      const slug = post.slug || `post-${post.id}`; // Fallback if slug is missing
+      
+      // Write metadata and content
+      outputStream.write(`Date: ${formattedDate}\n`);
+      outputStream.write(`Slug: ${slug}\n\n`);
+      outputStream.write(`${post.content}\n`);
+      
+      // Add separator between posts (except for the last one)
+      if (index < result.rows.length - 1) {
+        outputStream.write('\n---\n\n');
       }
-      postsByDate[date].push(post.content);
-    });
-
-    // Write posts to file, grouped by date
-    const dates = Object.keys(postsByDate);
-    
-    dates.forEach((date, dateIndex) => {
-      // Write date header
-      outputStream.write(`${date}\n\n`);
-      
-      // Write posts for this date
-      const posts = postsByDate[date];
-      posts.forEach((postContent, postIndex) => {
-        // Add post content
-        outputStream.write(`${postContent}\n\n`);
-        
-        // Add delimiter between posts from the same date (except for the last one)
-        if (postIndex < posts.length - 1) {
-          outputStream.write('---\n\n');
-        }
-      });
-      
-      // No need for a delimiter between dates, as the date itself serves as a delimiter
     });
 
     outputStream.end();
