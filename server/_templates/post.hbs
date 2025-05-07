@@ -62,7 +62,7 @@
     <div class="post-navigation">
       <div class="post-nav-links">
         {{#if navLinks.prevPostId}}
-        <a href="/p/{{navLinks.prevPostId}}" class="post-nav-link post-nav-prev" rel="prev" id="prev-post-link">
+        <a href="{{permalink navLinks.prev}}" class="post-nav-link post-nav-prev" rel="prev" id="prev-post-link">
           <div class="post-nav-link-content">
             <span class="post-nav-direction">← Previous</span>
             <span class="post-nav-text">
@@ -77,7 +77,7 @@
         {{/if}}
 
         {{#if navLinks.nextPostId}} 
-        <a href="/p/{{navLinks.nextPostId}}" class="post-nav-link post-nav-next" rel="next" id="next-post-link">
+        <a href="{{permalink navLinks.next}}" class="post-nav-link post-nav-next" rel="next" id="next-post-link">
           <div class="post-nav-link-content">
             <span class="post-nav-direction">Next →</span>
             <span class="post-nav-text">

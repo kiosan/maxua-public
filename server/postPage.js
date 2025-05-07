@@ -56,7 +56,8 @@ exports.handler = async (event) => {
  * Extract post ID from the request path
  */
 function extractPostIdFromPath(path) {
-  const match = path.match(/\/p\/(\d+)/);
+  // Extract ID from the new format: /p/slug-123
+  const match = path.match(/\/p\/.*?-(\d+)$/);
   return match ? match[1] : null;
 }
 
@@ -87,18 +88,20 @@ async function fetchPrevNextPostIds(currentPostId) {
     SELECT 
       prev.id AS prev_id, 
       prev.preview_text AS prev_preview,
+      prev.slug AS prev_slug,
       next.id AS next_id, 
-      next.preview_text AS next_preview
+      next.preview_text AS next_preview,
+      next.slug AS next_slug
     FROM current_post cp
     LEFT JOIN LATERAL (
-      SELECT id, preview_text
+      SELECT id, preview_text, slug
       FROM posts
       WHERE created_at < cp.created_at
       ORDER BY created_at DESC
       LIMIT 1
     ) prev ON true
     LEFT JOIN LATERAL (
-      SELECT id, preview_text
+      SELECT id, preview_text, slug
       FROM posts
       WHERE created_at > cp.created_at
       ORDER BY created_at ASC
@@ -117,8 +120,10 @@ async function fetchPrevNextPostIds(currentPostId) {
   return {
     prevPostId: data.prev_id || null,
     prevPostText: data.prev_preview || null,
+    prevPostSlug: data.prev_slug || null,
     nextPostId: data.next_id || null,
-    nextPostText: data.next_preview || null
+    nextPostText: data.next_preview || null,
+    nextPostSlug: data.next_slug || null
   };
 }
 
@@ -135,6 +140,24 @@ async function prepareTemplateData(post, event, navLinks) {
     ? previewContent.substring(0, 47) + '...'
     : previewContent;
   
+  // Format nav links as post objects for the permalink helper
+  if (navLinks.prevPostId) {
+    navLinks.prev = {
+      id: navLinks.prevPostId,
+      slug: navLinks.prevPostSlug
+    };
+  }
+  
+  if (navLinks.nextPostId) {
+    navLinks.next = {
+      id: navLinks.nextPostId,
+      slug: navLinks.nextPostSlug
+    };
+  }
+
+  console.log("prev", navLinks.prev);
+  console.log("next", navLinks.next);
+
   // Format the date
   const formattedDate = formatDate(post.created_at);
   

@@ -1,6 +1,6 @@
 // server/emailDelivery.js 
 const { Resend } = require('resend');
-const { pool, formatDate } = require('./utils');
+const { pool, formatDate, getPostPermalink } = require('./utils');
 const { render } = require('./templateEngine');
 
 // Initialize Resend with API key
@@ -70,7 +70,7 @@ async function sharePostToEmail(post) {
 
   try {
     // Prepare common data for all emails
-    const postUrl = `https://maxua.com/p/${post.id}`;
+    const postUrl = `https://maxua.com${getPostPermalink(post)}`;
     const topicName = post.topic_name || null;
     
     // Render the base template just once (will replace unsubscribe URL for each recipient)

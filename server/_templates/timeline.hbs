@@ -93,7 +93,7 @@ button.load-more {
           {{#each posts}}
           <div class="post-card" data-post-id="{{this.id}}">
             <!-- Make the main content clickable -->
-            <a href="/p/{{this.id}}" class="post-card-link">
+            <a href="{{permalink this}}" class="post-card-link">
               <div class="post-content">{{{this.content_html}}}</div>
               {{#if this.image_url}}
               <div class="post-image-container">

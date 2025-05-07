@@ -238,11 +238,42 @@ function createServerlessAdapter(pageHandler) {
 
 // Set up SSR routes using the adapter
 app.get('/search', createServerlessAdapter(searchPage));
-app.get('/p/:id', createServerlessAdapter(postPage));
 app.get('/', createServerlessAdapter(timelinePage));
 app.get('/t/:topic', createServerlessAdapter(timelinePage));
 app.get('/compose', createServerlessAdapter(composePage));
 app.get('/sitemap.xml', createServerlessAdapter(sitemap));
+
+
+// Redirect old post format to new slug format
+app.get('/p/:id(\\d+)', async (req, res, next) => {
+  try {
+    const postId = req.params.id;
+    // Fetch the post to get its slug
+    const result = await pool.query(
+      'SELECT slug FROM posts WHERE id = $1',
+      [postId]
+    );
+    
+    if (result.rows.length === 0) {
+      // Post not found, let the regular route handle the 404
+      return next();
+    }
+    
+    const post = result.rows[0];
+    if (post.slug) {
+      // Redirect to the new slug format
+      return res.redirect(301, `/p/${post.slug}-${postId}`);
+    }
+    
+    // If post has no slug, let the regular route handle it
+    next();
+  } catch (error) {
+    console.error('Error in post redirect:', error);
+    next(error);
+  }
+});
+
+app.get('/p/:slug([\\w\\-]+)-:id(\\d+)', createServerlessAdapter(postPage));
 
 const translationRoutes = require('./routes/translation');
 app.use('/api', translationRoutes);

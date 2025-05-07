@@ -68,7 +68,20 @@ function registerPartial(name, templateName) {
   }
 }
 
-// Register helper functions for use in templates
+/**
+ * Register helper functions for use in templates.
+ */
+
+Handlebars.registerHelper('permalink', function(post) {
+  if (!post || !post.id) return '/';
+  
+  if (post.slug) {
+    return `/p/${post.slug}-${post.id}`;
+  }
+  
+  return `/p/${post.id}`;
+});
+
 Handlebars.registerHelper('formatDate', function(dateStr) {
   return formatDate(dateStr);
 });

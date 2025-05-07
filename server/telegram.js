@@ -1,6 +1,6 @@
 // functions/telegram.js
 const fetch = require('node-fetch');
-const { pool } = require('./utils');
+const { pool, getPostPermalink } = require('./utils');
 
 // Telegram configuration
 const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
@@ -62,8 +62,7 @@ async function sharePostToTelegram(post) {
   }
 
   // Format the post content for Telegram
-  // HTML is supported in Telegram messages
-  const postUrl = `https://maxua.com/p/${post.id}`;
+  const postUrl = `https://maxua.com${getPostPermalink(post)}`;
   
   // Escape any HTML in the content (but preserve line breaks)
   const escapedContent = post.content

@@ -315,6 +315,92 @@ function formatTextToHtml(text) {
     .join('\n');
 }
 
+/**
+ * Generate a URL-friendly slug from text
+ * If text contains Cyrillic characters, translate it to English first
+ * @param {string} text - The text to convert to a slug
+ * @returns {string} - URL-friendly slug
+ */
+async function generateSlug(text) {
+  if (!text) return '';
+  
+  // Check if text contains Cyrillic characters
+  const hasCyrillic = /[а-яА-ЯіїєґІЇЄҐ]/.test(text);
+  
+  // If text has Cyrillic characters, translate it to English first
+  let processedText = text;
+  if (hasCyrillic) {
+    try {
+      // Use existing Azure translation service
+      processedText = await translateText(text);
+    } catch (error) {
+      console.error('Translation error:', error);
+      // Fall back to the original text if translation fails
+    }
+  }
+  
+  return processedText
+    .toString()
+    .toLowerCase()
+    .trim()
+    // Replace spaces and underscores with hyphens
+    .replace(/[\s_]+/g, '-')
+    // Remove numbers to avoid conflicting with post ID
+    .replace(/[0-9]/g, '')
+    // Remove special characters
+    .replace(/[^\w\-]+/g, '')
+    // Remove duplicate hyphens
+    .replace(/\-\-+/g, '-')
+    // Remove leading/trailing hyphens
+    .replace(/^-+/, '')
+    .replace(/-+$/, '')
+    // Limit length
+    .substring(0, 30)
+    // One final check for trailing hyphen (since previous operations might create one)
+    .replace(/-+$/, '');
+}
+
+async function translateText(text) {
+  const key = process.env.AZURE_TRANSLATOR_KEY;
+  const endpoint = 'https://api.cognitive.microsofttranslator.com';
+  const location = process.env.AZURE_TRANSLATOR_LOCATION || 'westeurope';
+  
+  // from=uk to force UA->EN translation
+  // why? autodetect won't work if first half is in English :)
+  const response = await fetch(`${endpoint}/translate?api-version=3.0&from=uk&to=en`, {
+    method: 'POST',
+    headers: {
+      'Ocp-Apim-Subscription-Key': key,
+      'Ocp-Apim-Subscription-Region': location,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify([{ text }])
+  });
+  
+  if (!response.ok) {
+    throw new Error(`Translation API error: ${response.status}`);
+  }
+  
+  const result = await response.json();
+  const translation = result[0]?.translations[0]?.text;
+  console.log(`trans: ${text} -> ${translation}`);
+  return translation;
+}
+
+/**
+ * Generate a permalink for a post
+ * @param {Object} post - Post object with id and slug properties
+ * @returns {string} - Permalink URL
+ */
+function getPostPermalink(post) {
+  if (!post || !post.id) return '/';
+  
+  if (post.slug) {
+    return `/p/${post.slug}-${post.id}`;
+  }
+  
+  return `/p/${post.id}`;
+}
 
 module.exports = { 
   pool, 
@@ -331,5 +417,8 @@ module.exports = {
   captureError,
   authMiddleware,
   rateLimiterMiddleware,
+  getPostPermalink,
+  generateSlug,
+  translateText,
   closePool
 };

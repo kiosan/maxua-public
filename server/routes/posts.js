@@ -1,7 +1,7 @@
 // routes/posts.js
 const express = require('express');
 const router = express.Router();
-const { pool, authMiddleware, rateLimiterMiddleware } = require('../utils');
+const { pool, authMiddleware, rateLimiterMiddleware, generateSlug } = require('../utils');
 const { sharePostToTelegram } = require('../telegram');
 const { sharePostToBluesky } = require('../bluesky');
 const { sharePostToEmail } = require('../emailDelivery');
@@ -26,14 +26,18 @@ router.post('/publish', authMiddleware, async (req, res) => {
     // Remove any newlines from preview text
     previewText = previewText.replace(/\n/g, ' ').trim();
 
+    // Generate a slug for the post
+    const textToSlugify = previewText || content.substring(0, Math.min(50, content.length));
+    const slug = await generateSlug(textToSlugify);
+
     // Check if a topic was specified
     const topicId = req.body.topic_id || null;
     const image_url = req.body.image_url || null;
     
     // Insert post with topic_id if provided
     const result = await pool.query(
-      'INSERT INTO posts (content, preview_text, topic_id, image_url) VALUES ($1, $2, $3, $4) RETURNING *', 
-      [content, previewText, topicId, image_url]
+      'INSERT INTO posts (content, preview_text, topic_id, slug) VALUES ($1, $2, $3, $4) RETURNING *', 
+      [content, previewText, topicId, slug]
     );
 
     const newPost = result.rows[0];
