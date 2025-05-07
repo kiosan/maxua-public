@@ -97,7 +97,7 @@ function setupTranslationButtons() {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ 
-            text: contentElement.textContent.trim() 
+            postId: postId
           })
         });
         

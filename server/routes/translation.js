@@ -1,18 +1,26 @@
 // server/routes/translation.js
 const express = require('express');
 const router = express.Router();
-const fetch = require('node-fetch');
-const { rateLimiterMiddleware, translateText } = require('../utils');
+const { pool, rateLimiterMiddleware, translateText } = require('../utils');
 
 router.post('/translate', rateLimiterMiddleware, async (req, res) => {
-  const { text } = req.body;
+  const { postId } = req.body;
   
-  if (!text) {
-    return res.status(400).json({ error: 'No text provided' });
+  if (!postId) {
+    return res.status(400).json({ error: 'No postId provided' });
   }
 
   try {
-    const translation = await translateText(text);
+    const result = await pool.query('SELECT content FROM posts WHERE id = $1', [postId]);
+    
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Post not found' });
+    }
+    
+    const postContent = result.rows[0].content;
+    
+    // Translate the post content
+    const translation = await translateText(postContent);
     return res.json({ translation });
   } catch (error) {
     console.error('Translation error:', error);
