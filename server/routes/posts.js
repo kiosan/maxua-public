@@ -147,22 +147,6 @@ router.post('/views', rateLimiterMiddleware, async (req, res) => {
          ON CONFLICT (post_id, anon_id) DO NOTHING`,
         [postId, anonId]
       );
-
-      await pool.query(
-        'INSERT INTO activity_log(type, post_id, anon_id) VALUES ($1, $2, $3)',
-        ['view', postId, anonId]
-      );
-    }
-
-    // Track homepage view
-    if (pathname === '/') {
-      const data = {};
-      if (req.body.referrer) data.referrer = req.body.referrer;
-
-      await pool.query(
-        'INSERT INTO activity_log(type, anon_id, data) VALUES ($1, $2, $3)',
-        ['timeline', anonId, data]
-      );
     }
 
     return res.json({ success: true });
