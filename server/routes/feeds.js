@@ -11,6 +11,7 @@ router.get('/rss', async (req, res) => {
       SELECT p.*, t.name as topic_name, t.slug as topic_slug
       FROM posts p
       LEFT JOIN topics t ON p.topic_id = t.id
+      WHERE p.status='public'
       ORDER BY p.created_at DESC
       LIMIT 20
     `);

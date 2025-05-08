@@ -58,6 +58,7 @@ exports.handler = async (event, context) => {
         t.slug as topic_slug
       FROM posts p
       LEFT JOIN topics t ON p.topic_id = t.id
+      WHERE p.status = 'public'
     `;
     
     const queryParams = [];
@@ -65,7 +66,7 @@ exports.handler = async (event, context) => {
     
     // Add topic filter if needed
     if (topicId) {
-      postsQuery += ` WHERE p.topic_id = $${paramIndex++}`;
+      postsQuery += ` AND p.topic_id = $${paramIndex++}`;
       queryParams.push(topicId);
     }
     
@@ -84,11 +85,14 @@ exports.handler = async (event, context) => {
     });
     
     // Determine if there are more posts for pagination
-    const countQuery = topicId 
-    ? 'SELECT COUNT(*) FROM posts WHERE topic_id = $1'
-    : 'SELECT COUNT(*) FROM posts';
+    let countQuery = 'SELECT COUNT(*) FROM posts WHERE status = \'public\'';
+    const countParams = [];
+
+    if (topicId) {
+      countQuery += ' AND topic_id = $1';
+      countParams.push(topicId);
+    }
     
-    const countParams = topicId ? [topicId] : [];
     const countResult = await pool.query(countQuery, countParams);
     const totalCount = parseInt(countResult.rows[0].count);
     const hasMore = offset + limit < totalCount;

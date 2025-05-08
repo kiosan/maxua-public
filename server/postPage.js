@@ -72,7 +72,7 @@ async function fetchPost(postId) {
     SELECT p.*, t.id as topic_id, t.name as topic_name, t.slug as topic_slug 
     FROM posts p
     LEFT JOIN topics t ON p.topic_id = t.id
-    WHERE p.id = $1
+    WHERE p.id = $1 AND p.status='public'
   `, [postId]);
   
   const post = postResult.rows.length ? postResult.rows[0] : null;
@@ -113,6 +113,7 @@ async function fetchPrevNextPostIds(currentPostId) {
       SELECT id, preview_text, slug
       FROM posts
       WHERE created_at < cp.created_at
+      AND status='public'
       ORDER BY created_at DESC
       LIMIT 1
     ) prev ON true
@@ -120,6 +121,7 @@ async function fetchPrevNextPostIds(currentPostId) {
       SELECT id, preview_text, slug
       FROM posts
       WHERE created_at > cp.created_at
+      AND status='public'
       ORDER BY created_at ASC
       LIMIT 1
     ) next ON true
