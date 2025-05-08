@@ -55,8 +55,7 @@ exports.handler = async (event, context) => {
       SELECT 
         p.*, 
         t.name as topic_name, 
-        t.slug as topic_slug,
-        (SELECT COUNT(*) FROM comments c WHERE c.post_id = p.id AND c.confirmed = true) as comment_count
+        t.slug as topic_slug
       FROM posts p
       LEFT JOIN topics t ON p.topic_id = t.id
     `;
@@ -120,10 +119,6 @@ exports.handler = async (event, context) => {
                 <a href="#" class="translate-link" data-post-id="${post.id}" data-translated="false">Translate</a>
                 ${showTopicBadge ? `
                 <a href="/t/${post.topic_slug}" class="topic-badge">#${post.topic_name}</a>` : ''}
-                ${post.comment_count && post.comment_count > 0 ? `
-                <a href="/p/${post.id}#comments" class="comments-badge">
-                  💬 ${post.comment_count}
-                </a>` : ''}
               </div>
             </div>
           </div>
