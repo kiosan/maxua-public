@@ -1,0 +1,223 @@
+/* public/css/compose2.css */
+/* Complete styles for the compose2 page with attachments */
+
+.compose-container {
+    max-width: 650px;
+    margin: 1rem auto;
+    padding: 0;
+}
+
+.compose-card {
+    background-color: white;
+    border: 1px solid var(--color-card-border);
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    position: relative;
+}
+
+.compose-header {
+    margin-bottom: 1.5rem;
+}
+
+.compose-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    margin-top: 0;
+}
+
+.compose-subtitle {
+    color: var(--color-secondary-text);
+    font-size: 0.9rem;
+}
+
+.compose-textarea {
+    width: 100%;
+    min-height: 200px;
+    padding: 1rem;
+    font-size: 1.1rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-family: var(--font-family);
+    margin-bottom: 1rem;
+    resize: vertical;
+    transition: border-color 0.2s;
+}
+
+.compose-textarea:focus {
+    outline: none;
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.1);
+}
+
+.button-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.post-button {
+    background-color: var(--color-accent);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.post-button:hover {
+    background-color: var(--color-accent-hover);
+}
+
+.post-button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.character-count {
+    text-align: right;
+    font-size: 0.85rem;
+    color: var(--color-secondary-text);
+}
+
+.status-message {
+    margin-top: 1rem;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    display: none;
+}
+
+.status-success {
+    background-color: #e6f7e6;
+    color: #2e7d32;
+}
+
+.status-error {
+    background-color: #ffebee;
+    color: #c62828;
+}
+
+/* Attachments specific styles */
+.attachments-container {
+    margin-top: 1.5rem;
+}
+
+.attachment-drop-area {
+    border: 2px dashed #ddd;
+    border-radius: 8px;
+    padding: 1.5rem;
+    text-align: center;
+    background-color: #f9f9f9;
+    cursor: pointer;
+    margin-bottom: 1rem;
+    transition: background-color 0.2s, border-color 0.2s;
+}
+
+.attachment-drop-area:hover,
+.attachment-drop-area.dragover {
+    background-color: #f0f7ff;
+    border-color: #1a73e8;
+}
+
+.attachment-drop-area p {
+    margin: 0 0 0.5rem 0;
+    color: #666;
+}
+
+.attachment-items {
+    margin-top: 1rem;
+}
+
+.attachment-item {
+    border: 1px solid #eee;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 0.75rem;
+    background-color: white;
+    position: relative;
+}
+
+.attachment-preview {
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid #eee;
+    border-radius: 4px;
+    padding: 0.75rem;
+    margin-bottom: 0.75rem;
+    background-color: #fafafa;
+}
+
+.attachment-controls {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+}
+
+.attachment-controls button {
+    background-color: #f5f5f5;
+    color: #666;
+    border: none;
+    padding: 0.4rem 0.6rem;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    cursor: pointer;
+}
+
+.attachment-controls button:hover {
+    background-color: #e5e5e5;
+}
+
+.attachment-controls button.delete {
+    color: #d32f2f;
+}
+
+.attachment-controls button.delete:hover {
+    background-color: #ffebee;
+}
+
+/* Mobile optimizations */
+@media (max-width: 600px) {
+    /* Maximize space by reducing vertical padding */
+    body {
+        padding: 0;
+    }
+    
+    .compose-container {
+        padding: 0;
+        margin: 0;
+        max-width: 100%;
+        width: 100%;
+    }
+    
+    .compose-card {
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
+        padding: 1rem;
+        box-shadow: none;
+    }
+    
+    /* Make textarea use full width */
+    .compose-textarea {
+        padding: 0.75rem;
+        border-radius: 6px;
+        font-size: 1rem;
+    }
+    
+    /* Full width buttons */
+    .button-row {
+        flex-direction: column;
+        gap: 10px;
+        margin-bottom: 1rem;
+    }
+    
+    .post-button {
+        width: 100%;
+        text-align: center;
+    }
+}
