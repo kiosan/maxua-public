@@ -117,7 +117,7 @@
       loading: false,
       
       async submitComment() {
-        if (!this.content || !this.author) return;
+        if (!this.content) return;
         
         this.loading = true;
         this.status = '';
@@ -177,8 +177,8 @@
     
     <div class="comment-author-fields">
       <div class="input-row">
-        <input type="text" x-model="author" placeholder="Your name" required>
-        <input type="email" x-model="email" placeholder="Email (optional)">
+        <input type="text" x-model="author" placeholder="Your name">
+        <input type="email" x-model="email" placeholder="Email (for replies)">
       </div>
     </div>
     

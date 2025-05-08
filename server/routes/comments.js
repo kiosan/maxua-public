@@ -11,7 +11,7 @@ router.post('/', rateLimiterMiddleware, async (req, res) => {
     const { postId, author, email, content } = req.body;
     
     // Basic validation
-    if (!postId || !author || !content || content.trim() === '') {
+    if (!postId || !content || content.trim() === '') {
       return res.status(400).json({ error: 'Missing required fields' });
     }
     
@@ -23,7 +23,7 @@ router.post('/', rateLimiterMiddleware, async (req, res) => {
     // Insert comment into database
     const result = await pool.query(
       'INSERT INTO comments2 (post_id, author, email, content) VALUES ($1, $2, $3, $4) RETURNING id',
-      [postId, author, email || null, content]
+      [postId, author || '', email || null, content]
     );
     
     const commentId = result.rows[0].id;
