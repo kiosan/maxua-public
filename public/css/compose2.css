@@ -58,6 +58,29 @@
     margin-bottom: 1.5rem;
 }
 
+.save-draft-button {
+    background-color: #f2f2f2;
+    color: #333;
+    border: 1px solid #ddd;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    box-shadow: none;
+}
+
+.save-draft-button:hover {
+    background-color: #e8e8e8;
+}
+
+.save-draft-button:disabled {
+    background-color: #f2f2f2;
+    color: #999;
+    cursor: not-allowed;
+}
+
 .post-button {
     background-color: var(--color-accent);
     color: white;
@@ -75,7 +98,7 @@
 }
 
 .post-button:disabled {
-    background-color: #ccc;
+    background-color: #a2c2fd;
     cursor: not-allowed;
 }
 
@@ -83,6 +106,12 @@
     text-align: right;
     font-size: 0.85rem;
     color: var(--color-secondary-text);
+    transition: color 0.2s;
+}
+
+.character-count.over-limit {
+    color: darkred; /* Red color when over the limit */
+    font-weight: 500;
 }
 
 .status-message {
@@ -110,11 +139,11 @@
 .attachment-drop-area {
     border: 2px dashed #ddd;
     border-radius: 8px;
-    padding: 1.5rem;
+    padding: 1rem;
     text-align: center;
     background-color: #f9f9f9;
     cursor: pointer;
-    margin-bottom: 1rem;
+    margin-bottom: 0rem;
     transition: background-color 0.2s, border-color 0.2s;
 }
 

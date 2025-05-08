@@ -20,14 +20,20 @@ router.get('/', authMiddleware, async (req, res) => {
   }
 });
 
-// Handle post creation with attachments
-router.post('/publish', authMiddleware, async (req, res) => {
+// Handle both drafts and published posts
+router.post('/post', authMiddleware, async (req, res) => {
   try {
-    const { content, attachments } = req.body;
+    const { content, attachments, status } = req.body;
     
     // Validate input
     if ((!content || content.trim() === '') && (!attachments || attachments.length === 0)) {
       return res.status(400).json({ error: 'Post must have either content or attachments' });
+    }
+    
+    // Validate status
+    const validStatus = status === 'draft' || status === 'published';
+    if (!validStatus) {
+      return res.status(400).json({ error: 'Invalid status value' });
     }
 
     // Start a transaction
@@ -57,10 +63,10 @@ router.post('/publish', authMiddleware, async (req, res) => {
         }
       }
 
-      // Insert post
+      // Insert post with the specified status
       const postResult = await client.query(
-        'INSERT INTO posts (content, preview_text) VALUES ($1, $2) RETURNING *', 
-        [content || '', previewText]
+        'INSERT INTO posts (content, preview_text, status) VALUES ($1, $2, $3) RETURNING *', 
+        [content || '', previewText, status]
       );
 
       const post = postResult.rows[0];
@@ -100,9 +106,10 @@ router.post('/publish', authMiddleware, async (req, res) => {
       client.release();
     }
   } catch (error) {
-    console.error('Error creating post with attachments:', error);
+    console.error('Error creating post:', error);
     return res.status(500).json({ error: 'Server error', details: error.message });
   }
 });
+
 
 module.exports = router;
