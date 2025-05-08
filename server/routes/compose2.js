@@ -1,16 +1,24 @@
-// server/routes/compose2.js
+// server/routes/compose2.js - Updated unified post route
 const express = require('express');
 const router = express.Router();
-const { pool, authMiddleware } = require('../utils');
-const templateEngine = require('../templateEngine');
+const { pool, authMiddleware, generateSlug } = require('../utils');
 const sanitizeHtml = require('sanitize-html');
+const templateEngine = require('../templateEngine');
+const { sharePostToTelegram } = require('../telegram');
+const { sharePostToBluesky } = require('../bluesky');
+const { sharePostToEmail } = require('../emailDelivery');
 
-
+// Display the compose page
 router.get('/', authMiddleware, async (req, res) => {
   try {
+    // Fetch topics for the dropdown
+    const topicsResult = await pool.query('SELECT id, name, slug FROM topics ORDER BY name ASC');
+    const topics = topicsResult.rows;
+    
     // Render the compose2 template
     const html = templateEngine.render('compose2', {
-      pageTitle: 'Compose with Attachments - Max Ischenko'
+      pageTitle: 'Compose - Max Ischenko',
+      topics: topics
     });
     
     res.send(html);
@@ -23,7 +31,7 @@ router.get('/', authMiddleware, async (req, res) => {
 // Handle both drafts and published posts
 router.post('/post', authMiddleware, async (req, res) => {
   try {
-    const { content, attachments, status } = req.body;
+    const { content, attachments, status, shareTelegram, shareBluesky, topicId } = req.body;
     
     // Validate input
     if ((!content || content.trim() === '') && (!attachments || attachments.length === 0)) {
@@ -42,12 +50,16 @@ router.post('/post', authMiddleware, async (req, res) => {
     try {
       await client.query('BEGIN');
       
-      // Generate preview text from content
+      // STEP 1: Generate preview text from content
       let previewText = '';
       if (content) {
-        previewText = content.length > 40 
-          ? content.substring(0, Math.min(37, content.indexOf(' ', 30) !== -1 ? content.indexOf(' ', 30) : 37)) + '..' 
-          : content;
+        if (content.length > 40) {
+          // Try to cut at a space, not mid-word
+          const truncateAt = content.lastIndexOf(' ', 37);
+          previewText = content.substring(0, truncateAt > 0 ? truncateAt : 37) + '..';
+        } else {
+          previewText = content;
+        }
         // Remove any newlines from preview text
         previewText = previewText.replace(/\n/g, ' ').trim();
       } else if (attachments && attachments.length > 0) {
@@ -56,22 +68,38 @@ router.post('/post', authMiddleware, async (req, res) => {
         if (firstAttachment.type === 'html') {
           // Extract text from HTML for preview
           const textContent = firstAttachment.content.replace(/<[^>]*>/g, ' ');
-          previewText = textContent.length > 40 
-            ? textContent.substring(0, Math.min(37, textContent.indexOf(' ', 30) !== -1 ? textContent.indexOf(' ', 30) : 37)) + '..' 
-            : textContent;
+          if (textContent.length > 40) {
+            const truncateAt = textContent.lastIndexOf(' ', 37);
+            previewText = textContent.substring(0, truncateAt > 0 ? truncateAt : 37) + '..';
+          } else {
+            previewText = textContent;
+          }
           previewText = previewText.replace(/\n/g, ' ').trim();
         }
       }
 
-      // Insert post with the specified status
+      // STEP 2: Generate a slug for the post
+      const textToSlugify = previewText || content.substring(0, Math.min(50, content.length));
+      const slug = await generateSlug(textToSlugify);
+
+      // STEP 3: Insert post with all required fields
       const postResult = await client.query(
-        'INSERT INTO posts (content, preview_text, status) VALUES ($1, $2, $3) RETURNING *', 
-        [content || '', previewText, status]
+        `INSERT INTO posts 
+         (content, preview_text, slug, topic_id, status) 
+         VALUES ($1, $2, $3, $4, $5) 
+         RETURNING *`, 
+        [
+          content || '', 
+          previewText, 
+          slug,
+          topicId || null, 
+          status
+        ]
       );
 
       const post = postResult.rows[0];
       
-      // Process and save attachments if any
+      // STEP 4: Process and save attachments if any
       if (attachments && attachments.length > 0) {
         for (let i = 0; i < attachments.length; i++) {
           const attachment = attachments[i];
@@ -96,6 +124,67 @@ router.post('/post', authMiddleware, async (req, res) => {
         }
       }
       
+      // STEP 5: If published, handle sharing to various platforms
+      if (status === 'published') {
+        // Get complete post with topic info for sharing
+        const completePostResult = await client.query(`
+          SELECT p.*, t.name as topic_name, t.slug as topic_slug 
+          FROM posts p
+          LEFT JOIN topics t ON p.topic_id = t.id
+          WHERE p.id = $1
+        `, [post.id]);
+        
+        const completePost = completePostResult.rows[0];
+        
+        // Share via email if enabled and API key is available
+        try {
+          if (process.env.RESEND_API_KEY) {
+            // Default to true for email sharing
+            const shareEmail = req.body.shareEmail !== undefined ? req.body.shareEmail : true;
+            
+            if (shareEmail) {
+              await sharePostToEmail(completePost);
+              console.log(`Post ${post.id} sent via email`);
+            }
+          } else {
+            console.log('Resend API key not set, skipping email delivery');
+          }
+        } catch (emailError) {
+          console.error('Error sharing via email:', emailError);
+          // Continue even if email sharing fails
+        }
+
+        // Share to Telegram if enabled and token is available
+        if (shareTelegram) {
+          try {
+            if (process.env.TELEGRAM_BOT_TOKEN) {
+              await sharePostToTelegram(completePost);
+              console.log(`Post ${post.id} shared to Telegram`);
+            } else {
+              console.log('Telegram bot token not set, skipping share');
+            }
+          } catch (telegramError) {
+            console.error('Error sharing to Telegram:', telegramError);
+            // Continue even if Telegram sharing fails
+          }
+        }
+        
+        // Share to Bluesky if enabled and credentials are available
+        if (shareBluesky) {
+          try {
+            if (process.env.BLUESKY_USERNAME && process.env.BLUESKY_PASSWORD) {
+              await sharePostToBluesky(completePost);
+              console.log(`Post ${post.id} shared to Bluesky`);
+            } else {
+              console.log('Bluesky credentials not set, skipping share');
+            }
+          } catch (blueskyError) {
+            console.error('Error sharing to Bluesky:', blueskyError);
+            // Continue even if Bluesky sharing fails
+          }
+        }
+      }
+      
       await client.query('COMMIT');
       
       return res.status(201).json(post);
@@ -110,6 +199,5 @@ router.post('/post', authMiddleware, async (req, res) => {
     return res.status(500).json({ error: 'Server error', details: error.message });
   }
 });
-
 
 module.exports = router;

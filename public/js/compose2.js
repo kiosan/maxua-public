@@ -7,6 +7,8 @@ function composeApp() {
         submitting: null, // null, 'draft', or 'published'
         statusMessage: '',
         statusType: '',
+        shareTelegram: true,
+        shareBluesky: true,
         
         // Initialize
         init() {
@@ -154,6 +156,8 @@ function composeApp() {
                     credentials: 'include',
                     body: JSON.stringify({
                         content: this.content,
+                        shareTelegram: this.shareTelegram,
+                        shareBluesky: this.shareBluesky,
                         attachments: this.attachments,
                         status: status
                     })
