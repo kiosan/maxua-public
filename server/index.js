@@ -105,7 +105,12 @@ app.get(['/newsletter_archive/'], (req, res) => {
 });
 
 // Simplr static HTML page handler
-app.get(['/admin', '/test_auth', '/books', '/about', '/zsu'], (req, res) => {
+app.get(['/test_auth', '/books', '/about', '/zsu'], (req, res) => {
+  const pageName = req.path.substring(1);
+  res.sendFile(path.join(__dirname, '../public', `${pageName}.html`));
+});
+
+app.get('/admin', authMiddleware, (req, res) => {
   const pageName = req.path.substring(1);
   res.sendFile(path.join(__dirname, '../public', `${pageName}.html`));
 });

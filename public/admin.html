@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - MaxUA Microblog</title>
+    <title>Admin - maxua.com</title>
     <script defer src="https://unpkg.com/alpinejs@3.12.0/dist/cdn.min.js"></script>
     <style>
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             max-width: 650px;
             margin: 0 auto;
             padding: 20px;
@@ -16,7 +16,7 @@
         }
         
         header {
-            margin-bottom: 30px;
+            margin-bottom: 20px;
             border-bottom: 1px solid #eee;
             padding-bottom: 10px;
             display: flex;
@@ -24,136 +24,47 @@
             align-items: center;
         }
         
-        header h1 {
-            font-size: 24px;
-            margin-bottom: 0;
-        }
-        
         .container {
             margin-top: 20px;
-            padding: 30px;
+            padding: 20px;
             border-radius: 8px;
-            background-color: #ffffff;
+            background-color: #fff;
             border: 1px solid #e0e0e0;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-            margin-bottom: 20px;
+        }
+        
+        h1, h2 {
+            margin-top: 0;
         }
         
         h2 {
             font-size: 20px;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             padding-bottom: 10px;
             border-bottom: 1px solid #eee;
         }
         
-        .login-form {
-            display: flex;
-            flex-direction: column;
-            margin-bottom: 20px;
-        }
-        
-        input {
-            padding: 12px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            font-size: 16px;
-            margin-bottom: 15px;
-        }
-        
         button {
-            background-color: #0085ff;
-            color: white;
+            background-color: #f1f1f1;
+            color: #333;
             border: none;
-            padding: 12px 20px;
+            padding: 6px 12px;
             border-radius: 4px;
-            font-size: 16px;
+            font-size: 14px;
             cursor: pointer;
-            transition: background-color 0.3s;
-            margin-bottom: 10px;
         }
         
         button:hover {
-            background-color: #0066cc;
-        }
-        
-        button.danger {
-            background-color: #dc3545;
-        }
-        
-        button.danger:hover {
-            background-color: #bd2130;
-        }
-        
-        .status {
-            margin-top: 20px;
-            padding: 12px;
-            border-radius: 4px;
-        }
-        
-        .error {
-            background-color: #ffebee;
-            color: #c62828;
-        }
-        
-        .success {
-            background-color: #e6f7e6;
-            color: #2e7d32;
-        }
-        
-        .back-link {
-            margin-top: 20px;
-            text-align: left;
-        }
-        
-        .back-link a {
-            color: #0066cc;
-            text-decoration: none;
-        }
-        
-        .back-link a:hover {
-            text-decoration: underline;
-        }
-        
-        .admin-panel {
-            margin-top: 30px;
-        }
-        
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-        
-        .stat-card {
-            background-color: #f5f7fa;
-            padding: 15px;
-            border-radius: 8px;
-            text-align: center;
-        }
-        
-        .stat-value {
-            font-size: 24px;
-            font-weight: bold;
-            margin: 10px 0;
-        }
-        
-        .stat-label {
-            font-size: 14px;
-            color: #666;
+            background-color: #e0e0e0;
         }
         
         .comment-list {
-            margin-top: 20px;
+            margin-top: 10px;
         }
         
         .comment-item {
             border-bottom: 1px solid #eee;
-            padding: 15px 0;
-        }
-        
-        .comment-item:last-child {
-            border-bottom: none;
+            padding: 12px 0;
         }
         
         .comment-content {
@@ -168,29 +79,31 @@
             color: #666;
         }
         
-        .pin-button {
-            background-color: #f1f1f1;
-            color: #333;
-            font-size: 14px;
-            padding: 5px 10px;
-        }
-        
         .pinned {
-            background-color: #e6f7e6;
+            background-color: #f2f9f2;
             border-left: 3px solid #2e7d32;
             padding-left: 12px;
         }
         
-        .logout-button {
-            background-color: #f1f1f1;
-            color: #333;
-        }
-
         .no-comments {
             text-align: center;
             color: #666;
             font-style: italic;
-            padding: 20px 0;
+            padding: 15px 0;
+        }
+        
+        .load-more {
+            width: 100%;
+            margin-top: 15px;
+        }
+        
+        a {
+            color: #0066cc;
+            text-decoration: none;
+        }
+        
+        a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
@@ -198,206 +111,93 @@
     <div x-data="adminApp()">
         <header>
             <h1>Admin Dashboard</h1>
-            <div class="back-link">
-                <a href="/">&larr; Back to microblog</a>
-            </div>
+            <a href="/">&larr; Back to microblog</a>
         </header>
 
-        <!-- Login Section (visible when not logged in) -->
-        <template x-if="!isAuthenticated">
-            <div class="container">
-                <h2>Admin Login</h2>
-                <div class="login-form">
-                    <input type="password" x-model="password" placeholder="Enter password" @keyup.enter="login">
-                    <button @click="login" x-bind:disabled="isLoggingIn">
-                        <span x-text="isLoggingIn ? 'Logging in...' : 'Login'"></span>
-                    </button>
-                </div>
-                <div x-show="loginError" class="status error" x-text="loginError"></div>
-            </div>
-        </template>
-        
-        <!-- Admin Panel (visible after login) -->
-        <template x-if="isAuthenticated">
-            <div class="admin-panel">
-                <!-- Stats Container -->
-                <div class="container">
-                    <h2>Stats</h2>
-                    <div class="stats-grid">
-                        <div class="stat-card">
-                            <div class="stat-value" x-text="stats.subscriberCount || 0"></div>
-                            <div class="stat-label">Subscribers</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-value" x-text="stats.recentPosts || 0"></div>
-                            <div class="stat-label">Posts (7 days)</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-value" x-text="stats.recentComments || 0"></div>
-                            <div class="stat-label">Comments (7 days)</div>
-                        </div>
-                    </div>
-                    <button @click="refreshStats" class="logout-button">Refresh Stats</button>
-                </div>
-                
-                <!-- Comments Container -->
-                <div class="container">
-                    <h2>Recent Comments</h2>
-                    <div class="comment-list">
-                        <template x-if="comments.length === 0">
-                            <div class="no-comments">No comments found</div>
-                        </template>
-                        <template x-for="comment in comments" :key="comment.id">
-                            <div class="comment-item" :class="{ 'pinned': comment.pinned }">
-                                <div class="comment-content" x-text="comment.content"></div>
-                                <div class="comment-meta">
-                                    <div>
-                                        <strong x-text="comment.author"></strong> on 
-                                        <a :href="'/p/' + comment.post_id" target="_blank">Post #<span x-text="comment.post_id"></span></a>
-                                        • <span x-text="formatDate(comment.created_at)"></span>
-                                    </div>
-                                    <button 
-                                        @click="togglePin(comment.id)" 
-                                        class="pin-button"
-                                        x-text="comment.pinned ? 'Unpin' : 'Pin'"
-                                        :class="{ 'danger': comment.pinned }">
-                                    </button>
-                                </div>
+        <!-- Comments Container -->
+        <div class="container">
+            <h2>Recent Comments</h2>
+            <div class="comment-list">
+                <template x-if="comments.length === 0">
+                    <div class="no-comments">No comments found</div>
+                </template>
+                <template x-for="comment in comments" :key="comment.id">
+                    <div class="comment-item" :class="{ 'pinned': comment.pinned }">
+                        <div class="comment-content" x-text="comment.content"></div>
+                        <div class="comment-meta">
+                            <div>
+                                <strong x-text="comment.author"></strong> on 
+                                <a :href="'/p/' + comment.post_id">Post #<span x-text="comment.post_id"></span></a>
+                                • <span x-text="new Date(comment.created_at).toLocaleString()"></span>
                             </div>
-                        </template>
+                            <button @click="togglePin(comment.id)" x-text="comment.pinned ? 'Unpin' : 'Pin'"></button>
+                        </div>
                     </div>
-                    <button @click="refreshComments" class="logout-button" style="margin-top: 20px">Refresh Comments</button>
-                </div>
-                
-                <!-- Logout Button -->
-                <div style="text-align: right; margin-top: 20px;">
-                    <button @click="logout" class="logout-button">Logout</button>
-                </div>
+                </template>
             </div>
-        </template>
+            <button 
+                @click="loadComments(false)" 
+                class="load-more"
+                x-show="hasMoreComments">
+                Load more comments
+            </button>
+        </div>
+        
+        <!-- Stats Container -->
+        <div class="container">
+            <h2>Stats</h2>
+            <div>
+                <span x-text="stats.subscriberCount || 0"></span> subscribers, 
+                <span x-text="stats.recentPosts || 0"></span> posts and 
+                <span x-text="stats.recentComments || 0"></span> comments in the last 7 days
+            </div>
+        </div>
     </div>
 
     <script>
         function adminApp() {
             return {
-                isAuthenticated: false,
-                isLoggingIn: false,
-                password: '',
-                loginError: '',
                 comments: [],
-                stats: {
-                    subscriberCount: 0,
-                    recentPosts: 0,
-                    recentComments: 0
-                },
+                commentOffset: 0,
+                commentsPerPage: 10,
+                hasMoreComments: true,
+                stats: {},
                 
                 init() {
-                    this.checkAuthStatus();
-                },
-                
-                async checkAuthStatus() {
-                    try {
-                        const response = await fetch('/api/auth', {
-                            method: 'GET',
-                            credentials: 'include'
-                        });
-                        const data = await response.json();
-                        
-                        this.isAuthenticated = data.valid;
-                        
-                        if (this.isAuthenticated) {
-                            this.loadData();
-                        }
-                    } catch (error) {
-                        console.error('Error checking auth status:', error);
-                        this.isAuthenticated = false;
-                    }
-                },
-                
-                async login() {
-                    if (!this.password) {
-                        this.loginError = 'Please enter a password';
-                        return;
-                    }
-                    
-                    this.isLoggingIn = true;
-                    this.loginError = '';
-                    
-                    try {
-                        const response = await fetch('/api/auth', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            credentials: 'include',
-                            body: JSON.stringify({ 
-                                password: this.password,
-                                deviceInfo: navigator.userAgent 
-                            })
-                        });
-                        
-                        const data = await response.json();
-                        
-                        if (response.ok && data.success) {
-                            this.isAuthenticated = true;
-                            this.password = '';
-                            this.loadData();
-                        } else {
-                            this.loginError = data.error || 'Invalid password';
-                        }
-                    } catch (error) {
-                        console.error('Login error:', error);
-                        this.loginError = 'Server error. Please try again.';
-                    } finally {
-                        this.isLoggingIn = false;
-                    }
-                },
-                
-                async logout() {
-                    try {
-                        // Simply clear the local authentication state
-                        // The server will handle the cookie invalidation
-                        document.cookie = 'auth_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-                        this.isAuthenticated = false;
-                    } catch (error) {
-                        console.error('Logout error:', error);
-                    }
-                },
-                
-                async loadData() {
-                    await Promise.all([
-                        this.loadStats(),
-                        this.loadComments()
-                    ]);
+                    Promise.all([this.loadStats(), this.loadComments(true)]);
                 },
                 
                 async loadStats() {
                     try {
-                        const response = await fetch('/api/admin/stats', {
-                            credentials: 'include'
-                        });
-                        
-                        if (response.ok) {
-                            this.stats = await response.json();
-                        } else {
-                            console.error('Failed to load stats');
-                        }
-                    } catch (error) {
-                        console.error('Error loading stats:', error);
+                        const res = await fetch('/api/admin/stats', {credentials: 'include'});
+                        if (res.ok) this.stats = await res.json();
+                    } catch (err) {
+                        console.error('Error loading stats:', err);
                     }
                 },
                 
-                async loadComments() {
+                async loadComments(reset = false) {
+                    if (reset) {
+                        this.commentOffset = 0;
+                        this.comments = [];
+                        this.hasMoreComments = true;
+                    }
+                    
                     try {
-                        const response = await fetch('/api/admin/comments', {
+                        const res = await fetch(`/api/admin/comments?offset=${this.commentOffset}&limit=${this.commentsPerPage}`, {
                             credentials: 'include'
                         });
                         
-                        if (response.ok) {
-                            this.comments = await response.json();
-                        } else {
-                            console.error('Failed to load comments');
+                        if (res.ok) {
+                            const newComments = await res.json();
+                            if (newComments.length < this.commentsPerPage) {
+                                this.hasMoreComments = false;
+                            }
+                            this.comments = [...this.comments, ...newComments];
+                            this.commentOffset += newComments.length;
                         }
-                    } catch (error) {
-                        console.error('Error loading comments:', error);
+                    } catch (err) {
+                        console.error('Error loading comments:', err);
                     }
                 },
                 
@@ -406,37 +206,17 @@
                         const comment = this.comments.find(c => c.id === commentId);
                         if (!comment) return;
                         
-                        const newPinnedState = !comment.pinned;
-                        
-                        const response = await fetch(`/api/admin/comments/${commentId}/pin`, {
+                        const res = await fetch(`/api/admin/comments/${commentId}/pin`, {
                             method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
+                            headers: {'Content-Type': 'application/json'},
                             credentials: 'include',
-                            body: JSON.stringify({ pinned: newPinnedState })
+                            body: JSON.stringify({pinned: !comment.pinned})
                         });
                         
-                        if (response.ok) {
-                            // Update local state
-                            comment.pinned = newPinnedState;
-                        } else {
-                            console.error('Failed to update comment pin status');
-                        }
-                    } catch (error) {
-                        console.error('Error toggling pin:', error);
+                        if (res.ok) comment.pinned = !comment.pinned;
+                    } catch (err) {
+                        console.error('Error toggling pin:', err);
                     }
-                },
-                
-                refreshStats() {
-                    this.loadStats();
-                },
-                
-                refreshComments() {
-                    this.loadComments();
-                },
-                
-                formatDate(dateString) {
-                    const date = new Date(dateString);
-                    return date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
                 }
             };
         }

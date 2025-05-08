@@ -35,18 +35,19 @@ router.get('/stats', authMiddleware, async (req, res) => {
   }
 });
 
-// Get recent comments
+// Get recent comments (updated for pagination)
 router.get('/comments', authMiddleware, async (req, res) => {
   try {
-    const limit = req.query.limit || 10;
+    const limit = parseInt(req.query.limit) || 10;
+    const offset = parseInt(req.query.offset) || 0;
     
-    // Get the 10 most recent comments, ordered by creation date
+    // Get comments with pagination
     const result = await pool.query(
       `SELECT c.id, c.post_id, c.author, c.email, c.content, c.pinned, c.created_at 
        FROM comments2 c 
        ORDER BY c.created_at DESC 
-       LIMIT $1`,
-      [limit]
+       LIMIT $1 OFFSET $2`,
+      [limit, offset]
     );
 
     return res.json(result.rows);
@@ -55,6 +56,7 @@ router.get('/comments', authMiddleware, async (req, res) => {
     return res.status(500).json({ error: 'Server error', details: error.message });
   }
 });
+
 
 // Toggle comment pin status
 router.post('/comments/:id/pin', authMiddleware, async (req, res) => {
