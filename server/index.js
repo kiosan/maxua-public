@@ -104,42 +104,10 @@ app.get(['/newsletter_archive/'], (req, res) => {
   res.sendFile(path.join(__dirname, '../public/newsletter_archive/index.html'));
 });
 
-// Serve static HTML files from public directory
-app.get('/:page.html', (req, res, next) => {
-  const page = req.params.page;
-  const filePath = path.join(__dirname, '../public', `${page}.html`);
-  
-  // Check if the file exists
-  fs.access(filePath, fs.constants.F_OK, (err) => {
-    if (err) {
-      // File doesn't exist, move to next handler
-      return next();
-    }
-    // File exists, send it
-    res.sendFile(filePath);
-  });
-});
-
-// Special case for root-level admin and other pages
-app.get('/admin', (req, res) => {
-  res.sendFile(path.join(__dirname, '../public/admin.html'));
-});
-
-app.get('/test_auth', (req, res) => {
-  res.sendFile(path.join(__dirname, '../public/test_auth.html'));
-});
-
-// Add routes for any other pages that need direct handling
-app.get('/books', (req, res) => {
-  res.sendFile(path.join(__dirname, '../public/books.html'));
-});
-
-app.get('/about', (req, res) => {
-  res.sendFile(path.join(__dirname, '../public/about.html'));
-});
-
-app.get('/zsu', (req, res) => {
-  res.sendFile(path.join(__dirname, '../public/zsu.html'));
+// Simplr static HTML page handler
+app.get(['/admin', '/test_auth', '/books', '/about', '/zsu'], (req, res) => {
+  const pageName = req.path.substring(1);
+  res.sendFile(path.join(__dirname, '../public', `${pageName}.html`));
 });
 
 // Create adapter for SSR page handlers
