@@ -110,13 +110,12 @@
 <body>
     <div x-data="adminApp()">
         <header>
-            <h1>Admin Dashboard</h1>
             <a href="/">&larr; Back to microblog</a>
         </header>
 
         <!-- Comments Container -->
         <div class="container">
-            <h2>Recent Comments</h2>
+            <h2>Comments</h2>
             <div class="comment-list">
                 <template x-if="comments.length === 0">
                     <div class="no-comments">No comments found</div>
