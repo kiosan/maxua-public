@@ -88,6 +88,21 @@
     </div>
     {{/if}}
 
+    {{#if pinnedComments.length}}
+    <div class="pinned-comments-section">
+      <h3>Pinned Comments</h3>
+      {{#each pinnedComments}}
+      <div class="pinned-comment">
+        <div class="pinned-comment-content">{{{content_html}}}</div>
+        <div class="pinned-comment-meta">
+          <div class="pinned-comment-date">{{formatted_date}}</div>
+          <div class="pinned-comment-author">{{author}}</div>
+        </div>
+      </div>
+      {{/each}}
+    </div>
+    {{/if}}
+
 <div class="comment-form-container" style="margin-top: 3rem;">
   <h3>Share your thoughts</h3>
   

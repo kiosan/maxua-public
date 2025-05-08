@@ -139,6 +139,20 @@ async function prepareTemplateData(post, event, navLinks) {
   const previewTitle = previewContent.length > 50 
     ? previewContent.substring(0, 47) + '...'
     : previewContent;
+
+  // Fetch pinned comments
+  const commentsQuery = `
+    SELECT id, author, content, created_at 
+    FROM comments2 
+    WHERE post_id = $1 AND pinned = true 
+    ORDER BY created_at ASC
+  `;
+  const commentsResult = await pool.query(commentsQuery, [post.id]);
+  const pinnedComments = commentsResult.rows.map(comment => ({
+    ...comment,
+    formatted_date: formatDate(comment.created_at),
+    content_html: linkify(comment.content)
+  }));
   
   // Format nav links as post objects for the permalink helper
   if (navLinks.prevPostId) {
@@ -214,6 +228,7 @@ async function prepareTemplateData(post, event, navLinks) {
     postTitle: previewTitle,
     metaTags,
     structuredData,
+    pinnedComments,
     navLinks
   };
 }
