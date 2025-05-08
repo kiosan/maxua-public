@@ -41,37 +41,12 @@ app.use((req, res, next) => {
   next();
 });
 
-// Database connection warm-up
-let dbConnected = false;
-const checkDatabaseConnection = async () => {
-  try {
-    if (!dbConnected) {
-      const client = await pool.connect();
-      try {
-        await client.query('SELECT 1');
-        console.log('Database connection established');
-        dbConnected = true;
-      } finally {
-        client.release();
-      }
-    }
-  } catch (err) {
-    console.error('Database connection error:', err);
-    dbConnected = false;
-  }
-};
-
-// Call immediately and then set interval
-checkDatabaseConnection();
-setInterval(checkDatabaseConnection, 60000); // Check every minute
-
 // Health check endpoint
 app.get('/api/health', (req, res) => {
   res.json({ 
     status: 'ok', 
     time: new Date().toISOString(),
-    env: process.env.NODE_ENV || 'development',
-    dbConnected
+    env: process.env.NODE_ENV || 'development'
   });
 });
 
