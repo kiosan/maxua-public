@@ -56,6 +56,14 @@
           </button>
       </div>
   </div>
+                
+                <div 
+                  x-show="statusMessage !== ''" 
+                  x-text="statusMessage" 
+                  :class="`status-message status-${statusType}`"
+                  x-transition
+                  x-cloak>
+                </div>
 
   <!-- Sharing options section - add after button row -->
 <div class="sharing-options">
@@ -112,13 +120,7 @@
 
 
                 </form>
-                
-                <div 
-                    x-show="statusMessage" 
-                    x-text="statusMessage" 
-                    :class="`status-message status-${statusType}`"
-                    style="display: none;">
-                </div>
+
             </div>
         </div>
     </main>
