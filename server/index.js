@@ -2,7 +2,6 @@
 require('dotenv').config();
 const express = require('express');
 const cookieParser = require('cookie-parser');
-const cors = require('cors');
 const Sentry = require('@sentry/node');
 const { pool, rateLimiterMiddleware, authMiddleware } = require('./utils');
 
@@ -35,14 +34,6 @@ Sentry.init({
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true })); // for HTMX
-
-// CORS middleware
-app.use(cors({
-  origin: ['https://maxua.com', 'http://localhost:8888', 'http://localhost:3000'],
-  credentials: true, // Allow cookies to be sent
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
-}));
 
 // Request logging
 app.use((req, res, next) => {
