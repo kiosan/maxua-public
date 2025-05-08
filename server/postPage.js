@@ -63,16 +63,32 @@ function extractPostIdFromPath(path) {
 
 /**
  * Fetch post data from the database
+ *
+ * Post + attachments (if any) - in order
  */
 async function fetchPost(postId) {
-  const result = await pool.query(`
+  // First, fetch the post with its topic
+  const postResult = await pool.query(`
     SELECT p.*, t.id as topic_id, t.name as topic_name, t.slug as topic_slug 
     FROM posts p
     LEFT JOIN topics t ON p.topic_id = t.id
     WHERE p.id = $1
   `, [postId]);
   
-  return result.rows.length ? result.rows[0] : null;
+  const post = postResult.rows.length ? postResult.rows[0] : null;
+  
+  if (post) {
+    const attachmentsResult = await pool.query(`
+      SELECT id, type, content, position
+      FROM attachments
+      WHERE post_id = $1
+      ORDER BY position ASC
+    `, [postId]);
+    
+    post.attachments = attachmentsResult.rows;
+  }
+  
+  return post;
 }
 
 /**

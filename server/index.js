@@ -79,6 +79,9 @@ app.use('/api/drafts', draftsRoutes);
 app.use('/api', newsletterRoutes); // Will handle /subscribe, /confirmSubscription, /unsubscribe
 app.use('/', feedsRoutes); // Will handle /rss
 
+const compose2Routes = require('./routes/compose2');
+app.use('/compose2', compose2Routes);
+
 // STATIC paths - from Netlify
 const path = require('path');
 

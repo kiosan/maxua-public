@@ -23,6 +23,7 @@
     "node-fetch": "^2.7.0",
     "pg": "^8.11.3",
     "resend": "^4.2.0",
+    "sanitize-html": "^2.16.0",
     "uuid": "^11.1.0"
   },
   "devDependencies": {
