@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin - MaxUA Microblog</title>
+    <script defer src="https://unpkg.com/alpinejs@3.12.0/dist/cdn.min.js"></script>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -28,13 +29,14 @@
             margin-bottom: 0;
         }
         
-        .auth-container {
+        .container {
             margin-top: 20px;
             padding: 30px;
             border-radius: 8px;
             background-color: #ffffff;
             border: 1px solid #e0e0e0;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
         }
         
         h2 {
@@ -44,7 +46,7 @@
             border-bottom: 1px solid #eee;
         }
         
-        .auth-form {
+        .login-form {
             display: flex;
             flex-direction: column;
             margin-bottom: 20px;
@@ -82,15 +84,10 @@
             background-color: #bd2130;
         }
         
-        .section {
-            margin-bottom: 30px;
-        }
-        
         .status {
             margin-top: 20px;
             padding: 12px;
             border-radius: 4px;
-            display: none;
         }
         
         .error {
@@ -119,15 +116,69 @@
         
         .admin-panel {
             margin-top: 30px;
-            display: none;
         }
         
-        .session-info {
-            background-color: #f9f9f9;
-            padding: 15px;
-            border-radius: 4px;
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
             margin-bottom: 20px;
-            border: 1px solid #eee;
+        }
+        
+        .stat-card {
+            background-color: #f5f7fa;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .comment-list {
+            margin-top: 20px;
+        }
+        
+        .comment-item {
+            border-bottom: 1px solid #eee;
+            padding: 15px 0;
+        }
+        
+        .comment-item:last-child {
+            border-bottom: none;
+        }
+        
+        .comment-content {
+            margin-bottom: 10px;
+            white-space: pre-wrap;
+        }
+        
+        .comment-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .pin-button {
+            background-color: #f1f1f1;
+            color: #333;
+            font-size: 14px;
+            padding: 5px 10px;
+        }
+        
+        .pinned {
+            background-color: #e6f7e6;
+            border-left: 3px solid #2e7d32;
+            padding-left: 12px;
         }
         
         .logout-button {
@@ -135,64 +186,260 @@
             color: #333;
         }
 
-        .settings-form {
-            margin-top: 20px;
-        }
-
-        .settings-form label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-
-        .settings-form input {
-            width: 100%;
+        .no-comments {
+            text-align: center;
+            color: #666;
+            font-style: italic;
+            padding: 20px 0;
         }
     </style>
 </head>
 <body>
-    <header>
-        <h1>Admin Dashboard</h1>
-        <div class="back-link">
-            <a href="/">&larr; Back to microblog</a>
-        </div>
-    </header>
+    <div x-data="adminApp()">
+        <header>
+            <h1>Admin Dashboard</h1>
+            <div class="back-link">
+                <a href="/">&larr; Back to microblog</a>
+            </div>
+        </header>
 
-    <!-- Login Section (visible when not logged in) -->
-    <div class="auth-container" id="login-section">
-        <h2>Admin Login</h2>
-        <div class="auth-form">
-            <input type="password" id="password-input" placeholder="Enter password">
-            <button id="login-button">Login</button>
-        </div>
-        <div id="login-status" class="status"></div>
-    </div>
-    
-    <!-- Admin Panel (visible after login) -->
-    <div id="admin-panel" class="admin-panel">
-        <div class="auth-container">
-            <h2>Session Management</h2>
-            <div class="session-info" id="session-info">
-                <!-- This will be populated with session info -->
+        <!-- Login Section (visible when not logged in) -->
+        <template x-if="!isAuthenticated">
+            <div class="container">
+                <h2>Admin Login</h2>
+                <div class="login-form">
+                    <input type="password" x-model="password" placeholder="Enter password" @keyup.enter="login">
+                    <button @click="login" x-bind:disabled="isLoggingIn">
+                        <span x-text="isLoggingIn ? 'Logging in...' : 'Login'"></span>
+                    </button>
+                </div>
+                <div x-show="loginError" class="status error" x-text="loginError"></div>
             </div>
-            <div class="section">
-                <button id="logout-button" class="logout-button">Logout Current Session</button>
-                <button id="revoke-button" class="danger">Revoke All Sessions</button>
-            </div>
-            <div id="session-status" class="status"></div>
-        </div>
+        </template>
         
-        <div class="auth-container">
-            <h2>Settings</h2>
-            <div class="settings-form">
-                <label for="site-title">Site Title</label>
-                <input type="text" id="site-title" placeholder="MaxUA Microblog">
+        <!-- Admin Panel (visible after login) -->
+        <template x-if="isAuthenticated">
+            <div class="admin-panel">
+                <!-- Stats Container -->
+                <div class="container">
+                    <h2>Stats</h2>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-value" x-text="stats.subscriberCount || 0"></div>
+                            <div class="stat-label">Subscribers</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" x-text="stats.recentPosts || 0"></div>
+                            <div class="stat-label">Posts (7 days)</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" x-text="stats.recentComments || 0"></div>
+                            <div class="stat-label">Comments (7 days)</div>
+                        </div>
+                    </div>
+                    <button @click="refreshStats" class="logout-button">Refresh Stats</button>
+                </div>
                 
-                <button id="save-settings" class="mt-3">Save Settings</button>
+                <!-- Comments Container -->
+                <div class="container">
+                    <h2>Recent Comments</h2>
+                    <div class="comment-list">
+                        <template x-if="comments.length === 0">
+                            <div class="no-comments">No comments found</div>
+                        </template>
+                        <template x-for="comment in comments" :key="comment.id">
+                            <div class="comment-item" :class="{ 'pinned': comment.pinned }">
+                                <div class="comment-content" x-text="comment.content"></div>
+                                <div class="comment-meta">
+                                    <div>
+                                        <strong x-text="comment.author"></strong> on 
+                                        <a :href="'/p/' + comment.post_id" target="_blank">Post #<span x-text="comment.post_id"></span></a>
+                                        • <span x-text="formatDate(comment.created_at)"></span>
+                                    </div>
+                                    <button 
+                                        @click="togglePin(comment.id)" 
+                                        class="pin-button"
+                                        x-text="comment.pinned ? 'Unpin' : 'Pin'"
+                                        :class="{ 'danger': comment.pinned }">
+                                    </button>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                    <button @click="refreshComments" class="logout-button" style="margin-top: 20px">Refresh Comments</button>
+                </div>
+                
+                <!-- Logout Button -->
+                <div style="text-align: right; margin-top: 20px;">
+                    <button @click="logout" class="logout-button">Logout</button>
+                </div>
             </div>
-            <div id="settings-status" class="status"></div>
-        </div>
+        </template>
     </div>
-    <script type="module" src="/js/admin.js"></script>
+
+    <script>
+        function adminApp() {
+            return {
+                isAuthenticated: false,
+                isLoggingIn: false,
+                password: '',
+                loginError: '',
+                comments: [],
+                stats: {
+                    subscriberCount: 0,
+                    recentPosts: 0,
+                    recentComments: 0
+                },
+                
+                init() {
+                    this.checkAuthStatus();
+                },
+                
+                async checkAuthStatus() {
+                    try {
+                        const response = await fetch('/api/auth', {
+                            method: 'GET',
+                            credentials: 'include'
+                        });
+                        const data = await response.json();
+                        
+                        this.isAuthenticated = data.valid;
+                        
+                        if (this.isAuthenticated) {
+                            this.loadData();
+                        }
+                    } catch (error) {
+                        console.error('Error checking auth status:', error);
+                        this.isAuthenticated = false;
+                    }
+                },
+                
+                async login() {
+                    if (!this.password) {
+                        this.loginError = 'Please enter a password';
+                        return;
+                    }
+                    
+                    this.isLoggingIn = true;
+                    this.loginError = '';
+                    
+                    try {
+                        const response = await fetch('/api/auth', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            credentials: 'include',
+                            body: JSON.stringify({ 
+                                password: this.password,
+                                deviceInfo: navigator.userAgent 
+                            })
+                        });
+                        
+                        const data = await response.json();
+                        
+                        if (response.ok && data.success) {
+                            this.isAuthenticated = true;
+                            this.password = '';
+                            this.loadData();
+                        } else {
+                            this.loginError = data.error || 'Invalid password';
+                        }
+                    } catch (error) {
+                        console.error('Login error:', error);
+                        this.loginError = 'Server error. Please try again.';
+                    } finally {
+                        this.isLoggingIn = false;
+                    }
+                },
+                
+                async logout() {
+                    try {
+                        // Simply clear the local authentication state
+                        // The server will handle the cookie invalidation
+                        document.cookie = 'auth_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+                        this.isAuthenticated = false;
+                    } catch (error) {
+                        console.error('Logout error:', error);
+                    }
+                },
+                
+                async loadData() {
+                    await Promise.all([
+                        this.loadStats(),
+                        this.loadComments()
+                    ]);
+                },
+                
+                async loadStats() {
+                    try {
+                        const response = await fetch('/api/admin/stats', {
+                            credentials: 'include'
+                        });
+                        
+                        if (response.ok) {
+                            this.stats = await response.json();
+                        } else {
+                            console.error('Failed to load stats');
+                        }
+                    } catch (error) {
+                        console.error('Error loading stats:', error);
+                    }
+                },
+                
+                async loadComments() {
+                    try {
+                        const response = await fetch('/api/admin/comments', {
+                            credentials: 'include'
+                        });
+                        
+                        if (response.ok) {
+                            this.comments = await response.json();
+                        } else {
+                            console.error('Failed to load comments');
+                        }
+                    } catch (error) {
+                        console.error('Error loading comments:', error);
+                    }
+                },
+                
+                async togglePin(commentId) {
+                    try {
+                        const comment = this.comments.find(c => c.id === commentId);
+                        if (!comment) return;
+                        
+                        const newPinnedState = !comment.pinned;
+                        
+                        const response = await fetch(`/api/admin/comments/${commentId}/pin`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            credentials: 'include',
+                            body: JSON.stringify({ pinned: newPinnedState })
+                        });
+                        
+                        if (response.ok) {
+                            // Update local state
+                            comment.pinned = newPinnedState;
+                        } else {
+                            console.error('Failed to update comment pin status');
+                        }
+                    } catch (error) {
+                        console.error('Error toggling pin:', error);
+                    }
+                },
+                
+                refreshStats() {
+                    this.loadStats();
+                },
+                
+                refreshComments() {
+                    this.loadComments();
+                },
+                
+                formatDate(dateString) {
+                    const date = new Date(dateString);
+                    return date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
+                }
+            };
+        }
+    </script>
 </body>
 </html>

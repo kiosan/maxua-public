@@ -200,6 +200,9 @@ app.get(['/p/:id(\\d+)', '/p/:slug([\\w\\-]+)-:id(\\d+)'], async (req, res, next
 const translationRoutes = require('./routes/translation');
 app.use('/api', translationRoutes);
 
+const adminRoutes = require('./routes/admin');
+app.use('/api/admin', adminRoutes);
+
 // Start the server
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
