@@ -243,37 +243,25 @@ app.get('/t/:topic', createServerlessAdapter(timelinePage));
 app.get('/compose', createServerlessAdapter(composePage));
 app.get('/sitemap.xml', createServerlessAdapter(sitemap));
 
-
-// Redirect old post format to new slug format
-app.get('/p/:id(\\d+)', async (req, res, next) => {
+// single page route
+// handles old /p/{id} style and slug redirects for SEO
+// also, still uses createServerlessAdapter legacy code
+app.get(['/p/:id(\\d+)', '/p/:slug([\\w\\-]+)-:id(\\d+)'], async (req, res, next) => {
   try {
-    const postId = req.params.id;
-    // Fetch the post to get its slug
-    const result = await pool.query(
-      'SELECT slug FROM posts WHERE id = $1',
-      [postId]
-    );
+    const { id, slug = '' } = req.params;
+    const result = await pool.query('SELECT slug FROM posts WHERE id = $1', [id]);
     
-    if (result.rows.length === 0) {
-      // Post not found, let the regular route handle the 404
-      return next();
+    // Redirect only if we have a post with a slug that differs from the URL
+    if (result.rows.length > 0 && result.rows[0].slug && result.rows[0].slug !== slug) {
+      return res.redirect(301, `/p/${result.rows[0].slug}-${id}`);
     }
     
-    const post = result.rows[0];
-    if (post.slug) {
-      // Redirect to the new slug format
-      return res.redirect(301, `/p/${post.slug}-${postId}`);
-    }
-    
-    // If post has no slug, let the regular route handle it
-    next();
+    // Otherwise, process the request normally
+    createServerlessAdapter(postPage)(req, res, next);
   } catch (error) {
-    console.error('Error in post redirect:', error);
     next(error);
   }
 });
-
-app.get('/p/:slug([\\w\\-]+)-:id(\\d+)', createServerlessAdapter(postPage));
 
 const translationRoutes = require('./routes/translation');
 app.use('/api', translationRoutes);
