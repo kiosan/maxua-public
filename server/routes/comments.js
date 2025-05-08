@@ -49,6 +49,7 @@ ${author} ${email} wrote:
 \n\n
 ${content}
 
+https://maxua.com/p/${postId}
     `;
     
     await sendEmail({
