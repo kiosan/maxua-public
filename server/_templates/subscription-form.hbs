@@ -1,11 +1,26 @@
 <div class="subscription-form-panel">
-  <h3>Get new posts in your inbox!</h3>
+  <h3>New posts in your inbox ✨</h3>
   
   <form x-data="{
     email: '',
     message: '',
     messageType: '',
     submitting: false,
+    tagline: '',
+    
+    init() {
+      // Array of possible taglines
+      const taglines = [
+        'Thoughts on startups, tech, and coffee ☕',
+        'З мене контент, з вас підписка ;-)',
+        'Better than sex! – no one said ever. Still worth a try though',
+        'Less lurking, more subscribing гг',
+        'free eBook included! (але це не точно)',
+      ];
+      
+      // Pick a random tagline
+      this.tagline = taglines[Math.floor(Math.random() * taglines.length)];
+    },
     
     async submitForm() {
       if (!this.email || !this.isValidEmail(this.email)) {
@@ -62,7 +77,7 @@
       </button>
     </div>
     
-    <div class="subscription-info">One email per day. Easy-peasy ;)</div>
+    <div class="subscription-info" x-text="tagline"></div>
     
     <div 
       x-show="message" 
