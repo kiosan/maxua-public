@@ -980,24 +980,6 @@ textarea#post-content {
         width: 100%;
     }
     
-    .topic-header {
-        margin-bottom: 1rem;
-        padding-bottom: 0.5rem;
-    }
-    
-    .topic-tag {
-        font-size: 0.9rem;
-    }
-    
-    .topics-nav {
-        padding-bottom: 0.5rem;
-    }
-    
-    .topic-tab {
-        padding: 0.5rem 0.75rem;
-        font-size: 0.9rem;
-    }
-    
     .single-post-container .post-content {
         font-size: 1.1rem;
     }
