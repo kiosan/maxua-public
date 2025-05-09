@@ -57,6 +57,32 @@
         button:hover {
             background-color: #e0e0e0;
         }
+
+        .stats-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+          gap: 20px;
+          margin-top: 15px;
+        }
+
+        .stats-section {
+          padding: 15px;
+          background-color: #f9f9f9;
+          border-radius: 6px;
+          border: 1px solid #eee;
+        }
+
+        .stats-section h3 {
+          margin-top: 0;
+          margin-bottom: 10px;
+          font-size: 16px;
+          color: #555;
+        }
+
+        .stats-section p {
+          margin: 0;
+          font-size: 15px;
+        }
         
         .comment-list {
             margin-top: 10px;
@@ -113,6 +139,31 @@
             <a href="/">&larr; Back to microblog</a>
         </header>
 
+        <!-- Stats Container -->
+        <div class="container">
+            <h2>Stats</h2>
+            <div class="stats-grid">
+                <div class="stats-section">
+                    <h3>Visitors</h3>
+                    <p><span x-text="stats.visitors?.daily || 0"></span> daily active, 
+                       <span x-text="stats.visitors?.weekly || 0"></span> weekly, 
+                       <span x-text="stats.visitors?.allTime || 0"></span> total</p>
+                </div>
+                <div class="stats-section">
+                    <h3>Subscribers</h3>
+                    <p>+<span x-text="stats.subscribers?.newLastWeek || 0"></span> last week, 
+                       <span x-text="stats.subscribers?.total || 0"></span> total</p>
+                </div>
+                <!--
+                <div class="stats-section">
+                    <h3>Comments</h3>
+                    <p>+<span x-text="stats.comments?.newLastWeek || 0"></span> last week, 
+                       <span x-text="stats.comments?.total || 0"></span> total</p>
+                </div>
+                -->
+            </div>
+        </div>
+
         <!-- Comments Container -->
         <div class="container">
             <h2>Comments</h2>
@@ -142,15 +193,6 @@
             </button>
         </div>
         
-        <!-- Stats Container -->
-        <div class="container">
-            <h2>Stats</h2>
-            <div>
-                <span x-text="stats.subscriberCount || 0"></span> subscribers, 
-                <span x-text="stats.recentPosts || 0"></span> posts and 
-                <span x-text="stats.recentComments || 0"></span> comments in the last 7 days
-            </div>
-        </div>
     </div>
 
     <script>
@@ -163,17 +205,23 @@
                 stats: {},
                 
                 init() {
-                    Promise.all([this.loadStats(), this.loadComments(true)]);
+                  Promise.all([this.loadStats(), this.loadComments(true)]);
                 },
-                
-                async loadStats() {
-                    try {
-                        const res = await fetch('/api/admin/stats', {credentials: 'include'});
-                        if (res.ok) this.stats = await res.json();
-                    } catch (err) {
-                        console.error('Error loading stats:', err);
-                    }
-                },
+
+              async loadStats() {
+                try {
+                  const res = await fetch('/api/admin/stats', {credentials: 'include'});
+                  if (res.ok) {
+                    this.stats = await res.json();
+                    // Map the stats format to maintain backward compatibility with existing code
+                    this.stats.subscriberCount = this.stats.subscribers?.total || 0;
+                    this.stats.recentComments = this.stats.comments?.newLastWeek || 0;
+                    this.stats.recentPosts = this.stats.posts?.newLastWeek || 0;
+                  }
+                } catch (err) {
+                  console.error('Error loading extended stats:', err);
+                }
+              },
                 
                 async loadComments(reset = false) {
                     if (reset) {

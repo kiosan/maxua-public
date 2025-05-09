@@ -3,14 +3,20 @@ const express = require('express');
 const router = express.Router();
 const { pool, authMiddleware } = require('../utils');
 
-// Get admin stats
+// Get extended stats including visitor metrics
 router.get('/stats', authMiddleware, async (req, res) => {
   try {
-    // Get subscriber count
+    // Get basic stats (existing subscribers and post stats)
     const subscriberResult = await pool.query(
       'SELECT COUNT(*) FROM subscribers WHERE confirmed = true'
     );
     const subscriberCount = parseInt(subscriberResult.rows[0].count);
+
+    // Get new subscribers in the last 7 days
+    const newSubscribersResult = await pool.query(
+      'SELECT COUNT(*) FROM subscribers WHERE confirmed = true AND created_at > NOW() - INTERVAL \'7 days\''
+    );
+    const newSubscriberCount = parseInt(newSubscribersResult.rows[0].count);
 
     // Get posts created in the last 7 days
     const postsResult = await pool.query(
@@ -18,19 +24,57 @@ router.get('/stats', authMiddleware, async (req, res) => {
     );
     const recentPosts = parseInt(postsResult.rows[0].count);
 
+    // Get total comments
+    const totalCommentsResult = await pool.query(
+      'SELECT COUNT(*) FROM comments2'
+    );
+    const totalComments = parseInt(totalCommentsResult.rows[0].count);
+
     // Get comments created in the last 7 days
     const commentsResult = await pool.query(
       'SELECT COUNT(*) FROM comments2 WHERE created_at > NOW() - INTERVAL \'7 days\''
     );
     const recentComments = parseInt(commentsResult.rows[0].count);
 
+    // Get visitor stats
+    // Daily active users (last 24 hours)
+    const dailyActiveResult = await pool.query(
+      'SELECT COUNT(*) FROM visitor_stats WHERE last_seen > NOW() - INTERVAL \'24 hours\''
+    );
+    const dailyActiveVisitors = parseInt(dailyActiveResult.rows[0].count);
+
+    // Weekly active users (last 7 days)
+    const weeklyActiveResult = await pool.query(
+      'SELECT COUNT(*) FROM visitor_stats WHERE last_seen > NOW() - INTERVAL \'7 days\''
+    );
+    const weeklyActiveVisitors = parseInt(weeklyActiveResult.rows[0].count);
+
+    // All-time unique visitors
+    const allTimeResult = await pool.query(
+      'SELECT COUNT(*) FROM visitor_stats'
+    );
+    const allTimeVisitors = parseInt(allTimeResult.rows[0].count);
+
     return res.json({
-      subscriberCount,
-      recentPosts,
-      recentComments
+      visitors: {
+        daily: dailyActiveVisitors,
+        weekly: weeklyActiveVisitors,
+        allTime: allTimeVisitors
+      },
+      subscribers: {
+        total: subscriberCount,
+        newLastWeek: newSubscriberCount
+      },
+      comments: {
+        total: totalComments,
+        newLastWeek: recentComments
+      },
+      posts: {
+        newLastWeek: recentPosts
+      }
     });
   } catch (error) {
-    console.error('Error fetching admin stats:', error);
+    console.error('Error fetching extended stats:', error);
     return res.status(500).json({ error: 'Server error', details: error.message });
   }
 });
