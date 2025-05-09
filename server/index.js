@@ -118,6 +118,61 @@ app.get('/admin', authMiddleware, (req, res) => {
   res.sendFile(path.join(__dirname, '../public', `${pageName}.html`));
 });
 
+// Track post and page views
+app.post('/track-visits', rateLimiterMiddleware, async (req, res) => {
+  try {
+    let { pathname, anonId, referrer } = req.body;
+
+    if (!anonId && !pathname) {
+      return res.status(400).json({ error: 'Missing anonId or pathname' });
+    }
+
+    // Extract postId from pathname
+    let postId = null;
+    if (pathname.startsWith('/p/')) {
+      // Handle both formats: /p/slug-123 and /p/123
+      const slugMatch = pathname.match(/\/p\/.*?-(\d+)$/);
+      if (slugMatch) {
+        // Format: /p/slug-123
+        postId = parseInt(slugMatch[1], 10);
+      } else {
+        // Format: /p/123
+        const directMatch = pathname.match(/\/p\/(\d+)$/);
+        if (directMatch) {
+          postId = parseInt(directMatch[1], 10);
+        }
+      }
+    }
+
+    // Update visitor stats (upsert pattern)
+    await pool.query(`
+      INSERT INTO visitor_stats (anon_id, last_path, last_referrer)
+      VALUES ($1, $2, $3)
+      ON CONFLICT (anon_id) 
+      DO UPDATE SET 
+        visit_count = visitor_stats.visit_count + 1,
+        last_seen = NOW(),
+        last_path = $2,
+        last_referrer = $3
+    `, [anonId, pathname, referrer || null]);
+    
+    // If we have a postId, track page view separately
+    if (postId) {
+      await pool.query(
+        `INSERT INTO page_views (post_id, anon_id)
+         VALUES ($1, $2)
+         ON CONFLICT (post_id, anon_id) DO NOTHING`,
+        [postId, anonId]
+      );
+    }
+
+    return res.json({ success: true });
+  } catch (err) {
+    console.error('Error logging view:', err.message);
+    return res.status(500).json({ error: 'Server error', details: err.message });
+  }
+});
+
 // Create adapter for SSR page handlers
 function createServerlessAdapter(pageHandler) {
   return async (req, res) => {

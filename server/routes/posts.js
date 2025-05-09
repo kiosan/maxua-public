@@ -122,40 +122,6 @@ router.post('/publish', authMiddleware, async (req, res) => {
   }
 });
 
-// Track post and page views
-router.post('/views', rateLimiterMiddleware, async (req, res) => {
-  try {
-    let { postId, pathname, anonId } = req.body;
-
-    if (!anonId || (!postId && !pathname)) {
-      return res.status(400).json({ error: 'Missing postId or pathname or anonId' });
-    }
-
-    // Extract postId from pathname if needed
-    if (!postId && pathname?.startsWith('/p/')) {
-      const match = pathname.match(/^\/p\/(\d+)/);
-      if (match) {
-        postId = parseInt(match[1], 10);
-      }
-    }
-
-    // Track post view if postId is available
-    if (postId) {
-      await pool.query(
-        `INSERT INTO page_views (post_id, anon_id)
-         VALUES ($1, $2)
-         ON CONFLICT (post_id, anon_id) DO NOTHING`,
-        [postId, anonId]
-      );
-    }
-
-    return res.json({ success: true });
-  } catch (err) {
-    console.error('Error logging view:', err.message);
-    return res.status(500).json({ error: 'Server error', details: err.message });
-  }
-});
-
 // Get topics
 router.get('/topics', async (req, res) => {
   try {

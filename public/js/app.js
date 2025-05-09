@@ -24,13 +24,27 @@ export function getAnonId() {
 }
 
 /**
+ * This counts how many times a visitor returns to the site
+ */
+function countReturnVisits() {
+  const anonId = getAnonId();
+  
+  const VISIT_COUNT_KEY = "visits_count";
+  
+  let visitCount = parseInt(localStorage.getItem(VISIT_COUNT_KEY) || '0');
+  visitCount++;
+  
+  localStorage.setItem(VISIT_COUNT_KEY, visitCount.toString());
+}
+
+/**
  * Track page view for analytics
  * @param {string} pathname Page path
  * @param {string} anonId Anonymous user ID
  */
 export async function trackPageView(pathname, anonId) {
   try {
-    await fetch('/api/views', {
+    await fetch('/track-visits', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -153,7 +167,8 @@ function initApp() {
   if (!['localhost', '127.0.0.1'].includes(window.location.hostname)) {
     trackPageView(window.location.pathname, getAnonId());
   }
-  
+
+  countReturnVisits(); 
 }
 
 // Initialize on page load
