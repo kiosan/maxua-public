@@ -1,98 +1,73 @@
-<div x-data="{
-  shown: false,
-  email: '',
-  message: '',
-  messageType: '',
-  submitting: false,
+<div class="subscription-form-panel">
+  <h3>Get new posts in your inbox!</h3>
   
-  toggleForm() {
-    this.shown = !this.shown;
-  },
-  
-  async submitForm() {
-    if (!this.email || !this.isValidEmail(this.email)) {
-      this.message = 'Please enter a valid email address';
-      this.messageType = 'error';
-      return;
-    }
+  <form x-data="{
+    email: '',
+    message: '',
+    messageType: '',
+    submitting: false,
     
-    this.submitting = true;
-    
-    try {
-      const response = await fetch('/api/subscribe', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          email: this.email
-        })
-      });
-      
-      const result = await response.json();
-      
-      if (response.ok) {
-        this.message = result.message;
-        this.messageType = 'success';
-        this.email = '';
-      } else {
-        throw new Error(result.error || 'Failed to subscribe');
+    async submitForm() {
+      if (!this.email || !this.isValidEmail(this.email)) {
+        this.message = 'Please enter a valid email address';
+        this.messageType = 'error';
+        return;
       }
-    } catch (error) {
-      this.message = `Error: ${error.message}`;
-      this.messageType = 'error';
-    } finally {
-      this.submitting = false;
+      
+      this.submitting = true;
+      
+      try {
+        const response = await fetch('/api/subscribe', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ 
+            email: this.email
+          })
+        });
+        
+        const result = await response.json();
+        
+        if (response.ok) {
+          this.message = result.message;
+          this.messageType = 'success';
+          this.email = '';
+        } else {
+          throw new Error(result.error || 'Failed to subscribe');
+        }
+      } catch (error) {
+        this.message = `Error: ${error.message}`;
+        this.messageType = 'error';
+      } finally {
+        this.submitting = false;
+      }
+    },
+    
+    isValidEmail(email) {
+      const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return regex.test(email);
     }
-  },
-  
-  isValidEmail(email) {
-    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return regex.test(email);
-  }
-}"
-class="subscription-form-container"
-x-init="
-  document.addEventListener('DOMContentLoaded', () => {
-    const subscribeLinks = document.querySelectorAll('.subscribe-link');
-    subscribeLinks.forEach(link => {
-      link.addEventListener('click', (e) => {
-        e.preventDefault();
-        $dispatch('toggle-subscribe');
-      });
-    });
-  });
-"
-@toggle-subscribe.window="toggleForm()">
-
-  <div 
-    x-show="shown" 
-    class="subscription-form-panel"
-    style="display: none;">
+  }" @submit.prevent="submitForm">
+    <div class="form-group">
+      <input 
+        type="email" 
+        x-model="email" 
+        placeholder="Your email address" 
+        required
+        class="email-input">
+      <button 
+        type="submit" 
+        :disabled="submitting"
+        class="subscribe-button">
+        <span x-text="submitting ? 'Subscribing...' : 'Subscribe'"></span>
+      </button>
+    </div>
     
-    <h3>New posts in your inbox!</h3>
+    <div class="subscription-info">One email per day. Easy-peasy ;)</div>
     
-    <form @submit.prevent="submitForm">
-      <div class="form-group">
-        <input 
-          type="email" 
-          x-model="email" 
-          placeholder="Your email address" 
-          required
-          class="email-input">
-        <button 
-          type="submit" 
-          :disabled="submitting"
-          class="subscribe-button">
-          <span x-text="submitting ? 'Subscribing...' : 'Subscribe'"></span>
-        </button>
-      </div>
-      
-      <div class="subscription-info">One email per day. Easy-peasy ;)</div>
-      
-      <div 
-        x-show="message" 
-        x-text="message" 
-        :class="`subscription-message ${messageType}`">
-      </div>
-    </form>
-  </div>
+    <div 
+      x-show="message" 
+      x-text="message" 
+      :class="`subscription-message ${messageType}`">
+    </div>
+  </form>
 </div>

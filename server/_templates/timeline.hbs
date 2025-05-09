@@ -71,7 +71,6 @@ button.load-more {
 <body>
   <main>
     {{> profile-header activePage="home"}}
-    {{> subscription-form}}
     
     <!-- Timeline / Posts -->
     <div class="timeline">
@@ -116,6 +115,11 @@ button.load-more {
                src="https://share.transistor.fm/e/{{this.transistor_fm_code}}"></iframe>
           {{/if}}
           </div>
+
+          {{#if (eq @index 1)}}
+          {{> subscription-form}}
+          {{/if}}
+
           {{/each}}
         {{else}}
           <p class="empty-message">{{#if currentTopic}}No posts in this topic yet.{{else}}No posts yet.{{/if}}</p>

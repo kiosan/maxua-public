@@ -167,16 +167,12 @@ footer a:hover {
 
 /* Subscription modal box */
 
-.subscription-form-container {
-  margin: 0 0 1.5rem 0;
-}
-
 .subscription-form-panel {
   background-color: lightyellow;
   border: 1px solid #eee;
   border-radius: 8px;
   padding: 1.5rem;
-  margin-top: 0.5rem;
+  margin: 1.5rem 0;
 }
 
 .subscription-form-panel h3 {
@@ -186,7 +182,7 @@ footer a:hover {
   font-weight: 600;
 }
 
-.subscription-form-panel .form-group {
+.form-group {
   display: flex;
   gap: 0.5rem;
   margin-bottom: 1rem;
@@ -203,21 +199,6 @@ footer a:hover {
 .email-input:focus {
   outline: none;
   border-color: var(--color-accent);
-}
-
-.subscribe-button {
-  background-color: var(--color-muted-link);
-  color: white;
-  border: none;
-  padding: 0.75rem 1.25rem;
-  border-radius: 4px;
-  font-size: 1rem;
-  cursor: pointer;
-}
-
-.subscribe-button:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
 }
 
 .subscription-info {
@@ -243,9 +224,8 @@ footer a:hover {
   color: #c62828;
 }
 
-/* Mobile responsiveness */
 @media (max-width: 640px) {
-  .subscription-form-panel .form-group {
+  .form-group {
     flex-direction: column;
   }
   
