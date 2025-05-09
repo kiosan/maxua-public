@@ -80,6 +80,12 @@ async function sendDailyDigest(options = {}) {
     const today = new Date();
     const digestDate = today.toISOString().slice(0, 10).replace(/-/g, '');
     const digestId = `daily#${digestDate}`;
+
+    const dateFormatted = today.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
     
     // 4. Determine the subject line
     let subjectLine;
@@ -125,7 +131,10 @@ async function sendDailyDigest(options = {}) {
     }
     
     // 6. Generate template once
-    const baseHtml = render('email-digest', { posts: formattedPosts });
+    const baseHtml = render('email-digest', {
+      posts: formattedPosts,
+      dateFormatted
+    });
     
     // If dry run, just return the preview
     if (dryRun) {
