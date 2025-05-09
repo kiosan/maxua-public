@@ -125,6 +125,11 @@ exports.handler = async (event, context) => {
                 <a href="/t/${post.topic_slug}" class="topic-badge">#${post.topic_name}</a>` : ''}
               </div>
             </div>
+            ${post.transistor_fm_code ? `
+      <iframe width="100%" height="180" style="margin: 1rem 0 0 0"
+           frameborder="no" scrolling="no" seamless=""
+           src="https://share.transistor.fm/e/${post.transistor_fm_code}"></iframe>
+      ` : ''}
           </div>
         `;
       }).join('');

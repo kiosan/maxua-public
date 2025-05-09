@@ -96,7 +96,6 @@ button.load-more {
             <a href="{{permalink this}}" class="post-card-link">
               <div class="post-content">{{{this.content_html}}}</div>
             </a>
-            
             <div class="post-meta">
               <div class="post-date">
                 <!-- Date as simple text, not a link -->
@@ -109,6 +108,11 @@ button.load-more {
                 {{/if}}
               </div>
             </div>
+          {{#if this.transistor_fm_code}}
+          <iframe width="100%" height="180" style="margin: 1rem 0 0 0"
+               frameborder="no" scrolling="no" seamless=""
+               src="https://share.transistor.fm/e/{{this.transistor_fm_code}}"></iframe>
+          {{/if}}
           </div>
           {{/each}}
         {{else}}
