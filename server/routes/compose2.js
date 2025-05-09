@@ -6,7 +6,6 @@ const sanitizeHtml = require('sanitize-html');
 const templateEngine = require('../templateEngine');
 const { sharePostToTelegram } = require('../telegram');
 const { sharePostToBluesky } = require('../bluesky');
-const { sharePostToEmail } = require('../emailDelivery');
 
 // Display the compose page
 router.get('/', authMiddleware, async (req, res) => {
@@ -136,24 +135,6 @@ router.post('/post', authMiddleware, async (req, res) => {
         
         const completePost = completePostResult.rows[0];
         
-        // Share via email if enabled and API key is available
-        try {
-          if (process.env.RESEND_API_KEY) {
-            // Default to true for email sharing
-            const shareEmail = req.body.shareEmail !== undefined ? req.body.shareEmail : true;
-            
-            if (shareEmail) {
-              await sharePostToEmail(completePost);
-              console.log(`Post ${post.id} sent via email`);
-            }
-          } else {
-            console.log('Resend API key not set, skipping email delivery');
-          }
-        } catch (emailError) {
-          console.error('Error sharing via email:', emailError);
-          // Continue even if email sharing fails
-        }
-
         // Share to Telegram if enabled and token is available
         if (shareTelegram) {
           try {

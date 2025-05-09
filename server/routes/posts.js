@@ -4,7 +4,6 @@ const router = express.Router();
 const { pool, authMiddleware, rateLimiterMiddleware, generateSlug } = require('../utils');
 const { sharePostToTelegram } = require('../telegram');
 const { sharePostToBluesky } = require('../bluesky');
-const { sharePostToEmail } = require('../emailDelivery');
 
 // Create a new post (requires authentication)
 router.post('/publish', authMiddleware, async (req, res) => {
@@ -55,31 +54,7 @@ router.post('/publish', authMiddleware, async (req, res) => {
     // Get sharing options with defaults (Telegram ON, Bluesky OFF, Email ON)
     const shareOptions = req.body.share_options || {};
     const shareTelegram = shareOptions.telegram !== undefined ? shareOptions.telegram : true;
-    const shareEmail = shareOptions.email !== undefined ? shareOptions.email : true;
     const shareBluesky = shareOptions.bluesky !== undefined ? shareOptions.bluesky : false;
-
-    // Share the post via email if enabled and Resend API key is available
-    if (shareEmail) {
-      try {
-        if (process.env.RESEND_API_KEY) {
-          const emailResult = await sharePostToEmail(completePost);
-          if (emailResult.success) {
-            console.log(`Post ${newPost.id} sent via email to ${emailResult.sentCount} subscribers`);
-          } else if (emailResult.skipped) {
-            console.log(`Post ${newPost.id} email delivery skipped: ${emailResult.reason}`);
-          } else {
-            console.log(`Post ${newPost.id} email delivery failed: ${emailResult.reason}`);
-          }
-        } else {
-          console.log('Resend API key not set, skipping email delivery');
-        }
-      } catch (error) {
-        console.error('Error sharing via email:', error);
-        // We don't want to fail the post creation if email delivery fails
-      }
-    } else {
-      console.log(`Email delivery disabled for post ${newPost.id}`);
-    }
 
     // Share to Telegram if enabled and token is available
     if (shareTelegram) {
