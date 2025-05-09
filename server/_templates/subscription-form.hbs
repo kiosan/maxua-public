@@ -1,7 +1,5 @@
-<div class="footer-subscription">
-  <div class="footer-subscription-content">
     <a name="subscribe"></a>
-    <h3 class="footer-subscription-heading">Get new posts into your inbox!</h3>
+    <h3>Get new posts into your inbox!</h3>
     
     <form x-data="{
         email: '',
@@ -53,10 +51,9 @@
           return regex.test(email);
         }
       }"
-      @submit.prevent="submitForm"
-      class="footer-subscription-form">
+          @submit.prevent="submitForm">
       
-      <div class="footer-subscription-form-row">
+      <div>
         <input 
           type="email" 
           x-model="email" 
@@ -78,6 +75,3 @@
         x-transition>
       </div>
     </form>
-    
-  </div>
-</div>
