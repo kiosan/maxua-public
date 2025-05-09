@@ -165,215 +165,151 @@ footer a:hover {
     font-weight: 500;
 }
 
-/* Footer + subscription form */
+/* New big-ass footer w/ contrast background */
 
-footer {
+/* Add these to your main.css file */
+
+/* Footer Styles */
+.site-footer {
+  background-color: #1e1e24; /* Dark background for contrast */
+  color: #e0e0e0;
+  width: 100%;
   margin-top: 3rem;
   padding: 0;
-  text-align: center;
-  color: var(--color-secondary-text);
-  font-size: 0.9rem;
-  border-top: 1px solid var(--color-border);
-  width: 100%;
-}
-
-.footer-subscription {
-  background-color: lightyellow;
-  border-bottom: 1px solid var(--color-border);
-  padding: 2rem 1rem;
-}
-
-.footer-subscription-content {
-  max-width: var(--container-width);
-  margin: 0 auto;
-  text-align: left;
-}
-
-.footer-subscription-heading {
-  font-size: 1.2rem;
-  font-weight: 600;
-  margin-bottom: 1rem;
-  color: var(--color-text);
-}
-
-.footer-subscription-form {
-  margin-bottom: 1rem;
-}
-
-.footer-subscription-form-row {
-  display: flex;
-  gap: 0.75rem;
-  margin-bottom: 0.5rem;
-}
-
-.footer-subscription-form input[type="email"] {
-  flex: 1;
-  padding: 0.75rem;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 1rem;
-  font-family: var(--font-family);
-}
-
-.footer-subscription-form input[type="email"]:focus {
-  outline: none;
-  border-color: var(--color-accent);
-  box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.1);
-}
-
-.footer-subscription-form button {
-  background-color: var(--color-muted-link);
-  color: white;
-  border: none;
-  padding: 0.75rem 1.25rem;
-  border-radius: 4px;
-  font-size: 0.95rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-  white-space: nowrap;
-}
-
-.footer-subscription-form button:hover {
-  background-color: var(--color-muted-link-hover);
-}
-
-.footer-subscription-form button:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
-}
-
-.footer-subscription-links {
-  font-size: 0.9rem;
-  color: var(--color-secondary-text);
-}
-
-.footer-subscription-links a {
-  color: var(--color-accent);
-  text-decoration: none;
-  margin: 0 0.25rem;
-}
-
-.footer-subscription-links a:hover {
-  text-decoration: underline;
-}
-
-.footer-subscription-links .separator {
-  margin: 0;
-  color: var(--color-secondary-text);
-}
-
-.subscription-info {
-  font-size: 0.85rem;
-  color: var(--color-secondary-text);
-  margin-top: 0.5rem;
-  font-style: italic;
-}
-
-.subscription-message {
-  margin-top: 0.5rem;
-  padding: 0.5rem 0.75rem;
-  border-radius: 4px;
-  font-size: 0.9rem;
-  display: none;
-}
-
-.subscription-message.success {
-  background-color: #e6f7e6;
-  color: #2e7d32;
-  display: block;
-}
-
-.subscription-message.error {
-  background-color: #ffebee;
-  color: #c62828;
-  display: block;
-}
-
-.footer-copyright {
-  padding: 1.5rem;
-  background-color: #fff;
   line-height: 1.6;
-  font-size: 0.85rem;
-  max-width: var(--container-width);
+}
+
+.footer-container {
+  padding: 3rem 1.5rem;
+}
+
+.footer-content {
+  max-width: 1200px;
   margin: 0 auto;
-  text-align: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
 }
 
-.email-field-container {
+.footer-column {
   flex: 1;
-  position: relative;
+  min-width: 200px;
 }
 
-#subscriber-email {
-  width: 100%;
-  padding-right: 150px; /* Make room for the radio options */
+.footer-heading {
+  font-size: 1.2rem;
+  margin-bottom: 1.2rem;
+  color: #ffffff;
+  font-weight: 600;
 }
 
-.radio-toggle-group {
-  position: absolute;
-  right: 8px;
-  top: 50%;
-  transform: translateY(-50%);
+.footer-description {
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+  color: #b0b0b0;
+}
+
+/* Social Links */
+.social-links {
   display: flex;
-  gap: 8px;
-  background-color: #f5f5f5;
-  border: 1px solid #e0e0e0;
-  border-radius: 4px;
-  padding: 2px;
+  flex-wrap: wrap;
+  gap: 0.75rem;
 }
 
-.radio-option {
-  font-size: 0.8rem;
-  color: #555;
-  display: flex;
+.social-link {
+  display: inline-flex;
   align-items: center;
-  padding: 2px 6px;
-  cursor: pointer;
-  border-radius: 3px;
+  gap: 0.4rem;
+  color: #b0b0b0;
+  text-decoration: none;
+  padding: 0.4rem 0.6rem;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  font-size: 0.9rem;
 }
 
-.radio-option input {
-  position: absolute;
-  opacity: 0;
-  cursor: pointer;
+.social-link:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  text-decoration: none;
 }
 
-/* Style for selected option */
-.radio-option input:checked + span {
-  color: #1a73e8;
-  font-weight: 500;
+.social-link svg {
+  transition: all 0.2s ease;
 }
 
-/* Highlight the label when selected */
-.radio-option input:checked {
-  background-color: #e8f0fe;
+.social-link:hover svg {
+  transform: scale(1.1);
 }
 
-.radio-option:hover {
-  background-color: #eaeaea;
+/* Footer Navigation */
+.footer-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
 }
 
-/* Make the entire container look like a toggle switch */
-.radio-option input:checked ~ .radio-option {
-  background-color: white;
+.footer-nav a {
+  color: #b0b0b0;
+  text-decoration: none;
+  transition: color 0.2s ease;
+  padding: 0.2rem 0;
 }
 
-/* Responsive adjustments */
-@media (max-width: 600px) {
-  .footer-subscription-form-row {
+.footer-nav a:hover {
+  color: #ffffff;
+  text-decoration: none;
+}
+
+/* Quote Styling */
+.footer-quote {
+  background-color: rgba(255, 255, 255, 0.05);
+  padding: 1.25rem;
+  margin: 0;
+  border-left: 3px solid #4e88ca;
+  border-radius: 0 4px 4px 0;
+}
+
+.footer-quote p {
+  margin: 0;
+  font-style: italic;
+  color: #d0d0d0;
+  line-height: 1.6;
+}
+
+/* Footer Bottom */
+.footer-bottom {
+  background-color: rgba(0, 0, 0, 0.2);
+  text-align: center;
+  padding: 1.25rem;
+  font-size: 0.85rem;
+  color: #a0a0a0;
+}
+
+/* Media Queries */
+@media (max-width: 768px) {
+  .footer-content {
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 2.5rem;
   }
   
-  .footer-subscription-form button {
+  .footer-column {
     width: 100%;
+  }
+  
+  .social-links {
+    gap: 0.5rem;
   }
 }
 
-@media (max-width: 600px) {
-  .radio-option span {
-    font-size: 0.75rem; /* Slightly smaller font */
+@media (max-width: 480px) {
+  .footer-container {
+    padding: 2rem 1rem;
+  }
+  
+  .social-links {
+    flex-direction: column;
+    align-items: flex-start;
   }
 }
 
