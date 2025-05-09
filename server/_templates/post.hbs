@@ -25,8 +25,6 @@
   <main>
     {{> profile-header activePage="post"}}
 
-    <!-- No topic header at the top of the page -->
-
     <div class="single-post-container" id="single-post-container">
       <div class="post-card" data-post-id="{{post.id}}">
         <div class="post-content">{{{post.content}}}</div>
@@ -43,13 +41,6 @@
          src="https://share.transistor.fm/e/{{post.transistor_fm_code}}"></iframe>
     {{/if}}
 
-        <div class="post-topic">
-        {{#if post.topic_name}}
-        <p>
-          Posted in <a href="/t/{{post.topic_slug}}" class="topic-badge">#{{post.topic_name}}</a>
-        </p>
-        {{/if}}
-        </div>
     </div>
 
     {{#if post.attachments.length}}

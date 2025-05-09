@@ -157,14 +157,8 @@
           <div class="search-count">
             {{#if pagination.total}}
               Found {{pagination.total}} result{{#if (neq pagination.total 1)}}s{{/if}} for "{{query.term}}"
-              {{#if currentTopic}}
-              in topic "{{currentTopic.name}}"
-              {{/if}}
             {{else}}
               No results found for "{{query.term}}"
-              {{#if currentTopic}}
-              in topic "{{currentTopic.name}}"
-              {{/if}}
             {{/if}}
           </div>
         
@@ -176,9 +170,6 @@
               <div class="post-meta">
                 <div class="post-date">
                   <a href="/p/{{this.id}}" class="permalink-date">{{this.formatted_date}}</a>
-                  {{#if this.topic_slug}}
-                  <a href="/t/{{this.topic_slug}}" class="topic-badge">#{{this.topic_name}}</a>
-                  {{/if}}
                 </div>
               </div>
             </div>
@@ -186,7 +177,7 @@
             
             <!-- Pagination -->
             {{#if pagination.hasMore}}
-            <a href="/search?q={{query.term}}{{#if query.topic}}&topic={{query.topic}}{{/if}}&offset={{add pagination.offset pagination.limit}}" class="load-more" id="load-more">Load more results</a>
+            <a href="/search?q={{query.term}}&offset={{add pagination.offset pagination.limit}}" class="load-more" id="load-more">Load more results</a>
             {{/if}}
           {{else}}
             <!-- No results found -->
@@ -199,7 +190,6 @@
                 <ul>
                   <li>Using more general keywords</li>
                   <li>Checking your spelling</li>
-                  <li>Searching in all topics</li>
                 </ul>
               </div>
             </div>

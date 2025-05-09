@@ -10,14 +10,9 @@ const { sharePostToBluesky } = require('../bluesky');
 // Display the compose page
 router.get('/', authMiddleware, async (req, res) => {
   try {
-    // Fetch topics for the dropdown
-    const topicsResult = await pool.query('SELECT id, name, slug FROM topics ORDER BY name ASC');
-    const topics = topicsResult.rows;
-    
     // Render the compose2 template
     const html = templateEngine.render('compose2', {
-      pageTitle: 'Compose - Max Ischenko',
-      topics: topics
+      pageTitle: 'Compose - Max Ischenko'
     });
     
     res.send(html);
@@ -30,7 +25,7 @@ router.get('/', authMiddleware, async (req, res) => {
 // Handle both drafts and published posts
 router.post('/post', authMiddleware, async (req, res) => {
   try {
-    const { content, attachments, status, shareTelegram, shareBluesky, topicId } = req.body;
+    const { content, attachments, status, shareTelegram, shareBluesky } = req.body;
     
     // Validate input
     if ((!content || content.trim() === '') && (!attachments || attachments.length === 0)) {
@@ -84,14 +79,13 @@ router.post('/post', authMiddleware, async (req, res) => {
       // STEP 3: Insert post with all required fields
       const postResult = await client.query(
         `INSERT INTO posts 
-         (content, preview_text, slug, topic_id, status) 
-         VALUES ($1, $2, $3, $4, $5) 
+         (content, preview_text, slug, status) 
+         VALUES ($1, $2, $3, $4) 
          RETURNING *`, 
         [
           content || '', 
           previewText, 
           slug,
-          topicId || null, 
           status
         ]
       );
@@ -125,21 +119,12 @@ router.post('/post', authMiddleware, async (req, res) => {
       
       // STEP 5: If published, handle sharing to various platforms
       if (status === 'published') {
-        // Get complete post with topic info for sharing
-        const completePostResult = await client.query(`
-          SELECT p.*, t.name as topic_name, t.slug as topic_slug 
-          FROM posts p
-          LEFT JOIN topics t ON p.topic_id = t.id
-          WHERE p.id = $1
-        `, [post.id]);
-        
-        const completePost = completePostResult.rows[0];
         
         // Share to Telegram if enabled and token is available
         if (shareTelegram) {
           try {
             if (process.env.TELEGRAM_BOT_TOKEN) {
-              await sharePostToTelegram(completePost);
+              await sharePostToTelegram(post);
               console.log(`Post ${post.id} shared to Telegram`);
             } else {
               console.log('Telegram bot token not set, skipping share');
@@ -154,7 +139,7 @@ router.post('/post', authMiddleware, async (req, res) => {
         if (shareBluesky) {
           try {
             if (process.env.BLUESKY_USERNAME && process.env.BLUESKY_PASSWORD) {
-              await sharePostToBluesky(completePost);
+              await sharePostToBluesky(post);
               console.log(`Post ${post.id} shared to Bluesky`);
             } else {
               console.log('Bluesky credentials not set, skipping share');

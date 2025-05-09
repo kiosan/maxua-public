@@ -8,9 +8,7 @@ router.get('/rss', async (req, res) => {
   try {
     // Get the 20 most recent posts
     const result = await pool.query(`
-      SELECT p.*, t.name as topic_name, t.slug as topic_slug
-      FROM posts p
-      LEFT JOIN topics t ON p.topic_id = t.id
+      SELECT * FROM posts p
       WHERE p.status='public'
       ORDER BY p.created_at DESC
       LIMIT 20
@@ -72,19 +70,13 @@ function generateRSS(posts) {
       url => `<a href="${url}">${url}</a>`
     );
     
-    // Add topic tag if available
-    let topicInfo = '';
-    if (post.topic_name) {
-      topicInfo = `<br><br><small>Topic: #${post.topic_name}</small>`;
-    }
-    
     // Add item to RSS feed
     rss += `  <item>
     <title>${title}</title>
     <link>${postUrl}</link>
     <guid>${postUrl}</guid>
     <pubDate>${postDate}</pubDate>
-    <description><![CDATA[${contentWithLinks.replace(/\n/g, '<br>')}${topicInfo}]]></description>
+    <description><![CDATA[${contentWithLinks.replace(/\n/g, '<br>')}]]></description>
   </item>
 `;
   });
