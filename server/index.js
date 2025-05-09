@@ -16,7 +16,6 @@ const feedsRoutes = require('./routes/feeds');
 // Import serverless adapters for SSR pages
 const postPage = require('./postPage');
 const timelinePage = require('./timelinePage');
-const searchPage = require('./searchPage');
 const composePage = require('./composePage');
 const sitemap = require('./sitemap');
 
@@ -238,7 +237,6 @@ app.get('/t/:topic', async (req, res) => {
 });
 
 // Set up SSR routes using the adapter
-app.get('/search', createServerlessAdapter(searchPage));
 app.get('/', createServerlessAdapter(timelinePage));
 app.get('/compose', createServerlessAdapter(composePage));
 app.get('/sitemap.xml', createServerlessAdapter(sitemap));
