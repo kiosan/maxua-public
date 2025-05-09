@@ -7,14 +7,7 @@ const { pool, rateLimiterMiddleware, sendEmail } = require('../utils');
 // Subscribe to the newsletter
 router.post('/subscribe', rateLimiterMiddleware, async (req, res) => {
   try {
-    const { email, preferences } = req.body;
-
-    const preferenceType = preferences || 'single-post';
-
-    // Validate preference value
-    if (!['single-post', 'digest'].includes(preferenceType)) {
-      return res.status(400).json({ error: 'Invalid preference type' });
-    }
+    const { email } = req.body;
 
     // Validate email
     if (!email || !isValidEmail(email)) {
@@ -23,7 +16,7 @@ router.post('/subscribe', rateLimiterMiddleware, async (req, res) => {
 
     // Check if email already exists
     const existingResult = await pool.query(
-      'SELECT id, confirmed, preferences FROM subscribers WHERE email = $1',
+      'SELECT id, confirmed FROM subscribers WHERE email = $1',
       [email]
     );
     
@@ -31,37 +24,23 @@ router.post('/subscribe', rateLimiterMiddleware, async (req, res) => {
       const subscriber = existingResult.rows[0];
 
       if (subscriber.confirmed) {
-        // If they're trying to subscribe to the same preference they already have
-        if (subscriber.preferences === preferenceType) {
-          return res.json({ 
-            success: true, 
-            message: 'You are already subscribed with this delivery preference.',
-            alreadySubscribed: true
-          });
-        } else {
-          await pool.query(
-            'UPDATE subscribers SET preferences = $1 WHERE id = $2',
-            [preferenceType, subscriber.id]
-          );
-
-          return res.json({ 
-            success: true, 
-            message: `Your subscription has been updated to ${preferenceType === 'digest' ? 'weekly digest' : 'every post'}.`,
-            preferenceUpdated: true
-          });
-        }
+        return res.json({ 
+          success: true, 
+          message: 'You are already subscribed!',
+          alreadySubscribed: true
+        });
       }
       
       // If not confirmed, generate new confirmation token and send again
       const confirmationToken = uuidv4();
       
       await pool.query(
-        'UPDATE subscribers SET confirmation_token = $1, preferences = $2, created_at = NOW() WHERE id = $3',
-        [confirmationToken, preferenceType, subscriber.id]
+        'UPDATE subscribers SET confirmation_token = $1, created_at = NOW() WHERE id = $2',
+        [confirmationToken, subscriber.id]
       );
       
       // Send confirmation email
-      await sendConfirmationEmail(email, confirmationToken, preferenceType);
+      await sendConfirmationEmail(email, confirmationToken);
       
       return res.json({ 
         success: true, 
@@ -77,12 +56,12 @@ router.post('/subscribe', rateLimiterMiddleware, async (req, res) => {
 
     // Insert into subscribers table
     await pool.query(
-      'INSERT INTO subscribers (email, confirmation_token, unsubscribe_token, preferences) VALUES ($1, $2, $3, $4)',
-      [email, confirmationToken, unsubscribeToken, preferenceType]
+      'INSERT INTO subscribers (email, confirmation_token, unsubscribe_token) VALUES ($1, $2, $3)',
+      [email, confirmationToken, unsubscribeToken]
     );
 
     // Send confirmation email
-    await sendConfirmationEmail(email, confirmationToken, preferenceType);
+    await sendConfirmationEmail(email, confirmationToken);
 
     return res.json({ 
       success: true, 
@@ -131,10 +110,9 @@ router.get('/confirmSubscription', async (req, res) => {
     await sendNotificationEmail(subscriber.email);
 
     return res.status(200).send(generateHtmlResponse(
-      'Subscription Confirmed',
-      `<p>Thank you for subscribing to Max Ischenko's blog!</p>
-       <p>You will now receive email updates when new posts are published.</p>
-       <p><a href="https://maxua.com">Return to the blog</a></p>`
+      'Thank you for subscribing!',
+      `<p>You will now receive my daily email digest with new posts.</p>
+       <p><a href="https://maxua.com">Back to the blog</a></p>`
     ));
   } catch (error) {
     console.error('Error confirming subscription:', error);
@@ -200,15 +178,10 @@ function isValidEmail(email) {
 }
 
 // Helper function to send confirmation email
-async function sendConfirmationEmail(email, token, preferenceType) {
+async function sendConfirmationEmail(email, token) {
   const confirmUrl = `https://maxua.com/api/confirmSubscription?token=${token}`;
-  const greeting = 'Hi there,';
+  const greeting = 'Welcome!';
 
-  const preferenceText = preferenceType === 'digest' ? 
-    ' for weekly digest emails (sent every Friday)' : 
-    '';
-  
-  
   const html = `
   <!DOCTYPE html>
 <html>
@@ -227,21 +200,18 @@ async function sendConfirmationEmail(email, token, preferenceType) {
               
               <p style="margin: 0 0 20px 0; padding: 0; text-align: left;">${greeting}</p>
               
-              <p style="margin: 0 0 20px 0; padding: 0; text-align: left;">Thank you for subscribing to Max Ischenko's blog${preferenceText}.</p>
-              
-              <p style="margin: 0 0 20px 0; padding: 0; text-align: left;">Please confirm your subscription by clicking the button below:</p>
+              <p style="margin: 0 0 20px 0; padding: 0; text-align: left;">Click below to confirm&mdash;or use <a href="${confirmUrl}">this link</a>
+              </p>
               
               <div style="margin: 15px 0; padding: 0; text-align: left;">
                 <a href="${confirmUrl}" style="background-color: #0366d6; color: white; text-decoration: none; display: inline-block; padding: 8px 20px; border-radius: 4px; font-weight: 500; font-size: 14px;">Confirm Subscription</a>
               </div>
-              
-              <p style="margin: 0 0 20px 0; padding: 0; text-align: left;">Or copy and paste this link into your browser: ${confirmUrl}</p>
-              
-              <p style="margin: 0; padding: 0; text-align: left; color: #666; font-size: 14px;">If you didn't subscribe to this blog, you can safely ignore this email.</p>
-              
+
               <div style="margin: 30px 0 0 0; padding: 0; text-align: left; color: #666; font-size: 14px;">
                 Best,<br>
-                Max Ischenko
+                Max
+                <br><br>
+                ps: any questions? just reply to this email ;-)
               </div>
               
             </td>
@@ -256,8 +226,9 @@ async function sendConfirmationEmail(email, token, preferenceType) {
 
   await sendEmail({
     to: email,
-    subject: 'Confirm your subscription to Max Ischenko\'s blog',
-    text: `${greeting}\n\nThank you for subscribing to Max Ischenko\'s blog.\n\nPlease confirm your subscription by clicking this link: ${confirmUrl}\n\nIf you didn't subscribe to this blog, you can safely ignore this email.\n\nBest,\nMax Ischenko`,
+    subject: 'Confirm your subscription',
+    reply_to: 'ischenko@gmail.com',
+    text: `${greeting}\n\nWelcome!\n\nPlease follow this link to confirm: ${confirmUrl}\n\nIf you didn't subscribe to this blog, you can safely ignore this email.\n\nBest,\nMax`,
     html
   });
 }

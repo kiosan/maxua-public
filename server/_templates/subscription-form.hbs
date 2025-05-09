@@ -1,26 +1,85 @@
 <div class="footer-subscription">
   <div class="footer-subscription-content">
     <a name="subscribe"></a>
-    <h3 class="footer-subscription-heading">Subscribe to new posts</h3>
-    <form id="subscription-form" class="footer-subscription-form">
+    <h3 class="footer-subscription-heading">Subscribe to daily updates</h3>
+    
+    <form x-data="{
+        email: '',
+        message: '',
+        messageType: '',
+        submitting: false,
+        
+        async submitForm() {
+          if (!this.email || !this.isValidEmail(this.email)) {
+            this.message = 'Please enter a valid email address';
+            this.messageType = 'error';
+            return;
+          }
+          
+          this.submitting = true;
+          
+          try {
+            const response = await fetch('/api/subscribe', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ 
+                email: this.email, 
+              })
+            });
+            
+            const result = await response.json();
+            
+            if (response.ok) {
+              this.message = result.message;
+              this.messageType = 'success';
+              this.email = '';
+            } else {
+              throw new Error(result.error || 'Failed to subscribe');
+            }
+          } catch (error) {
+            this.message = `Error: ${error.message}`;
+            this.messageType = 'error';
+          } finally {
+            this.submitting = false;
+            
+            if (this.messageType === 'success') {
+              setTimeout(() => this.message = '', 8000);
+            }
+          }
+        },
+        
+        isValidEmail(email) {
+          const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          return regex.test(email);
+        }
+      }"
+      @submit.prevent="submitForm"
+      class="footer-subscription-form">
+      
       <div class="footer-subscription-form-row">
-        <div class="email-field-container">
-          <input type="email" id="subscriber-email" placeholder="Your email address" required>
-          <div class="radio-toggle-group">
-            <label class="radio-option">
-              <input type="radio" name="preferences" value="single-post" checked>
-              <span>Each post</span>
-            </label>
-            <label class="radio-option">
-              <input type="radio" name="preferences" value="digest">
-              <span>Weekly</span>
-            </label>
-          </div>
-        </div>
-        <button type="submit" id="subscribe-button">Subscribe</button>
+        <input 
+          type="email" 
+          x-model="email" 
+          placeholder="Your email address" 
+          required>
+        <button 
+          type="submit" 
+          :disabled="submitting">
+          <span x-text="submitting ? 'Subscribing...' : 'Subscribe'"></span>
+        </button>
       </div>
-      <div id="subscription-message" class="subscription-message"></div>
+      
+      <div class="subscription-info">One email a day. No emails on
+        weekends. Easy-peasy ;)</div>
+      
+      <div 
+        x-show="message" 
+        x-text="message" 
+        :class="`subscription-message ${messageType}`"
+        x-transition>
+      </div>
     </form>
+    
     <div class="footer-subscription-links">
       Also available via:
       <a href="https://t.me/maxua_public">Telegram</a>
