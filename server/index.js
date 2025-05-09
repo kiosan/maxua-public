@@ -233,10 +233,13 @@ function createServerlessAdapter(pageHandler) {
   };
 }
 
+app.get('/t/:topic', async (req, res) => {
+  return res.redirect(301, '/'); // topics are gone, baby
+});
+
 // Set up SSR routes using the adapter
 app.get('/search', createServerlessAdapter(searchPage));
 app.get('/', createServerlessAdapter(timelinePage));
-app.get('/t/:topic', createServerlessAdapter(timelinePage));
 app.get('/compose', createServerlessAdapter(composePage));
 app.get('/sitemap.xml', createServerlessAdapter(sitemap));
 

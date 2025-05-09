@@ -22,53 +22,14 @@ exports.handler = async (event, context) => {
     const limit = parseInt(query.limit) || 10;
     const offset = parseInt(query.offset) || 0;
     
-    // Extract topic slug from path or query parameters
-    let topicSlug = query.topic || null;
-    
-    // If not in query params, try to extract from path (/t/slug)
-    if (!topicSlug && event.path.startsWith('/t/')) {
-      topicSlug = event.path.substring(3);
-    }
-    
-    // Check if we need to filter by topic
-    let topicId = null;
-    let topic = null;
-    
-    if (topicSlug) {
-      const topicResult = await pool.query(
-        'SELECT id, name, slug, description FROM topics WHERE slug = $1',
-        [topicSlug]
-      );
-      
-      if (topicResult.rows.length > 0) {
-        topic = topicResult.rows[0];
-        topicId = topic.id;
-      }
-    }
-    
-    // Fetch topics for navigation
-    const topicsResult = await pool.query('SELECT id, name, slug FROM topics ORDER BY name ASC');
-    const topics = topicsResult.rows;
     
     // Fetch posts with optimized query
     let postsQuery = `
-      SELECT 
-        p.*, 
-        t.name as topic_name, 
-        t.slug as topic_slug
-      FROM posts p
-      LEFT JOIN topics t ON p.topic_id = t.id
-      WHERE p.status = 'public'
+      SELECT * FROM posts p WHERE p.status = 'public'
     `;
     
     const queryParams = [];
     let paramIndex = 1;
-    
-    // Add topic filter if needed
-    if (topicId) {
-      postsQuery += ` AND p.topic_id = $${paramIndex++}`;
-      queryParams.push(topicId);
-    }
     
     // Add ordering and pagination
     postsQuery += ` ORDER BY p.created_at DESC LIMIT $${paramIndex++} OFFSET $${paramIndex++}`;
@@ -86,14 +47,7 @@ exports.handler = async (event, context) => {
     
     // Determine if there are more posts for pagination
     let countQuery = 'SELECT COUNT(*) FROM posts WHERE status = \'public\'';
-    const countParams = [];
-
-    if (topicId) {
-      countQuery += ' AND topic_id = $1';
-      countParams.push(topicId);
-    }
-    
-    const countResult = await pool.query(countQuery, countParams);
+    const countResult = await pool.query(countQuery);
     const totalCount = parseInt(countResult.rows[0].count);
     const hasMore = offset + limit < totalCount;
     
@@ -108,8 +62,6 @@ exports.handler = async (event, context) => {
     if (isHtmxRequest) {
       
       const postsHtml = posts.map(post => {
-        const showTopicBadge = post.topic_slug && 
-                          (!topic || topic.id !== post.topic_id);
         
         return `
           <div class="post-card" data-post-id="${post.id}">
@@ -121,8 +73,6 @@ exports.handler = async (event, context) => {
               <div class="post-date">
                 <span class="post-date-text">${post.formatted_date}</span>
                 <a href="#" class="translate-link" data-post-id="${post.id}" data-translated="false">Translate</a>
-                ${showTopicBadge ? `
-                <a href="/t/${post.topic_slug}" class="topic-badge">#${post.topic_name}</a>` : ''}
               </div>
             </div>
             ${post.transistor_fm_code ? `
@@ -146,7 +96,7 @@ exports.handler = async (event, context) => {
         <!-- Update the load more button with the new offset -->
         <div id="load-more-button" hx-swap-oob="true">
           <button 
-             hx-get="${topicSlug ? `/t/${topicSlug}` : '/'}?offset=${offset + limit}&htmx=true"
+             hx-get="/?offset=${offset + limit}&htmx=true"
              hx-target="#posts-container"
              hx-swap="beforeend"
              class="load-more">
@@ -169,35 +119,20 @@ exports.handler = async (event, context) => {
       };
     }
 
-    // Set the page title based on whether we're viewing a topic or the main timeline
-    const pageTitle = topic 
-      ? `${topic.name}: ${topic.description} - Max Ischenko` 
-      : "Max Ischenko blog - Thoughts on startups, tech, and more";
+    const pageTitle = "Max Ischenko personal blog";
     
     // Create a description for meta tags
-    let pageDescription = topic
-      ? `Posts about ${topic.name} from Max Ischenko - Founder of DOU.ua and Djinni.`
-      : 'Thoughts on startups, tech, and Ukraine. Founder of DOU.ua and Djinni.';
-    
-    // Add any additional topic description if available
-    if (topic && topic.description) {
-      pageDescription = topic.description;
-    }
+    let pageDescription = 'Thoughts on startups and product. Founder of DOU.ua and Djinni.';
     
     // Construct canonical URL
-    const canonicalUrl = topic
-      ? `https://maxua.com/t/${topic.slug}`
-      : 'https://maxua.com';
+    const canonicalUrl = 'https://maxua.com';
     
     // Generate meta tags
     const metaTags = generateMetaTags({
       title: pageTitle,
       description: pageDescription,
       url: canonicalUrl,
-      // Add topic name to keywords if available
-      keywords: topic 
-        ? `${topic.name}, startups, tech, Max Ischenko, Ukraine` 
-        : 'startups, tech, Max Ischenko, Ukraine',
+      keywords: 'startups, tech, Max Ischenko, Ukraine',
     });
     
     // Generate structured data
@@ -219,8 +154,6 @@ exports.handler = async (event, context) => {
     // Prepare template data
     const templateData = {
       posts,
-      topics,
-      currentTopic: topic,
       pagination: {
         offset,
         limit,

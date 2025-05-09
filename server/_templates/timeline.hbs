@@ -75,18 +75,8 @@ button.load-more {
     <!-- Timeline / Posts -->
     <div class="timeline">
 
-      {{#if topics}}
-      <div class="topic-header">
-        <a href="/" class="topic-tag {{#unless currentTopic}}active{{/unless}}">Everything</a>
-        {{#each topics}}
-        <a href="/t/{{this.slug}}" class="topic-tag {{#if (eq ../currentTopic.id this.id)}}active{{/if}}">#{{this.name}}</a>
-        {{/each}}
-        <a href="/search" class="topic-tag">🔍 Search</a>
-      </div>
-      {{/if}}
-
-      <h2>{{#if currentTopic}}
-        {{currentTopic.name}}: {{currentTopic.description}}{{else}}What's on my mind{{/if}}
+      <h2>
+        What's on my mind
       </h2>
       
       <div id="posts-container">
@@ -102,11 +92,6 @@ button.load-more {
                 <!-- Date as simple text, not a link -->
                 <span class="post-date-text">{{this.formatted_date}}</span>
                 <a href="#" class="translate-link" data-post-id="{{this.id}}" data-translated="false">Translate</a>
-                {{#if this.topic_slug}}
-                {{#neq ../currentTopic.id this.topic_id}}
-                  <a href="/t/{{this.topic_slug}}" class="topic-badge">#{{this.topic_name}}</a>
-                {{/neq}}
-                {{/if}}
               </div>
             </div>
           {{#if this.transistor_fm_code}}
@@ -122,14 +107,14 @@ button.load-more {
 
           {{/each}}
         {{else}}
-          <p class="empty-message">{{#if currentTopic}}No posts in this topic yet.{{else}}No posts yet.{{/if}}</p>
+          <p class="empty-message">No posts yet.</p>
         {{/if}}
       </div>
       
       {{#if pagination.hasMore}}
       <div id="load-more-container">
         <button id="load-more-button"
-           hx-get="{{#if currentTopic}}/t/{{currentTopic.slug}}{{else}}/{{/if}}?offset={{add pagination.offset pagination.limit}}&htmx=true"
+           hx-get="/?offset={{add pagination.offset pagination.limit}}&htmx=true"
            hx-target="#posts-container"
            hx-swap="beforeend"
            class="load-more">
