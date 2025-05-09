@@ -109,7 +109,6 @@ async function loadAllQuotes() {
   try {
     const result = await pool.query('SELECT * FROM qotd');
     allQuotes = result.rows;
-    console.log(`Loaded ${allQuotes.length} quotes from database`);
   } catch (error) {
     console.error('Error loading quotes:', error);
   }
