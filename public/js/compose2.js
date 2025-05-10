@@ -65,6 +65,7 @@ function composeApp() {
         selectDraft(draft) {
             
             this.content = draft.content;
+            this.currentDraftId = draft.id; // Track which draft we're editing
             
             // Trigger input event to resize textarea
             const textarea = document.querySelector('.compose-textarea');
@@ -107,21 +108,28 @@ function composeApp() {
             
             if (this.submitting) return; // Prevent double submission
             this.submitting = status;
-            
-            try {
+
+           try {
+                const body = {
+                    content: this.content,
+                    shareTelegram: this.shareTelegram,
+                    shareBluesky: this.shareBluesky,
+                    status: status
+                };
+                
+                // Include draftId if we're editing an existing draft
+                if (this.currentDraftId && status === 'published') {
+                    body.draftId = this.currentDraftId;
+                }
+                
                 const response = await fetch('/compose/post', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     credentials: 'include',
-                    body: JSON.stringify({
-                        content: this.content,
-                        shareTelegram: this.shareTelegram,
-                        shareBluesky: this.shareBluesky,
-                        status: status
-                    })
+                    body: JSON.stringify(body)
                 });
-                
-                const result = await response.json();
+            
+                const result = response.json();
                 
                 if (response.ok) {
                     if (status === 'published') {
