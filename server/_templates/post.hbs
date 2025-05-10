@@ -43,20 +43,6 @@
 
     </div>
 
-    {{#if post.attachments.length}}
-    <div class="post-attachments">
-      {{#each post.attachments}}
-        <div class="attachment-item">
-          {{#if (eq this.type "html")}}
-            <div class="attachment-content">{{{this.content}}}</div>
-          {{else}}
-            <div class="attachment-content">Unsupported attachment type: {{this.type}}</div>
-          {{/if}}
-        </div>
-      {{/each}}
-    </div>
-    {{/if}}
-
     {{#if navLinks}}
     <div class="post-navigation">
       <div class="post-nav-links">

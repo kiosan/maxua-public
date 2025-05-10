@@ -63,8 +63,6 @@ function extractPostIdFromPath(path) {
 
 /**
  * Fetch post data from the database
- *
- * Post + attachments (if any) - in order
  */
 async function fetchPost(postId) {
   // First, fetch the post with its topic
@@ -76,17 +74,6 @@ async function fetchPost(postId) {
   `, [postId]);
   
   const post = postResult.rows.length ? postResult.rows[0] : null;
-  
-  if (post) {
-    const attachmentsResult = await pool.query(`
-      SELECT id, type, content, position
-      FROM attachments
-      WHERE post_id = $1
-      ORDER BY position ASC
-    `, [postId]);
-    
-    post.attachments = attachmentsResult.rows;
-  }
   
   return post;
 }

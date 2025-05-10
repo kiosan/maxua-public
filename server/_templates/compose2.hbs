@@ -65,69 +65,28 @@
                   x-cloak>
                 </div>
 
-  <!-- Sharing options section - add after button row -->
-<div class="sharing-options">
-    <h3 class="sharing-title">Sharing options</h3>
-    <div class="toggle-group">
-        <label class="toggle-label">
-            <input type="checkbox" x-model="shareTelegram">
-            <span class="toggle-slider"></span>
-            <span class="toggle-text">Share to Telegram</span>
-        </label>
-        
-        <label class="toggle-label">
-            <input type="checkbox" x-model="shareBluesky">
-            <span class="toggle-slider"></span>
-            <span class="toggle-text">Share to Bluesky</span>
-        </label>
-    </div>
-</div>
-
-                    <!-- Attachments Section -->
-                    <div class="attachments-container">
-                        <h3>Attachments</h3>
+                  <!-- Sharing options section - add after button row -->
+                <div class="sharing-options">
+                    <h3 class="sharing-title">Sharing options</h3>
+                    <div class="toggle-group">
+                        <label class="toggle-label">
+                            <input type="checkbox" x-model="shareTelegram">
+                            <span class="toggle-slider"></span>
+                            <span class="toggle-text">Share to Telegram</span>
+                        </label>
                         
-                        <!-- Drop area / Paste zone -->
-                        <div class="attachment-drop-area" 
-                             @click="focusPasteArea"
-                             @dragover.prevent="dragover = true"
-                             @dragleave.prevent="dragover = false"
-                             @drop.prevent="handleDrop"
-                             :class="{ 'dragover': dragover }">
-                            <p>Drag & drop rich text or click to paste</p>
-                            <p style="font-size: 0.85rem;">or press Ctrl+V to paste from clipboard</p>
-                            
-                            <!-- Hidden textarea for paste capture -->
-                            <textarea 
-                                x-ref="pasteArea" 
-                                @paste="handlePaste"
-                                style="position: absolute; left: -9999px; width: 1px; height: 1px;">
-                            </textarea>
-                        </div>
-                        
-                        <!-- Display attachments -->
-                        <div class="attachment-items" x-show="attachments.length > 0">
-                            <template x-for="(attachment, index) in attachments" :key="index">
-                                <div class="attachment-item">
-                                    <div class="attachment-preview" x-html="sanitizeHTML(attachment.content)"></div>
-                                    <div class="attachment-controls">
-                                        <button type="button" class="delete" @click="removeAttachment(index)">Remove</button>
-                                    </div>
-                                </div>
-                            </template>
-                        </div>
+                        <label class="toggle-label">
+                            <input type="checkbox" x-model="shareBluesky">
+                            <span class="toggle-slider"></span>
+                            <span class="toggle-text">Share to Bluesky</span>
+                        </label>
                     </div>
-
-
+                </div>
                 </form>
 
             </div>
         </div>
     </main>
-    
-    <footer>
-        &copy; 2025 Max Ischenko
-    </footer>
 
     <script src="/js/compose2.js"></script>
 </body>

@@ -2,7 +2,6 @@
 const express = require('express');
 const router = express.Router();
 const { pool, authMiddleware, generateSlug } = require('../utils');
-const sanitizeHtml = require('sanitize-html');
 const templateEngine = require('../templateEngine');
 const { sharePostToTelegram } = require('../telegram');
 const { sharePostToBluesky } = require('../bluesky');
@@ -25,11 +24,11 @@ router.get('/', authMiddleware, async (req, res) => {
 // Handle both drafts and published posts
 router.post('/post', authMiddleware, async (req, res) => {
   try {
-    const { content, attachments, status, shareTelegram, shareBluesky } = req.body;
+    const { content, status, shareTelegram, shareBluesky } = req.body;
     
     // Validate input
-    if ((!content || content.trim() === '') && (!attachments || attachments.length === 0)) {
-      return res.status(400).json({ error: 'Post must have either content or attachments' });
+    if (!content || content.trim() === '') {
+      return res.status(400).json({ error: 'No content found' });
     }
     
     // Validate status
@@ -46,31 +45,16 @@ router.post('/post', authMiddleware, async (req, res) => {
       
       // STEP 1: Generate preview text from content
       let previewText = '';
-      if (content) {
-        if (content.length > 40) {
-          // Try to cut at a space, not mid-word
-          const truncateAt = content.lastIndexOf(' ', 37);
-          previewText = content.substring(0, truncateAt > 0 ? truncateAt : 37) + '..';
-        } else {
-          previewText = content;
-        }
-        // Remove any newlines from preview text
-        previewText = previewText.replace(/\n/g, ' ').trim();
-      } else if (attachments && attachments.length > 0) {
-        // If no content but has attachments, create preview from first attachment
-        const firstAttachment = attachments[0];
-        if (firstAttachment.type === 'html') {
-          // Extract text from HTML for preview
-          const textContent = firstAttachment.content.replace(/<[^>]*>/g, ' ');
-          if (textContent.length > 40) {
-            const truncateAt = textContent.lastIndexOf(' ', 37);
-            previewText = textContent.substring(0, truncateAt > 0 ? truncateAt : 37) + '..';
-          } else {
-            previewText = textContent;
-          }
-          previewText = previewText.replace(/\n/g, ' ').trim();
-        }
+      if (content.length > 40) {
+        // Try to cut at a space, not mid-word
+        const truncateAt = content.lastIndexOf(' ', 37);
+        previewText = content.substring(0, truncateAt > 0 ? truncateAt : 37) + '..';
+      } else {
+        previewText = content;
       }
+
+      // Remove any newlines from preview text
+      previewText = previewText.replace(/\n/g, ' ').trim();
 
       // STEP 2: Generate a slug for the post
       const textToSlugify = previewText || content.substring(0, Math.min(50, content.length));
@@ -92,32 +76,7 @@ router.post('/post', authMiddleware, async (req, res) => {
 
       const post = postResult.rows[0];
       
-      // STEP 4: Process and save attachments if any
-      if (attachments && attachments.length > 0) {
-        for (let i = 0; i < attachments.length; i++) {
-          const attachment = attachments[i];
-          
-          // Sanitize HTML content
-          let sanitizedContent = attachment.content;
-          if (attachment.type === 'html') {
-            sanitizedContent = sanitizeHtml(attachment.content, {
-              allowedTags: sanitizeHtml.defaults.allowedTags.concat(['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'img']),
-              allowedAttributes: {
-                ...sanitizeHtml.defaults.allowedAttributes,
-                'img': ['src', 'alt', 'title']
-              }
-            });
-          }
-          
-          // Insert attachment
-          await client.query(
-            'INSERT INTO attachments (post_id, type, content, position) VALUES ($1, $2, $3, $4)',
-            [post.id, attachment.type, sanitizedContent, i]
-          );
-        }
-      }
-      
-      // STEP 5: If published, handle sharing to various platforms
+      // STEP 4: If published, handle sharing to various platforms
       if (status === 'published') {
         
         // Share to Telegram if enabled and token is available
