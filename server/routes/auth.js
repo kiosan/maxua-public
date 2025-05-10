@@ -19,7 +19,7 @@ router.post('/', rateLimiterMiddleware, async (req, res) => {
     
     // Create a new session
     const expiresAt = new Date();
-    expiresAt.setDate(expiresAt.getDate() + 7); // 7 days expiration
+    expiresAt.setDate(expiresAt.getDate() + 365); // never expire (1 year)
     
     const result = await pool.query(
       'INSERT INTO sessions (expires_at, device_info) VALUES ($1, $2) RETURNING id',
