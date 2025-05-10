@@ -129,7 +129,7 @@ function composeApp() {
                     body: JSON.stringify(body)
                 });
             
-                const result = response.json();
+                const result = await response.json();
                 
                 if (response.ok) {
                     if (status === 'published') {
