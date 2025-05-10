@@ -16,7 +16,6 @@ const feedsRoutes = require('./routes/feeds');
 // Import serverless adapters for SSR pages
 const postPage = require('./postPage');
 const timelinePage = require('./timelinePage');
-const composePage = require('./composePage');
 const sitemap = require('./sitemap');
 
 // Create Express app
@@ -79,7 +78,7 @@ app.use('/api', newsletterRoutes); // Will handle /subscribe, /confirmSubscripti
 app.use('/', feedsRoutes); // Will handle /rss
 
 const compose2Routes = require('./routes/compose2');
-app.use('/compose2', compose2Routes);
+app.use('/compose', compose2Routes);
 
 // STATIC paths - from Netlify
 const path = require('path');
@@ -238,7 +237,6 @@ app.get('/t/:topic', async (req, res) => {
 
 // Set up SSR routes using the adapter
 app.get('/', createServerlessAdapter(timelinePage));
-app.get('/compose', createServerlessAdapter(composePage));
 app.get('/sitemap.xml', createServerlessAdapter(sitemap));
 
 // single page route
