@@ -26,12 +26,6 @@ router.post('/', rateLimiterMiddleware, async (req, res) => {
       [expiresAt, deviceInfo || 'Unknown']
     );
     
-    // Log the new session
-    await pool.query(
-      'INSERT INTO activity_log(type, session_id, data) VALUES ($1, $2, $3)',
-      ['session', result.rows[0].id, { device: deviceInfo || 'Unknown' }]
-    );
-    
     // Set HttpOnly cookie
     const sessionId = result.rows[0].id;
     const isDevEnvironment = process.env.NODE_ENV !== 'production';
