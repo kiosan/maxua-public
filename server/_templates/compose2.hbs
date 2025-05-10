@@ -39,51 +39,63 @@
                       "
                       autofocus></textarea>
 
-  <div class="button-row" style="margin-top: 0.5rem;">
-      <div class="button-group-left">
-          <button type="button" @click="submitPost('draft')" :disabled="submitting" class="save-draft-button">
-              <span x-text="submitting === 'draft' ? 'Saving...' : 'Save as Draft'"></span>
-          </button>
-      </div>
-      <div class="button-group-right">
-        <div class="character-count" 
-             x-show="content.length > 250"
-             :class="content.length > 300 ? 'over-limit' : ''">
-          <span x-text="content.length"></span> characters
-        </div>
-          <button type="button" @click="submitPost('published')" :disabled="submitting" class="post-button">
-              <span x-text="submitting === 'published' ? 'Publishing...' : 'Publish'"></span>
-          </button>
-      </div>
-  </div>
-                
-                <div 
-                  x-show="statusMessage !== ''" 
-                  x-text="statusMessage" 
-                  :class="`status-message status-${statusType}`"
-                  x-transition
-                  x-cloak>
-                </div>
-
-                  <!-- Sharing options section - add after button row -->
-                <div class="sharing-options">
-                    <h3 class="sharing-title">Sharing options</h3>
-                    <div class="toggle-group">
-                        <label class="toggle-label">
-                            <input type="checkbox" x-model="shareTelegram">
-                            <span class="toggle-slider"></span>
-                            <span class="toggle-text">Share to Telegram</span>
-                        </label>
-                        
-                        <label class="toggle-label">
-                            <input type="checkbox" x-model="shareBluesky">
-                            <span class="toggle-slider"></span>
-                            <span class="toggle-text">Share to Bluesky</span>
-                        </label>
+                    <div class="button-row" style="margin-top: 0.5rem;">
+                        <div class="button-group-left">
+                            <button type="button" @click="submitPost('draft')" :disabled="submitting" class="save-draft-button">
+                                <span x-text="submitting === 'draft' ? 'Saving...' : 'Save as Draft'"></span>
+                            </button>
+                        </div>
+                        <div class="button-group-right">
+                            <div class="character-count" 
+                                 x-show="content.length > 250"
+                                 :class="content.length > 300 ? 'over-limit' : ''">
+                                <span x-text="content.length"></span> characters
+                            </div>
+                            <button type="button" @click="submitPost('published')" :disabled="submitting" class="post-button">
+                                <span x-text="submitting === 'published' ? 'Publishing...' : 'Publish'"></span>
+                            </button>
+                        </div>
                     </div>
-                </div>
-                </form>
+                    
+                    <div 
+                      x-show="statusMessage !== ''" 
+                      x-text="statusMessage" 
+                      :class="`status-message status-${statusType}`"
+                      x-transition
+                      x-cloak>
+                    </div>
 
+                    <!-- Sharing options section -->
+                    <div class="sharing-options">
+                        <h3 class="sharing-title">Sharing options</h3>
+                        <div class="toggle-group">
+                            <label class="toggle-label">
+                                <input type="checkbox" x-model="shareTelegram">
+                                <span class="toggle-slider"></span>
+                                <span class="toggle-text">Share to Telegram</span>
+                            </label>
+                            
+                            <label class="toggle-label">
+                                <input type="checkbox" x-model="shareBluesky">
+                                <span class="toggle-slider"></span>
+                                <span class="toggle-text">Share to Bluesky</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <!-- Drafts section -->
+                    <div class="drafts-section" x-show="drafts.length > 0">
+                        <h3 class="drafts-title">Saved Drafts</h3>
+                        <div class="drafts-list">
+                            <template x-for="draft in drafts" :key="draft.id">
+                                <div @click="selectDraft(draft)" class="draft-item">
+                                    <div class="draft-preview" x-text="draft.content.length > 50 ? draft.content.substring(0, 50) + '...' : draft.content"></div>
+                                    <div class="draft-date" x-text="new Date(draft.created_at).toLocaleString()"></div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
     </main>

@@ -21,6 +21,23 @@ router.get('/', authMiddleware, async (req, res) => {
   }
 });
 
+router.get('/drafts', authMiddleware, async (req, res) => {
+  try {
+    const result = await pool.query(
+      `SELECT id, content, created_at 
+       FROM posts 
+       WHERE status = 'draft' 
+       ORDER BY created_at DESC 
+       LIMIT 10`
+    );
+    
+    res.json(result.rows);
+  } catch (error) {
+    console.error('Error fetching drafts:', error);
+    res.status(500).json({ error: 'Failed to fetch drafts' });
+  }
+});
+
 // Handle both drafts and published posts
 router.post('/post', authMiddleware, async (req, res) => {
   try {

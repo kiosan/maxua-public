@@ -8,30 +8,74 @@ function composeApp() {
         statusType: '',
         shareTelegram: true,
         shareBluesky: true,
+        drafts: [],
+        loadingDrafts: false,
         
         // Initialize
-        init() {
-          // Keyboard shortcuts
-          document.addEventListener('keydown', (e) => {
-            // Skip if user is in a form field that isn't the compose textarea
-            if (document.activeElement.tagName === 'INPUT' || 
-               (document.activeElement.tagName === 'TEXTAREA' && 
-                !document.activeElement.classList.contains('compose-textarea'))) {
-                return;
-            }
+        async init() {
+            // Keyboard shortcuts
+            document.addEventListener('keydown', (e) => {
+                // Skip if user is in a form field that isn't the compose textarea
+                if (document.activeElement.tagName === 'INPUT' || 
+                   (document.activeElement.tagName === 'TEXTAREA' && 
+                    !document.activeElement.classList.contains('compose-textarea'))) {
+                    return;
+                }
+                
+                // Ctrl+Enter to publish
+                if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                    e.preventDefault();
+                    this.submitPost('published');
+                }
+                
+                // Ctrl+S to save draft
+                if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+                    e.preventDefault();
+                    this.submitPost('draft');
+                }
+            });
             
-            // Ctrl+Enter to publish
-            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
-                e.preventDefault();
-                this.submitPost('published');
-            }
+            // Load drafts on page load
+            await this.loadDrafts();
+        },
+        
+        // Load drafts from server
+        async loadDrafts() {
+            if (this.loadingDrafts) return;
+            this.loadingDrafts = true;
             
-            // Ctrl+S to save draft
-            if ((e.ctrlKey || e.metaKey) && e.key === 's') {
-                e.preventDefault();
-                this.submitPost('draft');
+            try {
+                const response = await fetch('/compose/drafts', {
+                    credentials: 'include'
+                });
+                
+                if (response.ok) {
+                    this.drafts = await response.json();
+                } else {
+                    console.error('Failed to load drafts');
+                }
+            } catch (error) {
+                console.error('Error loading drafts:', error);
+            } finally {
+                this.loadingDrafts = false;
             }
-          });
+        },
+        
+        // Select and load a draft
+        selectDraft(draft) {
+            
+            this.content = draft.content;
+            
+            // Trigger input event to resize textarea
+            const textarea = document.querySelector('.compose-textarea');
+            if (textarea) {
+                textarea.style.height = 'auto';
+                textarea.style.height = Math.min(textarea.scrollHeight, 600) + 'px';
+
+                // Scroll to textarea with smooth behavior
+                textarea.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                textarea.focus();
+            }
         },
         
         // Submit post (handles both draft and publish)
@@ -45,7 +89,7 @@ function composeApp() {
             this.submitting = status;
             
             try {
-                const response = await fetch('/compose2/post', {
+                const response = await fetch('/compose/post', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     credentials: 'include',
@@ -66,12 +110,18 @@ function composeApp() {
                         // Reset form
                         this.content = '';
                         
+                        // Reload drafts to remove the one that was just published
+                        await this.loadDrafts();
+                        
                         // Redirect to the post after a delay
                         setTimeout(() => {
                             window.location.href = `/p/${result.id}`;
                         }, 1500);
                     } else {
                         this.showStatus("Draft saved successfully!", "success");
+                        
+                        // Reload drafts to show the new one
+                        await this.loadDrafts();
                     }
                 } else {
                     throw new Error(result.error || `Failed to ${status === 'draft' ? 'save draft' : 'publish post'}`);

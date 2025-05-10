@@ -195,6 +195,56 @@ input:checked + .toggle-slider:before {
     font-size: 0.95rem;
 }
 
+/* Drafts section styles */
+.drafts-section {
+    margin-top: 1.5rem;
+    padding: 1.25rem;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    border: 1px solid #eee;
+}
+
+.drafts-title {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0 0 1rem 0;
+    color: var(--color-text);
+}
+
+.drafts-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.draft-item {
+    padding: 0.75rem;
+    background-color: white;
+    border: 1px solid #eee;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s, border-color 0.2s;
+}
+
+.draft-item:hover {
+    background-color: #f5f5f5;
+    border-color: #ddd;
+}
+
+.draft-preview {
+    font-size: 0.95rem;
+    color: #333;
+    margin-bottom: 0.25rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.draft-date {
+    font-size: 0.85rem;
+    color: #666;
+}
+
 
 /* Mobile optimizations */
 @media (max-width: 600px) {
