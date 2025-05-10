@@ -77,7 +77,27 @@ function composeApp() {
                 textarea.focus();
             }
         },
-        
+
+        async deleteDraft(draftId) {
+            try {
+                const response = await fetch(`/compose/drafts/${draftId}`, {
+                    method: 'DELETE',
+                    credentials: 'include'
+                });
+                
+                if (response.ok) {
+                    // Remove from local drafts array
+                    this.drafts = this.drafts.filter(draft => draft.id !== draftId);
+                    this.showStatus("Draft deleted", "success");
+                } else {
+                    this.showStatus("Failed to delete draft", "error");
+                }
+            } catch (error) {
+                console.error('Error deleting draft:', error);
+                this.showStatus("Error deleting draft", "error");
+            }
+        },
+                
         // Submit post (handles both draft and publish)
         async submitPost(status) {
             if (!this.content.trim()) {

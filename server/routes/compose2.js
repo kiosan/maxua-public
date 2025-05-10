@@ -38,6 +38,29 @@ router.get('/drafts', authMiddleware, async (req, res) => {
   }
 });
 
+router.delete('/drafts/:id', authMiddleware, async (req, res) => {
+  try {
+    const draftId = req.params.id;
+    
+    // Delete the draft (only if it's actually a draft)
+    const result = await pool.query(
+      `DELETE FROM posts 
+       WHERE id = $1 AND status = 'draft' 
+       RETURNING id`,
+      [draftId]
+    );
+    
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Draft not found' });
+    }
+    
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Error deleting draft:', error);
+    res.status(500).json({ error: 'Failed to delete draft' });
+  }
+});
+
 // Handle both drafts and published posts
 router.post('/post', authMiddleware, async (req, res) => {
   try {

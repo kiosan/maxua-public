@@ -222,13 +222,37 @@ input:checked + .toggle-slider:before {
     background-color: white;
     border: 1px solid #eee;
     border-radius: 6px;
-    cursor: pointer;
     transition: background-color 0.2s, border-color 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
 .draft-item:hover {
     background-color: #f5f5f5;
     border-color: #ddd;
+}
+
+/* Add new styles for delete button */
+.draft-delete {
+    background: none;
+    border: none;
+    color: #999;
+    font-size: 1.25rem;
+    cursor: pointer;
+    padding: 0.25rem;
+    line-height: 1;
+    opacity: 0;
+    transition: opacity 0.2s, color 0.2s;
+}
+
+.draft-item:hover .draft-delete {
+    opacity: 1;
+}
+
+.draft-delete:hover {
+    color: #999;
+    background-color: #f5f5f5;
 }
 
 .draft-preview {

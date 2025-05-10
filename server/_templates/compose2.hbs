@@ -87,12 +87,17 @@
                     <div class="drafts-section" x-show="drafts.length > 0">
                         <h3 class="drafts-title">Saved Drafts</h3>
                         <div class="drafts-list">
-                            <template x-for="draft in drafts" :key="draft.id">
-                                <div @click="selectDraft(draft)" class="draft-item">
-                                    <div class="draft-preview" x-text="draft.content.length > 50 ? draft.content.substring(0, 50) + '...' : draft.content"></div>
-                                    <div class="draft-date" x-text="new Date(draft.created_at).toLocaleString()"></div>
-                                </div>
-                            </template>
+                          <template x-for="draft in drafts" :key="draft.id">
+                              <div class="draft-item">
+                                  <div @click="selectDraft(draft)" style="flex: 1; cursor: pointer;">
+                                      <div class="draft-preview" x-text="draft.content.length > 50 ? draft.content.substring(0, 50) + '...' : draft.content"></div>
+                                      <div class="draft-date" x-text="new Date(draft.created_at).toLocaleString()"></div>
+                                  </div>
+                                  <button
+                                    @click.stop="deleteDraft(draft.id)"
+                                    class="draft-delete">🗑️</button>
+                              </div>
+                          </template>
                         </div>
                     </div>
                 </form>
