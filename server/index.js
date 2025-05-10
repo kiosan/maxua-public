@@ -7,8 +7,6 @@ const { pool, rateLimiterMiddleware, authMiddleware } = require('./utils');
 
 // Import route modules
 const authRoutes = require('./routes/auth');
-const postsRoutes = require('./routes/posts');
-const draftsRoutes = require('./routes/drafts');
 const commentsRoutes = require('./routes/comments');
 const newsletterRoutes = require('./routes/newsletter');
 const feedsRoutes = require('./routes/feeds');
@@ -71,9 +69,7 @@ app.use((err, req, res, next) => {
 
 // Mount the route modules
 app.use('/api/auth', authRoutes);
-app.use('/api', postsRoutes); // Will handle /publish, /views, /topics 
 app.use('/api/comments', commentsRoutes);
-app.use('/api/drafts', draftsRoutes);
 app.use('/api', newsletterRoutes); // Will handle /subscribe, /confirmSubscription, /unsubscribe
 app.use('/', feedsRoutes); // Will handle /rss
 
