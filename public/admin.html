@@ -68,6 +68,7 @@
         .stats-section {
           padding: 15px;
           background-color: #f9f9f9;
+          background-color: lightyellow;
           border-radius: 6px;
           border: 1px solid #eee;
         }
@@ -143,15 +144,15 @@
         <div class="container">
             <h2>Stats</h2>
             <div class="stats-grid">
-                <div class="stats-section">
+                <div class="stats-section visitors">
                     <h3>Visitors</h3>
                     <p><span x-text="stats.visitors?.daily || 0"></span> daily active, 
                        <span x-text="stats.visitors?.weekly || 0"></span> weekly, 
                        <span x-text="stats.visitors?.allTime || 0"></span> total</p>
                 </div>
-                <div class="stats-section">
+                <div class="stats-section subs">
                     <h3>Subscribers</h3>
-                    <p>+<span x-text="stats.subscribers?.newLastWeek || 0"></span> last week, 
+                    <p>+<span x-text="stats.subscribers?.newLastWeek || 0"></span> this week, 
                        <span x-text="stats.subscribers?.total || 0"></span> total</p>
                 </div>
                 <!--
