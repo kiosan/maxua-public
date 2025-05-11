@@ -76,6 +76,8 @@ router.post('/post', authMiddleware, async (req, res) => {
       return res.status(400).json({ error: 'Invalid status value' });
     }
 
+    const newStatus = status === 'published' ? 'public' : status;
+
     // Start a transaction
     const client = await pool.connect();
     
@@ -114,7 +116,7 @@ router.post('/post', authMiddleware, async (req, res) => {
            SET content = $1, preview_text = $2, slug = $3, status = $4, created_at = NOW()
            WHERE id = $5 AND status = 'draft'
            RETURNING *`,
-          [content, previewText, slug, 'public', draftId]
+          [content, previewText, slug, newStatus, draftId]
         );
         
         if (updateResult.rows.length === 0) {
@@ -131,7 +133,7 @@ router.post('/post', authMiddleware, async (req, res) => {
            (content, preview_text, slug, status) 
            VALUES ($1, $2, $3, $4) 
            RETURNING *`, 
-          [content, previewText, slug, 'public']
+          [content, previewText, slug, newStatus]
         );
         
         post = insertResult.rows[0];
