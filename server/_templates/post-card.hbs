@@ -1,4 +1,4 @@
-<div class="post-card" data-post-id="{{id}}">
+<div class="post-card" data-post-id="{{id}}" data-post-type="{{type}}">
   {{#if noLink}}
     <div class="post-content">{{{content_html}}}</div>
   {{else}}
@@ -6,8 +6,17 @@
       <div class="post-content">{{{content_html}}}</div>
     </a>
   {{/if}}
+
+  {{#if metadata.url}}
+  <div class="post-url">
+    <a href="{{metadata.url}}" target="_blank">{{metadata.url}}</a>
+  </div>
+  {{/if}}
   
   <div class="post-meta">
+    {{#if (neq type 'text')}}
+    <span class="post-type">{{#if (eq type 'link')}}Link{{else if (eq type 'quote')}}Quote{{/if}}</span>&nbsp;•&nbsp;
+    {{/if}}
     <div class="post-date">
       <span class="post-date-text">{{formatted_date}}</span>
       <a href="#" class="translate-link" data-post-id="{{id}}" data-translated="false">Translate</a>
@@ -20,3 +29,4 @@
        src="https://share.transistor.fm/e/{{transistor_fm_code}}"></iframe>
   {{/if}}
 </div>
+
