@@ -2,6 +2,11 @@
 function composeApp() {
     return {
         content: '',
+        postType: 'text',
+        quoteUrl: '',
+        linkUrl: '',
+        linkTitle: '',
+        linkDescription: '',
         dragover: false,
         submitting: null, // null, 'draft', or 'published'
         statusMessage: '',
@@ -10,6 +15,7 @@ function composeApp() {
         shareBluesky: true,
         drafts: [],
         loadingDrafts: false,
+        currentDraftId: null,
         
         // Initialize
         async init() {
@@ -60,12 +66,36 @@ function composeApp() {
                 this.loadingDrafts = false;
             }
         },
+
+        getPlaceholder() {
+          switch (this.postType) {
+            case 'quote':
+              return 'Enter the quote with attribution...';
+            case 'link':
+              return 'Add your thoughts about this link... (optional)';
+            default:
+              return "What's on your mind?";
+          }
+        },
         
         // Select and load a draft
         selectDraft(draft) {
-            
             this.content = draft.content;
-            this.currentDraftId = draft.id; // Track which draft we're editing
+            this.currentDraftId = draft.id;
+            this.postType = draft.type || 'text';
+            
+            if (draft.metadata) {
+                switch (draft.type) {
+                    case 'quote':
+                        this.quoteUrl = draft.metadata.url || '';
+                        break;
+                    case 'link':
+                        this.linkUrl = draft.metadata.url || '';
+                        this.linkTitle = draft.metadata.title || '';
+                        this.linkDescription = draft.metadata.description || '';
+                        break;
+                }
+            }
             
             // Trigger input event to resize textarea
             const textarea = document.querySelector('.compose-textarea');
@@ -98,20 +128,58 @@ function composeApp() {
                 this.showStatus("Error deleting draft", "error");
             }
         },
+        
+        // Fetch URL metadata for link posts
+        async fetchLinkMeta() {
+            if (!this.linkUrl) return;
+            
+            try {
+                const response = await fetch('/compose/fetch-link-meta', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({ url: this.linkUrl })
+                });
+                
+                const data = await response.json();
+                if (data.title) this.linkTitle = data.title;
+                if (data.description) this.linkDescription = data.description;
+            } catch (error) {
+                console.error('Error fetching link metadata:', error);
+                this.showStatus("Failed to fetch link metadata", "error");
+            }
+        },
+        
+        // Build metadata based on post type
+        buildMetadata() {
+            switch (this.postType) {
+                case 'quote':
+                    return { url: this.quoteUrl || null };
+                case 'link':
+                    return {
+                        url: this.linkUrl,
+                        title: this.linkTitle,
+                        description: this.linkDescription
+                    };
+                default:
+                    return {};
+            }
+        },
                 
         // Submit post (handles both draft and publish)
         async submitPost(status) {
-            if (!this.content.trim()) {
-                this.showStatus(`${status === 'draft' ? 'Draft' : 'Post'} must have content`, "error");
+            if (!this.validateContent()) {
                 return;
             }
             
             if (this.submitting) return; // Prevent double submission
             this.submitting = status;
 
-           try {
+            try {
                 const body = {
                     content: this.content,
+                    type: this.postType,
+                    metadata: this.buildMetadata(),
                     shareTelegram: this.shareTelegram,
                     shareBluesky: this.shareBluesky,
                     status: status
@@ -136,7 +204,7 @@ function composeApp() {
                         this.showStatus("Post published successfully!", "success");
                         
                         // Reset form
-                        this.content = '';
+                        this.resetForm();
                         
                         // Reload drafts to remove the one that was just published
                         await this.loadDrafts();
@@ -159,6 +227,32 @@ function composeApp() {
             } finally {
                 this.submitting = null;
             }
+        },
+        
+        // Validate content based on post type
+        validateContent() {
+            if (!this.content.trim()) {
+                this.showStatus(`${this.submitting === 'draft' ? 'Draft' : 'Post'} must have content`, "error");
+                return false;
+            }
+            
+            if (this.postType === 'link' && !this.linkUrl) {
+                this.showStatus("Link posts must have a URL", "error");
+                return false;
+            }
+            
+            return true;
+        },
+        
+        // Reset form fields
+        resetForm() {
+            this.content = '';
+            this.postType = 'text';
+            this.quoteUrl = '';
+            this.linkUrl = '';
+            this.linkTitle = '';
+            this.linkDescription = '';
+            this.currentDraftId = null;
         },
         
         // Show status message

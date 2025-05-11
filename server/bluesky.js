@@ -316,5 +316,6 @@ function detectLinks(text) {
 }
 
 module.exports = {
+  fetchUrlMetadata,
   sharePostToBluesky
 };

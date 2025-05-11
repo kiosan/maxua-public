@@ -18,28 +18,65 @@
         <div class="compose-container" x-data="composeApp()">
             <div class="compose-card">
                 <div class="compose-header">
-                    <h2 class="compose-title">Compose a new post</h2>
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-                        <p class="compose-subtitle" style="margin: 0;">Share your thoughts, ideas, or updates</p>
-                    </div>
+                    <h2 class="compose-title">
+                        Compose a new post
+                        <button @click="postType = 'text'" :class="{ 'active': postType === 'text' }" class="type-selector">#Text</button>
+                        <button @click="postType = 'quote'" :class="{ 'active': postType === 'quote' }" class="type-selector">#Quote</button>
+                        <button @click="postType = 'link'" :class="{ 'active': postType === 'link' }" class="type-selector">#Link</button>
+                    </h2>
+                    <p class="compose-subtitle">Share your thoughts, ideas, or updates</p>
                 </div>
                 
-                <form id="compose-form" @submit.prevent="publishPost">
+                <form id="compose-form" @submit.prevent="submitPost('published')">
+                    <!-- Main textarea - always visible first -->
                     <textarea x-model="content"
-                      class="compose-textarea" 
-                      placeholder="What's on your mind?"
-                      @paste="handlePasteInPost($event)"
-                      x-init="
-                        $el.style.height = 'auto'; 
-                        $el.style.height = Math.min($el.scrollHeight, 600) + 'px'
-                      "
-                      @input="
-                        $el.style.height = 'auto'; 
-                        $el.style.height = Math.min($el.scrollHeight, 600) + 'px'
-                      "
-                      autofocus></textarea>
+                        class="compose-textarea"
+                        :placeholder="getPlaceholder()"
+                        x-init="
+                            $el.style.height = 'auto'; 
+                            $el.style.height = Math.min($el.scrollHeight, 600) + 'px'
+                        "
+                        @input="
+                            $el.style.height = 'auto'; 
+                            $el.style.height = Math.min($el.scrollHeight, 600) + 'px'
+                        "
+                        autofocus></textarea>
 
-                    <div class="button-row" style="margin-top: 0.5rem;">
+                    <!-- Type-specific fields below textarea -->
+                    <template x-if="postType === 'quote'">
+                        <div class="type-specific-fields">
+                            <input type="url" x-model="quoteUrl" 
+                                placeholder="Source URL (optional)" 
+                                class="url-input">
+                        </div>
+                    </template>
+
+                    <template x-if="postType === 'link'">
+                        <div class="type-specific-fields">
+                            <div class="url-row">
+                                <input type="url" x-model="linkUrl" 
+                                    placeholder="Paste URL here..." 
+                                    class="url-input"
+                                    required>
+                                <button type="button" 
+                                    @click="fetchLinkMeta" 
+                                    class="fetch-button"
+                                    :disabled="!linkUrl">
+                                    Fetch
+                                </button>
+                            </div>
+                            
+                            <input type="text" x-model="linkTitle" 
+                                placeholder="Title" 
+                                class="text-input">
+                            
+                            <textarea x-model="linkDescription" 
+                                placeholder="Description" 
+                                class="description-textarea"></textarea>
+                        </div>
+                    </template>
+
+                    <div class="button-row">
                         <div class="button-group-left">
                             <button type="button" @click="submitPost('draft')" :disabled="submitting" class="save-draft-button">
                                 <span x-text="submitting === 'draft' ? 'Saving...' : 'Save as Draft'"></span>
@@ -51,7 +88,7 @@
                                  :class="content.length > 300 ? 'over-limit' : ''">
                                 <span x-text="content.length"></span> characters
                             </div>
-                            <button type="button" @click="submitPost('published')" :disabled="submitting" class="post-button">
+                            <button type="submit" :disabled="submitting" class="post-button">
                                 <span x-text="submitting === 'published' ? 'Publishing...' : 'Publish'"></span>
                             </button>
                         </div>
@@ -88,10 +125,11 @@
                         <h3 class="drafts-title">Saved Drafts</h3>
                         <div class="drafts-list">
                           <template x-for="draft in drafts" :key="draft.id">
-                              <div class="draft-item">
-                                  <div @click="selectDraft(draft)" style="flex: 1; cursor: pointer;">
-                                      <div class="draft-preview" x-text="draft.content.length > 50 ? draft.content.substring(0, 50) + '...' : draft.content"></div>
-                                      <div class="draft-date" x-text="new Date(draft.created_at).toLocaleString()"></div>
+                              <div class="draft-item" @click="selectDraft(draft)">
+                                  <div class="draft-preview" x-text="draft.content.length > 50 ? draft.content.substring(0, 50) + '...' : draft.content"></div>
+                                  <div class="draft-date">
+                                      <span class="draft-type">#<span x-text="draft.type || 'text'"></span></span> • 
+                                      <span x-text="new Date(draft.created_at).toLocaleString()"></span>
                                   </div>
                                   <button
                                     @click.stop="deleteDraft(draft.id)"

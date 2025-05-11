@@ -225,12 +225,20 @@ input:checked + .toggle-slider:before {
     transition: background-color 0.2s, border-color 0.2s;
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    justify-content: space-between; 
+    gap: 1rem;
+    cursor: pointer;
 }
 
 .draft-item:hover {
     background-color: #f5f5f5;
     border-color: #ddd;
+}
+
+/* Wrapper for the draft content (preview and date) */
+.draft-content {
+    flex: 1;
+    min-width: 0; /* Prevents overflow issues */
 }
 
 /* Add new styles for delete button */
@@ -244,6 +252,8 @@ input:checked + .toggle-slider:before {
     line-height: 1;
     opacity: 0;
     transition: opacity 0.2s, color 0.2s;
+    flex-shrink: 0; /* Prevents button from shrinking */
+    margin-left: auto; /* Ensures it stays on the right */
 }
 
 .draft-item:hover .draft-delete {
@@ -269,6 +279,91 @@ input:checked + .toggle-slider:before {
     color: #666;
 }
 
+
+/* Post types */
+
+.compose-title {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.type-selector {
+    background: none;
+    border: none;
+    color: var(--color-secondary-text);
+    font-size: 1rem;
+    font-weight: normal;
+    cursor: pointer;
+    padding: 0;
+    transition: color 0.2s;
+}
+
+.type-selector:hover {
+    color: var(--color-accent);
+}
+
+.type-selector.active {
+    color: var(--color-accent);
+    font-weight: 600;
+}
+
+/* Type-specific fields always below main textarea */
+.type-specific-fields {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.url-row {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.url-input {
+    flex: 1;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 1rem;
+}
+
+.fetch-button {
+    background-color: var(--color-accent);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 6px;
+    font-size: 1rem;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.fetch-button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.text-input, .description-textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 1rem;
+    margin-bottom: 0.75rem;
+}
+
+.description-textarea {
+    min-height: 80px;
+    resize: vertical;
+}
+
+/* Draft type indicator */
+.draft-type {
+    color: var(--color-accent);
+    font-weight: 500;
+}
 
 /* Mobile optimizations */
 @media (max-width: 600px) {
