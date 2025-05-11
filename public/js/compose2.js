@@ -66,17 +66,6 @@ function composeApp() {
                 this.loadingDrafts = false;
             }
         },
-
-        getPlaceholder() {
-          switch (this.postType) {
-            case 'quote':
-              return 'Enter the quote with attribution...';
-            case 'link':
-              return 'Add your thoughts about this link... (optional)';
-            default:
-              return "What's on your mind?";
-          }
-        },
         
         // Select and load a draft
         selectDraft(draft) {
@@ -168,9 +157,6 @@ function composeApp() {
                 
         // Submit post (handles both draft and publish)
         async submitPost(status) {
-            if (!this.validateContent()) {
-                return;
-            }
             
             if (this.submitting) return; // Prevent double submission
             this.submitting = status;
@@ -223,21 +209,6 @@ function composeApp() {
             } finally {
                 this.submitting = null;
             }
-        },
-        
-        // Validate content based on post type
-        validateContent() {
-            if (!this.content.trim()) {
-                this.showStatus(`${this.submitting === 'draft' ? 'Draft' : 'Post'} must have content`, "error");
-                return false;
-            }
-            
-            if (this.postType === 'link' && !this.linkUrl) {
-                this.showStatus("Link posts must have a URL", "error");
-                return false;
-            }
-            
-            return true;
         },
         
         // Reset form fields

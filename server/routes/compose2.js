@@ -82,10 +82,6 @@ router.delete('/drafts/:id', authMiddleware, async (req, res) => {
 router.post('/post', authMiddleware, async (req, res) => {
   try {
     const { content, type, metadata, status, shareTelegram, shareBluesky, draftId } = req.body;
-    
-    if (!content?.trim()) {
-      return res.status(400).json({ error: 'No content found' });
-    }
 
     if (!['text', 'quote', 'link'].includes(type)) {
       return res.status(400).json({ error: 'Invalid post type' });
@@ -93,6 +89,10 @@ router.post('/post', authMiddleware, async (req, res) => {
 
     if (!['draft', 'published'].includes(status)) {
       return res.status(400).json({ error: 'Invalid status' });
+    }
+    
+    if (!content?.trim()) {
+      return res.status(400).json({ error: 'No content found' });
     }
 
     const newStatus = status === 'published' ? 'public' : status;
