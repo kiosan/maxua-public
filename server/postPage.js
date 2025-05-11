@@ -227,8 +227,8 @@ async function prepareTemplateData(post, event, navLinks) {
   return {
     post: {
       ...post,
-      content: postContent,
-      formattedDate
+      content_html: postContent,
+      formatted_date: formattedDate
     },
     postTitle: previewTitle,
     metaTags,

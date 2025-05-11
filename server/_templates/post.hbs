@@ -26,21 +26,9 @@
     {{> profile-header activePage="post"}}
 
     <div class="single-post-container" id="single-post-container">
-      <div class="post-card" data-post-id="{{post.id}}">
-        <div class="post-content">{{{post.content}}}</div>
-
-        <div class="post-meta">
-          <div class="post-date">{{post.formattedDate}}
-          <a href="#" class="translate-link" data-post-id="{{post.id}}" data-translated="false">Translate</a>
-          </div>
-        </div>
-
-    {{#if post.transistor_fm_code}}
-    <iframe width="100%" height="180" style="margin: 1rem 0 0 0"
-         frameborder="no" scrolling="no" seamless=""
-         src="https://share.transistor.fm/e/{{post.transistor_fm_code}}"></iframe>
-    {{/if}}
-
+{{#with post}}
+{{> post-card noLink=true}}
+{{/with}}
     </div>
 
     {{#if navLinks}}

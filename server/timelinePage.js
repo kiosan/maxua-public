@@ -62,26 +62,7 @@ exports.handler = async (event, context) => {
     if (isHtmxRequest) {
       
       const postsHtml = posts.map(post => {
-        
-        return `
-          <div class="post-card" data-post-id="${post.id}">
-            <a href="/p/${post.id}" class="post-card-link">
-              <div class="post-content">${post.content_html}</div>
-            </a>
-            
-            <div class="post-meta">
-              <div class="post-date">
-                <span class="post-date-text">${post.formatted_date}</span>
-                <a href="#" class="translate-link" data-post-id="${post.id}" data-translated="false">Translate</a>
-              </div>
-            </div>
-            ${post.transistor_fm_code ? `
-      <iframe width="100%" height="180" style="margin: 1rem 0 0 0"
-           frameborder="no" scrolling="no" seamless=""
-           src="https://share.transistor.fm/e/${post.transistor_fm_code}"></iframe>
-      ` : ''}
-          </div>
-        `;
+        return templateEngine.render('post-card', post);
       }).join('');
 
       // If no more posts, add script to remove the button

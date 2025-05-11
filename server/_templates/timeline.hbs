@@ -72,40 +72,18 @@ button.load-more {
   <main>
     {{> profile-header activePage="home"}}
     
-    <!-- Timeline / Posts -->
     <div class="timeline">
 
-      <h2>
-        What's on my mind
-      </h2>
+      <h2>What's on my mind</h2>
       
       <div id="posts-container">
         {{#if posts.length}}
-          {{#each posts}}
-          <div class="post-card" data-post-id="{{this.id}}">
-            <!-- Make the main content clickable -->
-            <a href="{{permalink this}}" class="post-card-link">
-              <div class="post-content">{{{this.content_html}}}</div>
-            </a>
-            <div class="post-meta">
-              <div class="post-date">
-                <!-- Date as simple text, not a link -->
-                <span class="post-date-text">{{this.formatted_date}}</span>
-                <a href="#" class="translate-link" data-post-id="{{this.id}}" data-translated="false">Translate</a>
-              </div>
-            </div>
-          {{#if this.transistor_fm_code}}
-          <iframe width="100%" height="180" style="margin: 1rem 0 0 0"
-               frameborder="no" scrolling="no" seamless=""
-               src="https://share.transistor.fm/e/{{this.transistor_fm_code}}"></iframe>
-          {{/if}}
-          </div>
-
-          {{#if (eq @index 1)}}
-          {{> subscription-form}}
-          {{/if}}
-
-          {{/each}}
+      {{#each posts}}
+{{> post-card}}
+{{#if (eq @index 1)}}
+{{> subscription-form}}
+{{/if}}
+{{/each}}
         {{else}}
           <p class="empty-message">No posts yet.</p>
         {{/if}}

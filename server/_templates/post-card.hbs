@@ -1,0 +1,22 @@
+<div class="post-card" data-post-id="{{id}}">
+  {{#if noLink}}
+    <div class="post-content">{{{content_html}}}</div>
+  {{else}}
+    <a href="{{permalink this}}" class="post-card-link">
+      <div class="post-content">{{{content_html}}}</div>
+    </a>
+  {{/if}}
+  
+  <div class="post-meta">
+    <div class="post-date">
+      <span class="post-date-text">{{formatted_date}}</span>
+      <a href="#" class="translate-link" data-post-id="{{id}}" data-translated="false">Translate</a>
+    </div>
+  </div>
+
+  {{#if transistor_fm_code}}
+  <iframe width="100%" height="180" style="margin: 1rem 0 0 0"
+       frameborder="no" scrolling="no" seamless=""
+       src="https://share.transistor.fm/e/{{transistor_fm_code}}"></iframe>
+  {{/if}}
+</div>
