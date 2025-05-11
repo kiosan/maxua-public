@@ -65,18 +65,25 @@ router.post('/post', authMiddleware, async (req, res) => {
   try {
     const { content, status, shareTelegram, shareBluesky, draftId } = req.body;
     
-    // Validate input
-    if (!content || content.trim() === '') {
+    // Validate inputs
+    if (!content?.trim()) {
       return res.status(400).json({ error: 'No content found' });
     }
-    
-    // Validate status
-    const validStatus = status === 'draft' || status === 'published';
-    if (!validStatus) {
-      return res.status(400).json({ error: 'Invalid status value' });
+
+    if (!['draft', 'published'].includes(status)) {
+      return res.status(400).json({ error: 'Invalid status' });
     }
 
     const newStatus = status === 'published' ? 'public' : status;
+
+    // Prepare post metadata
+    let previewText = content.length > 40 
+      ? content.substring(0, content.lastIndexOf(' ', 37) || 37) + '..'
+      : content;
+    previewText = previewText.replace(/\n/g, ' ').trim();
+
+    const textToSlugify = previewText || content.substring(0, 50);
+    const slug = await generateSlug(textToSlugify);
 
     // Start a transaction
     const client = await pool.connect();
@@ -84,34 +91,10 @@ router.post('/post', authMiddleware, async (req, res) => {
     try {
       await client.query('BEGIN');
       
-      // Helper function to generate post fields
-      const preparePostFields = async (content) => {
-        // Generate preview text from content
-        let previewText = '';
-        if (content.length > 40) {
-          const truncateAt = content.lastIndexOf(' ', 37);
-          previewText = content.substring(0, truncateAt > 0 ? truncateAt : 37) + '..';
-        } else {
-          previewText = content;
-        }
-        
-        // Remove any newlines from preview text
-        previewText = previewText.replace(/\n/g, ' ').trim();
-        
-        // Generate a slug for the post
-        const textToSlugify = previewText || content.substring(0, Math.min(50, content.length));
-        const slug = await generateSlug(textToSlugify);
-        
-        return { previewText, slug };
-      };
-      
       let post;
       
       if (draftId && status === 'published') {
-        // Updating existing draft to published
-        const { previewText, slug } = await preparePostFields(content);
-        
-        const updateResult = await client.query(
+        const result = await client.query(
           `UPDATE posts 
            SET content = $1, preview_text = $2, slug = $3, status = $4, created_at = NOW()
            WHERE id = $5 AND status = 'draft'
@@ -119,30 +102,33 @@ router.post('/post', authMiddleware, async (req, res) => {
           [content, previewText, slug, newStatus, draftId]
         );
         
-        if (updateResult.rows.length === 0) {
+        if (result.rows.length === 0) {
           throw new Error('Draft not found or already published');
         }
         
-        post = updateResult.rows[0];
+        post = result.rows[0];
+
       } else {
-        // Creating new post (either draft or published)
-        const { previewText, slug } = await preparePostFields(content);
         
-        const insertResult = await client.query(
+        const result = await client.query(
           `INSERT INTO posts 
            (content, preview_text, slug, status) 
            VALUES ($1, $2, $3, $4) 
            RETURNING *`, 
           [content, previewText, slug, newStatus]
         );
+
+        if (result.rows.length === 0) {
+          throw new Error('Insert failed');
+        }
         
-        post = insertResult.rows[0];
+        post = result.rows[0];
       }
       
       // If published, handle sharing to various platforms
       if (status === 'published') {
         // Share to Telegram if enabled
-        if (shareTelegram && process.env.TELEGRAM_BOT_TOKEN) {
+        if (shareTelegram) {
           try {
             await sharePostToTelegram(post);
             console.log(`Post ${post.id} shared to Telegram`);
@@ -152,7 +138,7 @@ router.post('/post', authMiddleware, async (req, res) => {
         }
         
         // Share to Bluesky if enabled
-        if (shareBluesky && process.env.BLUESKY_USERNAME && process.env.BLUESKY_PASSWORD) {
+        if (shareBluesky) {
           try {
             await sharePostToBluesky(post);
             console.log(`Post ${post.id} shared to Bluesky`);
