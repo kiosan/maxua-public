@@ -178,17 +178,13 @@ function composeApp() {
             try {
                 const body = {
                     content: this.content,
+                    draftId: this.currentDraftId,
                     type: this.postType,
                     metadata: this.buildMetadata(),
                     shareTelegram: this.shareTelegram,
                     shareBluesky: this.shareBluesky,
                     status: status
                 };
-                
-                // Include draftId if we're editing an existing draft
-                if (this.currentDraftId && status === 'published') {
-                    body.draftId = this.currentDraftId;
-                }
                 
                 const response = await fetch('/compose/post', {
                     method: 'POST',
