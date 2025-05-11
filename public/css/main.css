@@ -485,7 +485,7 @@ footer a:hover {
 }
 
 .post-card[data-post-type="quote"] .post-content {
-  font-size: 1.35rem;
+  font-size: 1.15rem;
   font-style: italic;
   line-height: 1.5;
 }
