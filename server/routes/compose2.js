@@ -83,6 +83,16 @@ router.post('/post', authMiddleware, async (req, res) => {
   try {
     const { content, type, metadata, status, shareTelegram, shareBluesky, draftId } = req.body;
 
+    // Allow empty content for link posts only
+    if (type !== 'link' && !content?.trim()) {
+      return res.status(400).json({ error: 'No content found' });
+    }
+
+    // Additional validation for link posts
+    if (type === 'link' && !metadata?.url) {
+      return res.status(400).json({ error: 'Link posts must have a URL' });
+    }
+
     if (!['text', 'quote', 'link'].includes(type)) {
       return res.status(400).json({ error: 'Invalid post type' });
     }
@@ -90,21 +100,23 @@ router.post('/post', authMiddleware, async (req, res) => {
     if (!['draft', 'published'].includes(status)) {
       return res.status(400).json({ error: 'Invalid status' });
     }
-    
-    if (!content?.trim()) {
-      return res.status(400).json({ error: 'No content found' });
-    }
 
     const newStatus = status === 'published' ? 'public' : status;
 
-    // Prepare post metadata
-    let previewText = content.length > 40 
-      ? content.substring(0, content.lastIndexOf(' ', 37) || 37) + '..'
-      : content;
-    previewText = previewText.replace(/\n/g, ' ').trim();
+    // Prepare post metadata - handle empty content for link posts
+    let previewText;
 
-    const textToSlugify = previewText || content.substring(0, 50);
-    const slug = await generateSlug(textToSlugify);
+    if (type === 'link' && !content?.trim()) {
+      // Use link title for preview if content is empty
+      previewText = metadata?.title || metadata?.url || 'Link post';
+    } else {
+      previewText = content.length > 40 
+        ? content.substring(0, content.lastIndexOf(' ', 37) || 37) + '..'
+        : content;
+      previewText = previewText.replace(/\n/g, ' ').trim();
+    }
+
+    const slug = await generateSlug(previewText);
 
     // Start a transaction
     const client = await pool.connect();
