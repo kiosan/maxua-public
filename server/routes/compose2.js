@@ -82,7 +82,7 @@ router.delete('/drafts/:id', authMiddleware, async (req, res) => {
 
 router.post('/post', authMiddleware, async (req, res) => {
   try {
-    const { content, status, shareTelegram, shareBluesky, draftId } = req.body;
+    const { content, status, metadata, shareTelegram, shareBluesky, draftId } = req.body;
     
     // Basic validation
     if (!content || content.trim() === '') {
@@ -95,7 +95,24 @@ router.post('/post', authMiddleware, async (req, res) => {
 
     const newStatus = status === 'published' ? 'public' : status;
 
-    // Prepare post metadata
+    // Validate metadata
+    let validatedMetadata = {};
+    if (metadata && typeof metadata === 'object') {
+      // Check each key and value
+      Object.entries(metadata).forEach(([key, value]) => {
+        // Keys must be alphanumeric with underscores
+        if (/^[a-zA-Z0-9_]+$/.test(key)) {
+          // Convert value to string if needed
+          validatedMetadata[key] = String(value || ''); // store empty values too
+        }
+      });
+    }
+
+    const metadata_json = JSON.stringify(validatedMetadata);
+
+    console.log("POST", metadata, metadata_json);
+
+    // Prepare post preview text
     const previewText = content.length > 40 
       ? content.substring(0, content.lastIndexOf(' ', 37) || 37) + '..'
       : content;
@@ -114,10 +131,10 @@ router.post('/post', authMiddleware, async (req, res) => {
         const result = await client.query(
           `UPDATE posts 
            SET content = $1, preview_text = $2, slug = $3, status = $4, 
-               type = 'text', metadata = '{}'::jsonb, created_at = NOW()
-           WHERE id = $5 AND status = 'draft'
+               type = 'text', metadata = $5, created_at = NOW()
+           WHERE id = $6 AND status = 'draft'
            RETURNING *`,
-          [content, previewText, slug, newStatus, draftId]
+          [content, previewText, slug, newStatus, JSON.stringify(validatedMetadata), draftId]
         );
         
         if (result.rows.length === 0) {
@@ -131,9 +148,9 @@ router.post('/post', authMiddleware, async (req, res) => {
         const result = await client.query(
           `INSERT INTO posts 
            (content, preview_text, slug, status, type, metadata) 
-           VALUES ($1, $2, $3, $4, 'text', '{}'::jsonb) 
+           VALUES ($1, $2, $3, $4, 'text', $5) 
            RETURNING *`, 
-          [content, previewText, slug, newStatus]
+          [content, previewText, slug, newStatus, JSON.stringify(validatedMetadata)]
         );
 
         if (result.rows.length === 0) {

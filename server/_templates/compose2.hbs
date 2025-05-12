@@ -38,6 +38,58 @@
                     "
                     autofocus></textarea>
 
+                  <!-- New Metadata Section with shortcuts - collapsed by default -->
+<div class="metadata-section" 
+     x-data="{ expanded: false }">
+    <div class="metadata-header">
+        <span @click="expanded = !expanded; if(expanded && Object.keys(metadata).length === 0) addEmptyMetadataField();" class="metadata-toggle">
+            <span x-text="expanded ? '▼' : '▶'"></span> 
+            Metadata <span class="metadata-count" x-show="Object.keys(metadata).length > 0">
+                (<span x-text="Object.keys(metadata).length"></span>)
+            </span>
+        </span>
+        
+        <!-- Quick add buttons -->
+        <div class="metadata-shortcuts">
+            <button type="button" 
+                    @click="addMetadataWithKey('image_url'); expanded = true;"
+                    class="metadata-shortcut">+image_url</button>
+            <button type="button" 
+                    @click="addMetadataWithKey('transistor_embed_code'); expanded = true;"
+                    class="metadata-shortcut">+transistor</button>
+            <button type="button" 
+                    @click="addMetadataWithKey('lang'); expanded = true;"
+                    class="metadata-shortcut">+lang</button>
+        </div>
+    </div>
+    
+    <div class="metadata-content" x-show="expanded" x-transition>
+        <template x-for="(value, key) in metadata" :key="key">
+            <div class="metadata-field">
+                <input type="text" 
+                       x-model="metadata[key].key" 
+                       @keydown.enter.prevent="addEmptyMetadataField()"
+                       placeholder="key" 
+                       class="metadata-key"
+                       :class="{ 'invalid': !isValidKey(metadata[key].key) }">
+                <input type="text" 
+                       x-model="metadata[key].value" 
+                       @keydown.enter.prevent="addEmptyMetadataField()"
+                       placeholder="value" 
+                       class="metadata-value">
+                <button type="button" 
+                        @click="removeMetadataField(key)" 
+                        class="metadata-delete">×</button>
+            </div>
+        </template>
+        
+        <button type="button" 
+                @click="addEmptyMetadataField()" 
+                class="metadata-add-button">+ Add Field</button>
+          </div>
+      </div>
+
+
                     <div class="button-row">
                         <div class="button-group-left">
                             <button type="button" @click="submitPost('draft')" :disabled="submitting" class="save-draft-button">
