@@ -469,48 +469,6 @@ footer a:hover {
     opacity: 1;
 }
 
-.post-url {
-  margin: 0.75rem 0 0.75rem 0;
-  font-size: 1rem;
-}
-
-.post-url a {
-  color: var(--color-accent);
-  text-decoration: none;
-  word-break: break-all;
-}
-
-.post-url a:hover {
-  text-decoration: underline;
-}
-
-.post-card[data-post-type="quote"] .post-content {
-  font-size: 1.15rem;
-  font-style: italic;
-  line-height: 1.5;
-}
-
-/* Keep regular size for quote URL if present */
-.post-card[data-post-type="quote"] .post-url {
-  font-size: 1rem;
-  font-style: normal;
-}
-
-/* Different background colors for post types */
-.post-card[data-post-type="quote"] {
-  background-color: #fffefb;
-}
-
-.post-card[data-post-type="link"] {
-  background-color: #f1f8ff;
-}
-
-/* Text posts keep the default background */
-.post-card[data-post-type="text"],
-.post-card:not([data-post-type]) {
-  background-color: var(--color-card-bg);
-}
-
 /* Single post page styles */
 .single-post-container {
     margin: 2rem 0;

@@ -1,13 +1,7 @@
-// public/js/compose2.js
+// public/js/compose2.js (simplified version)
 function composeApp() {
     return {
         content: '',
-        postType: 'text',
-        quoteUrl: '',
-        linkUrl: '',
-        linkTitle: '',
-        linkDescription: '',
-        dragover: false,
         submitting: null, // null, 'draft', or 'published'
         statusMessage: '',
         statusType: '',
@@ -71,20 +65,6 @@ function composeApp() {
         selectDraft(draft) {
             this.content = draft.content;
             this.currentDraftId = draft.id;
-            this.postType = draft.type || 'text';
-            
-            if (draft.metadata) {
-                switch (draft.type) {
-                    case 'quote':
-                        this.quoteUrl = draft.metadata.url || '';
-                        break;
-                    case 'link':
-                        this.linkUrl = draft.metadata.url || '';
-                        this.linkTitle = draft.metadata.title || '';
-                        this.linkDescription = draft.metadata.description || '';
-                        break;
-                }
-            }
             
             // Trigger input event to resize textarea
             const textarea = document.querySelector('.compose-textarea');
@@ -117,47 +97,9 @@ function composeApp() {
                 this.showStatus("Error deleting draft", "error");
             }
         },
-        
-        // Fetch URL metadata for link posts
-        async fetchLinkMeta() {
-            if (!this.linkUrl) return;
-            
-            try {
-                const response = await fetch('/compose/fetch-link-meta', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    credentials: 'include',
-                    body: JSON.stringify({ url: this.linkUrl })
-                });
-                
-                const data = await response.json();
-                if (data.title) this.linkTitle = data.title;
-                if (data.description) this.linkDescription = data.description;
-            } catch (error) {
-                console.error('Error fetching link metadata:', error);
-                this.showStatus("Failed to fetch link metadata", "error");
-            }
-        },
-        
-        // Build metadata based on post type
-        buildMetadata() {
-            switch (this.postType) {
-                case 'quote':
-                    return { url: this.quoteUrl || null };
-                case 'link':
-                    return {
-                        url: this.linkUrl,
-                        title: this.linkTitle,
-                        description: this.linkDescription
-                    };
-                default:
-                    return {};
-            }
-        },
                 
         // Submit post (handles both draft and publish)
         async submitPost(status) {
-            
             if (this.submitting) return; // Prevent double submission
             this.submitting = status;
 
@@ -165,8 +107,8 @@ function composeApp() {
                 const body = {
                     content: this.content,
                     draftId: this.currentDraftId,
-                    type: this.postType,
-                    metadata: this.buildMetadata(),
+                    type: 'text', // Always set to text
+                    metadata: {}, // Empty metadata
                     shareTelegram: this.shareTelegram,
                     shareBluesky: this.shareBluesky,
                     status: status
@@ -214,11 +156,6 @@ function composeApp() {
         // Reset form fields
         resetForm() {
             this.content = '';
-            this.postType = 'text';
-            this.quoteUrl = '';
-            this.linkUrl = '';
-            this.linkTitle = '';
-            this.linkDescription = '';
             this.currentDraftId = null;
         },
         

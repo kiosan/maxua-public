@@ -59,6 +59,7 @@ router.get('/drafts', authMiddleware, async (req, res) => {
 router.delete('/drafts/:id', authMiddleware, async (req, res) => {
   try {
     const draftId = req.params.id;
+    console.log("delete", draftId);
     
     // Delete the draft (only if it's actually a draft)
     const result = await pool.query(
@@ -81,20 +82,11 @@ router.delete('/drafts/:id', authMiddleware, async (req, res) => {
 
 router.post('/post', authMiddleware, async (req, res) => {
   try {
-    const { content, type, metadata, status, shareTelegram, shareBluesky, draftId } = req.body;
-
-    // Allow empty content for link posts only
-    if (type !== 'link' && !content?.trim()) {
+    const { content, status, shareTelegram, shareBluesky, draftId } = req.body;
+    
+    // Basic validation
+    if (!content || content.trim() === '') {
       return res.status(400).json({ error: 'No content found' });
-    }
-
-    // Additional validation for link posts
-    if (type === 'link' && !metadata?.url) {
-      return res.status(400).json({ error: 'Link posts must have a URL' });
-    }
-
-    if (!['text', 'quote', 'link'].includes(type)) {
-      return res.status(400).json({ error: 'Invalid post type' });
     }
 
     if (!['draft', 'published'].includes(status)) {
@@ -103,19 +95,11 @@ router.post('/post', authMiddleware, async (req, res) => {
 
     const newStatus = status === 'published' ? 'public' : status;
 
-    // Prepare post metadata - handle empty content for link posts
-    let previewText;
-
-    if (type === 'link' && !content?.trim()) {
-      // Use link title for preview if content is empty
-      previewText = metadata?.title || metadata?.url || 'Link post';
-    } else {
-      previewText = content.length > 40 
-        ? content.substring(0, content.lastIndexOf(' ', 37) || 37) + '..'
-        : content;
-      previewText = previewText.replace(/\n/g, ' ').trim();
-    }
-
+    // Prepare post metadata
+    const previewText = content.length > 40 
+      ? content.substring(0, content.lastIndexOf(' ', 37) || 37) + '..'
+      : content;
+    
     const slug = await generateSlug(previewText);
 
     // Start a transaction
@@ -130,10 +114,10 @@ router.post('/post', authMiddleware, async (req, res) => {
         const result = await client.query(
           `UPDATE posts 
            SET content = $1, preview_text = $2, slug = $3, status = $4, 
-               type = $5, metadata = $6, created_at = NOW()
-           WHERE id = $7 AND status = 'draft'
+               type = 'text', metadata = '{}'::jsonb, created_at = NOW()
+           WHERE id = $5 AND status = 'draft'
            RETURNING *`,
-          [content, previewText, slug, newStatus, type, metadata, draftId]
+          [content, previewText, slug, newStatus, draftId]
         );
         
         if (result.rows.length === 0) {
@@ -147,9 +131,9 @@ router.post('/post', authMiddleware, async (req, res) => {
         const result = await client.query(
           `INSERT INTO posts 
            (content, preview_text, slug, status, type, metadata) 
-           VALUES ($1, $2, $3, $4, $5, $6) 
+           VALUES ($1, $2, $3, $4, 'text', '{}'::jsonb) 
            RETURNING *`, 
-          [content, previewText, slug, newStatus, type, metadata]
+          [content, previewText, slug, newStatus]
         );
 
         if (result.rows.length === 0) {
@@ -196,6 +180,5 @@ router.post('/post', authMiddleware, async (req, res) => {
     return res.status(500).json({ error: 'Server error', details: error.message });
   }
 });
-
 
 module.exports = router;
