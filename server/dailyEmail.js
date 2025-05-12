@@ -9,6 +9,13 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 
 /**
  * Send a daily digest email to all subscribers
+ *
+ * Date logic: 
+ *  1. Do not include today 
+ *  2. Calculate range using daysBack-from midnight till midnight
+ * 
+ * This way there is no risk of missing a post-you're always fetch full
+ * days worth of posts regardless of what time the digest is run at.
  * 
  * @param {Object} options - Configuration options
  * @param {string} options.testEmail - If set, only send to this email for testing
@@ -26,9 +33,18 @@ async function sendDailyDigest(options = {}) {
     customSubject = null
   } = options;
 
+  // Date range calculation--doesn't include today
+  const endDate = new Date();
+  endDate.setDate(endDate.getDate() - 1);
+  endDate.setHours(23, 59, 59, 999); 
+  
+  const startDate = new Date(endDate);
+  startDate.setDate(startDate.getDate() - (daysBack - 1));
+  startDate.setHours(0, 0, 0, 0); 
+
   try {
-    // 1. Get posts from the specified period
-    const posts = await getRecentPosts(daysBack);
+    // 1. Get posts from the specified date range
+    const posts = await getRecentPosts(startDate, endDate);
     
     if (posts.length === 0) {
       console.log(`No posts in the last ${daysBack} days, skipping digest`);
@@ -81,11 +97,22 @@ async function sendDailyDigest(options = {}) {
     const digestDate = today.toISOString().slice(0, 10).replace(/-/g, '');
     const digestId = `daily#${digestDate}`;
 
-    const dateFormatted = today.toLocaleDateString('en-US', {
+    const dateFormatted = endDate.toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'long',
       day: 'numeric'
     });
+
+    // Calculate and format the start date for multi-day digests
+    let startDateFormatted = null;
+    if (daysBack > 1) {
+      const startDate = new Date(today);
+      startDate.setDate(startDate.getDate() - (daysBack - 1));
+      startDateFormatted = startDate.toLocaleDateString('en-US', {
+        month: 'long',
+        day: 'numeric'
+      });
+    }
     
     // 4. Determine the subject line
     let subjectLine;
@@ -133,6 +160,8 @@ async function sendDailyDigest(options = {}) {
     // 6. Generate template once
     const baseHtml = render('email-digest', {
       posts: formattedPosts,
+      startDateFormatted,
+      daysBack,
       dateFormatted
     });
     
@@ -249,20 +278,15 @@ async function sendDailyDigest(options = {}) {
  * @param {number} days - Number of days to look back
  * @returns {Promise<Array>} - Array of post objects
  */
-async function getRecentPosts(days = 1) {
+async function getRecentPosts(startDate, endDate) {
   const query = `
-    SELECT 
-      p.*, 
-      t.name as topic_name, 
-      t.slug as topic_slug,
-      (SELECT COUNT(*) FROM comments2 c WHERE c.post_id = p.id) as comment_count
-    FROM posts p
-    LEFT JOIN topics t ON p.topic_id = t.id
-    WHERE p.created_at >= NOW() - INTERVAL '${days} days'
-    ORDER BY p.created_at DESC
+    SELECT * FROM posts p
+    WHERE status = 'public' AND
+    created_at >= $1 and created_at <= $2
+    ORDER BY created_at DESC
   `;
   
-  const result = await pool.query(query);
+  const result = await pool.query(query, [startDate, endDate]);
   return result.rows;
 }
 

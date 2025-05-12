@@ -16,9 +16,13 @@
 <!-- Eliminate all default margins -->
 <body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; color: #222; text-align: left;">
 
-  <!--My blog digest for {{dateFormatted}}. Enjoy!-->
-  <br>
-  <br>
+  <div style="font-style: italic; font-size: 0.9rem; color: #555; margin-bottom: 1rem;">
+  {{#if startDateFormatted}}
+  My daily digest for {{startDateFormatted}}–{{dateFormatted}}. Enjoy!
+{{else}}
+  My daily digest for {{dateFormatted}}. Enjoy!
+{{/if}}
+  </div>
 
   <!-- Wrap entire content in table with zero margins -->
   <table cellpadding="0" cellspacing="0" border="0" width="100%" style="margin: 0; padding: 0;">
