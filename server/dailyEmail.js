@@ -139,14 +139,12 @@ async function sendDailyDigest(options = {}) {
       deliveryDbId = deliveryResult.rows[0].id;
     }
     
-    // Generate template once
-    const baseHtml = render('email-digest', {
-      posts: formattedPosts,
-      dateFormatted
-    });
-    
     // If dry run, just return the preview
     if (dryRun) {
+      const baseHtml = render('email-digest', {
+        posts: formattedPosts,
+        dateFormatted
+      });
       return {
         success: true,
         status: 'dry_run',
@@ -169,11 +167,18 @@ async function sendDailyDigest(options = {}) {
       
       // Create batch emails
       const emailBatch = batchSubscribers.map(subscriber => {
-        // Generate personalized unsubscribe URL
+        // Unsubscribe URL is unique to each subscriber (email)
         const unsubscribeUrl = `https://maxua.com/api/unsubscribe?token=${subscriber.unsubscribe_token}`;
         
-        // Replace placeholder with actual token
-        const html = baseHtml.replace('%%unsubscribeUrl%%', unsubscribeUrl);
+        const someone_special = subscriber.email === 'julia.ishchenko@gmail.com';
+
+        // Render the email -- do it for each subscriber to catch someone_special
+        // Also: replaces unsubscribeUrl placeholder with an actual link
+        const html = render('email-digest', {
+          posts: formattedPosts,
+          dateFormatted,
+          someone_special
+        }).replace('%%unsubscribeUrl%%', unsubscribeUrl); 
         
         // Plain text version (simplified)
         const text = `${subjectLine}\n\n` +
