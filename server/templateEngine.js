@@ -115,6 +115,16 @@ async function loadAllQuotes() {
 }
 loadAllQuotes();
 
+Handlebars.registerHelper('getDomain', function(url) {
+  if (!url) return '';
+  try {
+    return new URL(url).hostname;
+  } catch (e) {
+    // If URL parsing fails, return the original URL
+    return url;
+  }
+});
+
 Handlebars.registerHelper('getQotd', function(options) {
   try {
     if (allQuotes.length === 0) {

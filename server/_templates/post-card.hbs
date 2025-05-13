@@ -7,11 +7,13 @@
     </a>
   {{/if}}
   
-  {{#if metadata.image_url}}
-  <div class="post-link-preview">
+  {{#if metadata.url}}
+  <div class="post-link-preview" onclick="window.open('{{metadata.url}}', '_blank', 'noopener,noreferrer'); event.preventDefault(); event.stopPropagation();">
+    {{#if metadata.image_url}}
     <div class="link-preview-image">
       <img src="{{metadata.image_url}}" alt="Link preview" class="link-image">
     </div>
+    {{/if}}
     
     <div class="link-preview-info">
       {{#if metadata.title}}
@@ -24,20 +26,13 @@
       
       {{#if metadata.url}}
         <div class="link-url-display">
-          <a href="{{metadata.url}}" target="_blank" rel="noopener noreferrer" class="link-source" 
-             onclick="event.preventDefault(); event.stopPropagation(); window.open('{{metadata.url}}', '_blank', 'noopener,noreferrer');">
-            {{metadata.url}}
-          </a>
+          <span class="link-source">
+            {{getDomain metadata.url}}
+          </span>
         </div>
       {{/if}}
     </div>
   </div>
-  {{/if}}
-
-  {{#if metadata.transistor_embed_code}}
-  <iframe width="100%" height="180" style="margin: 1rem 0 0 0"
-       frameborder="no" scrolling="no" seamless=""
-       src="https://share.transistor.fm/e/{{metadata.transistor_embed_code}}"></iframe>
   {{/if}}
   
   <div class="post-meta">
@@ -46,4 +41,10 @@
       <a href="#" class="translate-link" data-post-id="{{id}}" data-translated="false">Translate</a>
     </div>
   </div>
+
+  {{#if metadata.transistor_embed_code}}
+  <iframe width="100%" height="180" style="margin: 1rem 0 0 0"
+       frameborder="no" scrolling="no" seamless=""
+       src="https://share.transistor.fm/e/{{metadata.transistor_embed_code}}"></iframe>
+  {{/if}}
 </div>
