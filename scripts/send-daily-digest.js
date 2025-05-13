@@ -16,7 +16,7 @@ async function main() {
     // Get command line arguments
     const args = process.argv.slice(2);
     const options = {
-      daysBack: 1, // Default days back
+      maxPosts: 'all', // Default to all (within hardcorded limit)
       dryRun: false, // Real run by default when called via cron
       askForSubject: false, // Don't ask for subject by default
       customSubject: null // No custom subject by default
@@ -24,8 +24,8 @@ async function main() {
 
     // Parse arguments - allows overrides when called manually
     args.forEach(arg => {
-      if (arg.startsWith('--days=')) {
-        options.daysBack = parseInt(arg.replace('--days=', ''));
+      if (arg.startsWith('--max=')) {
+        options.maxPosts = parseInt(arg.replace('--max=', ''));
       }
       if (arg === '--dry-run') {
         options.dryRun = true;
@@ -42,7 +42,7 @@ async function main() {
     });
 
     console.log(`Sending daily digest with options:
-    - Days back: ${options.daysBack}
+    - Max posts: ${options.maxPosts}
     - Dry run: ${options.dryRun}
     - Ask for subject: ${options.askForSubject}
     - Custom subject: ${options.customSubject || 'None'}

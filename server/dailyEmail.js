@@ -10,16 +10,13 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 /**
  * Send a daily digest email to all subscribers
  *
- * Date logic: 
- *  1. Do not include today 
- *  2. Calculate range using daysBack-from midnight till midnight
- * 
- * This way there is no risk of missing a post-you're always fetch full
- * days worth of posts regardless of what time the digest is run at.
+ * Updated to use digest_sent field instead of date calculations:
+ * - Retrieves posts that haven't been sent in a digest yet (digest_sent IS NULL)
+ * - Updates digest_sent timestamp after sending
  * 
  * @param {Object} options - Configuration options
  * @param {string} options.testEmail - If set, only send to this email for testing
- * @param {number} options.daysBack - How many days of posts to include (default: 1)
+ * @param {number|string} options.maxPosts - Maximum number of posts to include (default: 5), can be 'all'
  * @param {boolean} options.dryRun - If true, don't actually send emails
  * @param {boolean} options.askForSubject - If true, prompt for subject selection
  * @returns {Promise<Object>} - Result of the operation
@@ -27,27 +24,18 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 async function sendDailyDigest(options = {}) {
   const {
     testEmail = null,
-    daysBack = 1,
+    maxPosts = 5,
     dryRun = false,
     askForSubject = false,
     customSubject = null
   } = options;
 
-  // Date range calculation--doesn't include today
-  const endDate = new Date();
-  endDate.setDate(endDate.getDate() - 1);
-  endDate.setHours(23, 59, 59, 999); 
-  
-  const startDate = new Date(endDate);
-  startDate.setDate(startDate.getDate() - (daysBack - 1));
-  startDate.setHours(0, 0, 0, 0); 
-
   try {
-    // 1. Get posts from the specified date range
-    const posts = await getRecentPosts(startDate, endDate);
+    // Get posts that haven't been sent in a digest yet
+    const { posts, total } = await getUnsentPosts(maxPosts);
     
     if (posts.length === 0) {
-      console.log(`No posts in the last ${daysBack} days, skipping digest`);
+      console.log(`No unsent posts, skipping digest`);
       return {
         success: true,
         status: 'skipped',
@@ -55,9 +43,11 @@ async function sendDailyDigest(options = {}) {
       };
     }
     
-    console.log(`Found ${posts.length} posts for the daily digest`);
+    const remaining = total - posts.length;
+    console.log(`Found ${total} total unsent posts`);
+    console.log(`Sending ${posts.length}/${total} posts in this digest (${remaining} will remain unsent)`);
     
-    // 2. Get confirmed subscribers
+    // Get confirmed subscribers
     let subscribers = [];
     
     if (testEmail) {
@@ -89,7 +79,7 @@ async function sendDailyDigest(options = {}) {
       };
     }
     
-    // 3. Format posts data for template
+    // Format posts data for template
     const formattedPosts = formatPostsForEmail(posts);
     
     // Generate a unique ID for this digest (using date in format YYYYMMDD)
@@ -97,24 +87,13 @@ async function sendDailyDigest(options = {}) {
     const digestDate = today.toISOString().slice(0, 10).replace(/-/g, '');
     const digestId = `daily#${digestDate}`;
 
-    const dateFormatted = endDate.toLocaleDateString('en-US', {
+    const dateFormatted = today.toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'long',
       day: 'numeric'
     });
-
-    // Calculate and format the start date for multi-day digests
-    let startDateFormatted = null;
-    if (daysBack > 1) {
-      const startDate = new Date(today);
-      startDate.setDate(startDate.getDate() - (daysBack - 1));
-      startDateFormatted = startDate.toLocaleDateString('en-US', {
-        month: 'long',
-        day: 'numeric'
-      });
-    }
     
-    // 4. Determine the subject line
+    // Determine the subject line
     let subjectLine;
     
     if (customSubject) {
@@ -127,6 +106,9 @@ async function sendDailyDigest(options = {}) {
       // Default: use preview_text from the latest post
       subjectLine = posts[0].preview_text || posts[0].content.substring(0, 40);
     }
+
+    // Sanitize subject line - remove any newlines and excessive whitespace
+    subjectLine = subjectLine.replace(/\n/g, ' ').replace(/\s+/g, ' ').trim();
     
     // Check if this digest was already sent today
     if (!dryRun && !testEmail) {
@@ -146,7 +128,7 @@ async function sendDailyDigest(options = {}) {
       }
     }
     
-    // 5. Create delivery record
+    // Create delivery record
     let deliveryDbId = null;
 
     if (!dryRun && !testEmail) {
@@ -157,11 +139,9 @@ async function sendDailyDigest(options = {}) {
       deliveryDbId = deliveryResult.rows[0].id;
     }
     
-    // 6. Generate template once
+    // Generate template once
     const baseHtml = render('email-digest', {
       posts: formattedPosts,
-      startDateFormatted,
-      daysBack,
       dateFormatted
     });
     
@@ -178,7 +158,7 @@ async function sendDailyDigest(options = {}) {
       };
     }
     
-    // 7. Send emails in batches
+    // Send emails in batches
     const BATCH_SIZE = 50;
     let successCount = 0;
     let errorCount = 0;
@@ -247,12 +227,22 @@ async function sendDailyDigest(options = {}) {
       }
     }
     
-    // 8. Update delivery record with actual count
+    // Update delivery record with actual count
     if (deliveryDbId) {
       await pool.query(
         'UPDATE email_deliveries SET recipient_count = $1 WHERE id = $2',
         [successCount, deliveryDbId]
       );
+    }
+    
+    // Mark all included posts as sent
+    if (!dryRun && !testEmail && successCount > 0) {
+      const postIds = posts.map(post => post.id);
+      await pool.query(
+        'UPDATE posts SET digest_sent = NOW() WHERE id = ANY($1)',
+        [postIds]
+      );
+      console.log(`Marked ${postIds.length} posts as sent in digest`);
     }
     
     return {
@@ -274,20 +264,46 @@ async function sendDailyDigest(options = {}) {
 }
 
 /**
- * Get posts from the past X days
- * @param {number} days - Number of days to look back
- * @returns {Promise<Array>} - Array of post objects
+ * Get posts that haven't been sent in a digest yet
+ * @param {number|string} limit - Maximum number of posts to get, or 'all' for all unsent posts
+ * @returns {Promise<{posts: Array, total: number}>} - Posts array and total unsent count
  */
-async function getRecentPosts(startDate, endDate) {
-  const query = `
-    SELECT * FROM posts p
-    WHERE status = 'public' AND
-    created_at >= $1 and created_at <= $2
-    ORDER BY created_at DESC
+async function getUnsentPosts(limit = 5) {
+  // Get total count of unsent posts first
+  const countQuery = `
+    SELECT COUNT(*) FROM posts 
+    WHERE status = 'public' 
+    AND digest_sent IS NULL
   `;
   
-  const result = await pool.query(query, [startDate, endDate]);
-  return result.rows;
+  const countResult = await pool.query(countQuery);
+  const totalUnsent = parseInt(countResult.rows[0].count);
+  
+  // Determine the actual limit to use
+  let actualLimit = limit;
+  const HARD_LIMIT = 25; // Maximum number of posts to include, even with 'all'
+  
+  if (limit === 'all') {
+    actualLimit = Math.min(totalUnsent, HARD_LIMIT);
+  } else {
+    actualLimit = Math.min(parseInt(limit), HARD_LIMIT);
+  }
+  
+  // Get the posts
+  const query = `
+    SELECT * FROM posts p
+    WHERE status = 'public' 
+    AND digest_sent IS NULL
+    ORDER BY created_at DESC
+    LIMIT $1
+  `;
+  
+  const result = await pool.query(query, [actualLimit]);
+  
+  return {
+    posts: result.rows,
+    total: totalUnsent
+  };
 }
 
 /**
