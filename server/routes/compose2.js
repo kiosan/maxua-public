@@ -33,7 +33,7 @@ router.get('/', authMiddleware, async (req, res) => {
     const html = templateEngine.render('compose2', {
       pageTitle: editPostId ? 'Edit Post - Max Ischenko' : 'Compose - Max Ischenko',
       editMode: !!editPostId,
-      postData
+      postData: postData || null
     });
     
     res.send(html);
@@ -124,7 +124,7 @@ router.post('/post', authMiddleware, async (req, res) => {
     let validatedMetadata = {};
     if (metadata && typeof metadata === 'object') {
       Object.entries(metadata).forEach(([key, value]) => {
-        if (/^[a-zA-Z0-9_]+$/.test(key) && value !== '') {
+        if (/^[a-zA-Z0-9_]+$/.test(key) && value !== '' && key !== 'key') {
           validatedMetadata[key] = String(value);
         }
       });

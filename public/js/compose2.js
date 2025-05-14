@@ -89,14 +89,19 @@ function composeApp() {
             });
           }
 
-          // Add an empty field if none exists
-          if (Object.keys(this.metadata).length === 0) {
-            this.addEmptyMetadataField();
-          }
-
           // Disable sharing options in edit mode - we don't reshare edited posts
           this.shareTelegram = false;
           this.shareBluesky = false;
+
+          setTimeout(() => {
+            const textarea = document.querySelector('.compose-textarea');
+            if (textarea) {
+                textarea.style.height = 'auto';
+                textarea.style.height = Math.min(textarea.scrollHeight, 600) + 'px';
+                textarea.focus();
+                textarea.selectionStart = textarea.selectionEnd = textarea.value.length;
+            }
+          }, 0);
 
           console.log('Initialized edit mode for post:', postData.id);
         } catch (error) {
@@ -176,11 +181,6 @@ function composeApp() {
                     const id = Date.now() + Math.random().toString().slice(2, 8);
                     this.metadata[id] = { key, value };
                 });
-            }
-            
-            // Add an empty field if none exists
-            if (Object.keys(this.metadata).length === 0) {
-                this.addEmptyMetadataField();
             }
             
             // Trigger input event to resize textarea

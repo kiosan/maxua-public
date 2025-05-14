@@ -15,7 +15,8 @@
     <main>
         {{> profile-header activePage="compose"}}
 
-        <div class="compose-container" x-data="composeApp()" x-init="initWithData()">
+        <div class="compose-container" x-data="composeApp()" 
+          x-init="{{#if postData}}initWithEditDataFromDOM(){{/if}}">
             <div class="compose-card">
               <div class="compose-header">
                 <h2 class="compose-title">
@@ -43,7 +44,7 @@
           <div class="metadata-section" 
              x-data="{ expanded: false }">
             <div class="metadata-header">
-                <span @click="expanded = !expanded; if(expanded && Object.keys(metadata).length === 0) addEmptyMetadataField();" class="metadata-toggle">
+                <span @click="expanded = !expanded;" class="metadata-toggle">
             <span x-text="expanded ? '▼' : '▶'"></span> 
             Metadata <span class="metadata-count" x-show="Object.keys(metadata).length > 0">
                 (<span x-text="Object.keys(metadata).length"></span>)
