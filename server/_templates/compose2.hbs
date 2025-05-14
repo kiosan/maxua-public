@@ -38,11 +38,10 @@
                     "
                     autofocus></textarea>
 
-                  <!-- New Metadata Section with shortcuts - collapsed by default -->
-<div class="metadata-section" 
-     x-data="{ expanded: false }">
-    <div class="metadata-header">
-        <span @click="expanded = !expanded; if(expanded && Object.keys(metadata).length === 0) addEmptyMetadataField();" class="metadata-toggle">
+          <div class="metadata-section" 
+             x-data="{ expanded: false }">
+            <div class="metadata-header">
+                <span @click="expanded = !expanded; if(expanded && Object.keys(metadata).length === 0) addEmptyMetadataField();" class="metadata-toggle">
             <span x-text="expanded ? '▼' : '▶'"></span> 
             Metadata <span class="metadata-count" x-show="Object.keys(metadata).length > 0">
                 (<span x-text="Object.keys(metadata).length"></span>)
@@ -55,11 +54,14 @@
                     @click="addMetadataWithKey('image_url'); expanded = true;"
                     class="metadata-shortcut">+image_url</button>
             <button type="button" 
-                    @click="addMetadataWithKey('transistor_embed_code'); expanded = true;"
-                    class="metadata-shortcut">+transistor</button>
+                    @click="addMetadataWithKey('title'); expanded = true;"
+                    class="metadata-shortcut">+title</button>
             <button type="button" 
-                    @click="addMetadataWithKey('lang'); expanded = true;"
-                    class="metadata-shortcut">+lang</button>
+                    @click="addMetadataWithKey('description'); expanded = true;"
+                    class="metadata-shortcut">+desc</button>
+            <button type="button" 
+                    @click="addMetadataWithKey('transistor_embed_code'); expanded = true;"
+                    class="metadata-shortcut">+embed</button>
         </div>
     </div>
     

@@ -96,21 +96,19 @@ router.post('/post', authMiddleware, async (req, res) => {
     const newStatus = status === 'published' ? 'public' : status;
 
     // Validate metadata
+    // - Keys must be alphanumeric with underscores
+    // - Skip keys with empty values
+    // - Convert value to string if needed 
     let validatedMetadata = {};
     if (metadata && typeof metadata === 'object') {
-      // Check each key and value
       Object.entries(metadata).forEach(([key, value]) => {
-        // Keys must be alphanumeric with underscores
-        if (/^[a-zA-Z0-9_]+$/.test(key)) {
-          // Convert value to string if needed
-          validatedMetadata[key] = String(value || ''); // store empty values too
+        if (/^[a-zA-Z0-9_]+$/.test(key) && value !== '') {
+          validatedMetadata[key] = String(value);
         }
       });
     }
 
     const metadata_json = JSON.stringify(validatedMetadata);
-
-    console.log("POST", metadata, metadata_json);
 
     // Prepare post preview text
     const previewText = content.length > 40 
