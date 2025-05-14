@@ -30,11 +30,10 @@ router.get('/', authMiddleware, async (req, res) => {
       }
     }
     
-    // Render the compose2 template with optional post data
     const html = templateEngine.render('compose2', {
       pageTitle: editPostId ? 'Edit Post - Max Ischenko' : 'Compose - Max Ischenko',
       editMode: !!editPostId,
-      postData: postData ? JSON.stringify(postData) : null
+      postData
     });
     
     res.send(html);

@@ -102,6 +102,10 @@ Handlebars.registerHelper('neq', function (a, b, options) {
   return a != b;
 });
 
+Handlebars.registerHelper('json', function(context) {
+  return JSON.stringify(context);
+});
+
 // QOTD feature
 
 let allQuotes = [];

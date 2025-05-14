@@ -15,7 +15,7 @@
     <main>
         {{> profile-header activePage="compose"}}
 
-        <div class="compose-container" x-data="composeApp()" x-init="initWithEditData('{{postData}}', {{editMode}})">
+        <div class="compose-container" x-data="composeApp()" x-init="initWithData()">
             <div class="compose-card">
               <div class="compose-header">
                 <h2 class="compose-title">
@@ -38,6 +38,8 @@
                     "
                     autofocus></textarea>
 
+<input type="hidden" id="edit-post-data" value="{{json postData}}" {{#unless postData}}style="display:none"{{/unless}}>
+                  
           <div class="metadata-section" 
              x-data="{ expanded: false }">
             <div class="metadata-header">

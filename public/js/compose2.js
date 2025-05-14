@@ -50,61 +50,61 @@ function composeApp() {
                 await this.loadDrafts();
             }
         },
-        
-        // Initialize with edit data if provided
-        initWithEditData(postDataJson, isEdit) {
-            if (!isEdit || !postDataJson) return;
-            
-            try {
-                // Parse the JSON data safely
-                const postData = JSON.parse(postDataJson.replace(/&quot;/g, '"'));
-                
-                // Set edit mode
-                this.isEditMode = true;
-                this.editPostId = postData.id;
-                
-                // Set content
-                this.content = postData.content || '';
-                
-                // Parse and set metadata
-                this.metadata = {};
-                if (postData.metadata) {
-                    let metadataObj = {};
-                    
-                    // Handle stringified JSON
-                    if (typeof postData.metadata === 'string') {
-                        try {
-                            metadataObj = JSON.parse(postData.metadata);
-                        } catch (e) {
-                            console.error('Error parsing metadata JSON:', e);
-                        }
-                    } else {
-                        metadataObj = postData.metadata;
-                    }
-                    
-                    // Convert to our format with IDs
-                    Object.entries(metadataObj).forEach(([key, value]) => {
-                        const id = Date.now() + Math.random().toString().slice(2, 8);
-                        this.metadata[id] = { key, value: String(value) };
-                    });
-                }
-                
-                // Add an empty field if none exists
-                if (Object.keys(this.metadata).length === 0) {
-                    this.addEmptyMetadataField();
-                }
-                
-                // Disable sharing options in edit mode - we don't reshare edited posts
-                this.shareTelegram = false;
-                this.shareBluesky = false;
-                
-                console.log('Initialized edit mode for post:', postData.id);
-            } catch (error) {
-                console.error('Error initializing edit data:', error);
-                this.showStatus('Error loading post data for editing', 'error');
+
+      initWithData() {
+        const dataElement = document.getElementById('edit-post-data');
+        if (!dataElement || !dataElement.value) return;
+
+        try {
+          // Parse the JSON data from the hidden input
+          const postData = JSON.parse(dataElement.value);
+
+          // Set edit mode
+          this.isEditMode = true;
+          this.editPostId = postData.id;
+
+          // Set content
+          this.content = postData.content || '';
+
+          // Parse and set metadata
+          this.metadata = {};
+          if (postData.metadata) {
+            let metadataObj = {};
+
+            // Handle stringified JSON
+            if (typeof postData.metadata === 'string') {
+              try {
+                metadataObj = JSON.parse(postData.metadata);
+              } catch (e) {
+                console.error('Error parsing metadata JSON:', e);
+              }
+            } else {
+              metadataObj = postData.metadata;
             }
-        },
-        
+
+            // Convert to our format with IDs
+            Object.entries(metadataObj).forEach(([key, value]) => {
+              const id = Date.now() + Math.random().toString().slice(2, 8);
+              this.metadata[id] = { key, value: String(value) };
+            });
+          }
+
+          // Add an empty field if none exists
+          if (Object.keys(this.metadata).length === 0) {
+            this.addEmptyMetadataField();
+          }
+
+          // Disable sharing options in edit mode - we don't reshare edited posts
+          this.shareTelegram = false;
+          this.shareBluesky = false;
+
+          console.log('Initialized edit mode for post:', postData.id);
+        } catch (error) {
+          console.error('Error initializing edit data:', error);
+          this.showStatus('Error loading post data for editing', 'error');
+        }
+      },
+
         // Metadata functions
         isValidKey(key) {
             if (!key) return false;
