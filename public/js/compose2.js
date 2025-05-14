@@ -13,6 +13,7 @@ function composeApp() {
         currentDraftId: null,
         isEditMode: false,
         editPostId: null,
+        deletingDraft: null, // Track which draft is being deleted to prevent double deletion
         
         // Initialize
         async init() {
@@ -195,7 +196,19 @@ function composeApp() {
         },
 
         async deleteDraft(draftId) {
+            if (!draftId) return;
+            
             try {
+                // Stop propagation and prevent default form submission if called from an event
+                if (event) {
+                    event.stopPropagation();
+                    event.preventDefault();
+                }
+                
+                // Check if already deleting this draft
+                if (this.deletingDraft === draftId) return;
+                this.deletingDraft = draftId;
+                
                 const response = await fetch(`/compose/drafts/${draftId}`, {
                     method: 'DELETE',
                     credentials: 'include'
@@ -208,7 +221,7 @@ function composeApp() {
                     
                     // Clear current draft if it was the one deleted
                     if (this.currentDraftId === draftId) {
-                        this.currentDraftId = null;
+                        this.resetForm();
                     }
                 } else {
                     this.showStatus("Failed to delete draft", "error");
@@ -216,6 +229,8 @@ function composeApp() {
             } catch (error) {
                 console.error('Error deleting draft:', error);
                 this.showStatus("Error deleting draft", "error");
+            } finally {
+                this.deletingDraft = null;
             }
         },
                 
@@ -286,8 +301,10 @@ function composeApp() {
                         // Update the current draft ID
                         this.currentDraftId = result.id;
                         
-                        // Reload drafts to show the new one
-                        await this.loadDrafts();
+                        // Redirect to compose page to reset the form after a delay
+                        setTimeout(() => {
+                            window.location.href = '/compose';
+                        }, 1500);
                     }
                 } else {
                     throw new Error(result.error || `Failed to ${status === 'draft' ? 'save draft' : 'publish post'}`);
@@ -307,15 +324,8 @@ function composeApp() {
                 return;
             }
             
-            // Normal reset
-            this.content = '';
-            this.metadata = {};
-            this.addEmptyMetadataField();
-            this.currentDraftId = null;
-            this.editPostId = null;
-            this.isEditMode = false;
-            this.shareTelegram = true;
-            this.shareBluesky = true;
+            // For all other cases, redirect to compose to get a fresh state
+            window.location.href = '/compose';
         },
         
         // Show status message

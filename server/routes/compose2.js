@@ -1,4 +1,4 @@
-// Updated server/routes/compose2.js 
+// Updated server/routes/compose2.js to support post editing
 const express = require('express');
 const router = express.Router();
 const { pool, authMiddleware, generateSlug } = require('../utils');
@@ -6,6 +6,7 @@ const templateEngine = require('../templateEngine');
 const { sharePostToTelegram } = require('../telegram');
 const { sharePostToBluesky, fetchUrlMetadata } = require('../bluesky');
 
+// Display the compose page - updated to support editing mode
 router.get('/', authMiddleware, async (req, res) => {
   try {
     // Check if editing an existing post
@@ -178,6 +179,34 @@ router.post('/post', authMiddleware, async (req, res) => {
         
         post = result.rows[0];
       } 
+      // DRAFT EDIT MODE: Updating an existing draft
+      else if (draftId && status === 'draft') {
+        // Verify the draft exists
+        const checkResult = await client.query(
+          `SELECT id FROM posts WHERE id = $1 AND status = 'draft'`,
+          [draftId]
+        );
+        
+        if (checkResult.rows.length === 0) {
+          throw new Error('Draft not found');
+        }
+        
+        // Update the existing draft
+        const result = await client.query(
+          `UPDATE posts 
+           SET content = $1, preview_text = $2, slug = $3,
+               type = 'text', metadata = $4, updated_at = NOW()
+           WHERE id = $5 AND status = 'draft'
+           RETURNING *`,
+          [content, previewText, slug, JSON.stringify(validatedMetadata), draftId]
+        );
+        
+        if (result.rows.length === 0) {
+          throw new Error('Failed to update draft');
+        }
+        
+        post = result.rows[0];
+      }
       // PUBLISH FROM DRAFT: Converting a draft to a published post
       else if (draftId && status === 'published') {
         const result = await client.query(
