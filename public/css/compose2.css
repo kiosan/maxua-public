@@ -414,6 +414,10 @@ input:checked + .toggle-slider:before {
 }
 
 /* Mobile optimizations */
+
+/* Enhanced mobile styling for compose2.css */
+
+/* Existing mobile optimizations */
 @media (max-width: 600px) {
     body {
         padding: 0;
@@ -449,5 +453,184 @@ input:checked + .toggle-slider:before {
     .post-button {
         width: 100%;
         text-align: center;
+    }
+}
+
+/* Additional mobile improvements */
+@media (max-width: 768px) {
+    /* Metadata section improvements */
+    .metadata-section {
+        margin: 1rem 0;
+        border-radius: 6px;
+    }
+    
+    .metadata-header {
+        padding: 0.8rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+    
+    .metadata-toggle {
+        font-size: 1rem;
+        flex-grow: 1;
+    }
+    
+    .metadata-shortcuts {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        width: 100%;
+        gap: 0.5rem;
+        margin-top: 0.5rem;
+    }
+    
+    .metadata-shortcut {
+        padding: 0.6rem 0.4rem;
+        font-size: 0.9rem;
+        text-align: center;
+        border-radius: 6px;
+        width: 100%;
+    }
+    
+    /* Metadata fields */
+    .metadata-field {
+        flex-direction: column;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+        position: relative;
+        padding-right: 35px;
+    }
+    
+    .metadata-key,
+    .metadata-value {
+        width: 100%;
+        padding: 0.8rem;
+        font-size: 1rem;
+    }
+    
+    .metadata-delete {
+        position: absolute;
+        top: 0;
+        right: 0;
+        padding: 0.3rem;
+        font-size: 1.5rem;
+    }
+    
+    .metadata-add-button {
+        width: 100%;
+        padding: 0.8rem;
+        font-size: 1rem;
+        margin-top: 0.5rem;
+    }
+    
+    /* Improve button styling */
+    .button-row {
+        gap: 1rem;
+    }
+    
+    .save-draft-button,
+    .post-button {
+        width: 100%;
+        padding: 0.9rem 1rem;
+        font-size: 1.1rem;
+        border-radius: 8px;
+        margin: 0;
+    }
+    
+    .save-draft-button {
+        background-color: #f5f5f5;
+        border: 1px solid #ddd;
+        color: #333;
+    }
+    
+    .post-button {
+        background-color: #1a73e8;
+        color: white;
+        font-weight: 600;
+    }
+    
+    /* Drafts section */
+    .drafts-section {
+        margin-top: 2rem;
+        padding: 1rem;
+    }
+    
+    .draft-item {
+        padding: 1rem;
+        position: relative;
+        padding-right: 40px;
+    }
+    
+    .draft-delete {
+        position: absolute;
+        top: 50%;
+        right: 0.5rem;
+        transform: translateY(-50%);
+        opacity: 0.8; /* Always visible on mobile */
+        background-color: #f5f5f5;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    /* Character count */
+    .character-count {
+        text-align: center;
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+}
+
+/* Small phone optimizations */
+@media (max-width: 480px) {
+    .compose-card {
+        padding: 0.8rem;
+    }
+    
+    .compose-title {
+        font-size: 1.3rem;
+    }
+    
+    .compose-subtitle {
+        font-size: 0.85rem;
+    }
+    
+    .metadata-shortcuts {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .metadata-shortcut {
+        font-size: 0.85rem;
+        padding: 0.5rem 0.4rem;
+        min-height: 36px;
+    }
+    
+    /* Sharing options section */
+    .sharing-options {
+        padding: 1rem;
+        margin: 1rem 0;
+    }
+    
+    .toggle-group {
+        gap: 0.8rem;
+    }
+    
+    .toggle-slider {
+        width: 40px;
+        height: 22px;
+    }
+    
+    .toggle-slider:before {
+        height: 16px;
+        width: 16px;
+    }
+    
+    input:checked + .toggle-slider:before {
+        transform: translateX(18px);
     }
 }
