@@ -170,7 +170,8 @@ async function sendDailyDigest(options = {}) {
         // Unsubscribe URL is unique to each subscriber (email)
         const unsubscribeUrl = `https://maxua.com/api/unsubscribe?token=${subscriber.unsubscribe_token}`;
         
-        const someone_special = subscriber.email === 'julia.ishchenko@gmail.com';
+        let someone_special = subscriber.email === 'julia.ishchenko@gmail.com';
+        if (testEmail) someone_special = testEmail; // over-ride for testing
 
         // Render the email -- do it for each subscriber to catch someone_special
         // Also: replaces unsubscribeUrl placeholder with an actual link
@@ -363,30 +364,22 @@ async function promptForSubject(posts) {
       console.log(`${index + 1}: ${post.preview_text || post.content.substring(0, 40)}`);
     });
     
-    console.log(`${posts.length + 1}: Enter custom subject`);
-    
-    rl.question('\nEnter your choice (number): ', (answer) => {
-      const choice = parseInt(answer.trim());
-      
-      if (choice > 0 && choice <= posts.length) {
+    rl.question('\nEnter number OR custom subject line: ', (answer) => {
+      const trimmed = answer.trim();
+      const idx = parseInt(trimmed, 10);
+
+      if (!isNaN(idx) && idx > 0 && idx <= posts.length) {
         // User selected a post's preview text
-        const subject = posts[choice - 1].preview_text || posts[choice - 1].content.substring(0, 40);
+        const subject = posts[idx - 1].preview_text || posts[idx - 1].content.substring(0, 40);
         rl.close();
         resolve(subject);
-      } else if (choice === posts.length + 1) {
-        // User wants to enter a custom subject
-        rl.question('Enter custom subject: ', (customSubject) => {
-          rl.close();
-          resolve(customSubject.trim());
-        });
       } else {
-        // Invalid choice, default to the first post
-        console.log('Invalid choice, using first post as subject.');
-        const subject = posts[0].preview_text || posts[0].content.substring(0, 40);
+        // Treat input as custom subject line
         rl.close();
-        resolve(subject);
+        resolve(trimmed);
       }
     });
+    
   });
 }
 
