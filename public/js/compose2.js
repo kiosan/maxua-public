@@ -1,4 +1,4 @@
-// public/js/compose2.js - updated for the new metadata requirements
+// Updated public/js/compose2.js with editing functionality
 function composeApp() {
     return {
         content: '',
@@ -11,6 +11,8 @@ function composeApp() {
         drafts: [],
         loadingDrafts: false,
         currentDraftId: null,
+        isEditMode: false,
+        editPostId: null,
         
         // Initialize
         async init() {
@@ -23,21 +25,83 @@ function composeApp() {
                     return;
                 }
                 
-                // Ctrl+Enter to publish
+                // Ctrl+Enter to publish/update
                 if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
                     e.preventDefault();
                     this.submitPost('published');
                 }
                 
-                // Ctrl+S to save draft
-                if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+                // Ctrl+S to save draft (only in non-edit mode)
+                if ((e.ctrlKey || e.metaKey) && e.key === 's' && !this.isEditMode) {
                     e.preventDefault();
                     this.submitPost('draft');
                 }
+                
+                // Escape to cancel edit
+                if (e.key === 'Escape' && this.isEditMode) {
+                    e.preventDefault();
+                    this.resetForm();
+                }
             });
             
-            // Load drafts on page load
-            await this.loadDrafts();
+            // Load drafts on page load (but not in edit mode)
+            if (!this.isEditMode) {
+                await this.loadDrafts();
+            }
+        },
+        
+        // Initialize with edit data if provided
+        initWithEditData(postDataJson, isEdit) {
+            if (!isEdit || !postDataJson) return;
+            
+            try {
+                // Parse the JSON data safely
+                const postData = JSON.parse(postDataJson.replace(/&quot;/g, '"'));
+                
+                // Set edit mode
+                this.isEditMode = true;
+                this.editPostId = postData.id;
+                
+                // Set content
+                this.content = postData.content || '';
+                
+                // Parse and set metadata
+                this.metadata = {};
+                if (postData.metadata) {
+                    let metadataObj = {};
+                    
+                    // Handle stringified JSON
+                    if (typeof postData.metadata === 'string') {
+                        try {
+                            metadataObj = JSON.parse(postData.metadata);
+                        } catch (e) {
+                            console.error('Error parsing metadata JSON:', e);
+                        }
+                    } else {
+                        metadataObj = postData.metadata;
+                    }
+                    
+                    // Convert to our format with IDs
+                    Object.entries(metadataObj).forEach(([key, value]) => {
+                        const id = Date.now() + Math.random().toString().slice(2, 8);
+                        this.metadata[id] = { key, value: String(value) };
+                    });
+                }
+                
+                // Add an empty field if none exists
+                if (Object.keys(this.metadata).length === 0) {
+                    this.addEmptyMetadataField();
+                }
+                
+                // Disable sharing options in edit mode - we don't reshare edited posts
+                this.shareTelegram = false;
+                this.shareBluesky = false;
+                
+                console.log('Initialized edit mode for post:', postData.id);
+            } catch (error) {
+                console.error('Error initializing edit data:', error);
+                this.showStatus('Error loading post data for editing', 'error');
+            }
         },
         
         // Metadata functions
@@ -74,7 +138,7 @@ function composeApp() {
         
         // Load drafts from server
         async loadDrafts() {
-            if (this.loadingDrafts) return;
+            if (this.loadingDrafts || this.isEditMode) return;
             this.loadingDrafts = true;
             
             try {
@@ -96,6 +160,8 @@ function composeApp() {
         
         // Select and load a draft
         selectDraft(draft) {
+            if (this.isEditMode) return; // Don't allow selecting drafts in edit mode
+            
             this.content = draft.content;
             this.currentDraftId = draft.id;
             
@@ -139,6 +205,11 @@ function composeApp() {
                     // Remove from local drafts array
                     this.drafts = this.drafts.filter(draft => draft.id !== draftId);
                     this.showStatus("Draft deleted", "success");
+                    
+                    // Clear current draft if it was the one deleted
+                    if (this.currentDraftId === draftId) {
+                        this.currentDraftId = null;
+                    }
                 } else {
                     this.showStatus("Failed to delete draft", "error");
                 }
@@ -148,7 +219,7 @@ function composeApp() {
             }
         },
                 
-        // Submit post (handles both draft and publish)
+        // Submit post (handles both draft and publish, as well as editing)
         async submitPost(status) {
             if (this.submitting) return; // Prevent double submission
             this.submitting = status;
@@ -165,7 +236,8 @@ function composeApp() {
                 
                 const body = {
                     content: this.content,
-                    draftId: this.currentDraftId,
+                    draftId: !this.isEditMode ? this.currentDraftId : null,
+                    editPostId: this.isEditMode ? this.editPostId : null,
                     type: 'text', // Always set to text
                     metadata: flatMetadata,
                     shareTelegram: this.shareTelegram,
@@ -183,7 +255,17 @@ function composeApp() {
                 const result = await response.json();
                 
                 if (response.ok) {
-                    if (status === 'published') {
+                    // Edit mode success message
+                    if (this.isEditMode && status === 'published') {
+                        this.showStatus("Post updated successfully!", "success");
+                        
+                        // Redirect to the post after a delay
+                        setTimeout(() => {
+                            window.location.href = `/p/${result.id}`;
+                        }, 1500);
+                    }
+                    // Normal publish mode
+                    else if (status === 'published') {
                         this.showStatus("Post published successfully!", "success");
                         
                         // Reset form
@@ -196,8 +278,13 @@ function composeApp() {
                         setTimeout(() => {
                             window.location.href = `/p/${result.id}`;
                         }, 1500);
-                    } else {
+                    } 
+                    // Draft save mode
+                    else {
                         this.showStatus("Draft saved successfully!", "success");
+                        
+                        // Update the current draft ID
+                        this.currentDraftId = result.id;
                         
                         // Reload drafts to show the new one
                         await this.loadDrafts();
@@ -214,10 +301,21 @@ function composeApp() {
         
         // Reset form fields
         resetForm() {
+            // In edit mode, go back to the post
+            if (this.isEditMode && this.editPostId) {
+                window.location.href = `/p/${this.editPostId}`;
+                return;
+            }
+            
+            // Normal reset
             this.content = '';
             this.metadata = {};
             this.addEmptyMetadataField();
             this.currentDraftId = null;
+            this.editPostId = null;
+            this.isEditMode = false;
+            this.shareTelegram = true;
+            this.shareBluesky = true;
         },
         
         // Show status message

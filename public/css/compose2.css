@@ -286,6 +286,38 @@ input:checked + .toggle-slider:before {
     background-color: #f5f5f5;
 }
 
+/* Edit mode */
+
+.cancel-button {
+  background-color: #f5f5f5;
+  color: #555;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.cancel-button:hover {
+  background-color: #e8e8e8;
+}
+
+.edit-info {
+  margin: 1.5rem 0;
+  padding: 1rem;
+  background-color: #f8f8ff;
+  border: 1px solid #e0e0ff;
+  border-left: 3px solid #4285f4;
+  border-radius: 0 8px 8px 0;
+}
+
+.edit-note {
+  font-size: 0.95rem;
+  color: #555;
+  margin: 0;
+}
+
 /* Metadata section styles */
 
 .metadata-header {
@@ -415,9 +447,6 @@ input:checked + .toggle-slider:before {
 
 /* Mobile optimizations */
 
-/* Enhanced mobile styling for compose2.css */
-
-/* Existing mobile optimizations */
 @media (max-width: 600px) {
     body {
         padding: 0;

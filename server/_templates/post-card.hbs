@@ -34,11 +34,16 @@
     </div>
   </div>
   {{/if}}
-  
+
   <div class="post-meta">
     <div class="post-date">
       <span class="post-date-text">{{formatted_date}}</span>
       <a href="#" class="translate-link" data-post-id="{{id}}" data-translated="false">Translate</a>
+  {{#if editBtn}}
+      <span x-data="{ isAdmin: false }" x-init="isAdmin = localStorage.getItem('microblog_auth') !== null">
+        <a x-show="isAdmin" href="/compose?edit={{id}}" class="edit-link">Edit</a>
+      </span>
+  {{/if}}
     </div>
   </div>
 

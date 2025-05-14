@@ -1,4 +1,4 @@
-<!-- server/_templates/compose2.hbs -->
+<!-- Updated server/_templates/compose2.hbs -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,13 +15,13 @@
     <main>
         {{> profile-header activePage="compose"}}
 
-        <div class="compose-container" x-data="composeApp()">
+        <div class="compose-container" x-data="composeApp()" x-init="initWithEditData('{{postData}}', {{editMode}})">
             <div class="compose-card">
               <div class="compose-header">
                 <h2 class="compose-title">
-                  Compose a new post
+                  <span x-text="isEditMode ? 'Edit post' : 'Compose a new post'"></span>
                 </h2>
-                <p class="compose-subtitle">Share your thoughts, ideas, or updates</p>
+                <p class="compose-subtitle" x-text="isEditMode ? 'Update your post - editing will not change the original publish date' : 'Share your thoughts, ideas, or updates'"></p>
               </div>
                 
                 <form id="compose-form" @submit.prevent="submitPost('published')">
@@ -94,8 +94,11 @@
 
                     <div class="button-row">
                         <div class="button-group-left">
-                            <button type="button" @click="submitPost('draft')" :disabled="submitting" class="save-draft-button">
+                            <button x-show="!isEditMode" type="button" @click="submitPost('draft')" :disabled="submitting" class="save-draft-button">
                                 <span x-text="submitting === 'draft' ? 'Saving...' : 'Save as Draft'"></span>
+                            </button>
+                            <button x-show="isEditMode" type="button" @click="resetForm()" :disabled="submitting" class="cancel-button">
+                                Cancel
                             </button>
                         </div>
                         <div class="button-group-right">
@@ -105,7 +108,7 @@
                                 <span x-text="content.length"></span> characters
                             </div>
                             <button type="submit" :disabled="submitting" class="post-button">
-                                <span x-text="submitting === 'published' ? 'Publishing...' : 'Publish'"></span>
+                                <span x-text="submitting === 'published' ? (isEditMode ? 'Updating...' : 'Publishing...') : (isEditMode ? 'Update Post' : 'Publish')"></span>
                             </button>
                         </div>
                     </div>
@@ -119,7 +122,7 @@
                     </div>
 
                     <!-- Sharing options section -->
-                    <div class="sharing-options">
+                    <div class="sharing-options" x-show="!isEditMode">
                         <h3 class="sharing-title">Sharing options</h3>
                         <div class="toggle-group">
                             <label class="toggle-label">
@@ -136,8 +139,16 @@
                         </div>
                     </div>
                     
+                    <!-- Edit Mode Info -->
+                    <div class="edit-info" x-show="isEditMode">
+                        <p class="edit-note">
+                            <strong>Editing Post #<span x-text="editPostId"></span></strong> - 
+                            You're editing a published post. The original publish date will be preserved.
+                        </p>
+                    </div>
+                    
                     <!-- Drafts section -->
-                    <div class="drafts-section" x-show="drafts.length > 0">
+                    <div class="drafts-section" x-show="drafts.length > 0 && !isEditMode">
                         <h3 class="drafts-title">Saved Drafts</h3>
                         <div class="drafts-list">
                         <template x-for="draft in drafts" :key="draft.id">

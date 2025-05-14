@@ -1,4 +1,4 @@
-// server/routes/compose2.js - Updated unified post route
+// Updated server/routes/compose2.js 
 const express = require('express');
 const router = express.Router();
 const { pool, authMiddleware, generateSlug } = require('../utils');
@@ -6,12 +6,34 @@ const templateEngine = require('../templateEngine');
 const { sharePostToTelegram } = require('../telegram');
 const { sharePostToBluesky, fetchUrlMetadata } = require('../bluesky');
 
-// Display the compose page
 router.get('/', authMiddleware, async (req, res) => {
   try {
-    // Render the compose2 template
+    // Check if editing an existing post
+    const editPostId = req.query.edit;
+    
+    // If editing, fetch the post data
+    let postData = null;
+    
+    if (editPostId) {
+      const result = await pool.query(
+        `SELECT id, content, type, status, metadata, created_at 
+         FROM posts 
+         WHERE id = $1 AND status = 'public'`,  // Only allow editing published posts
+        [editPostId]
+      );
+      
+      if (result.rows.length > 0) {
+        postData = result.rows[0];
+      } else {
+        return res.status(404).send('Post not found or cannot be edited');
+      }
+    }
+    
+    // Render the compose2 template with optional post data
     const html = templateEngine.render('compose2', {
-      pageTitle: 'Compose - Max Ischenko'
+      pageTitle: editPostId ? 'Edit Post - Max Ischenko' : 'Compose - Max Ischenko',
+      editMode: !!editPostId,
+      postData: postData ? JSON.stringify(postData) : null
     });
     
     res.send(html);
@@ -82,7 +104,7 @@ router.delete('/drafts/:id', authMiddleware, async (req, res) => {
 
 router.post('/post', authMiddleware, async (req, res) => {
   try {
-    const { content, status, metadata, shareTelegram, shareBluesky, draftId } = req.body;
+    const { content, status, metadata, shareTelegram, shareBluesky, draftId, editPostId } = req.body;
     
     // Basic validation
     if (!content || content.trim() === '') {
@@ -125,7 +147,39 @@ router.post('/post', authMiddleware, async (req, res) => {
       
       let post;
       
-      if (draftId && status === 'published') {
+      // EDIT MODE: Updating an existing published post
+      if (editPostId && status === 'published') {
+        // Verify the post exists and is published
+        const checkResult = await client.query(
+          `SELECT id, created_at FROM posts WHERE id = $1 AND status = 'public'`,
+          [editPostId]
+        );
+        
+        if (checkResult.rows.length === 0) {
+          throw new Error('Post not found or is not published');
+        }
+        
+        // Keep the original created_at timestamp when updating
+        const originalCreatedAt = checkResult.rows[0].created_at;
+        
+        // Update the existing post - preserve created_at timestamp
+        const result = await client.query(
+          `UPDATE posts 
+           SET content = $1, preview_text = $2, slug = $3, 
+               type = 'text', metadata = $4, updated_at = NOW()
+           WHERE id = $5 AND status = 'public'
+           RETURNING *`,
+          [content, previewText, slug, JSON.stringify(validatedMetadata), editPostId]
+        );
+        
+        if (result.rows.length === 0) {
+          throw new Error('Failed to update post');
+        }
+        
+        post = result.rows[0];
+      } 
+      // PUBLISH FROM DRAFT: Converting a draft to a published post
+      else if (draftId && status === 'published') {
         const result = await client.query(
           `UPDATE posts 
            SET content = $1, preview_text = $2, slug = $3, status = $4, 
@@ -140,9 +194,9 @@ router.post('/post', authMiddleware, async (req, res) => {
         }
         
         post = result.rows[0];
-
-      } else {
-        
+      } 
+      // NORMAL MODE: Create a new post or draft
+      else {
         const result = await client.query(
           `INSERT INTO posts 
            (content, preview_text, slug, status, type, metadata) 
@@ -159,7 +213,8 @@ router.post('/post', authMiddleware, async (req, res) => {
       }
       
       // If published, handle sharing to various platforms
-      if (status === 'published') {
+      // Only share when publishing new posts, not when editing
+      if (status === 'published' && !editPostId) {
         // Share to Telegram if enabled
         if (shareTelegram) {
           try {
@@ -191,7 +246,7 @@ router.post('/post', authMiddleware, async (req, res) => {
       client.release();
     }
   } catch (error) {
-    console.error('Error creating post:', error);
+    console.error('Error creating/updating post:', error);
     return res.status(500).json({ error: 'Server error', details: error.message });
   }
 });

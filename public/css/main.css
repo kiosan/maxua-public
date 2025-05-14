@@ -480,11 +480,24 @@ footer a:hover {
     line-height: 1.5;
 }
 
+/* Edit button for posts (admin) */
+.edit-link {
+  background: none;
+  border: none;
+  color: var(--color-secondary-text);
+  font-size: 0.85rem;
+  cursor: pointer;
+  padding: 0;
+  margin-left: 8px;
+  text-decoration: underline;
+}
+
+.edit-link:hover {
+  background-color: var(--color-border);
+  color: var(--color-accent);
+}
+
 /* Rich embeds */
-
-/* UPDATES FOR PUBLIC/CSS/MAIN.CSS */
-
-/* Add these styles for the link preview in post cards */
 
 .post-link-preview {
   margin-top: 1rem;
