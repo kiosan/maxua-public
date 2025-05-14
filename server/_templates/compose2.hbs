@@ -1,4 +1,4 @@
-<!-- Updated server/_templates/compose2.hbs -->
+<!-- Updated compose2.hbs to support URL detection -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -35,7 +35,8 @@
                     "
                     @input="
                         $el.style.height = 'auto'; 
-                        $el.style.height = Math.min($el.scrollHeight, 600) + 'px'
+                        $el.style.height = Math.min($el.scrollHeight, 600) + 'px';
+                        handleContentChange();
                     "
                     autofocus></textarea>
 
@@ -94,6 +95,42 @@
           </div>
       </div>
 
+      <!-- Link Preview section when URL is detected -->
+      <div class="post-link-preview-container" 
+           x-show="Object.values(metadata).some(field => field.key === 'url' && field.value)">
+        <div class="link-preview-heading">Link Preview:</div>
+        <div class="post-link-preview" style="margin-bottom: 1.5rem; cursor: default;">
+            <!-- Image from metadata -->
+            <div class="link-preview-image" 
+                 x-show="Object.values(metadata).some(field => field.key === 'image_url' && field.value)">
+                <img class="link-image" 
+                     :src="Object.values(metadata).find(field => field.key === 'image_url')?.value || ''" 
+                     alt="Link preview">
+            </div>
+            
+            <div class="link-preview-info">
+                <!-- Title from metadata -->
+                <div class="link-title" 
+                     x-show="Object.values(metadata).some(field => field.key === 'title' && field.value)"
+                     x-text="Object.values(metadata).find(field => field.key === 'title')?.value || ''">
+                </div>
+                
+                <!-- Description from metadata -->
+                <div class="link-description" 
+                     x-show="Object.values(metadata).some(field => field.key === 'description' && field.value)"
+                     x-text="Object.values(metadata).find(field => field.key === 'description')?.value || ''">
+                </div>
+                
+                <!-- URL display -->
+                <div class="link-url-display" 
+                     x-show="Object.values(metadata).some(field => field.key === 'url' && field.value)">
+                    <span class="link-source"
+                         x-text="new URL(Object.values(metadata).find(field => field.key === 'url')?.value || '').hostname">
+                    </span>
+                </div>
+            </div>
+        </div>
+      </div>
 
                     <div class="button-row">
                         <div class="button-group-left">
