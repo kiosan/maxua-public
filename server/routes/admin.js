@@ -7,50 +7,50 @@ const { pool, authMiddleware } = require('../utils');
 router.get('/stats', authMiddleware, async (req, res) => {
   try {
     // Get basic stats (existing subscribers and post stats)
-    const subscriberResult = await pool.query(
+    const subscriberResult = await runQuery(
       'SELECT COUNT(*) FROM subscribers WHERE confirmed = true'
     );
     const subscriberCount = parseInt(subscriberResult.rows[0].count);
 
     // Get new subscribers in the last 7 days
-    const newSubscribersResult = await pool.query(
-      'SELECT COUNT(*) FROM subscribers WHERE confirmed = true AND created_at > NOW() - INTERVAL \'7 days\''
+    const newSubscribersResult = await runQuery(
+      "SELECT COUNT(*) FROM subscribers WHERE confirmed = true AND created_at > datetime('now', '-7 days')"
     );
     const newSubscriberCount = parseInt(newSubscribersResult.rows[0].count);
 
     // Get posts created in the last 7 days
-    const postsResult = await pool.query(
-      'SELECT COUNT(*) FROM posts WHERE created_at > NOW() - INTERVAL \'7 days\''
+    const postsResult = await runQuery(
+      "SELECT COUNT(*) FROM posts WHERE created_at > datetime('now', '-7 days')"
     );
     const recentPosts = parseInt(postsResult.rows[0].count);
 
     // Get total comments
-    const totalCommentsResult = await pool.query(
+    const totalCommentsResult = await runQuery(
       'SELECT COUNT(*) FROM comments2'
     );
     const totalComments = parseInt(totalCommentsResult.rows[0].count);
 
     // Get comments created in the last 7 days
-    const commentsResult = await pool.query(
-      'SELECT COUNT(*) FROM comments2 WHERE created_at > NOW() - INTERVAL \'7 days\''
+    const commentsResult = await runQuery(
+      "SELECT COUNT(*) FROM comments2 WHERE created_at > datetime('now', '-7 days')"
     );
     const recentComments = parseInt(commentsResult.rows[0].count);
 
     // Get visitor stats
     // Daily active users (last 24 hours)
-    const dailyActiveResult = await pool.query(
-      'SELECT COUNT(*) FROM visitor_stats WHERE last_seen > NOW() - INTERVAL \'24 hours\''
+    const dailyActiveResult = await runQuery(
+      "SELECT COUNT(*) FROM visitor_stats WHERE last_seen > datetime('now', '-1 day')"
     );
     const dailyActiveVisitors = parseInt(dailyActiveResult.rows[0].count);
 
     // Weekly active users (last 7 days)
-    const weeklyActiveResult = await pool.query(
-      'SELECT COUNT(*) FROM visitor_stats WHERE last_seen > NOW() - INTERVAL \'7 days\''
+    const weeklyActiveResult = await runQuery(
+      "SELECT COUNT(*) FROM visitor_stats WHERE last_seen > datetime('now', '-7 days')"
     );
     const weeklyActiveVisitors = parseInt(weeklyActiveResult.rows[0].count);
 
     // All-time unique visitors
-    const allTimeResult = await pool.query(
+    const allTimeResult = await runQuery(
       'SELECT COUNT(*) FROM visitor_stats'
     );
     const allTimeVisitors = parseInt(allTimeResult.rows[0].count);
@@ -86,11 +86,11 @@ router.get('/comments', authMiddleware, async (req, res) => {
     const offset = parseInt(req.query.offset) || 0;
     
     // Get comments with pagination
-    const result = await pool.query(
+    const result = await runQuery(
       `SELECT c.id, c.post_id, c.author, c.email, c.content, c.pinned, c.created_at 
        FROM comments2 c 
        ORDER BY c.created_at DESC 
-       LIMIT $1 OFFSET $2`,
+       LIMIT ? OFFSET ?`,
       [limit, offset]
     );
 
@@ -113,8 +113,8 @@ router.post('/comments/:id/pin', authMiddleware, async (req, res) => {
     }
 
     // Update the comment pinned status
-    const result = await pool.query(
-      'UPDATE comments2 SET pinned = $1 WHERE id = $2 RETURNING id, pinned',
+    const result = await runQuery(
+      'UPDATE comments2 SET pinned = ? WHERE id = ? RETURNING id, pinned',
       [pinned, commentId]
     );
 

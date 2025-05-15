@@ -1,6 +1,6 @@
 // server/dailyEmail.js - Daily digest email sender
 const { Resend } = require('resend');
-const { pool, formatDate, escapeHTML } = require('./utils');
+const { db, runQuery, formatDate, escapeHTML  } = require('./utils');
 const { render } = require('./templateEngine');
 const readline = require('readline');
 
@@ -61,7 +61,7 @@ async function sendDailyDigest(options = {}) {
       console.log(`Test mode: Will send only to ${testEmail}`);
     } else {
       // Get actual subscribers - include both preferences to simplify migration
-      const subscribersResult = await pool.query(`
+      const subscribersResult = await runQuery(`
         SELECT id, email, name, unsubscribe_token 
         FROM subscribers 
         WHERE confirmed = true AND (preferences = 'digest' OR preferences = 'single-post')
@@ -112,8 +112,8 @@ async function sendDailyDigest(options = {}) {
     
     // Check if this digest was already sent today
     if (!dryRun && !testEmail) {
-      const existingDelivery = await pool.query(
-        'SELECT id FROM email_deliveries WHERE delivery_id = $1',
+      const existingDelivery = await runQuery(
+        'SELECT id FROM email_deliveries WHERE delivery_id = ?',
         [digestId]
       );
       
@@ -132,8 +132,8 @@ async function sendDailyDigest(options = {}) {
     let deliveryDbId = null;
 
     if (!dryRun && !testEmail) {
-      const deliveryResult = await pool.query(
-        'INSERT INTO email_deliveries (delivery_id, sent_at, recipient_count, subject) VALUES ($1, NOW(), $2, $3) RETURNING id',
+      const deliveryResult = await runQuery(
+        "INSERT INTO email_deliveries (delivery_id, sent_at, recipient_count, subject) VALUES (?, datetime('now'), ?, ?) RETURNING id",
         [digestId, subscribers.length, subjectLine]
       );
       deliveryDbId = deliveryResult.rows[0].id;
@@ -190,7 +190,7 @@ async function sendDailyDigest(options = {}) {
         return {
           from: 'Max Ischenko <hello@maxua.com>',
           to: [subscriber.email],
-          reply_to: 'ischenko@gmail.com',
+          reply_to: 'obondar@gmail.com',
           subject: subjectLine,
           html: html,
           text: text,
@@ -222,9 +222,9 @@ async function sendDailyDigest(options = {}) {
         // Update last_sent_at for subscribers in this batch
         if (batchSuccessCount > 0 && !testEmail) {
           const subscriberIds = batchSubscribers.map(s => s.id);
-          await pool.query(
-            'UPDATE subscribers SET last_sent_at = NOW() WHERE id = ANY($1)',
-            [subscriberIds]
+          await runQuery(
+            "UPDATE subscribers SET last_sent_at = datetime('now') WHERE id IN (" + subscriberIds.map(() => '?').join(',') + ")",
+            subscriberIds
           );
         }
       } catch (batchError) {
@@ -235,8 +235,8 @@ async function sendDailyDigest(options = {}) {
     
     // Update delivery record with actual count
     if (deliveryDbId) {
-      await pool.query(
-        'UPDATE email_deliveries SET recipient_count = $1 WHERE id = $2',
+      await runQuery(
+        'UPDATE email_deliveries SET recipient_count = ? WHERE id = ?',
         [successCount, deliveryDbId]
       );
     }
@@ -244,9 +244,9 @@ async function sendDailyDigest(options = {}) {
     // Mark all included posts as sent
     if (!dryRun && !testEmail && successCount > 0) {
       const postIds = posts.map(post => post.id);
-      await pool.query(
-        'UPDATE posts SET digest_sent = NOW() WHERE id = ANY($1)',
-        [postIds]
+      await runQuery(
+        "UPDATE posts SET digest_sent = datetime('now') WHERE id IN (" + postIds.map(() => '?').join(',') + ")",
+        postIds
       );
       console.log(`Marked ${postIds.length} posts as sent in digest`);
     }
@@ -282,7 +282,7 @@ async function getUnsentPosts(limit = 5) {
     AND digest_sent IS NULL
   `;
   
-  const countResult = await pool.query(countQuery);
+  const countResult = await runQuery(countQuery);
   const totalUnsent = parseInt(countResult.rows[0].count);
   
   // Determine the actual limit to use
@@ -301,10 +301,10 @@ async function getUnsentPosts(limit = 5) {
     WHERE status = 'public' 
     AND digest_sent IS NULL
     ORDER BY created_at DESC
-    LIMIT $1
+    LIMIT ?
   `;
   
-  const result = await pool.query(query, [actualLimit]);
+  const result = await runQuery(query, [actualLimit]);
   
   return {
     posts: result.rows,

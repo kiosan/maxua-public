@@ -11,7 +11,7 @@ router.post('/translate', rateLimiterMiddleware, async (req, res) => {
   }
 
   try {
-    const result = await pool.query('SELECT content FROM posts WHERE id = $1', [postId]);
+    const result = await runQuery('SELECT content FROM posts WHERE id = ?', [postId]);
     
     if (result.rows.length === 0) {
       return res.status(404).json({ error: 'Post not found' });

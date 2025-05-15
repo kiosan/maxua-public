@@ -1,5 +1,5 @@
 // functions/sitemap.js
-const { pool } = require('./utils');
+const { db, runQuery } = require('./utils');
 
 /**
  * Generate a sitemap.xml for the site
@@ -28,7 +28,7 @@ exports.handler = async (event, context) => {
     
     // Get topics with the latest post date for each topic
     // This gives us a better "last modified" date for each topic page
-    const topicResult = await pool.query(`
+    const topicResult = await runQuery(`
       SELECT t.slug, t.created_at, MAX(p.created_at) as last_post_date
       FROM topics t
       LEFT JOIN posts p ON t.id = p.topic_id
@@ -50,7 +50,7 @@ exports.handler = async (event, context) => {
     }
     
     // Add all posts
-    const postResult = await pool.query(`
+    const postResult = await runQuery(`
       SELECT id, created_at 
       FROM posts 
       ORDER BY created_at DESC LIMIT 100

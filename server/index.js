@@ -3,7 +3,7 @@ require('dotenv').config();
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const Sentry = require('@sentry/node');
-const { pool, rateLimiterMiddleware, authMiddleware } = require('./utils');
+const { db, runQuery, rateLimiterMiddleware, authMiddleware } = require('./utils');
 
 // Import route modules
 const authRoutes = require('./routes/auth');
@@ -139,22 +139,22 @@ app.post('/track-visits', rateLimiterMiddleware, async (req, res) => {
     }
 
     // Update visitor stats (upsert pattern)
-    await pool.query(`
+    await runQuery(`
       INSERT INTO visitor_stats (anon_id, last_path, last_referrer)
-      VALUES ($1, $2, $3)
+      VALUES (?, ?, ?)
       ON CONFLICT (anon_id) 
       DO UPDATE SET 
         visit_count = visitor_stats.visit_count + 1,
-        last_seen = NOW(),
-        last_path = $2,
-        last_referrer = $3
-    `, [anonId, pathname, referrer || null]);
+        last_seen = datetime('now'),
+        last_path = ?,
+        last_referrer = ?
+    `, [anonId, pathname, referrer || null, pathname, referrer || null]);
     
     // If we have a postId, track page view separately
     if (postId) {
-      await pool.query(
+      await runQuery(
         `INSERT INTO page_views (post_id, anon_id)
-         VALUES ($1, $2)
+         VALUES (?, ?)
          ON CONFLICT (post_id, anon_id) DO NOTHING`,
         [postId, anonId]
       );
@@ -241,7 +241,7 @@ app.get('/sitemap.xml', createServerlessAdapter(sitemap));
 app.get(['/p/:id(\\d+)', '/p/:slug([\\w\\-]+)-:id(\\d+)'], async (req, res, next) => {
   try {
     const { id, slug = '' } = req.params;
-    const result = await pool.query('SELECT slug FROM posts WHERE id = $1', [id]);
+    const result = await runQuery('SELECT slug FROM posts WHERE id = ?', [id]);
     
     // Redirect only if we have a post with a slug that differs from the URL
     if (result.rows.length > 0 && result.rows[0].slug && result.rows[0].slug !== slug) {

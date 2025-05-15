@@ -7,7 +7,7 @@ const { pool } = require('../utils');
 router.get('/rss', async (req, res) => {
   try {
     // Get the 20 most recent posts
-    const result = await pool.query(`
+    const result = await runQuery(`
       SELECT * FROM posts p
       WHERE p.status='public'
       ORDER BY p.created_at DESC

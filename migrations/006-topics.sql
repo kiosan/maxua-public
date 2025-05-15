@@ -3,11 +3,11 @@
 
 -- Create topics table
 CREATE TABLE topics (
-  id SERIAL PRIMARY KEY,
-  name VARCHAR(50) NOT NULL UNIQUE,
-  slug VARCHAR(50) NOT NULL UNIQUE,
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL UNIQUE,
+  slug TEXT NOT NULL UNIQUE,
   description TEXT,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+  created_at TEXT DEFAULT (datetime('now'))
 );
 
 -- Add topic_id to posts table (nullable - posts can have no topic)
@@ -36,4 +36,4 @@ UPDATE posts SET topic_id = (SELECT id FROM topics WHERE slug = 'startups')
 WHERE id IN (60, 50);
 
 -- Add activity logging for topic changes
-COMMENT ON TABLE topics IS 'Topics that can be assigned to posts';
+-- SQLite doesn't support COMMENT ON TABLE, this is just a comment in the migration file

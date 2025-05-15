@@ -1,6 +1,6 @@
 // functions/telegram.js
 const fetch = require('node-fetch');
-const { pool, getPostPermalink } = require('./utils');
+const { db, runQuery, getPostPermalink  } = require('./utils');
 
 // Telegram configuration
 const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;

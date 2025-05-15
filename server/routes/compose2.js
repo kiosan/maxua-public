@@ -1,7 +1,7 @@
 // Updated server/routes/compose2.js to support post editing
 const express = require('express');
 const router = express.Router();
-const { pool, authMiddleware, generateSlug } = require('../utils');
+const { db, runQuery, authMiddleware, generateSlug } = require('../utils');
 const templateEngine = require('../templateEngine');
 const { sharePostToTelegram } = require('../telegram');
 const { sharePostToBluesky, fetchUrlMetadata } = require('../bluesky');
@@ -16,22 +16,27 @@ router.get('/', authMiddleware, async (req, res) => {
     let postData = null;
     
     if (editPostId) {
-      const result = await pool.query(
-        `SELECT id, content, type, status, metadata, created_at 
+      console.log(`[DEBUG] Loading post for editing, id: ${editPostId}`);
+      const result = await runQuery(
+        `SELECT id, content, type, status, metadata, created_at, slug, preview_text 
          FROM posts 
-         WHERE id = $1 AND status = 'public'`,  // Only allow editing published posts
+         WHERE id = ?`,  // Allow editing any post regardless of status
         [editPostId]
       );
       
+      console.log(`[DEBUG] Query result:`, result);
+      
       if (result.rows.length > 0) {
         postData = result.rows[0];
+        console.log(`[DEBUG] Post data loaded:`, postData);
       } else {
+        console.log(`[DEBUG] Post not found with id: ${editPostId}`);
         return res.status(404).send('Post not found or cannot be edited');
       }
     }
     
     const html = templateEngine.render('compose2', {
-      pageTitle: editPostId ? 'Edit Post - Max Ischenko' : 'Compose - Max Ischenko',
+      pageTitle: editPostId ? 'Edit Post - Sasha Bondar' : 'Compose - Sasha Bondar',
       editMode: !!editPostId,
       postData: postData || null
     });
@@ -63,7 +68,7 @@ router.post('/fetch-link-meta', authMiddleware, async (req, res) => {
 
 router.get('/drafts', authMiddleware, async (req, res) => {
   try {
-    const result = await pool.query(
+    const result = await runQuery(
       `SELECT id, content, type, metadata, created_at 
        FROM posts 
        WHERE status = 'draft' 
@@ -84,9 +89,9 @@ router.delete('/drafts/:id', authMiddleware, async (req, res) => {
     console.log("delete", draftId);
     
     // Delete the draft (only if it's actually a draft)
-    const result = await pool.query(
+    const result = await runQuery(
       `DELETE FROM posts 
-       WHERE id = $1 AND status = 'draft' 
+       WHERE id = ? AND status = 'draft' 
        RETURNING id`,
       [draftId]
     );
@@ -140,18 +145,19 @@ router.post('/post', authMiddleware, async (req, res) => {
     const slug = await generateSlug(previewText);
 
     // Start a transaction
-    const client = await pool.connect();
+    // With SQLite we don't need to get a client connection
     
     try {
-      await client.query('BEGIN');
+      // SQLite transactions are handled differently
+      db.prepare('BEGIN TRANSACTION').run();
       
       let post;
       
       // EDIT MODE: Updating an existing published post
       if (editPostId && status === 'published') {
         // Verify the post exists and is published
-        const checkResult = await client.query(
-          `SELECT id, created_at FROM posts WHERE id = $1 AND status = 'public'`,
+        const checkResult = await runQuery(
+          `SELECT id, created_at FROM posts WHERE id = ? AND status = 'public'`,
           [editPostId]
         );
         
@@ -163,11 +169,11 @@ router.post('/post', authMiddleware, async (req, res) => {
         const originalCreatedAt = checkResult.rows[0].created_at;
         
         // Update the existing post - preserve created_at timestamp
-        const result = await client.query(
+        const result = await runQuery(
           `UPDATE posts 
-           SET content = $1, preview_text = $2, slug = $3, 
-               type = 'text', metadata = $4, updated_at = NOW()
-           WHERE id = $5 AND status = 'public'
+           SET content = ?, preview_text = ?, slug = ?, 
+               type = 'text', metadata = ?, updated_at = datetime('now')
+           WHERE id = ? AND status = 'public'
            RETURNING *`,
           [content, previewText, slug, JSON.stringify(validatedMetadata), editPostId]
         );
@@ -181,8 +187,8 @@ router.post('/post', authMiddleware, async (req, res) => {
       // DRAFT EDIT MODE: Updating an existing draft
       else if (draftId && status === 'draft') {
         // Verify the draft exists
-        const checkResult = await client.query(
-          `SELECT id FROM posts WHERE id = $1 AND status = 'draft'`,
+        const checkResult = await runQuery(
+          `SELECT id FROM posts WHERE id = ? AND status = 'draft'`,
           [draftId]
         );
         
@@ -191,11 +197,11 @@ router.post('/post', authMiddleware, async (req, res) => {
         }
         
         // Update the existing draft
-        const result = await client.query(
+        const result = await runQuery(
           `UPDATE posts 
-           SET content = $1, preview_text = $2, slug = $3,
-               type = 'text', metadata = $4, updated_at = NOW()
-           WHERE id = $5 AND status = 'draft'
+           SET content = ?, preview_text = ?, slug = ?,
+               type = 'text', metadata = ?, updated_at = datetime('now')
+           WHERE id = ? AND status = 'draft'
            RETURNING *`,
           [content, previewText, slug, JSON.stringify(validatedMetadata), draftId]
         );
@@ -208,11 +214,11 @@ router.post('/post', authMiddleware, async (req, res) => {
       }
       // PUBLISH FROM DRAFT: Converting a draft to a published post
       else if (draftId && status === 'published') {
-        const result = await client.query(
+        const result = await runQuery(
           `UPDATE posts 
-           SET content = $1, preview_text = $2, slug = $3, status = $4, 
-               type = 'text', metadata = $5, created_at = NOW()
-           WHERE id = $6 AND status = 'draft'
+           SET content = ?, preview_text = ?, slug = ?, status = ?, 
+               type = 'text', metadata = ?, created_at = datetime('now')
+           WHERE id = ? AND status = 'draft'
            RETURNING *`,
           [content, previewText, slug, newStatus, JSON.stringify(validatedMetadata), draftId]
         );
@@ -225,10 +231,10 @@ router.post('/post', authMiddleware, async (req, res) => {
       } 
       // NORMAL MODE: Create a new post or draft
       else {
-        const result = await client.query(
+        const result = await runQuery(
           `INSERT INTO posts 
            (content, preview_text, slug, status, type, metadata) 
-           VALUES ($1, $2, $3, $4, 'text', $5) 
+           VALUES (?, ?, ?, ?, 'text', ?) 
            RETURNING *`, 
           [content, previewText, slug, newStatus, JSON.stringify(validatedMetadata)]
         );
@@ -264,14 +270,16 @@ router.post('/post', authMiddleware, async (req, res) => {
         }
       }
       
-      await client.query('COMMIT');
+      // Commit SQLite transaction
+      db.prepare('COMMIT').run();
       
       return res.status(201).json(post);
     } catch (error) {
-      await client.query('ROLLBACK');
+      // Rollback SQLite transaction
+      db.prepare('ROLLBACK').run();
       throw error;
     } finally {
-      client.release();
+      // No need to release connection with SQLite
     }
   } catch (error) {
     console.error('Error creating/updating post:', error);

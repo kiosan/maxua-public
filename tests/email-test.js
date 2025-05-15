@@ -63,15 +63,15 @@ async function sendTestEmail() {
     const randomNum = Date.now() % 100000;
     
     // Replace the unsubscribe placeholder
-    const finalHtml = htmlContent.replace('%%unsubscribeUrl%%', 'https://maxua.com/unsubscribe?token=test-token');
+    const finalHtml = htmlContent.replace('%%unsubscribeUrl%%', 'https://sbondar.com/unsubscribe?token=test-token');
     
     // Send the email
     const { data, error } = await resend.emails.send({
-      from: 'Max Ischenko <hello@maxua.com>',
-      to: 'ischenko@gmail.com',
+      from: 'Sasha Bondar <hello@sbondar.com>',
+      to: 'obondar@gmail.com',
       subject: `[TEST]: ${subject}`,
       html: finalHtml,
-      text: `TEST EMAIL\n\n${testPost.content}\n\nRead more: ${postUrl}\n\nTo unsubscribe: https://maxua.com/unsubscribe?token=test-token`
+      text: `TEST EMAIL\n\n${testPost.content}\n\nRead more: ${postUrl}\n\nTo unsubscribe: https://sbondar.com/unsubscribe?token=test-token`
     });
     
     if (error) {

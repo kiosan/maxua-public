@@ -1,5 +1,5 @@
 // functions/composePage.js
-const { pool, getCorsHeaders, getETagHeaders } = require('./utils');
+const { db, runQuery, getCorsHeaders, getETagHeaders  } = require('./utils');
 const templateEngine = require('./templateEngine');
 
 /**
@@ -75,7 +75,7 @@ exports.handler = async (event, context) => {
  */
 async function fetchTopics() {
   try {
-    const result = await pool.query(`
+    const result = await runQuery(`
       SELECT * FROM topics ORDER BY name ASC
     `);
     
@@ -91,7 +91,7 @@ async function fetchTopics() {
  */
 async function fetchDrafts() {
   try {
-    const result = await pool.query(`
+    const result = await runQuery(`
       SELECT d.*, t.name as topic_name, t.slug as topic_slug
       FROM drafts d
       LEFT JOIN topics t ON d.topic_id = t.id
@@ -110,11 +110,11 @@ async function fetchDrafts() {
  */
 async function fetchDraft(draftId) {
   try {
-    const result = await pool.query(
+    const result = await runQuery(
       `SELECT d.*, t.name as topic_name, t.slug as topic_slug
        FROM drafts d
        LEFT JOIN topics t ON d.topic_id = t.id
-       WHERE d.id = $1`,
+       WHERE d.id = ?`,
       [draftId]
     );
     

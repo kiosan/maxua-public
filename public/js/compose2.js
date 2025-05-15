@@ -1,4 +1,4 @@
-// Updated public/js/compose2.js with editing functionality
+// Enhanced public/js/compose2.js with URL detection for rich embeds
 function composeApp() {
     return {
         content: '',
@@ -14,6 +14,10 @@ function composeApp() {
         isEditMode: false,
         editPostId: null,
         deletingDraft: null, // Track which draft is being deleted to prevent double deletion
+        
+        // Track processed URLs to avoid redundant API calls
+        processedUrls: {},
+        urlDetectionTimer: null,
         
         // Initialize
         async init() {
@@ -51,64 +55,165 @@ function composeApp() {
             }
         },
 
-      initWithData() {
-        const dataElement = document.getElementById('edit-post-data');
-        if (!dataElement || !dataElement.value) return;
-
-        try {
-          // Parse the JSON data from the hidden input
-          const postData = JSON.parse(dataElement.value);
-
-          // Set edit mode
-          this.isEditMode = true;
-          this.editPostId = postData.id;
-
-          // Set content
-          this.content = postData.content || '';
-
-          // Parse and set metadata
-          this.metadata = {};
-          if (postData.metadata) {
-            let metadataObj = {};
-
-            // Handle stringified JSON
-            if (typeof postData.metadata === 'string') {
-              try {
-                metadataObj = JSON.parse(postData.metadata);
-              } catch (e) {
-                console.error('Error parsing metadata JSON:', e);
-              }
-            } else {
-              metadataObj = postData.metadata;
+        // Handle content changes with URL detection
+        handleContentChange() {
+            this.content = this.$el.value;
+            
+            // Debounce URL detection to avoid hammering the server while typing
+            clearTimeout(this.urlDetectionTimer);
+            this.urlDetectionTimer = setTimeout(() => {
+                this.detectAndProcessUrl();
+            }, 1000); // 1 second debounce
+        },
+        
+        // Detect URLs in content and fetch metadata if new
+        async detectAndProcessUrl() {
+            const urlRegex = /(https?:\/\/[^\s]+)/g;
+            const matches = this.content.match(urlRegex);
+            
+            if (!matches || matches.length === 0) return;
+            
+            // Process the first URL found (we'll focus on one URL per post for simplicity)
+            const url = matches[0];
+            
+            // Skip if we've already processed this URL
+            if (this.processedUrls[url]) return;
+            
+            // Check if we already have metadata for this URL
+            const hasExistingUrlMetadata = this.hasUrlInMetadata();
+            if (hasExistingUrlMetadata) return;
+            
+            try {
+                // Mark URL as being processed to prevent duplicate requests
+                this.processedUrls[url] = 'processing';
+                
+                // Fetch metadata for the URL
+                const response = await fetch('/compose/fetch-link-meta', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({ url })
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Failed to fetch URL metadata');
+                }
+                
+                const metadata = await response.json();
+                this.processedUrls[url] = 'completed';
+                
+                // Only populate metadata if we have something useful
+                if (metadata && (metadata.title || metadata.description || metadata.image)) {
+                    this.populateMetadataFields(url, metadata);
+                }
+            } catch (error) {
+                console.error('Error fetching URL metadata:', error);
+                this.processedUrls[url] = 'error';
             }
-
-            // Convert to our format with IDs
-            Object.entries(metadataObj).forEach(([key, value]) => {
-              const id = Date.now() + Math.random().toString().slice(2, 8);
-              this.metadata[id] = { key, value: String(value) };
+        },
+        
+        // Check if we already have URL metadata
+        hasUrlInMetadata() {
+            // Check if we already have url, title, description or image_url in metadata
+            const metadataKeys = new Set();
+            Object.values(this.metadata).forEach(item => {
+                metadataKeys.add(item.key);
             });
-          }
+            
+            return metadataKeys.has('url') || 
+                   metadataKeys.has('title') || 
+                   metadataKeys.has('description') || 
+                   metadataKeys.has('image_url');
+        },
+        
+        // Add metadata fields from URL fetch
+        populateMetadataFields(url, metadata) {
+            const fieldsToAdd = [
+                { key: 'url', value: url },
+                { key: 'title', value: metadata.title || '' },
+                { key: 'description', value: metadata.description || '' },
+                { key: 'image_url', value: metadata.image || '' }
+            ];
+            
+            // Add each field if it doesn't already exist
+            fieldsToAdd.forEach(field => {
+                // Skip empty values
+                if (!field.value) return;
+                
+                // Check if this field already exists
+                const existingField = Object.values(this.metadata).find(item => item.key === field.key);
+                
+                // Don't override existing metadata fields
+                if (!existingField) {
+                    const id = Date.now() + Math.random().toString().slice(2, 8);
+                    this.metadata[id] = { key: field.key, value: field.value };
+                }
+            });
+        },
 
-          // Disable sharing options in edit mode - we don't reshare edited posts
-          this.shareTelegram = false;
-          this.shareBluesky = false;
+        initWithEditDataFromDOM() {
+            const dataElement = document.getElementById('edit-post-data');
+            if (!dataElement || !dataElement.value) return;
 
-          setTimeout(() => {
-            const textarea = document.querySelector('.compose-textarea');
-            if (textarea) {
-                textarea.style.height = 'auto';
-                textarea.style.height = Math.min(textarea.scrollHeight, 600) + 'px';
-                textarea.focus();
-                textarea.selectionStart = textarea.selectionEnd = textarea.value.length;
+            try {
+                // Parse the JSON data from the hidden input
+                const postData = JSON.parse(dataElement.value);
+
+                // Set edit mode
+                this.isEditMode = true;
+                this.editPostId = postData.id;
+
+                // Set content
+                this.content = postData.content || '';
+
+                // Parse and set metadata
+                this.metadata = {};
+                if (postData.metadata) {
+                    let metadataObj = {};
+
+                    // Handle stringified JSON
+                    if (typeof postData.metadata === 'string') {
+                        try {
+                            metadataObj = JSON.parse(postData.metadata);
+                        } catch (e) {
+                            console.error('Error parsing metadata JSON:', e);
+                        }
+                    } else {
+                        metadataObj = postData.metadata;
+                    }
+
+                    // Convert to our format with IDs
+                    Object.entries(metadataObj).forEach(([key, value]) => {
+                        const id = Date.now() + Math.random().toString().slice(2, 8);
+                        this.metadata[id] = { key, value: String(value) };
+                    });
+
+                    // If there's a URL in metadata, mark it as processed
+                    if (metadataObj.url) {
+                        this.processedUrls[metadataObj.url] = 'completed';
+                    }
+                }
+
+                // Disable sharing options in edit mode - we don't reshare edited posts
+                this.shareTelegram = false;
+                this.shareBluesky = false;
+
+                setTimeout(() => {
+                    const textarea = document.querySelector('.compose-textarea');
+                    if (textarea) {
+                        textarea.style.height = 'auto';
+                        textarea.style.height = Math.min(textarea.scrollHeight, 600) + 'px';
+                        textarea.focus();
+                        textarea.selectionStart = textarea.selectionEnd = textarea.value.length;
+                    }
+                }, 0);
+
+                console.log('Initialized edit mode for post:', postData.id);
+            } catch (error) {
+                console.error('Error initializing edit data:', error);
+                this.showStatus('Error loading post data for editing', 'error');
             }
-          }, 0);
-
-          console.log('Initialized edit mode for post:', postData.id);
-        } catch (error) {
-          console.error('Error initializing edit data:', error);
-          this.showStatus('Error loading post data for editing', 'error');
-        }
-      },
+        },
 
         // Metadata functions
         isValidKey(key) {
@@ -181,6 +286,11 @@ function composeApp() {
                     const id = Date.now() + Math.random().toString().slice(2, 8);
                     this.metadata[id] = { key, value };
                 });
+                
+                // If there's a URL in metadata, mark it as processed
+                if (draft.metadata.url) {
+                    this.processedUrls[draft.metadata.url] = 'completed';
+                }
             }
             
             // Trigger input event to resize textarea

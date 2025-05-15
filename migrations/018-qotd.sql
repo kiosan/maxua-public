@@ -1,13 +1,13 @@
 -- migrations/018-qotd.sql
 CREATE TABLE qotd (
-  id SERIAL PRIMARY KEY,
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
   text TEXT NOT NULL,
-  author VARCHAR(100),
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+  author TEXT,
+  created_at TEXT DEFAULT (datetime('now'))
 );
 
 -- Add index for faster random selection
 CREATE INDEX idx_qotd_id ON qotd(id);
 
--- Add comment for documentation
-COMMENT ON TABLE qotd IS 'For Quote of the day (QOTD) feature';
+-- SQLite doesn't support COMMENT ON syntax
+-- qotd: For Quote of the day (QOTD) feature

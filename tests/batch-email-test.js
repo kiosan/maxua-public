@@ -93,19 +93,19 @@ TEST EMAIL - This is a test of the batch email system.`;
     const emailBatch = [
       {
         from: 'Max Ischenko <hello@maxua.com>',
-        to: ['ischenko@gmail.com'], // Your email
-        reply_to: 'ischenko@gmail.com',
+        to: ['obondar@gmail.com'], // Your email
+        reply_to: 'obondar@gmail.com',
         subject: '[TEST] Batch Email 1',
         html: createHTML('https://maxua.com/api/unsubscribe?token=test-token-1'),
         text: createText('https://maxua.com/api/unsubscribe?token=test-token-1')
       },
       {
-        from: 'Max Ischenko <hello@maxua.com>',
-        to: ['ischenko+test@gmail.com'], // Another test email
-        reply_to: 'ischenko@gmail.com',
+        from: 'Max Ischenko <hello@sbondar.com>',
+        to: ['obondar@gmail.com'], // Another test email
+        reply_to: 'obondar@gmail.com',
         subject: '[TEST] Batch Email 2',
-        html: createHTML('https://maxua.com/api/unsubscribe?token=test-token-2'),
-        text: createText('https://maxua.com/api/unsubscribe?token=test-token-2')
+        html: createHTML('https://sbondar.com/api/unsubscribe?token=test-token-2'),
+        text: createText('https://sbondar.com/api/unsubscribe?token=test-token-2')
       }
     ];
 

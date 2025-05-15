@@ -15,8 +15,8 @@ router.post('/subscribe', rateLimiterMiddleware, async (req, res) => {
     }
 
     // Check if email already exists
-    const existingResult = await pool.query(
-      'SELECT id, confirmed FROM subscribers WHERE email = $1',
+    const existingResult = await runQuery(
+      'SELECT id, confirmed FROM subscribers WHERE email = ?',
       [email]
     );
     
@@ -34,8 +34,8 @@ router.post('/subscribe', rateLimiterMiddleware, async (req, res) => {
       // If not confirmed, generate new confirmation token and send again
       const confirmationToken = uuidv4();
       
-      await pool.query(
-        'UPDATE subscribers SET confirmation_token = $1, created_at = NOW() WHERE id = $2',
+      await runQuery(
+        "UPDATE subscribers SET confirmation_token = ?, created_at = datetime('now') WHERE id = ?",
         [confirmationToken, subscriber.id]
       );
       
@@ -55,8 +55,8 @@ router.post('/subscribe', rateLimiterMiddleware, async (req, res) => {
     const unsubscribeToken = uuidv4();
 
     // Insert into subscribers table
-    await pool.query(
-      'INSERT INTO subscribers (email, confirmation_token, unsubscribe_token) VALUES ($1, $2, $3)',
+    await runQuery(
+      'INSERT INTO subscribers (email, confirmation_token, unsubscribe_token) VALUES (?, ?, ?)',
       [email, confirmationToken, unsubscribeToken]
     );
 
@@ -86,8 +86,8 @@ router.get('/confirmSubscription', async (req, res) => {
     }
 
     // Look up the subscription by confirmation token
-    const result = await pool.query(
-      'SELECT id, email FROM subscribers WHERE confirmation_token = $1',
+    const result = await runQuery(
+      'SELECT id, email FROM subscribers WHERE confirmation_token = ?',
       [token]
     );
 
@@ -101,8 +101,8 @@ router.get('/confirmSubscription', async (req, res) => {
     const subscriber = result.rows[0];
 
     // Mark subscription as confirmed and clear the confirmation token
-    await pool.query(
-      'UPDATE subscribers SET confirmed = true, confirmation_token = NULL WHERE id = $1',
+    await runQuery(
+      'UPDATE subscribers SET confirmed = true, confirmation_token = NULL WHERE id = ?',
       [subscriber.id]
     );
     
@@ -136,8 +136,8 @@ router.get('/unsubscribe', async (req, res) => {
     }
 
     // Look up the subscription by unsubscribe token
-    const result = await pool.query(
-      'SELECT id, email FROM subscribers WHERE unsubscribe_token = $1',
+    const result = await runQuery(
+      'SELECT id, email FROM subscribers WHERE unsubscribe_token = ?',
       [token]
     );
 
@@ -151,8 +151,8 @@ router.get('/unsubscribe', async (req, res) => {
     const subscriber = result.rows[0];
 
     // Delete the subscription
-    await pool.query(
-      'DELETE FROM subscribers WHERE id = $1',
+    await runQuery(
+      'DELETE FROM subscribers WHERE id = ?',
       [subscriber.id]
     );
 
@@ -227,7 +227,7 @@ async function sendConfirmationEmail(email, token) {
   await sendEmail({
     to: email,
     subject: 'Confirm your subscription',
-    reply_to: 'ischenko@gmail.com',
+    reply_to: 'obondar@gmail.com',
     text: `${greeting}\n\nWelcome!\n\nPlease follow this link to confirm: ${confirmUrl}\n\nIf you didn't subscribe to this blog, you can safely ignore this email.\n\nBest,\nMax`,
     html
   });
@@ -236,11 +236,11 @@ async function sendConfirmationEmail(email, token) {
 // Helper function to send notification email to admin
 async function sendNotificationEmail(subscriberEmail) {
   try {
-    const subject = `New subscriber on maxua.com`;
+    const subject = `New subscriber on sbondar.com`;
     const text = `\n\nEmail: ${subscriberEmail}`;
     
     await sendEmail({
-      to: 'ischenko@gmail.com', 
+      to: 'obondar@gmail.com', 
       subject,
       text
     });
@@ -259,7 +259,7 @@ function generateHtmlResponse(title, content) {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${title} - Max Ischenko</title>
+  <title>${title} - Sasha Bondar</title>
   <style>
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;

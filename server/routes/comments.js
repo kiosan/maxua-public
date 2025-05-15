@@ -2,7 +2,7 @@
 const express = require('express');
 const router = express.Router();
 
-const { pool, rateLimiterMiddleware, sendEmail } = require('../utils');
+const { db, runQuery, rateLimiterMiddleware, sendEmail } = require('../utils');
 const { v4: uuidv4 } = require('uuid');
 
 // Add this endpoint to handle new comment submissions
@@ -21,8 +21,8 @@ router.post('/', rateLimiterMiddleware, async (req, res) => {
     }
     
     // Get post details 
-    const postResult = await pool.query(
-      'SELECT preview_text, content, slug FROM posts WHERE id = $1',
+    const postResult = await runQuery(
+      'SELECT preview_text, content, slug FROM posts WHERE id = ?',
       [postId]
     );
 
@@ -33,12 +33,13 @@ router.post('/', rateLimiterMiddleware, async (req, res) => {
     const post = postResult.rows[0];
     
     // Insert comment into database
-    const result = await pool.query(
-      'INSERT INTO comments2 (post_id, author, email, content) VALUES ($1, $2, $3, $4) RETURNING id',
+    const result = await runQuery(
+      'INSERT INTO comments2 (post_id, author, email, content) VALUES (?, ?, ?, ?) RETURNING id',
       [postId, author || '', email || null, content]
     );
     
-    const commentId = result.rows[0].id;
+    // Extract the comment ID (with SQLite, this could be in rows[0].id or in lastInsertRowid)
+    const commentId = result.rows[0]?.id || result.lastInsertRowid;
       
     const subject = `New comment on post #${postId}`;
     
@@ -53,7 +54,7 @@ https://maxua.com/p/${postId}
     `;
     
     await sendEmail({
-      to: 'ischenko@gmail.com',
+      to: 'obondar@gmail.com',
       subject,
       text: emailBody,
       reply_to: email // Set reply-to to commenter email if available

@@ -1,5 +1,5 @@
 // functions/postPage.js
-const { pool, escapeHTML, linkify, formatDate, getCorsHeaders, getETagHeaders } = require('./utils');
+const { db, runQuery, escapeHTML, linkify, formatDate, getCorsHeaders, getETagHeaders  } = require('./utils');
 const templateEngine = require('./templateEngine');
 const { 
   generateMetaTags,
@@ -66,11 +66,11 @@ function extractPostIdFromPath(path) {
  */
 async function fetchPost(postId) {
   // First, fetch the post with its topic
-  const postResult = await pool.query(`
+  const postResult = await runQuery(`
     SELECT p.*, t.id as topic_id, t.name as topic_name, t.slug as topic_slug 
     FROM posts p
     LEFT JOIN topics t ON p.topic_id = t.id
-    WHERE p.id = $1 AND p.status='public'
+    WHERE p.id = ? AND p.status='public'
   `, [postId]);
   
   const post = postResult.rows.length ? postResult.rows[0] : null;
@@ -84,37 +84,27 @@ async function fetchPost(postId) {
  * Note: "next" means newer post, "prev" means older post
  */
 async function fetchPrevNextPostIds(currentPostId) {
+  // SQLite doesn't support LEFT JOIN LATERAL, so we need to use subqueries instead
   const query = `
     WITH current_post AS (
-      SELECT created_at FROM posts WHERE id = $1
+      SELECT created_at FROM posts WHERE id = ?
     )
     SELECT 
-      prev.id AS prev_id, 
-      prev.preview_text AS prev_preview,
-      prev.slug AS prev_slug,
-      next.id AS next_id, 
-      next.preview_text AS next_preview,
-      next.slug AS next_slug
-    FROM current_post cp
-    LEFT JOIN LATERAL (
-      SELECT id, preview_text, slug
-      FROM posts
-      WHERE created_at < cp.created_at
-      AND status='public'
-      ORDER BY created_at DESC
-      LIMIT 1
-    ) prev ON true
-    LEFT JOIN LATERAL (
-      SELECT id, preview_text, slug
-      FROM posts
-      WHERE created_at > cp.created_at
-      AND status='public'
-      ORDER BY created_at ASC
-      LIMIT 1
-    ) next ON true
+      (SELECT id FROM posts WHERE created_at < (SELECT created_at FROM posts WHERE id = ?) 
+       AND status='public' ORDER BY created_at DESC LIMIT 1) AS prev_id,
+      (SELECT preview_text FROM posts WHERE created_at < (SELECT created_at FROM posts WHERE id = ?) 
+       AND status='public' ORDER BY created_at DESC LIMIT 1) AS prev_preview,
+      (SELECT slug FROM posts WHERE created_at < (SELECT created_at FROM posts WHERE id = ?) 
+       AND status='public' ORDER BY created_at DESC LIMIT 1) AS prev_slug,
+      (SELECT id FROM posts WHERE created_at > (SELECT created_at FROM posts WHERE id = ?) 
+       AND status='public' ORDER BY created_at ASC LIMIT 1) AS next_id,
+      (SELECT preview_text FROM posts WHERE created_at > (SELECT created_at FROM posts WHERE id = ?) 
+       AND status='public' ORDER BY created_at ASC LIMIT 1) AS next_preview,
+      (SELECT slug FROM posts WHERE created_at > (SELECT created_at FROM posts WHERE id = ?) 
+       AND status='public' ORDER BY created_at ASC LIMIT 1) AS next_slug
   `;
   
-  const result = await pool.query(query, [currentPostId]);
+  const result = await runQuery(query, [currentPostId, currentPostId, currentPostId, currentPostId, currentPostId, currentPostId, currentPostId]);
     
   if (result.rows.length === 0) {
     return {};
@@ -149,10 +139,10 @@ async function prepareTemplateData(post, event, navLinks) {
   const commentsQuery = `
     SELECT id, author, content, created_at 
     FROM comments2 
-    WHERE post_id = $1 AND pinned = true 
+    WHERE post_id = ? AND pinned = true 
     ORDER BY created_at ASC
   `;
-  const commentsResult = await pool.query(commentsQuery, [post.id]);
+  const commentsResult = await runQuery(commentsQuery, [post.id]);
   const pinnedComments = commentsResult.rows.map(comment => ({
     ...comment,
     formatted_date: formatDate(comment.created_at),
@@ -181,7 +171,7 @@ async function prepareTemplateData(post, event, navLinks) {
   const description = extractDescription(post.content, 160);
   
   // Build the full canonical URL
-  const domain = 'https://maxua.com';
+  const domain = 'https://sbondar.com';
   const canonicalUrl = `${domain}/p/${post.id}`;
   
   // Generate meta tags for SEO
@@ -194,8 +184,8 @@ async function prepareTemplateData(post, event, navLinks) {
     modifiedTime: post.created_at,
     // Add topic as a keyword if available
     keywords: post.topic_name 
-      ? `${post.topic_name}, startups, tech, Max Ischenko` 
-      : 'startups, tech, Max Ischenko'
+      ? `${post.topic_name}, startups, tech, Sasha Bondar` 
+      : 'startups, tech, Sasha Bondar'
   });
   
   // Generate breadcrumb structured data
@@ -218,7 +208,7 @@ async function prepareTemplateData(post, event, navLinks) {
     generateBreadcrumbsSchema(breadcrumbItems, domain),
     generatePersonSchema({
       sameAs: [
-        'https://www.linkedin.com/in/maksim/',
+        'https://www.linkedin.com/in/obondar/',
         // Add your other profiles here
       ]
     })

@@ -1,5 +1,5 @@
 // functions/subscribe.js
-const { pool, wrap, sendEmail } = require('./utils');
+const { db, runQuery, wrap, sendEmail  } = require('./utils');
 const { v4: uuidv4 } = require('uuid');
 const { render } = require('./templateEngine');
 
@@ -27,8 +27,8 @@ exports.handler = wrap(async (event, context, headers) => {
     }
 
     // Check if email already exists
-    const existingResult = await pool.query(
-      'SELECT id, confirmed FROM subscribers WHERE email = $1',
+    const existingResult = await runQuery(
+      'SELECT id, confirmed FROM subscribers WHERE email = ?',
       [email]
     );
 
@@ -51,8 +51,8 @@ exports.handler = wrap(async (event, context, headers) => {
       // If not confirmed, generate new confirmation token and send again
       const confirmationToken = uuidv4();
       
-      await pool.query(
-        'UPDATE subscribers SET confirmation_token = $1, created_at = NOW() WHERE id = $2',
+      await runQuery(
+        "UPDATE subscribers SET confirmation_token = ?, created_at = datetime('now') WHERE id = ?",
         [confirmationToken, subscriber.id]
       );
       
@@ -75,8 +75,8 @@ exports.handler = wrap(async (event, context, headers) => {
     const unsubscribeToken = uuidv4();
 
     // Insert into subscribers table
-    await pool.query(
-      'INSERT INTO subscribers (email, name, confirmation_token, unsubscribe_token) VALUES ($1, $2, $3, $4)',
+    await runQuery(
+      'INSERT INTO subscribers (email, name, confirmation_token, unsubscribe_token) VALUES (?, ?, ?, ?)',
       [email, name || null, confirmationToken, unsubscribeToken]
     );
 

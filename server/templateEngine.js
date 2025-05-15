@@ -2,7 +2,7 @@
 const fs = require('fs');
 const path = require('path');
 const Handlebars = require('handlebars');
-const { isDevEnvironment, formatDate, pool } = require('./utils');
+const { isDevEnvironment, formatDate, db, runQuery } = require('./utils');
 
 // Cache for compiled templates
 const templateCache = {};
@@ -111,7 +111,7 @@ Handlebars.registerHelper('json', function(context) {
 let allQuotes = [];
 async function loadAllQuotes() {
   try {
-    const result = await pool.query('SELECT * FROM qotd');
+    const result = await runQuery('SELECT * FROM qotd');
     allQuotes = result.rows;
   } catch (error) {
     console.error('Error loading quotes:', error);

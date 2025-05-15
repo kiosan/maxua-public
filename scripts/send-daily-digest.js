@@ -37,7 +37,7 @@ async function main() {
         options.customSubject = arg.replace('--subject=', '');
       }
       if (arg.startsWith('--test')) {
-        options.testEmail = 'ischenko@gmail.com';
+        options.testEmail = 'obondar@gmail.com';
       }
     });
 

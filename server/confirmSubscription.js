@@ -1,5 +1,5 @@
 // functions/confirmSubscription.js
-const { pool, wrap, sendEmail } = require('./utils');
+const { db, runQuery, wrap, sendEmail  } = require('./utils');
 
 exports.handler = wrap(async (event, context, headers) => {
   // Only handle GET requests with a token
@@ -21,8 +21,8 @@ exports.handler = wrap(async (event, context, headers) => {
     const token = event.queryStringParameters.token;
     
     // Look up the subscription by confirmation token
-    const result = await pool.query(
-      'SELECT id, email, name FROM subscribers WHERE confirmation_token = $1',
+    const result = await runQuery(
+      'SELECT id, email, name FROM subscribers WHERE confirmation_token = ?',
       [token]
     );
 
@@ -43,8 +43,8 @@ exports.handler = wrap(async (event, context, headers) => {
     const subscriber = result.rows[0];
 
     // Mark subscription as confirmed and clear the confirmation token
-    await pool.query(
-      'UPDATE subscribers SET confirmed = true, confirmation_token = NULL WHERE id = $1',
+    await runQuery(
+      'UPDATE subscribers SET confirmed = true, confirmation_token = NULL WHERE id = ?',
       [subscriber.id]
     );
     
@@ -92,7 +92,7 @@ async function sendNotificationEmail(subscriberEmail, subscriberName) {
     const text = `\n\nEmail: ${subscriberEmail}${nameInfo}\n\nTime: ${new Date().toLocaleString()}`;
     
     await sendEmail({
-      to: 'ischenko@gmail.com', 
+      to: 'obondar@gmail.com', 
       subject,
       text
     });

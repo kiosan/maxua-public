@@ -1,7 +1,8 @@
 // routes/auth.js
 const express = require('express');
 const router = express.Router();
-const { pool, rateLimiterMiddleware } = require('../utils');
+const crypto = require('crypto');
+const { db, runQuery, rateLimiterMiddleware } = require('../utils');
 
 // Login route
 router.post('/', rateLimiterMiddleware, async (req, res) => {
@@ -17,17 +18,20 @@ router.post('/', rateLimiterMiddleware, async (req, res) => {
       return res.status(401).json({ success: false, error: 'Invalid password' });
     }
     
-    // Create a new session
+    // Create a new session with UUID as ID
     const expiresAt = new Date();
     expiresAt.setDate(expiresAt.getDate() + 365); // never expire (1 year)
     
-    const result = await pool.query(
-      'INSERT INTO sessions (expires_at, device_info) VALUES ($1, $2) RETURNING id',
-      [expiresAt, deviceInfo || 'Unknown']
+    // Convert the Date object to ISO string for SQLite storage
+    const expiresAtStr = expiresAt.toISOString();
+    const sessionId = crypto.randomUUID();
+    
+    await runQuery(
+      'INSERT INTO sessions (id, expires_at, device_info) VALUES (?, ?, ?)',
+      [sessionId, expiresAtStr, deviceInfo || 'Unknown']
     );
     
     // Set HttpOnly cookie
-    const sessionId = result.rows[0].id;
     const isDevEnvironment = process.env.NODE_ENV !== 'production';
     const secure = !isDevEnvironment;
     
@@ -37,7 +41,7 @@ router.post('/', rateLimiterMiddleware, async (req, res) => {
       expires: expiresAt,
       sameSite: 'Lax',
       path: '/',
-      domain: req.headers.host?.includes('localhost') ? undefined : '.maxua.com'
+      domain: req.headers.host?.includes('localhost') ? undefined : '.sbondar.com'
     });
     
     return res.json({
@@ -62,8 +66,8 @@ router.get('/', async (req, res) => {
     }
     
     // Check session validity in database
-    const result = await pool.query(
-      'SELECT id FROM sessions WHERE id = $1 AND expires_at > NOW()',
+    const result = await runQuery(
+      "SELECT id FROM sessions WHERE id = ? AND expires_at > datetime('now')",
       [sessionId]
     );
     
@@ -71,8 +75,8 @@ router.get('/', async (req, res) => {
     
     // If session is valid but using query parameter, set a cookie for future requests
     if (isValid && req.query.sessionId && !req.cookies?.auth_token) {
-      const sessionResult = await pool.query(
-        'SELECT expires_at FROM sessions WHERE id = $1',
+      const sessionResult = await runQuery(
+        'SELECT expires_at FROM sessions WHERE id = ?',
         [sessionId]
       );
       
@@ -113,7 +117,7 @@ router.delete('/', async (req, res) => {
     }
     
     // Delete all sessions
-    await pool.query('DELETE FROM sessions');
+    await runQuery('DELETE FROM sessions');
     
     // Clear auth cookie
     res.clearCookie('auth_token', {

@@ -2,29 +2,25 @@
 require('dotenv').config();
 const crypto = require('crypto');
 const Sentry = require('@sentry/node');
-const { Pool } = require('pg');
+const Database = require('better-sqlite3');
+const path = require('path');
+const fs = require('fs');
 
 const { Resend } = require('resend');
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: { rejectUnauthorized: false },
-  max: 10, // Limit max connections
-  idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 2000,
-  
-  // Add connection handling
-  async onConnect(client) {
-    // Set session parameters once per connection to optimize common operations
-    await client.query('SET statement_timeout = 5000') // 5 second query timeout
-  },
-  
-  // Log connection issues for debugging
-  onError: (err, client) => {
-    console.error('Unexpected error on idle client', err)
-  }
-});
+// Ensure the database directory exists
+const dbDirectory = path.resolve(process.cwd(), 'database');
+if (!fs.existsSync(dbDirectory)) {
+  fs.mkdirSync(dbDirectory, { recursive: true });
+}
+
+// Create SQLite database connection
+const dbPath = process.env.DATABASE_URL || path.join(dbDirectory, 'sbondar.sqlite');
+const db = new Database(dbPath, { verbose: process.env.NODE_ENV === 'development' ? console.log : null });
+
+// Enable foreign keys
+db.pragma('foreign_keys = ON');
 
 const authMiddleware = async (req, res, next) => {
   try {
@@ -45,12 +41,10 @@ const authMiddleware = async (req, res, next) => {
     }
     
     // Check session validity
-    const result = await pool.query(
-      'SELECT id FROM sessions WHERE id = $1 AND expires_at > NOW()',
-      [sessionId]
-    );
+    const stmt = db.prepare("SELECT id FROM sessions WHERE id = ? AND expires_at > datetime('now')");
+    const result = stmt.get(sessionId);
     
-    if (result.rows.length === 0) {
+    if (!result) {
       return res.status(401).json({ error: 'Invalid or expired session' });
     }
     
@@ -62,19 +56,8 @@ const authMiddleware = async (req, res, next) => {
   }
 };
 
-// Add a keep-alive mechanism
-setInterval(async () => {
-  try {
-    const client = await pool.connect()
-    try {
-      await client.query('SELECT 1') // Keep connection warm
-    } finally {
-      client.release()
-    }
-  } catch (err) {
-    console.error('Error during keep-alive ping', err)
-  }
-}, 60000) // Every minute
+// SQLite doesn't need a keep-alive mechanism
+// The connection is automatically maintained
 
 const rateLimits = new Map();
 
@@ -258,7 +241,8 @@ function captureError(error, contextData = {}) {
 }
 
 function closePool() {
-  return pool.end();
+  if (db) return db.close();
+  return Promise.resolve();
 }
 
 async function sendEmail({ to, subject, text, html = null, reply_to = null }) {
@@ -271,7 +255,7 @@ async function sendEmail({ to, subject, text, html = null, reply_to = null }) {
 
   // Build the email payload
   const emailPayload = {
-    from: 'Max Ischenko <hello@maxua.com>',
+    from: 'Sasha Bondar <hello@sbondar.com>',
     to,
     subject,
     text,
@@ -402,8 +386,107 @@ function getPostPermalink(post) {
   return `/p/${post.id}`;
 }
 
+/**
+ * Helper function to execute SQLite queries with a PostgreSQL-like response interface
+ * This makes transitioning from pg to better-sqlite3 easier
+ * @param {string} query - SQL query with ? placeholders for parameters
+ * @param {Array} params - Array of parameter values to be used in the query
+ * @returns {Object} - Object with rows and rowCount properties similar to pg
+ */
+function runQuery(query, params = []) {
+  try {
+    // Convert PostgreSQL ?, ?, etc. params to SQLite ? params
+    // This is a simplified conversion that handles basic cases
+    const sqliteQuery = query.replace(/\$(\d+)/g, '?');
+    
+    // For statements that don't return data (INSERT, UPDATE, DELETE)
+    if (sqliteQuery.toLowerCase().trim().startsWith('insert') ||
+        sqliteQuery.toLowerCase().trim().startsWith('update') ||
+        sqliteQuery.toLowerCase().trim().startsWith('delete')) {
+      
+      // Check if query has a RETURNING clause
+      const hasReturning = sqliteQuery.toLowerCase().includes('returning');
+      
+      const stmt = db.prepare(sqliteQuery.replace(/\s+RETURNING\s+\*/i, ''));
+      const info = stmt.run(...params);
+      
+      // If it's an INSERT with RETURNING clause, fetch the inserted row
+      if (hasReturning && sqliteQuery.toLowerCase().trim().startsWith('insert')) {
+        const tableName = sqliteQuery.toLowerCase().match(/insert\s+into\s+(\w+)/i)[1];
+        const fetchStmt = db.prepare(`SELECT * FROM ${tableName} WHERE rowid = ?`);
+        const insertedRow = fetchStmt.get(info.lastInsertRowid);
+        
+        return {
+          rows: insertedRow ? [insertedRow] : [],
+          rowCount: info.changes,
+          lastInsertRowid: info.lastInsertRowid
+        };
+      }
+      
+      // If it's an UPDATE with RETURNING clause, fetch the updated row(s)
+      if (hasReturning && sqliteQuery.toLowerCase().trim().startsWith('update')) {
+        // Extract table name from UPDATE statement
+        const tableName = sqliteQuery.toLowerCase().match(/update\s+(\w+)/i)[1];
+        
+        // Extract the WHERE clause to identify which rows were updated
+        const whereMatch = sqliteQuery.match(/where\s+(.+?)(?:\s+returning|$)/i);
+        if (whereMatch && whereMatch[1] && info.changes > 0) {
+          const whereClause = whereMatch[1];
+          
+          // Create a query to fetch the updated rows
+          const fetchStmt = db.prepare(`SELECT * FROM ${tableName} WHERE ${whereClause}`);
+          
+          // Use the same params since SQLite doesn't support RETURNING
+          // This assumes the WHERE clause uses the same binding positions as the original query
+          // Get the relevant params for the WHERE clause
+          const whereParams = params.slice(params.length - whereClause.split('?').length + 1);
+          
+          try {
+            const updatedRows = fetchStmt.all(...whereParams);
+            return {
+              rows: updatedRows,
+              rowCount: info.changes,
+              lastInsertRowid: null
+            };
+          } catch (error) {
+            console.error('Error fetching updated rows:', error);
+            // Default to empty result with changes count if fetch fails
+            return {
+              rows: [],
+              rowCount: info.changes,
+              lastInsertRowid: null
+            };
+          }
+        }
+      }
+      
+      return { 
+        rows: [], 
+        rowCount: info.changes,
+        lastInsertRowid: info.lastInsertRowid
+      };
+    }
+    
+    // For SELECT statements
+    const stmt = db.prepare(sqliteQuery);
+    if (sqliteQuery.toLowerCase().includes('limit 1') || sqliteQuery.includes('= ?')) {
+      // Likely expecting a single row
+      const row = stmt.get(...params);
+      return { rows: row ? [row] : [], rowCount: row ? 1 : 0 };
+    } else {
+      // Expecting multiple rows
+      const rows = stmt.all(...params);
+      return { rows, rowCount: rows.length };
+    }
+  } catch (error) {
+    console.error('SQLite query error:', error);
+    throw error;
+  }
+}
+
 module.exports = { 
-  pool, 
+  db, 
+  runQuery, // Add the query helper function
   wrap, 
   sendEmail,
   rateLimit,
