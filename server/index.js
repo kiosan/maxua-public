@@ -139,16 +139,51 @@ app.post('/track-visits', rateLimiterMiddleware, async (req, res) => {
     }
 
     // Update visitor stats (upsert pattern)
-    await runQuery(`
-      INSERT INTO visitor_stats (anon_id, last_path, last_referrer)
-      VALUES (?, ?, ?)
-      ON CONFLICT (anon_id) 
-      DO UPDATE SET 
-        visit_count = visitor_stats.visit_count + 1,
-        last_seen = datetime('now'),
-        last_path = ?,
-        last_referrer = ?
-    `, [anonId, pathname, referrer || null, pathname, referrer || null]);
+    try {
+      // First check if visitor_stats table exists
+      const tableCheckResult = await runQuery(
+        "SELECT name FROM sqlite_master WHERE type='table' AND name='visitor_stats'"
+      );
+      
+      if (tableCheckResult.rows.length > 0) {
+        await runQuery(`
+          INSERT INTO visitor_stats (anon_id, last_path, last_referrer)
+          VALUES (?, ?, ?)
+          ON CONFLICT (anon_id) 
+          DO UPDATE SET 
+            visit_count = visitor_stats.visit_count + 1,
+            last_seen = datetime('now'),
+            last_path = ?,
+            last_referrer = ?
+        `, [anonId, pathname, referrer || null, pathname, referrer || null]);
+      } else {
+        // Table doesn't exist, create it if this is a production environment
+        if (process.env.NODE_ENV === 'production') {
+          console.log('Creating visitor_stats table as it does not exist');
+          await runQuery(`
+            CREATE TABLE IF NOT EXISTS visitor_stats (
+              anon_id TEXT PRIMARY KEY,
+              first_seen TEXT DEFAULT (datetime('now')),
+              last_seen TEXT DEFAULT (datetime('now')),
+              visit_count INTEGER DEFAULT 1,
+              last_path TEXT,
+              last_referrer TEXT,
+              last_post_id INTEGER,
+              last_user_agent TEXT
+            )
+          `);
+          
+          // Now insert the record
+          await runQuery(`
+            INSERT INTO visitor_stats (anon_id, last_path, last_referrer)
+            VALUES (?, ?, ?)
+          `, [anonId, pathname, referrer || null]);
+        }
+      }
+    } catch (error) {
+      console.error('Error tracking visitor stats:', error);
+      // Continue with the response even if visitor tracking fails
+    }
     
     // If we have a postId, track page view separately
     if (postId) {
