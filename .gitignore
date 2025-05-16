@@ -12,6 +12,12 @@ yarn-error.log*
 # Kamal
 .kamal/secrets
 
+# SQLite Database
+database/*.sqlite
+database/*.db
+database/*.sqlite3
+database/*.sqlite-journal
+
 # Environment variables
 .env.local
 .env.development.local

@@ -11,9 +11,6 @@ npm-debug.log
 dist/
 .cache/
 
-# Database
-database/
-
 # Don't copy local SQLite database
 database/*.sqlite
 database/*.db
