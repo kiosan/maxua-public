@@ -90,7 +90,7 @@ router.get('/', async (req, res) => {
           expires: new Date(sessionResult.rows[0].expires_at),
           sameSite: 'Lax',
           path: '/',
-          domain: req.headers.host?.includes('localhost') ? undefined : '.maxua.com'
+          domain: req.headers.host?.includes('localhost') ? undefined : '.sbondar.com'
         });
       }
     }
@@ -122,7 +122,7 @@ router.delete('/', async (req, res) => {
     // Clear auth cookie
     res.clearCookie('auth_token', {
       path: '/',
-      domain: req.headers.host?.includes('localhost') ? undefined : '.maxua.com'
+      domain: req.headers.host?.includes('localhost') ? undefined : '.sbondar.com'
     });
     
     return res.json({ success: true, message: 'All sessions cleared' });

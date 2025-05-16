@@ -38,17 +38,17 @@ function generateRSS(posts) {
 <rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom">
 <channel>
   <title>Sasha Bondar's Blog</title>
-  <link>https://maxua.com</link>
+  <link>https://sbondar.com</link>
   <description>Thoughts on startups, tech, and more by Sasha Bondar</description>
   <language>uk-ua, en</language>
   <lastBuildDate>${new Date().toUTCString()}</lastBuildDate>
-  <atom:link href="https://maxua.com/rss" rel="self" type="application/rss+xml" />
+  <atom:link href="https://sbondar.com/rss" rel="self" type="application/rss+xml" />
 `;
 
   // Add items
   posts.forEach(post => {
     const postDate = new Date(post.created_at).toUTCString();
-    const postUrl = `https://maxua.com/p/${post.id}`;
+    const postUrl = `https://sbondar.com/p/${post.id}`;
     
     // Escape HTML entities in content
     const content = post.content

@@ -27,9 +27,6 @@ RUN mkdir -p database
 # Create volume for SQLite database
 VOLUME /app/database
 
-
-RUN npm run migrate
-
 # Expose port
 EXPOSE 8080
 

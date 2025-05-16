@@ -15,12 +15,11 @@ exports.handler = async (event, context) => {
       { url: '/', priority: '1.0', changefreq: 'daily' },
       { url: '/about', priority: '0.8', changefreq: 'monthly' },
       { url: '/books', priority: '0.7', changefreq: 'weekly' },
-      { url: '/zsu', priority: '0.6', changefreq: 'monthly' }
     ];
     
     for (const page of staticPages) {
       xml += `  <url>\n`;
-      xml += `    <loc>https://maxua.com${page.url}</loc>\n`;
+      xml += `    <loc>https://sbondar.com${page.url}</loc>\n`;
       xml += `    <changefreq>${page.changefreq}</changefreq>\n`;
       xml += `    <priority>${page.priority}</priority>\n`;
       xml += `  </url>\n`;
@@ -42,7 +41,7 @@ exports.handler = async (event, context) => {
         : new Date(topic.created_at).toISOString();
       
       xml += `  <url>\n`;
-      xml += `    <loc>https://maxua.com/t/${topic.slug}</loc>\n`;
+      xml += `    <loc>https://sbondar.com/t/${topic.slug}</loc>\n`;
       xml += `    <lastmod>${lastmod}</lastmod>\n`;
       xml += `    <changefreq>weekly</changefreq>\n`;
       xml += `    <priority>0.8</priority>\n`;
@@ -60,7 +59,7 @@ exports.handler = async (event, context) => {
       const lastmod = new Date(post.created_at).toISOString();
       
       xml += `  <url>\n`;
-      xml += `    <loc>https://maxua.com/p/${post.id}</loc>\n`;
+      xml += `    <loc>https://sbondar.com/p/${post.id}</loc>\n`;
       xml += `    <lastmod>${lastmod}</lastmod>\n`;
       xml += `    <changefreq>monthly</changefreq>\n`;
       xml += `    <priority>0.6</priority>\n`;
@@ -73,7 +72,7 @@ exports.handler = async (event, context) => {
       const homeLastmod = new Date(latestPost.created_at).toISOString();
       
       xml += `  <url>\n`;
-      xml += `    <loc>https://maxua.com/</loc>\n`;
+      xml += `    <loc>https://sbondar.com/</loc>\n`;
       xml += `    <lastmod>${homeLastmod}</lastmod>\n`;
       xml += `    <changefreq>daily</changefreq>\n`;
       xml += `    <priority>1.0</priority>\n`;

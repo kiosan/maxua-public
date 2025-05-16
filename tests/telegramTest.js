@@ -17,7 +17,7 @@ exports.handler = wrap(async (event, context, headers) => {
   try {
     // Parse the request body
     const body = JSON.parse(event.body || '{}');
-    const message = body.message || 'Test message from maxua.com';
+    const message = body.message || 'Test message from sbondar.com';
 
     // Send test message to Telegram
     const result = await sendTelegramMessage(message);

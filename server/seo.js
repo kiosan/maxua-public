@@ -10,12 +10,12 @@
 function generateMetaTags(options = {}) {
   const {
     title = 'Sasha Bondar',
-    description = 'Thoughts on startups, tech, and more. Founder of DOU.ua and Djinni.',
-    url = 'https://maxua.com',
-    image = 'https://maxua.com/profile-image.jpg', // Add a default image for social sharing
+    description = 'Thoughts on life, programming, AI, startups, tech, and more. Founder of Reintech.io',
+    url = 'https://sbondar.com',
+    image = 'https://sbondar.com/me.jpeg', // Add a default image for social sharing
     type = 'website',
     twitterCard = 'summary_large_image',
-    keywords = 'startups, tech, DOU, Djinni, Ukraine',
+    keywords = 'startups, programming, AI, tech, Reintech.io, Ukraine',
     author = 'Sasha Bondar',
     publishedTime = null,
     modifiedTime = null
@@ -76,7 +76,7 @@ function generateMetaTags(options = {}) {
  * @param {string} baseUrl Base URL of the website
  * @returns {string} HTML script tag with structured data
  */
-function generateBlogPostSchema(post, baseUrl = 'https://maxua.com') {
+function generateBlogPostSchema(post, baseUrl = 'https://sbondar.com') {
   if (!post || !post.id) return '';
 
   const postUrl = `${baseUrl}/p/${post.id}`;
@@ -118,9 +118,9 @@ function generateBlogPostSchema(post, baseUrl = 'https://maxua.com') {
  */
 function generateBlogListingSchema(options = {}) {
   const {
-    url = 'https://maxua.com',
+    url = 'https://sbondar.com',
     title = 'Sasha Bondar',
-    description = 'Thoughts on startups, tech, and more.',
+    description = 'Thoughts on life, programming, AI, startups, tech, and more.',
     posts = []
   } = options;
 
@@ -159,7 +159,7 @@ function generateBlogListingSchema(options = {}) {
  * @param {string} baseUrl Base URL of the website
  * @returns {string} HTML script tag with structured data
  */
-function generateBreadcrumbsSchema(items, baseUrl = 'https://maxua.com') {
+function generateBreadcrumbsSchema(items, baseUrl = 'https://sbondar.com') {
   if (!items || !items.length) return '';
 
   const breadcrumbItems = items.map((item, index) => ({
@@ -186,7 +186,7 @@ function generateBreadcrumbsSchema(items, baseUrl = 'https://maxua.com') {
 function generatePersonSchema(options = {}) {
   const {
     name = 'Sasha Bondar',
-    url = 'https://maxua.com',
+    url = 'https://sbondar.com',
     jobTitle = 'Create things',
     sameAs = [] // Add social media profiles here
   } = options;

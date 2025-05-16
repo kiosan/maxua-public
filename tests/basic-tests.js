@@ -1,12 +1,12 @@
 // tests/basic-tests.js
-// Basic functional tests for maxua.com website
+// Basic functional tests for sbondar.com website
 // Run with: node tests/basic-tests.js
 
 const axios = require('axios');
 const assert = require('assert');
 
 // Configuration
-const BASE_URL = process.env.TEST_BASE_URL || 'https://maxua.com';
+const BASE_URL = process.env.TEST_BASE_URL || 'https://sbondar.com';
 const VERBOSE = process.env.TEST_VERBOSE === 'true';
 
 // Utility functions

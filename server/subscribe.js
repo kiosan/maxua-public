@@ -105,7 +105,7 @@ exports.handler = wrap(async (event, context, headers) => {
  * Send a confirmation email to the subscriber
  */
 async function sendConfirmationEmail(email, name, token) {
-  const confirmUrl = `https://maxua.com/api/confirmSubscription?token=${token}`;
+  const confirmUrl = `https://sbondar.com/api/confirmSubscription?token=${token}`;
   const greeting = name ? `Hi ${name},` : 'Hi there,';
   
   // You might want to create a proper email template, but for now let's use a simple HTML string

@@ -17,7 +17,7 @@ exports.handler = wrap(async (event, context, headers) => {
   try {
     // Parse the request body
     const body = JSON.parse(event.body || '{}');
-    const message = body.message || 'Test post from maxua.com';
+    const message = body.message || 'Test post from sbondar.com';
 
     // Create a simple mock post object (no ID needed for testing)
     const mockPost = {

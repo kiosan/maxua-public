@@ -112,7 +112,7 @@ router.get('/confirmSubscription', async (req, res) => {
     return res.status(200).send(generateHtmlResponse(
       'Thank you for subscribing!',
       `<p>You will now receive my daily email digest with new posts.</p>
-       <p><a href="https://maxua.com">Back to the blog</a></p>`
+       <p><a href="https://sbondar.com">Back to the blog</a></p>`
     ));
   } catch (error) {
     console.error('Error confirming subscription:', error);
@@ -160,7 +160,7 @@ router.get('/unsubscribe', async (req, res) => {
       'Successfully Unsubscribed',
       `<p>You have been successfully unsubscribed from email updates.</p>
        <p>We're sorry to see you go! If you'd like to resubscribe in the future, you can do so at any time.</p>
-       <p><a href="https://maxua.com">Return to the blog</a></p>`
+       <p><a href="https://sbondar.com">Return to the blog</a></p>`
     ));
   } catch (error) {
     console.error('Error handling unsubscribe:', error);
@@ -179,7 +179,7 @@ function isValidEmail(email) {
 
 // Helper function to send confirmation email
 async function sendConfirmationEmail(email, token) {
-  const confirmUrl = `https://maxua.com/api/confirmSubscription?token=${token}`;
+  const confirmUrl = `https://sbondar.com/api/confirmSubscription?token=${token}`;
   const greeting = 'Welcome!';
 
   const html = `

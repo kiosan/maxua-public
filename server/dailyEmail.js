@@ -168,7 +168,7 @@ async function sendDailyDigest(options = {}) {
       // Create batch emails
       const emailBatch = batchSubscribers.map(subscriber => {
         // Unsubscribe URL is unique to each subscriber (email)
-        const unsubscribeUrl = `https://maxua.com/api/unsubscribe?token=${subscriber.unsubscribe_token}`;
+        const unsubscribeUrl = `https://sbondar.com/api/unsubscribe?token=${subscriber.unsubscribe_token}`;
         
         let someone_special = subscriber.email === 'julia.ishchenko@gmail.com';
         if (testEmail) someone_special = testEmail; // over-ride for testing
@@ -184,11 +184,11 @@ async function sendDailyDigest(options = {}) {
         // Plain text version (simplified)
         const text = `${subjectLine}\n\n` +
           `This digest includes ${posts.length} recent posts.\n` +
-          `Visit https://maxua.com to read all posts.\n\n` +
+          `Visit https://sbondar.com to read all posts.\n\n` +
           `To unsubscribe: ${unsubscribeUrl}`;
         
         return {
-          from: 'Sasha Bondar <hello@maxua.com>',
+          from: 'Sasha Bondar <hello@sbondar.com>',
           to: [subscriber.email],
           reply_to: 'obondar@gmail.com',
           subject: subjectLine,

@@ -33,7 +33,7 @@ async function testBatchEmail() {
     console.log('🧪 Testing batch email sending...');
 
     // Prepare variables
-    const postUrl = `https://maxua.com/p/${testPost.id}`;
+    const postUrl = `https://sbondar.com/p/${testPost.id}`;
     const formattedDate = formatDate(testPost.created_at);
     
     // Create HTML template (using a simpler approach for the test)
@@ -92,12 +92,12 @@ TEST EMAIL - This is a test of the batch email system.`;
     // Create batch emails - Resend expects an array of complete email objects
     const emailBatch = [
       {
-        from: 'Sasha Bondar <hello@maxua.com>',
+        from: 'Sasha Bondar <hello@sbondar.com>',
         to: ['obondar@gmail.com'], // Your email
         reply_to: 'obondar@gmail.com',
         subject: '[TEST] Batch Email 1',
-        html: createHTML('https://maxua.com/api/unsubscribe?token=test-token-1'),
-        text: createText('https://maxua.com/api/unsubscribe?token=test-token-1')
+        html: createHTML('https://sbondar.com/api/unsubscribe?token=test-token-1'),
+        text: createText('https://sbondar.com/api/unsubscribe?token=test-token-1')
       },
       {
         from: 'Sasha Bondar <hello@sbondar.com>',

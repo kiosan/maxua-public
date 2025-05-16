@@ -62,7 +62,7 @@ async function sharePostToTelegram(post) {
   }
 
   // Format the post content for Telegram
-  const postUrl = `https://maxua.com${getPostPermalink(post)}`;
+  const postUrl = `https://sbondar.com${getPostPermalink(post)}`;
   
   // Escape any HTML in the content (but preserve line breaks)
   const escapedContent = post.content

@@ -2,7 +2,7 @@ User-agent: *
 Allow: /
 
 # Sitemap location
-Sitemap: https://maxua.com/sitemap.xml
+Sitemap: https://sbondar.com/sitemap.xml
 
 # Avoid crawling admin and authentication pages
 Disallow: /admin

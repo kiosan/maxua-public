@@ -106,7 +106,7 @@ exports.handler = async (event, context) => {
     let pageDescription = 'Thoughts on startups and product. Founder of DOU.ua and Djinni.';
     
     // Construct canonical URL
-    const canonicalUrl = 'https://maxua.com';
+    const canonicalUrl = 'https://sbondar.com';
     
     // Generate meta tags
     const metaTags = generateMetaTags({

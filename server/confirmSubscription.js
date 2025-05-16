@@ -61,7 +61,7 @@ exports.handler = wrap(async (event, context, headers) => {
         'Subscription Confirmed',
         `<p>Thank you for subscribing to Sasha Bondar's blog!</p>
          <p>You will now receive email updates when new posts are published.</p>
-         <p><a href="https://maxua.com">Return to the blog</a></p>`
+         <p><a href="https://sbondar.com">Return to the blog</a></p>`
       )
     };
   } catch (error) {
@@ -88,7 +88,7 @@ exports.handler = wrap(async (event, context, headers) => {
 async function sendNotificationEmail(subscriberEmail, subscriberName) {
   try {
     const nameInfo = subscriberName ? ` (${subscriberName})` : '';
-    const subject = `New subscriber on maxua.com`;
+    const subject = `New subscriber on sbondar.com`;
     const text = `\n\nEmail: ${subscriberEmail}${nameInfo}\n\nTime: ${new Date().toLocaleString()}`;
     
     await sendEmail({

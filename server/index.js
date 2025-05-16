@@ -160,24 +160,31 @@ app.post('/track-visits', rateLimiterMiddleware, async (req, res) => {
         // Table doesn't exist, create it if this is a production environment
         if (process.env.NODE_ENV === 'production') {
           console.log('Creating visitor_stats table as it does not exist');
-          await runQuery(`
-            CREATE TABLE IF NOT EXISTS visitor_stats (
-              anon_id TEXT PRIMARY KEY,
-              first_seen TEXT DEFAULT (datetime('now')),
-              last_seen TEXT DEFAULT (datetime('now')),
-              visit_count INTEGER DEFAULT 1,
-              last_path TEXT,
-              last_referrer TEXT,
-              last_post_id INTEGER,
-              last_user_agent TEXT
-            )
-          `);
-          
-          // Now insert the record
-          await runQuery(`
-            INSERT INTO visitor_stats (anon_id, last_path, last_referrer)
-            VALUES (?, ?, ?)
-          `, [anonId, pathname, referrer || null]);
+          try {
+            // Use db directly for CREATE TABLE which doesn't return data
+            const createTableStmt = db.prepare(`
+              CREATE TABLE IF NOT EXISTS visitor_stats (
+                anon_id TEXT PRIMARY KEY,
+                first_seen TEXT DEFAULT (datetime('now')),
+                last_seen TEXT DEFAULT (datetime('now')),
+                visit_count INTEGER DEFAULT 1,
+                last_path TEXT,
+                last_referrer TEXT,
+                last_post_id INTEGER,
+                last_user_agent TEXT
+              )
+            `);
+            createTableStmt.run();
+            console.log('visitor_stats table created successfully');
+            
+            // Now insert the record
+            await runQuery(`
+              INSERT INTO visitor_stats (anon_id, last_path, last_referrer)
+              VALUES (?, ?, ?)
+            `, [anonId, pathname, referrer || null]);
+          } catch (err) {
+            console.error('Error creating visitor_stats table:', err);
+          }
         }
       }
     } catch (error) {

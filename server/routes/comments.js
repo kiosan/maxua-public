@@ -50,7 +50,7 @@ ${author} ${email} wrote:
 \n\n
 ${content}
 
-https://maxua.com/p/${postId}
+https://sbondar.com/p/${postId}
     `;
     
     await sendEmail({

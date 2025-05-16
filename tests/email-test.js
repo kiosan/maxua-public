@@ -39,7 +39,7 @@ async function sendTestEmail() {
     const template = await loadTemplate();
     
     // Prepare data for the template
-    const postUrl = `https://maxua.com/p/${testPost.id}`;
+    const postUrl = `https://sbondar.com/p/${testPost.id}`;
     const topicName = testPost.topic_name;
     
     // Render the HTML with the test data
