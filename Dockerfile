@@ -34,4 +34,4 @@ RUN npm run migrate
 EXPOSE 8080
 
 # Run migrations and start the server
-CMD sh -c "node server/index.js"
+CMD sh -c "npm start"

@@ -20,6 +20,9 @@ gem install kamal -v "~> 2.0"
 ## Deployment Commands
 
 ```bash
+# Setup Kamal
+kamal setup
+
 # Deploy application
 kamal deploy
 
