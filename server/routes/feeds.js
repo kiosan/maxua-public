@@ -37,9 +37,9 @@ function generateRSS(posts) {
   let rss = `<?xml version="1.0" encoding="UTF-8" ?>
 <rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom">
 <channel>
-  <title>Max Ischenko's Blog</title>
+  <title>Sasha Bondar's Blog</title>
   <link>https://maxua.com</link>
-  <description>Thoughts on startups, tech, and more by Max Ischenko</description>
+  <description>Thoughts on startups, tech, and more by Sasha Bondar</description>
   <language>uk-ua, en</language>
   <lastBuildDate>${new Date().toUTCString()}</lastBuildDate>
   <atom:link href="https://maxua.com/rss" rel="self" type="application/rss+xml" />

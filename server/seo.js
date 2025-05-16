@@ -9,14 +9,14 @@
  */
 function generateMetaTags(options = {}) {
   const {
-    title = 'Max Ischenko',
+    title = 'Sasha Bondar',
     description = 'Thoughts on startups, tech, and more. Founder of DOU.ua and Djinni.',
     url = 'https://maxua.com',
     image = 'https://maxua.com/profile-image.jpg', // Add a default image for social sharing
     type = 'website',
     twitterCard = 'summary_large_image',
     keywords = 'startups, tech, DOU, Djinni, Ukraine',
-    author = 'Max Ischenko',
+    author = 'Sasha Bondar',
     publishedTime = null,
     modifiedTime = null
   } = options;
@@ -36,7 +36,7 @@ function generateMetaTags(options = {}) {
     <meta property="og:description" content="${escapeHtml(description)}">
     <meta property="og:url" content="${url}">
     <meta property="og:type" content="${type}">
-    <meta property="og:site_name" content="Max Ischenko">
+    <meta property="og:site_name" content="Sasha Bondar">
     <meta property="og:locale" content="en_US">
   `;
 
@@ -96,12 +96,12 @@ function generateBlogPostSchema(post, baseUrl = 'https://maxua.com') {
     "description": description,
     "author": {
       "@type": "Person",
-      "name": "Max Ischenko",
+      "name": "Sasha Bondar",
       "url": baseUrl
     },
     "publisher": {
       "@type": "Person",
-      "name": "Max Ischenko",
+      "name": "Sasha Bondar",
       "url": baseUrl
     },
     "datePublished": post.created_at,
@@ -119,7 +119,7 @@ function generateBlogPostSchema(post, baseUrl = 'https://maxua.com') {
 function generateBlogListingSchema(options = {}) {
   const {
     url = 'https://maxua.com',
-    title = 'Max Ischenko',
+    title = 'Sasha Bondar',
     description = 'Thoughts on startups, tech, and more.',
     posts = []
   } = options;
@@ -135,7 +135,7 @@ function generateBlogListingSchema(options = {}) {
       "dateModified": post.updated_at || post.created_at,
       "author": {
         "@type": "Person",
-        "name": "Max Ischenko"
+        "name": "Sasha Bondar"
       }
     };
   });
@@ -185,7 +185,7 @@ function generateBreadcrumbsSchema(items, baseUrl = 'https://maxua.com') {
  */
 function generatePersonSchema(options = {}) {
   const {
-    name = 'Max Ischenko',
+    name = 'Sasha Bondar',
     url = 'https://maxua.com',
     jobTitle = 'Create things',
     sameAs = [] // Add social media profiles here

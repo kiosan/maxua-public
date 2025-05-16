@@ -23,6 +23,8 @@ gem install kamal -v "~> 2.0"
 # Setup Kamal
 kamal setup
 
+kamal app exec "npm run migrate"
+
 # Deploy application
 kamal deploy
 

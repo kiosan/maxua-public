@@ -100,7 +100,7 @@ exports.handler = async (event, context) => {
       };
     }
 
-    const pageTitle = "Max Ischenko personal blog";
+    const pageTitle = "Sasha Bondar personal blog";
     
     // Create a description for meta tags
     let pageDescription = 'Thoughts on startups and product. Founder of DOU.ua and Djinni.';
@@ -113,7 +113,7 @@ exports.handler = async (event, context) => {
       title: pageTitle,
       description: pageDescription,
       url: canonicalUrl,
-      keywords: 'startups, tech, Max Ischenko, Ukraine',
+      keywords: 'startups, tech, Sasha Bondar, Ukraine',
     });
     
     // Generate structured data

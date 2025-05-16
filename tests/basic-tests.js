@@ -85,7 +85,7 @@ async function runTests() {
   // Homepage loads and contains basic structural elements
   if (await testEndpoint('/', {
     contentChecks: [
-      '<title>Max Ischenko',
+      '<title>Sasha Bondar',
       '<img src="/images/mouse.jpeg"',
       'class="profile-image"',
       'class="post-card"'
@@ -113,7 +113,7 @@ async function runTests() {
   // Search page
   if (await testEndpoint('/search', {
     contentChecks: [
-      '<title>Search - Max Ischenko</title>',
+      '<title>Search - Sasha Bondar</title>',
       'class="search-input"',
       'class="search-button"'
     ]
@@ -135,14 +135,14 @@ async function runTests() {
       '<?xml version="1.0" encoding="UTF-8" ?>',
       '<rss version="2.0"',
       '<channel>',
-      '<title>Max Ischenko'
+      '<title>Sasha Bondar'
     ]
   })) passed++; else failed++;
   
   // About page
   if (await testEndpoint('/about', {
     contentChecks: [
-      '<title>About - Max Ischenko</title>',
+      '<title>About - Sasha Bondar</title>',
       'Фаундер DOU.ua та Djinni'
     ]
   })) passed++; else failed++;
@@ -150,7 +150,7 @@ async function runTests() {
   // Books page
   if (await testEndpoint('/books', {
     contentChecks: [
-      '<title>books - Max Ischenko</title>',
+      '<title>books - Sasha Bondar</title>',
       'Contagious', // some of the book titles
       'Andy Grove'
     ]

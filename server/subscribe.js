@@ -42,7 +42,7 @@ exports.handler = wrap(async (event, context, headers) => {
           headers,
           body: JSON.stringify({ 
             success: true, 
-            message: 'You are already subscribed to Max Ischenko\'s blog.',
+            message: 'You are already subscribed to Sasha Bondar\'s blog.',
             alreadySubscribed: true
           })
         };
@@ -127,7 +127,7 @@ async function sendConfirmationEmail(email, name, token) {
               
               <p style="margin: 0 0 20px 0; padding: 0; text-align: left;">${greeting}</p>
               
-              <p style="margin: 0 0 20px 0; padding: 0; text-align: left;">Thank you for subscribing to Max Ischenko's blog.</p>
+              <p style="margin: 0 0 20px 0; padding: 0; text-align: left;">Thank you for subscribing to Sasha Bondar's blog.</p>
               
               <p style="margin: 0 0 20px 0; padding: 0; text-align: left;">Please confirm your subscription by clicking the button below:</p>
               
@@ -141,7 +141,7 @@ async function sendConfirmationEmail(email, name, token) {
               
               <div style="margin: 30px 0 0 0; padding: 0; text-align: left; color: #666; font-size: 14px;">
                 Best,<br>
-                Max Ischenko
+                Sasha Bondar
               </div>
               
             </td>
@@ -156,8 +156,8 @@ async function sendConfirmationEmail(email, name, token) {
 
   await sendEmail({
     to: email,
-    subject: 'Confirm your subscription to Max Ischenko\'s blog',
-    text: `${greeting}\n\nThank you for subscribing to Max Ischenko\'s blog.\n\nPlease confirm your subscription by clicking this link: ${confirmUrl}\n\nIf you didn't subscribe to this blog, you can safely ignore this email.\n\nBest,\nMax Ischenko`,
+    subject: 'Confirm your subscription to Sasha Bondar\'s blog',
+    text: `${greeting}\n\nThank you for subscribing to Sasha Bondar\'s blog.\n\nPlease confirm your subscription by clicking this link: ${confirmUrl}\n\nIf you didn't subscribe to this blog, you can safely ignore this email.\n\nBest,\nSasha Bondar`,
     html
   });
 }

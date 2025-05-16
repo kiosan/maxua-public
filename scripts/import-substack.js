@@ -106,7 +106,7 @@ function copyHtmlFile(sourcePath, destPath, post) {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${post.title || 'Untitled'} | Max Ischenko</title>
+  <title>${post.title || 'Untitled'} | Sasha Bondar</title>
   <style>
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -214,7 +214,7 @@ function generateIndexHtml(posts, title) {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${title} | Max Ischenko</title>
+  <title>${title} | Sasha Bondar</title>
   <style>
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;

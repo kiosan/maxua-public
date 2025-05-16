@@ -45,7 +45,7 @@ exports.handler = async (event, context) => {
       topics,
       drafts,
       currentDraft,
-      pageTitle: 'Compose - Max Ischenko'
+      pageTitle: 'Compose - Sasha Bondar'
     };
     
     // Render the page

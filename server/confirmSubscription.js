@@ -59,7 +59,7 @@ exports.handler = wrap(async (event, context, headers) => {
       },
       body: generateHtmlResponse(
         'Subscription Confirmed',
-        `<p>Thank you for subscribing to Max Ischenko's blog!</p>
+        `<p>Thank you for subscribing to Sasha Bondar's blog!</p>
          <p>You will now receive email updates when new posts are published.</p>
          <p><a href="https://maxua.com">Return to the blog</a></p>`
       )
@@ -113,7 +113,7 @@ function generateHtmlResponse(title, content) {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${title} - Max Ischenko</title>
+  <title>${title} - Sasha Bondar</title>
   <style>
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;

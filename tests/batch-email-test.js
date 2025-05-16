@@ -63,7 +63,7 @@ async function testBatchEmail() {
           </div>
           
           <div style="margin-top: 30px; padding: 20px 15px 0 0; border-top: 1px solid #eee; color: #666; font-size: 13px; text-align: left;">
-            <div style="text-align: left;">You're receiving this email because you subscribed to updates from Max Ischenko.</div>
+            <div style="text-align: left;">You're receiving this email because you subscribed to updates from Sasha Bondar.</div>
             <div style="margin-top: 10px; font-size: 12px; color: #999; text-align: left;">
               <a href="${unsubscribeUrl}" style="color: #999; text-decoration: none; text-align: left;">Unsubscribe</a> from these emails.
             </div>
@@ -79,7 +79,7 @@ async function testBatchEmail() {
 </html>`;
 
     // Create plain text version
-    const createText = (unsubscribeUrl) => `[TEST] Batch email from Max Ischenko
+    const createText = (unsubscribeUrl) => `[TEST] Batch email from Sasha Bondar
 
 ${testPost.content}
 
@@ -92,7 +92,7 @@ TEST EMAIL - This is a test of the batch email system.`;
     // Create batch emails - Resend expects an array of complete email objects
     const emailBatch = [
       {
-        from: 'Max Ischenko <hello@maxua.com>',
+        from: 'Sasha Bondar <hello@maxua.com>',
         to: ['obondar@gmail.com'], // Your email
         reply_to: 'obondar@gmail.com',
         subject: '[TEST] Batch Email 1',
@@ -100,7 +100,7 @@ TEST EMAIL - This is a test of the batch email system.`;
         text: createText('https://maxua.com/api/unsubscribe?token=test-token-1')
       },
       {
-        from: 'Max Ischenko <hello@sbondar.com>',
+        from: 'Sasha Bondar <hello@sbondar.com>',
         to: ['obondar@gmail.com'], // Another test email
         reply_to: 'obondar@gmail.com',
         subject: '[TEST] Batch Email 2',

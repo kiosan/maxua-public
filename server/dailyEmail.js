@@ -188,7 +188,7 @@ async function sendDailyDigest(options = {}) {
           `To unsubscribe: ${unsubscribeUrl}`;
         
         return {
-          from: 'Max Ischenko <hello@maxua.com>',
+          from: 'Sasha Bondar <hello@maxua.com>',
           to: [subscriber.email],
           reply_to: 'obondar@gmail.com',
           subject: subjectLine,
