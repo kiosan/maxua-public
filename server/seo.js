@@ -12,7 +12,7 @@ function generateMetaTags(options = {}) {
     title = 'Sasha Bondar',
     description = 'Thoughts on life, programming, AI, startups, tech, and more. Founder of Reintech.io',
     url = 'https://sbondar.com',
-    image = 'https://sbondar.com/me.jpeg', // Add a default image for social sharing
+    image = 'https://sbondar.com/images/me.jpeg', // Add a default image for social sharing
     type = 'website',
     twitterCard = 'summary_large_image',
     keywords = 'startups, programming, AI, tech, Reintech.io, Ukraine',
@@ -120,6 +120,7 @@ function generateBlogListingSchema(options = {}) {
   const {
     url = 'https://sbondar.com',
     title = 'Sasha Bondar',
+    image = 'https://sbondar.com/images/me.jpeg'
     description = 'Thoughts on life, programming, AI, startups, tech, and more.',
     posts = []
   } = options;

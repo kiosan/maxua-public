@@ -41,13 +41,13 @@ kamal app restart
 kamal app exec "ls -la"
 
 # Access SQLite database
-kamal app exec "sqlite3 database/app.sqlite"
+kamal app exec -i "sqlite3 database/sbondar.sqlite"
 
 # Rollback to previous version
 kamal app rollback
 
 # Manual database backup
-ssh user@your-server-ip "cp /data/app_database/app.sqlite ~/backups/app-$(date +%Y%m%d).sqlite"
+ssh user@your-server-ip "cp /data/app_database/sbondar.sqlite ~/backups/app-$(date +%Y%m%d).sqlite"
 ```
 
 ## Configuration Reference
