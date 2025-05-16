@@ -1,59 +1,83 @@
 // routes/admin.js
 const express = require('express');
 const router = express.Router();
-const { pool, authMiddleware } = require('../utils');
+const { db, runQuery, authMiddleware } = require('../utils');
 
 // Get extended stats including visitor metrics
 router.get('/stats', authMiddleware, async (req, res) => {
   try {
     // Get basic stats (existing subscribers and post stats)
     const subscriberResult = await runQuery(
-      'SELECT COUNT(*) FROM subscribers WHERE confirmed = true'
+      'SELECT COUNT(*) as count FROM subscribers WHERE confirmed = 1'
     );
-    const subscriberCount = parseInt(subscriberResult.rows[0].count);
+    console.log('Subscriber query result:', subscriberResult.rows[0]);
+    const subscriberCount = parseInt(subscriberResult.rows[0]?.count || 0);
 
     // Get new subscribers in the last 7 days
     const newSubscribersResult = await runQuery(
-      "SELECT COUNT(*) FROM subscribers WHERE confirmed = true AND created_at > datetime('now', '-7 days')"
+      "SELECT COUNT(*) as count FROM subscribers WHERE confirmed = 1 AND created_at > datetime('now', '-7 days')"
     );
-    const newSubscriberCount = parseInt(newSubscribersResult.rows[0].count);
+    console.log('New subscriber query result:', newSubscribersResult.rows[0]);
+    const newSubscriberCount = parseInt(newSubscribersResult.rows[0]?.count || 0);
 
     // Get posts created in the last 7 days
     const postsResult = await runQuery(
-      "SELECT COUNT(*) FROM posts WHERE created_at > datetime('now', '-7 days')"
+      "SELECT COUNT(*) as count FROM posts WHERE status = 'public' AND created_at > datetime('now', '-7 days')"
     );
-    const recentPosts = parseInt(postsResult.rows[0].count);
+    console.log('Recent posts query result:', postsResult.rows[0]);
+    const recentPosts = parseInt(postsResult.rows[0]?.count || 0);
 
     // Get total comments
     const totalCommentsResult = await runQuery(
-      'SELECT COUNT(*) FROM comments2'
+      'SELECT COUNT(*) as count FROM comments2'
     );
-    const totalComments = parseInt(totalCommentsResult.rows[0].count);
+    console.log('Total comments query result:', totalCommentsResult.rows[0]);
+    const totalComments = parseInt(totalCommentsResult.rows[0]?.count || 0);
 
     // Get comments created in the last 7 days
     const commentsResult = await runQuery(
-      "SELECT COUNT(*) FROM comments2 WHERE created_at > datetime('now', '-7 days')"
+      "SELECT COUNT(*) as count FROM comments2 WHERE created_at > datetime('now', '-7 days')"
     );
-    const recentComments = parseInt(commentsResult.rows[0].count);
+    console.log('Recent comments query result:', commentsResult.rows[0]);
+    const recentComments = parseInt(commentsResult.rows[0]?.count || 0);
 
-    // Get visitor stats
-    // Daily active users (last 24 hours)
-    const dailyActiveResult = await runQuery(
-      "SELECT COUNT(*) FROM visitor_stats WHERE last_seen > datetime('now', '-1 day')"
-    );
-    const dailyActiveVisitors = parseInt(dailyActiveResult.rows[0].count);
+    // Get visitor stats if the table exists
+    let dailyActiveVisitors = 0;
+    let weeklyActiveVisitors = 0;
+    let allTimeVisitors = 0;
+    
+    try {
+      // Check if visitor_stats table exists
+      const tableCheckResult = await runQuery(
+        "SELECT name FROM sqlite_master WHERE type='table' AND name='visitor_stats'"
+      );
+      
+      // Only query visitor stats if the table exists
+      if (tableCheckResult.rows.length > 0) {
+        // Daily active users (last 24 hours)
+        const dailyActiveResult = await runQuery(
+          "SELECT COUNT(*) FROM visitor_stats WHERE last_seen > datetime('now', '-1 day')"
+        );
+        dailyActiveVisitors = parseInt(dailyActiveResult.rows[0].count);
 
-    // Weekly active users (last 7 days)
-    const weeklyActiveResult = await runQuery(
-      "SELECT COUNT(*) FROM visitor_stats WHERE last_seen > datetime('now', '-7 days')"
-    );
-    const weeklyActiveVisitors = parseInt(weeklyActiveResult.rows[0].count);
-
-    // All-time unique visitors
-    const allTimeResult = await runQuery(
-      'SELECT COUNT(*) FROM visitor_stats'
-    );
-    const allTimeVisitors = parseInt(allTimeResult.rows[0].count);
+        // Weekly active users (last 7 days)
+        const weeklyActiveResult = await runQuery(
+          "SELECT COUNT(*) FROM visitor_stats WHERE last_seen > datetime('now', '-7 days')"
+        );
+        weeklyActiveVisitors = parseInt(weeklyActiveResult.rows[0].count);
+        
+        // All-time unique visitors
+        const allTimeResult = await runQuery(
+          'SELECT COUNT(*) FROM visitor_stats'
+        );
+        allTimeVisitors = parseInt(allTimeResult.rows[0].count);
+      } else {
+        console.log('visitor_stats table does not exist - using default values');
+      }
+    } catch (error) {
+      console.error('Error fetching visitor stats:', error);
+      // Continue with default values (0) for visitor stats
+    }
 
     return res.json({
       visitors: {
@@ -112,10 +136,13 @@ router.post('/comments/:id/pin', authMiddleware, async (req, res) => {
       return res.status(400).json({ error: 'Missing pinned state' });
     }
 
+    // Convert boolean pinned value to integer (0 or 1) for SQLite compatibility
+    const pinnedValue = pinned ? 1 : 0;
+    
     // Update the comment pinned status
     const result = await runQuery(
       'UPDATE comments2 SET pinned = ? WHERE id = ? RETURNING id, pinned',
-      [pinned, commentId]
+      [pinnedValue, commentId]
     );
 
     if (result.rows.length === 0) {

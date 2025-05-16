@@ -2,6 +2,7 @@ node_modules
 npm-debug.log
 .git
 .github
+.env
 .env.local
 .env.*.local
 *.md
@@ -9,3 +10,18 @@ npm-debug.log
 .netlify/
 dist/
 .cache/
+
+# Database
+database/
+
+# Don't copy local SQLite database
+database/*.sqlite
+database/*.db
+
+# Don't copy local backups
+backups/
+
+# Ignore development and test files
+tests/
+*.test.js
+*.spec.js

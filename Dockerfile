@@ -1,5 +1,13 @@
 FROM node:18-slim
 
+# Install SQLite dependencies
+RUN apt-get update && apt-get install -y \
+    sqlite3 \
+    python3 \
+    build-essential \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
 # Create app directory
 WORKDIR /app
 
@@ -11,9 +19,19 @@ RUN npm install
 COPY server/ ./server/
 COPY public/ ./public/
 COPY scripts/ ./scripts/
+COPY migrations/ ./migrations/
+
+# Make sure database directory exists
+RUN mkdir -p database
+
+# Create volume for SQLite database
+VOLUME /app/database
+
+
+RUN npm run migrate
 
 # Expose port
 EXPOSE 8080
 
-# Start the server
-CMD [ "node", "server/index.js" ]
+# Run migrations and start the server
+CMD sh -c "node server/index.js"

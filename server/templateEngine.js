@@ -106,6 +106,15 @@ Handlebars.registerHelper('json', function(context) {
   return JSON.stringify(context);
 });
 
+Handlebars.registerHelper('parseJson', function(jsonString) {
+  try {
+    return JSON.parse(jsonString);
+  } catch (e) {
+    console.error('Error parsing JSON:', e);
+    return {};
+  }
+});
+
 // QOTD feature
 
 let allQuotes = [];

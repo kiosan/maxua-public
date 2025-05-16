@@ -1,6 +1,6 @@
 // functions/timelinePage.js
 
-const { db, runQuery, getCorsHeaders, getETagHeaders, formatDate, linkify, escapeHTML } = require('./utils');
+const { db, runQuery, getCorsHeaders, getETagHeaders, formatDate } = require('./utils');
 const templateEngine = require('./templateEngine');
 const { 
   generateMetaTags, 
@@ -24,16 +24,14 @@ exports.handler = async (event, context) => {
     
     
     // Fetch posts with optimized query
-    // Note: After SQLite migration, check if 'status' column exists. If not, fetch all posts.
     let postsQuery = `
-      SELECT * FROM posts p
+      SELECT * FROM posts p WHERE p.status = 'public'
     `;
     
     const queryParams = [];
     let paramIndex = 1;
     
     // Add ordering and pagination
-    // SQLite uses ? for parameters instead of ?, ?, etc.
     postsQuery += ` ORDER BY p.created_at DESC LIMIT ? OFFSET ?`;
     queryParams.push(limit, offset);
     
@@ -43,12 +41,12 @@ exports.handler = async (event, context) => {
       return {
         ...post,
         formatted_date: formatDate(post.created_at),
-        content_html: linkify(post.content)
+        content_html: linkifyText(escapeHTML(post.content))
       };
     });
     
     // Determine if there are more posts for pagination
-    let countQuery = 'SELECT COUNT(*) as count FROM posts';
+    let countQuery = 'SELECT COUNT(*) as count FROM posts WHERE status = \'public\'';
     const countResult = await runQuery(countQuery);
     const totalCount = parseInt(countResult.rows[0].count);
     const hasMore = offset + limit < totalCount;
@@ -169,4 +167,27 @@ exports.handler = async (event, context) => {
   }
 };
 
-// We're now importing escapeHTML and linkify from utils.js
+/**
+ * Escape HTML special characters
+ */
+function escapeHTML(str) {
+  if (!str) return '';
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+/**
+ * Convert URLs to data attributes instead of links
+ * This avoids nested anchor tags when making the whole post clickable
+ */
+function linkifyText(text) {
+  // Instead of creating anchor tags, mark URLs with a data attribute
+  const urlRegex = /(https?:\/\/[^\s]+)/g;
+  return text.replace(urlRegex, url => 
+    `<span class="post-url" data-url="${url}">${url}</span>`
+  );
+}

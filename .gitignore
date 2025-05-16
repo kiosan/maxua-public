@@ -9,6 +9,9 @@ yarn-error.log*
 .pnp
 .pnp.js
 
+# Kamal
+.kamal/secrets
+
 # Environment variables
 .env.local
 .env.development.local
