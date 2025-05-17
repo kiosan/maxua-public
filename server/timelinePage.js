@@ -1,6 +1,6 @@
 // functions/timelinePage.js
 
-const { db, runQuery, getCorsHeaders, getETagHeaders, formatDate } = require('./utils');
+const { db, runQuery, getCorsHeaders, getETagHeaders, formatDate, formatMarkdown } = require('./utils');
 const templateEngine = require('./templateEngine');
 const { 
   generateMetaTags, 
@@ -38,11 +38,9 @@ exports.handler = async (event, context) => {
     const postsResult = await runQuery(postsQuery, queryParams);
     const posts = postsResult.rows.map(post => {
       // Format the post data for the template
-      return {
-        ...post,
-        formatted_date: formatDate(post.created_at),
-        content_html: linkifyText(escapeHTML(post.content))
-      };
+      post.formatted_date = formatDate(post.created_at);
+      post.content_html = formatMarkdown(post.content);
+      return post;
     });
     
     // Determine if there are more posts for pagination

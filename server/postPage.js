@@ -1,5 +1,5 @@
 // functions/postPage.js
-const { db, runQuery, escapeHTML, linkify, formatDate, getCorsHeaders, getETagHeaders  } = require('./utils');
+const { db, runQuery, escapeHTML, linkify, formatDate, getCorsHeaders, getETagHeaders, formatMarkdown } = require('./utils');
 const templateEngine = require('./templateEngine');
 const { 
   generateMetaTags,
@@ -126,8 +126,8 @@ async function fetchPrevNextPostIds(currentPostId) {
  * Prepare data for template rendering
  */
 async function prepareTemplateData(post, event, navLinks) {
-  // Format and process the post content
-  const postContent = linkify(post.content);
+  // Format and process the post content with Markdown
+  const postContent = formatMarkdown(post.content);
   
   // Create a clean preview for the title (up to 50 chars)
   const previewContent = post.content.replace(/\n/g, ' ').trim();

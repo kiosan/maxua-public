@@ -5,6 +5,7 @@ const Sentry = require('@sentry/node');
 const Database = require('better-sqlite3');
 const path = require('path');
 const fs = require('fs');
+const { marked } = require('marked');
 
 const { Resend } = require('resend');
 const resend = new Resend(process.env.RESEND_API_KEY);
@@ -584,26 +585,50 @@ async function translateText(text) {
   }
 }
 
+/**
+ * Format text as markdown, handling paragraphs and basic formatting
+ * @param {string} text - Text to format
+ * @returns {string} - HTML formatted text
+ */
+function formatMarkdown(text) {
+  if (!text) return '';
+  
+  // Configure marked options
+  marked.setOptions({
+    breaks: true,        // Add line breaks
+    gfm: true,           // Use GitHub Flavored Markdown
+    headerIds: false,    // Don't add ids to headers
+    mangle: false,       // Don't mangle email addresses
+    sanitize: false,     // Don't sanitize HTML
+  });
+  
+  
+  
+  // Process with marked
+  return marked(text);
+}
+
+
+
 module.exports = { 
   db, 
-  runQuery, // Add the query helper function
+  runQuery, 
   wrap, 
   sendEmail,
   rateLimit,
-  getCorsHeaders, 
-  getETagHeaders,
-  escapeHTML, 
-  linkify, 
+  escapeHTML,
+  linkify,
   formatDate,
-  getIdFromPath, 
+  getCorsHeaders,
+  getETagHeaders,
   isDevEnvironment,
   captureError,
   authMiddleware,
-  // Add the new slug generation utilities
+  rateLimiterMiddleware,
+  formatMarkdown,
   generateSlug,
   transliterateCyrillic,
   translateText,
-  rateLimiterMiddleware,
   getPostPermalink,
   closePool
 };

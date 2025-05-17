@@ -1,13 +1,7 @@
 <div class="post-card" data-post-id="{{id}}">
-  {{#if noLink}}
-    <div class="post-content">
-      <div class="post-body">{{{content_html}}}</div>
-    </div>
-  {{else}}
-    <a href="{{permalink this}}" class="post-card-link">
-      <div class="post-content">{{{content_html}}}</div>
-    </a>
-  {{/if}}
+  <div class="post-content {{#unless noLink}}clickable-post{{/unless}}" {{#unless noLink}}data-permalink="{{permalink this}}"{{/unless}}>
+    <div class="post-body">{{{content_html}}}</div>
+  </div>
   {{#with (parseJson metadata) as |parsedMeta|}}
   {{#if parsedMeta.url}}
   <div class="post-link-preview" onclick="window.open('{{parsedMeta.url}}', '_blank', 'noopener,noreferrer'); event.preventDefault(); event.stopPropagation();">
@@ -61,8 +55,8 @@
       <a href="#" 
          class="show-all-reactions" 
          @click.prevent="toggleAllReactions()"
-         x-text="showAllReactions ? '' : '...'"
-         x-show="!showAllReactions || reactions.some(r => !hasReactions(r.type))"></a>
+         x-text="'...'"
+         x-show="!showAllReactions && reactions.some(r => !hasReactions(r.type))"></a>
     </div>
   </div>
 

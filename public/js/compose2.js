@@ -6,8 +6,8 @@ function composeApp() {
         submitting: null,   // null, 'draft', or 'published'
         statusMessage: '',
         statusType: '',
-        shareTelegram: true,
-        shareBluesky: true,
+        shareTelegram: false,
+        shareBluesky: false,
         drafts: [],
         loadingDrafts: false,
         currentDraftId: null,
