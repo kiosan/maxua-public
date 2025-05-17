@@ -61,7 +61,7 @@
       <a href="#" 
          class="show-all-reactions" 
          @click.prevent="toggleAllReactions()"
-         x-text="showAllReactions ? '-' : '...'"
+         x-text="showAllReactions ? '' : '...'"
          x-show="!showAllReactions || reactions.some(r => !hasReactions(r.type))"></a>
     </div>
   </div>
