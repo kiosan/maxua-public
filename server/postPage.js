@@ -217,10 +217,13 @@ async function prepareTemplateData(post, event, navLinks) {
   return {
     post: {
       ...post,
+      //postContentHtml: postContent,
+      formattedDuration: formatDuration,
       content_html: postContent,
       formatted_date: formattedDate
     },
     postTitle: previewTitle,
+    postId: post.id, 
     metaTags,
     structuredData,
     pinnedComments,

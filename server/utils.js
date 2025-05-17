@@ -605,6 +605,5 @@ module.exports = {
   translateText,
   rateLimiterMiddleware,
   getPostPermalink,
-  translateText,
   closePool
 };

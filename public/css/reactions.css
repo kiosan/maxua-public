@@ -1,0 +1,144 @@
+/* Post Reactions Styles */
+.post-reactions-container {
+  margin: 1rem 0;
+  padding: 1.5rem;
+  border-radius: 8px;
+  background-color: var(--color-border);
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+/* Compact reactions inside post content */
+.post-reactions-compact {
+  margin-top: 0.75rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--color-border);
+  margin-bottom: 0.5rem;
+  position: relative;
+}
+
+/* Timeline/index view specific styling */
+.timeline-container .post-reactions-compact {
+  margin-top: 0.5rem;
+  padding-top: 0.4rem;
+}
+
+.reactions-title {
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  color: var(--color-secondary-text);
+  font-weight: 500;
+}
+
+.reactions-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.reaction-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background-color: var(--color-bg);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: auto;
+}
+
+/* Compact version in post content */
+.post-reactions-compact .reaction-button {
+  padding: 0.35rem 0.6rem;
+  border-radius: 6px;
+  box-shadow: none;
+}
+
+/* More compact for timeline/index */
+.timeline-container .post-reactions-compact .reaction-button {
+  padding: 0.25rem 0.5rem;
+  margin-right: 0.3rem;
+  border-radius: 4px;
+  min-height: 28px;
+}
+
+.reaction-button:hover {
+  border-color: var(--color-accent);
+  transform: translateY(-2px);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.reaction-button:hover .reaction-count {
+  color: #fff;
+  /*background-color: var(--color-accent);
+  border-radius: 8px;
+  padding: 0 4px;
+  font-weight: bold;*/
+}
+
+.reaction-selected {
+  /*border-color: var(--color-accent);
+  background-color: rgba(26, 115, 232, 0.05);
+  font-weight: 500;*/
+}
+
+.reaction-emoji {
+  font-size: 1.25rem;
+  margin-right: 0.4rem;
+}
+
+.reaction-label {
+  font-size: 0.8rem;
+  margin: 0 0.4rem;
+}
+
+.reaction-count {
+  font-size: 0.75rem;
+  color: var(--color-secondary-text);
+  font-weight: 600;
+}
+
+/* Compact version */
+.post-reactions-compact .reaction-emoji {
+  font-size: 1rem;
+  margin-right: 0.25rem;
+}
+
+.post-reactions-compact .reaction-count {
+  font-size: 0.7rem;
+}
+
+/* Show all reactions link */
+.show-all-reactions {
+  font-size: 0.8rem;
+  color: var(--color-secondary-text);
+  text-decoration: none;
+  padding: 0.25rem 0.5rem;
+  margin-left: 0.25rem;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.show-all-reactions:hover {
+  color: var(--color-accent);
+  background-color: rgba(0, 0, 0, 0.05);
+  text-decoration: none;
+}
+
+/* Mobile styles */
+@media (max-width: 600px) {
+  .reactions-wrapper {
+    gap: 0.5rem;
+  }
+  
+  .reaction-button {
+    min-width: 65px;
+    padding: 0.5rem 0.75rem;
+  }
+  
+  .reaction-emoji {
+    font-size: 1.25rem;
+  }
+}

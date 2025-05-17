@@ -1,6 +1,8 @@
 <div class="post-card" data-post-id="{{id}}">
   {{#if noLink}}
-    <div class="post-content">{{{content_html}}}</div>
+    <div class="post-content">
+      <div class="post-body">{{{content_html}}}</div>
+    </div>
   {{else}}
     <a href="{{permalink this}}" class="post-card-link">
       <div class="post-content">{{{content_html}}}</div>
@@ -36,10 +38,38 @@
   {{/if}}
   {{/with}}
 
+
+  <!-- Compact reactions UI inside post content -->
+  <div class="post-reactions-compact" 
+       x-data="postReactions({{id}})" 
+       x-init="loadReactions()"
+       :data-post-id="{{id}}">
+    <div class="reactions-wrapper">
+      <!-- Show only active reactions unless toggle is clicked -->
+      <template x-for="reaction in reactions" :key="reaction.type">
+        <button 
+          class="reaction-button" 
+          :class="{ 'reaction-selected': userReaction === reaction.type }" 
+          @click="toggleReaction(reaction.type)" 
+          :title="reaction.description"
+          x-show="showAllReactions || hasReactions(reaction.type)">
+          <span class="reaction-emoji" x-text="reaction.emoji"></span>
+          <span class="reaction-count" x-text="counts[reaction.type] || 0"></span>
+        </button>
+      </template>
+      <!-- Toggle link to show all reactions -->
+      <a href="#" 
+         class="show-all-reactions" 
+         @click.prevent="toggleAllReactions()"
+         x-text="showAllReactions ? '-' : '...'"
+         x-show="!showAllReactions || reactions.some(r => !hasReactions(r.type))"></a>
+    </div>
+  </div>
+
   <div class="post-meta">
     <div class="post-date">
       <span class="post-date-text">{{formatted_date}}</span>
-      <a href="#" class="translate-link" data-post-id="{{id}}" data-translated="false">Translate</a>
+      <!--a href="#" class="translate-link" data-post-id="{{id}}" data-translated="false">Translate</a-->
   {{#if editBtn}}
       <span x-data="{ isAdmin: false }" x-init="isAdmin = localStorage.getItem('microblog_auth') !== null">
         <a x-show="isAdmin" href="/compose?edit={{id}}" class="edit-link">Edit</a>

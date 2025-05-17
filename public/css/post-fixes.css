@@ -1,0 +1,46 @@
+/* Post page layout fixes */
+
+/* Fix for excessive container height */
+.single-post-container {
+  height: auto !important;
+  min-height: 0 !important;
+  display: block;
+}
+
+/* Ensure post content flows properly */
+.single-post-container .post-card {
+  height: auto;
+  overflow: visible;
+  display: block;
+}
+
+/* Ensure proper spacing between elements */
+.post-navigation {
+  margin-top: 1.5rem;
+}
+
+/* Improve post body spacing */
+.post-body {
+  line-height: 1.6;
+}
+
+/* Streamline post meta section */
+.post-meta {
+  margin-top: 0.5rem;
+}
+
+/* Cleaner reactions display */
+.post-reactions-compact .reactions-wrapper {
+  justify-content: flex-start;
+}
+
+.post-reactions-compact .reaction-button {
+  margin-right: 0.25rem;
+}
+
+/* Better mobile view */
+@media (max-width: 600px) {
+  .single-post-container .post-card {
+    padding: 0.75rem;
+  }
+}
