@@ -484,6 +484,106 @@ function runQuery(query, params = []) {
   }
 }
 
+/**
+ * Transliterate Cyrillic text to Latin characters
+ * @param {string} text - The Cyrillic text to transliterate
+ * @returns {string} - Transliterated text
+ */
+function transliterateCyrillic(text) {
+  if (!text) return '';
+  
+  // Ukrainian and Russian Cyrillic to Latin mapping
+  const cyrillicToLatin = {
+    'а': 'a', 'б': 'b', 'в': 'v', 'г': 'h', 'ґ': 'g', 'д': 'd', 'е': 'e', 'є': 'ie',
+    'ж': 'zh', 'з': 'z', 'и': 'y', 'і': 'i', 'ї': 'yi', 'й': 'i', 'к': 'k', 'л': 'l',
+    'м': 'm', 'н': 'n', 'о': 'o', 'п': 'p', 'р': 'r', 'с': 's', 'т': 't', 'у': 'u',
+    'ф': 'f', 'х': 'kh', 'ц': 'ts', 'ч': 'ch', 'ш': 'sh', 'щ': 'shch', 'ь': '', 'ю': 'iu',
+    'я': 'ia', 'А': 'A', 'Б': 'B', 'В': 'V', 'Г': 'H', 'Ґ': 'G', 'Д': 'D', 'Е': 'E',
+    'Є': 'Ie', 'Ж': 'Zh', 'З': 'Z', 'И': 'Y', 'І': 'I', 'Ї': 'Yi', 'Й': 'I', 'К': 'K',
+    'Л': 'L', 'М': 'M', 'Н': 'N', 'О': 'O', 'П': 'P', 'Р': 'R', 'С': 'S', 'Т': 'T',
+    'У': 'U', 'Ф': 'F', 'Х': 'Kh', 'Ц': 'Ts', 'Ч': 'Ch', 'Ш': 'Sh', 'Щ': 'Shch', 'Ь': '',
+    'Ю': 'Iu', 'Я': 'Ia', 'ы': 'y', 'Ы': 'Y', 'э': 'e', 'Э': 'E', 'ё': 'e', 'Ё': 'E'
+  };
+  
+  // Replace each Cyrillic character with its Latin equivalent
+  return text.split('').map(char => cyrillicToLatin[char] || char).join('');
+}
+
+/**
+ * Generate a URL-friendly slug from text
+ * @param {string} text - The text to convert to a slug
+ * @param {boolean} transliterate - Whether to transliterate Cyrillic text (default: true)
+ * @returns {string} - URL-friendly slug
+ */
+function generateSlug(text, shouldTransliterate = true) {
+  if (!text) return '';
+  
+  // Check if text contains Cyrillic characters
+  const hasCyrillic = /[а-яА-ЯіїєґІЇЄҐ]/.test(text);
+  
+  // If text has Cyrillic characters and transliteration is enabled, transliterate it
+  let processedText = text;
+  if (hasCyrillic && shouldTransliterate) {
+    processedText = transliterateCyrillic(text);
+  }
+  
+  return processedText
+    .toString()
+    .toLowerCase()
+    .trim()
+    // Replace spaces and underscores with hyphens
+    .replace(/[\s_]+/g, '-')
+    // Remove special characters
+    .replace(/[^\w\-]+/g, '')
+    // Remove duplicate hyphens
+    .replace(/\-\-+/g, '-')
+    // Remove leading/trailing hyphens
+    .replace(/^-+/, '')
+    .replace(/-+$/, '')
+    // Limit length
+    .substring(0, 100);
+}
+
+/**
+ * Translate text using Azure Translator API (for slug generation with translation)
+ * Use this only if transliteration is not sufficient
+ * @param {string} text - The text to translate
+ * @returns {Promise<string>} - Translated text
+ */
+async function translateText(text) {
+  if (!process.env.AZURE_TRANSLATOR_KEY) {
+    console.warn('AZURE_TRANSLATOR_KEY not set - falling back to transliteration');
+    return transliterateCyrillic(text);
+  }
+
+  const key = process.env.AZURE_TRANSLATOR_KEY;
+  const endpoint = 'https://api.cognitive.microsofttranslator.com';
+  const location = process.env.AZURE_TRANSLATOR_LOCATION || 'westeurope';
+  
+  try {
+    // from=uk to force UA->EN translation
+    const response = await fetch(`${endpoint}/translate?api-version=3.0&from=uk&to=en`, {
+      method: 'POST',
+      headers: {
+        'Ocp-Apim-Subscription-Key': key,
+        'Ocp-Apim-Subscription-Region': location,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify([{ text }])
+    });
+    
+    if (!response.ok) {
+      throw new Error(`Translation API error: ${response.status}`);
+    }
+    
+    const result = await response.json();
+    return result[0]?.translations[0]?.text || '';
+  } catch (error) {
+    console.error('Translation error:', error);
+    return transliterateCyrillic(text);  // Fall back to transliteration
+  }
+}
+
 module.exports = { 
   db, 
   runQuery, // Add the query helper function
@@ -499,9 +599,12 @@ module.exports = {
   isDevEnvironment,
   captureError,
   authMiddleware,
+  // Add the new slug generation utilities
+  generateSlug,
+  transliterateCyrillic,
+  translateText,
   rateLimiterMiddleware,
   getPostPermalink,
-  generateSlug,
   translateText,
   closePool
 };

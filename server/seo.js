@@ -120,7 +120,7 @@ function generateBlogListingSchema(options = {}) {
   const {
     url = 'https://sbondar.com',
     title = 'Sasha Bondar',
-    image = 'https://sbondar.com/images/me.jpeg'
+    image = 'https://sbondar.com/images/me.jpeg',
     description = 'Thoughts on life, programming, AI, startups, tech, and more.',
     posts = []
   } = options;
