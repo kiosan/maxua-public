@@ -12,6 +12,9 @@ const newsletterRoutes = require('./routes/newsletter');
 const feedsRoutes = require('./routes/feeds');
 const reactionsRoutes = require('./routes/reactions');
 
+// Import custom middleware
+const referrerTrackingMiddleware = require('./middleware/visitorTracking');
+
 // Import serverless adapters for SSR pages
 const postPage = require('./postPage');
 const timelinePage = require('./timelinePage');
@@ -37,6 +40,9 @@ app.use((req, res, next) => {
   console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
   next();
 });
+
+// Referrer tracking middleware to record traffic sources
+app.use(referrerTrackingMiddleware);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {

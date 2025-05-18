@@ -3,6 +3,47 @@ const express = require('express');
 const router = express.Router();
 const { db, runQuery, authMiddleware } = require('../utils');
 
+// Get recent referrers (top 10 most recent unique referrers)
+router.get('/referrers', authMiddleware, async (req, res) => {
+  try {
+    // Get the 10 most recent unique referrers from referrer_stats table
+    let recentReferrers = [];
+    
+    // Check if referrer_stats table exists first
+    const tableCheckResult = await runQuery(
+      "SELECT name FROM sqlite_master WHERE type='table' AND name='referrer_stats'"
+    );
+    
+    if (tableCheckResult.rows.length > 0) {
+      // Get unique referrers with the most recent timestamp for each
+      const referrersResult = await runQuery(`
+        SELECT referrer, path, timestamp, user_agent
+        FROM referrer_stats
+        GROUP BY referrer
+        ORDER BY timestamp DESC
+        LIMIT 10
+      `);
+      
+      // Format results
+      recentReferrers = referrersResult.rows.map(row => ({
+        referrer: row.referrer,
+        path: row.path,
+        timestamp: row.timestamp,
+        userAgent: row.user_agent
+      }));
+    }
+    
+    return res.json({
+      referrers: recentReferrers
+    });
+  } catch (error) {
+    console.error('Error fetching referrers:', error);
+    return res.status(500).json({
+      error: 'Failed to fetch referrer data'
+    });
+  }
+});
+
 // Get extended stats including visitor metrics
 router.get('/stats', authMiddleware, async (req, res) => {
   try {
@@ -41,49 +82,33 @@ router.get('/stats', authMiddleware, async (req, res) => {
     console.log('Recent comments query result:', commentsResult.rows[0]);
     const recentComments = parseInt(commentsResult.rows[0]?.count || 0);
 
-    // Get visitor stats if the table exists
-    let dailyActiveVisitors = 0;
-    let weeklyActiveVisitors = 0;
-    let allTimeVisitors = 0;
+        // Get recent referrers count
+    let recentReferrersCount = 0;
     
     try {
-      // Check if visitor_stats table exists
+      // Check if referrer_stats table exists
       const tableCheckResult = await runQuery(
-        "SELECT name FROM sqlite_master WHERE type='table' AND name='visitor_stats'"
+        "SELECT name FROM sqlite_master WHERE type='table' AND name='referrer_stats'"
       );
       
-      // Only query visitor stats if the table exists
+      // Only query referrer stats if the table exists
       if (tableCheckResult.rows.length > 0) {
-        // Daily active users (last 24 hours)
-        const dailyActiveResult = await runQuery(
-          "SELECT COUNT(*) FROM visitor_stats WHERE last_seen > datetime('now', '-1 day')"
+        // Count of referrers in the last 7 days
+        const referrersResult = await runQuery(
+          "SELECT COUNT(DISTINCT referrer) as count FROM referrer_stats WHERE timestamp > datetime('now', '-7 days')"
         );
-        dailyActiveVisitors = parseInt(dailyActiveResult.rows[0].count);
-
-        // Weekly active users (last 7 days)
-        const weeklyActiveResult = await runQuery(
-          "SELECT COUNT(*) FROM visitor_stats WHERE last_seen > datetime('now', '-7 days')"
-        );
-        weeklyActiveVisitors = parseInt(weeklyActiveResult.rows[0].count);
-        
-        // All-time unique visitors
-        const allTimeResult = await runQuery(
-          'SELECT COUNT(*) FROM visitor_stats'
-        );
-        allTimeVisitors = parseInt(allTimeResult.rows[0].count);
+        recentReferrersCount = parseInt(referrersResult.rows[0]?.count || 0);
       } else {
-        console.log('visitor_stats table does not exist - using default values');
+        console.log('referrer_stats table does not exist - using default values');
       }
     } catch (error) {
-      console.error('Error fetching visitor stats:', error);
-      // Continue with default values (0) for visitor stats
+      console.error('Error fetching referrer stats:', error);
+      // Continue with default value (0) for referrer stats
     }
 
     return res.json({
-      visitors: {
-        daily: dailyActiveVisitors,
-        weekly: weeklyActiveVisitors,
-        allTime: allTimeVisitors
+      referrers: {
+        recentCount: recentReferrersCount
       },
       subscribers: {
         total: subscriberCount,
@@ -94,7 +119,7 @@ router.get('/stats', authMiddleware, async (req, res) => {
         newLastWeek: recentComments
       },
       posts: {
-        newLastWeek: recentPosts
+        recentCount: recentPosts
       }
     });
   } catch (error) {

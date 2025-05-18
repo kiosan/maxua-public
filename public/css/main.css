@@ -1001,23 +1001,39 @@ textarea#post-content {
 /* RESPONSIVE DESIGN                                                          */
 /* ========================================================================== */
 
-/* Large phones and tablets */
+/* Mobile screens */
 @media (max-width: 768px) {
     .profile-section {
-        flex-direction: column;
+        flex-direction: row;
         align-items: center;
-        text-align: center;
+        text-align: left;
         gap: 1rem;
+        padding: 1rem 0 1rem 0;
+        margin-top: 0.5rem;
     }
     
     .profile-image {
-        width: 70px;
-        height: 70px;
+        width: 50px;
+        height: 50px;
+        margin-top: 0;
+        margin-right: 0.5rem;
     }
     
-    h1 {
-        font-size: 1.5rem;
-        margin-top: 0.2rem;
+    .profile-info {
+        /* Use flex column for the profile info */
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .profile-info h1 {
+        font-size: 1.2rem;
+        margin: 0;
+        line-height: 1.2;
+    }
+    
+    .bio-content {
+        font-size: 0.9rem;
+        margin-bottom: 0.3rem;
     }
     
     .post-card, .post-form {
@@ -1028,8 +1044,9 @@ textarea#post-content {
 /* Mid-sized mobile screens */
 @media (max-width: 600px) {
     .profile-nav {
-        justify-content: center;
-        margin-top: 1rem;
+        justify-content: flex-start;
+        margin-top: 0.3rem;
+        font-size: 0.9rem;
     }
     
     .profile-nav a {

@@ -125,7 +125,14 @@
                 <div class="link-url-display" 
                      x-show="Object.values(metadata).some(field => field.key === 'url' && field.value)">
                     <span class="link-source"
-                         x-text="new URL(Object.values(metadata).find(field => field.key === 'url')?.value || '').hostname">
+                         x-text="(() => {
+                            try {
+                              const urlValue = Object.values(metadata).find(field => field.key === 'url')?.value;
+                              return urlValue ? new URL(urlValue).hostname : '';
+                            } catch (e) {
+                              return 'Invalid URL';
+                            }
+                          })()">
                     </span>
                 </div>
             </div>

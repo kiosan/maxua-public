@@ -112,11 +112,28 @@
             padding-left: 12px;
         }
         
-        .no-comments {
+        .no-comments, .no-referrers {
             text-align: center;
             color: #666;
             font-style: italic;
             padding: 15px 0;
+        }
+        
+        .referrer-item {
+            border-bottom: 1px solid #eee;
+            padding: 10px 0;
+            margin-bottom: 10px;
+        }
+        
+        .referrer-url {
+            font-weight: bold;
+            margin-bottom: 5px;
+            word-break: break-all;
+        }
+        
+        .referrer-meta {
+            font-size: 14px;
+            color: #666;
         }
         
         .load-more {
@@ -142,26 +159,51 @@
 
         <!-- Stats Container -->
         <div class="container">
-            <h2>Stats</h2>
+            <h2>Dashboard</h2>
+            
             <div class="stats-grid">
-                <div class="stats-section visitors">
-                    <h3>Visitors</h3>
-                    <p><span x-text="stats.visitors?.daily || 0"></span> daily active, 
-                       <span x-text="stats.visitors?.weekly || 0"></span> weekly, 
-                       <span x-text="stats.visitors?.allTime || 0"></span> total</p>
-                </div>
-                <div class="stats-section subs">
+                <div class="stats-section">
                     <h3>Subscribers</h3>
-                    <p>+<span x-text="stats.subscribers?.newLastWeek || 0"></span> this week, 
-                       <span x-text="stats.subscribers?.total || 0"></span> total</p>
+                    <p><span x-text="stats.subscribers.total"></span> total subscribers</p>
+                    <p><span x-text="stats.subscribers.newLastWeek"></span> new in last 7 days</p>
                 </div>
-                <!--
+                
+                <div class="stats-section">
+                    <h3>Posts</h3>
+                    <p><span x-text="stats.posts.recentCount"></span> new in last 7 days</p>
+                </div>
+                
                 <div class="stats-section">
                     <h3>Comments</h3>
-                    <p>+<span x-text="stats.comments?.newLastWeek || 0"></span> last week, 
-                       <span x-text="stats.comments?.total || 0"></span> total</p>
+                    <p><span x-text="stats.comments.total"></span> total comments</p>
+                    <p><span x-text="stats.comments.recentCount"></span> new in last 7 days</p>
                 </div>
-                -->
+                
+                <div class="stats-section">
+                    <h3>Referrers</h3>
+                    <p><span x-text="stats.referrers?.recentCount || 0"></span> unique in last 7 days</p>
+                </div>
+            </div>
+            
+            <!-- Recent Referrers Section -->
+            <div class="container" style="margin-top: 20px;">
+                <h2>Recent Referrers</h2>
+                <div class="referrer-list">
+                    <template x-if="referrers.length === 0">
+                        <div class="no-referrers">No recent referrers found</div>
+                    </template>
+                    <template x-for="referrer in referrers" :key="referrer.referrer">
+                        <div class="referrer-item">
+                            <div class="referrer-url">
+                                <a :href="referrer.referrer" target="_blank" x-text="referrer.referrer"></a>
+                            </div>
+                            <div class="referrer-meta">
+                                Visited: <span x-text="referrer.path"></span>
+                                • <span x-text="new Date(referrer.timestamp).toLocaleString()"></span>
+                            </div>
+                        </div>
+                    </template>
+                </div>
             </div>
         </div>
 
@@ -199,28 +241,37 @@
     <script>
         function adminApp() {
             return {
+                stats: {},
                 comments: [],
+                referrers: [],
                 commentOffset: 0,
                 commentsPerPage: 10,
                 hasMoreComments: true,
-                stats: {},
                 
-                init() {
-                  Promise.all([this.loadStats(), this.loadComments(true)]);
+                async init() {
+                    await this.loadStats();
+                    await this.loadComments(true);
+                    await this.loadReferrers();
                 },
 
               async loadStats() {
+                const response = await fetch('/api/admin/stats');
+                if (response.ok) {
+                  this.stats = await response.json();
+                }
+              },
+              
+              async loadReferrers() {
                 try {
-                  const res = await fetch('/api/admin/stats', {credentials: 'include'});
-                  if (res.ok) {
-                    this.stats = await res.json();
-                    // Map the stats format to maintain backward compatibility with existing code
-                    this.stats.subscriberCount = this.stats.subscribers?.total || 0;
-                    this.stats.recentComments = this.stats.comments?.newLastWeek || 0;
-                    this.stats.recentPosts = this.stats.posts?.newLastWeek || 0;
+                  const response = await fetch('/api/admin/referrers');
+                  if (response.ok) {
+                    const data = await response.json();
+                    this.referrers = data.referrers || [];
+                  } else {
+                    console.error('Failed to load referrers');
                   }
-                } catch (err) {
-                  console.error('Error loading extended stats:', err);
+                } catch (error) {
+                  console.error('Error loading referrers:', error);
                 }
               },
                 
