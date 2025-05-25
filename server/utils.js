@@ -607,15 +607,16 @@ function formatMarkdown(text) {
   
   // Replace hashtags with links
   // Regular expression that matches hashtags but not within HTML tags or URLs
-  // This regex matches #word that is either at the beginning of a line or after a space
-  // and is followed by a word boundary or punctuation
+  // This is a more compatible approach that doesn't use lookbehind assertions
   // Supports Latin and Ukrainian/Cyrillic characters
-  const hashtagRegex = /(?<=^|\s)(#([a-zA-Z0-9_а-яА-ЯіїєґІЇЄҐ]+))(?=\b|[.,;:!?]|$)/g;
+  const hashtagRegex = /(^|\s)(#[a-zA-Z0-9_а-яА-ЯіїєґІЇЄҐ]+)\b/g;
   
-  html = html.replace(hashtagRegex, (match, fullTag, tagName) => {
+  html = html.replace(hashtagRegex, (match, prefix, hashtag) => {
+    // Extract the tag name without the # symbol
+    const tagName = hashtag.substring(1);
     // Ensure the tagName is properly encoded in the URL
     const encodedTagName = encodeURIComponent(tagName.toLowerCase());
-    return `<a href="/tag/${encodedTagName}" class="post-hashtag">${fullTag}</a>`;
+    return `${prefix}<a href="/tag/${encodedTagName}" class="post-hashtag">${hashtag}</a>`;
   });
   
   return html;
