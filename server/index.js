@@ -11,6 +11,7 @@ const commentsRoutes = require('./routes/comments');
 const newsletterRoutes = require('./routes/newsletter');
 const feedsRoutes = require('./routes/feeds');
 const reactionsRoutes = require('./routes/reactions');
+const tagsRoutes = require('./routes/tags');
 
 // Import custom middleware
 const referrerTrackingMiddleware = require('./middleware/visitorTracking');
@@ -310,6 +311,9 @@ app.use('/api', translationRoutes);
 
 const adminRoutes = require('./routes/admin');
 app.use('/api/admin', adminRoutes);
+
+// Mount hashtag routes
+app.use('/', tagsRoutes);
 
 // Start the server
 const PORT = process.env.PORT || 8080;

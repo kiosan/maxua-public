@@ -1,4 +1,4 @@
-<div class="post-card" data-post-id="{{id}}">
+<div class="post-card" data-post-id="{{id}}" x-data="postReactions({{id}})" x-init="loadReactions()">
   <div class="post-content {{#unless noLink}}clickable-post{{/unless}}" {{#unless noLink}}data-permalink="{{permalink this}}"{{/unless}}>
     <div class="post-body">{{{content_html}}}</div>
   </div>
@@ -35,11 +35,17 @@
 
   <!-- Compact reactions UI inside post content -->
   <div class="post-reactions-compact" 
-       x-data="postReactions({{id}})" 
-       x-init="loadReactions()"
        :data-post-id="{{id}}">
+       
+    <!-- Notification positioned absolutely to cover the post card -->
+    <template x-if="showThankYou">
+      <div class="thank-you-overlay">
+        <div class="thank-you-message" x-text="thankYouMessage"></div>
+      </div>
+    </template>
+
     <div class="reactions-wrapper">
-      <!-- Show only active reactions unless toggle is clicked -->
+      <!-- Reactions that are already set or all reactions when hovering/clicked -->
       <template x-for="reaction in reactions" :key="reaction.type">
         <button 
           class="reaction-button" 
@@ -51,12 +57,11 @@
           <span class="reaction-count" x-text="counts[reaction.type] || 0"></span>
         </button>
       </template>
-      <!-- Toggle link to show all reactions -->
+      <!-- Toggle link (only shown on mobile) -->
       <a href="#" 
          class="show-all-reactions" 
          @click.prevent="toggleAllReactions()"
-         x-text="'...'"
-         x-show="!showAllReactions && reactions.some(r => !hasReactions(r.type))"></a>
+         x-show="isMobile && !showAllReactions && !userReaction">Саш, ...</a>
     </div>
   </div>
 

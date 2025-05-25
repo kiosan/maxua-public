@@ -602,10 +602,20 @@ function formatMarkdown(text) {
     sanitize: false,     // Don't sanitize HTML
   });
   
+  // Process the markdown first
+  let html = marked(text);
   
+  // Replace hashtags with links
+  // Regular expression that matches hashtags but not within HTML tags or URLs
+  // This regex matches #word that is either at the beginning of a line or after a space
+  // and is followed by a word boundary or punctuation
+  const hashtagRegex = /(?<=^|\s)(#([a-zA-Z0-9_]+))(?=\b|[.,;:!?]|$)/g;
   
-  // Process with marked
-  return marked(text);
+  html = html.replace(hashtagRegex, (match, fullTag, tagName) => {
+    return `<a href="/tag/${tagName.toLowerCase()}" class="post-hashtag">${fullTag}</a>`;
+  });
+  
+  return html;
 }
 
 

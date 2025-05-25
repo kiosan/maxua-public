@@ -2,6 +2,7 @@
 const express = require('express');
 const router = express.Router();
 const { db, runQuery, authMiddleware, generateSlug } = require('../utils');
+const { extractHashtags, savePostHashtags } = require('../utils/hashtags');
 const templateEngine = require('../templateEngine');
 const { sharePostToTelegram } = require('../telegram');
 const { sharePostToBluesky, fetchUrlMetadata } = require('../bluesky');
@@ -270,6 +271,14 @@ router.post('/post', authMiddleware, async (req, res) => {
         }
       }
       
+      // Process hashtags in the content
+      const hashtags = extractHashtags(content);
+      if (hashtags.length > 0) {
+        // Pass false since we're already in a transaction
+        await savePostHashtags(post.id, hashtags, false);
+        console.log(`Saved ${hashtags.length} hashtags for post ${post.id}`);
+      }
+
       // Commit SQLite transaction
       db.prepare('COMMIT').run();
       

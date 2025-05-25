@@ -1,6 +1,7 @@
 // functions/timelinePage.js
 
 const { db, runQuery, getCorsHeaders, getETagHeaders, formatDate, formatMarkdown } = require('./utils');
+const { getPopularHashtags } = require('./utils/hashtags');
 const templateEngine = require('./templateEngine');
 const { 
   generateMetaTags, 
@@ -42,6 +43,35 @@ exports.handler = async (event, context) => {
       post.content_html = formatMarkdown(post.content);
       return post;
     });
+    
+    // Get hashtags for all posts
+    if (posts.length > 0) {
+      const postIds = posts.map(post => post.id);
+      
+      // Fetch all hashtags for these posts in a single query
+      const hashtagsResult = await runQuery(
+        `SELECT ph.post_id, h.id, h.name 
+         FROM hashtags h
+         INNER JOIN post_hashtags ph ON h.id = ph.hashtag_id
+         WHERE ph.post_id IN (${postIds.map(() => '?').join(',')})
+         ORDER BY h.name ASC`,
+        postIds
+      );
+      
+      // Group hashtags by post_id
+      const hashtagsByPost = {};
+      for (const tag of hashtagsResult.rows) {
+        if (!hashtagsByPost[tag.post_id]) {
+          hashtagsByPost[tag.post_id] = [];
+        }
+        hashtagsByPost[tag.post_id].push({ id: tag.id, name: tag.name });
+      }
+      
+      // Attach hashtags to each post
+      for (const post of posts) {
+        post.hashtags = hashtagsByPost[post.id] || [];
+      }
+    }
     
     // Determine if there are more posts for pagination
     let countQuery = 'SELECT COUNT(*) as count FROM posts WHERE status = \'public\'';
@@ -130,6 +160,9 @@ exports.handler = async (event, context) => {
       })
     ].join('\n');
     
+    // Get popular hashtags for sidebar
+    const popularHashtags = await getPopularHashtags(10);
+    
     // Prepare template data
     const templateData = {
       posts,
@@ -141,7 +174,9 @@ exports.handler = async (event, context) => {
       },
       pageTitle,
       metaTags,
-      structuredData
+      structuredData,
+      popularHashtags,
+      activePage: 'home'
     };
     
     // Render the page

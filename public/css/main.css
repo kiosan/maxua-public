@@ -4,6 +4,8 @@
 
 @import 'reactions.css';
 @import 'post-fixes.css';
+@import 'hashtags.css';
+@import 'thank-you-notification.css';
 
 /* ========================================================================== */
 /* CORE VARIABLES AND BASE STYLES                                             */

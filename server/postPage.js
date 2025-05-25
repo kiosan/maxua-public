@@ -1,5 +1,6 @@
 // functions/postPage.js
 const { db, runQuery, escapeHTML, linkify, formatDate, getCorsHeaders, getETagHeaders, formatMarkdown } = require('./utils');
+const { getPopularHashtags } = require('./utils/hashtags');
 const templateEngine = require('./templateEngine');
 const { 
   generateMetaTags,
@@ -135,6 +136,19 @@ async function prepareTemplateData(post, event, navLinks) {
     ? previewContent.substring(0, 47) + '...'
     : previewContent;
 
+  // Fetch hashtags for this post
+  const hashtagsResult = await runQuery(
+    `SELECT h.id, h.name 
+     FROM hashtags h
+     INNER JOIN post_hashtags ph ON h.id = ph.hashtag_id
+     WHERE ph.post_id = ?
+     ORDER BY h.name ASC`,
+    [post.id]
+  );
+  
+  // Fetch popular hashtags for sidebar
+  const popularHashtags = await getPopularHashtags(10);
+
   // Fetch pinned comments
   const commentsQuery = `
     SELECT id, author, content, created_at 
@@ -220,14 +234,17 @@ async function prepareTemplateData(post, event, navLinks) {
       //postContentHtml: postContent,
       formattedDuration: formatDuration,
       content_html: postContent,
-      formatted_date: formattedDate
+      formatted_date: formattedDate,
+      hashtags: hashtagsResult.rows
     },
     postTitle: previewTitle,
     postId: post.id, 
     metaTags,
     structuredData,
     pinnedComments,
-    navLinks
+    navLinks,
+    popularHashtags,
+    activePage: 'post'
   };
 }
 

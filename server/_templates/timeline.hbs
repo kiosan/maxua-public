@@ -75,8 +75,22 @@ button.load-more {
     {{> profile-header activePage="home"}}
     
     <div class="timeline">
-
+      {{#if hashtag}}
+      <div class="hashtag-page-header">
+        <h2 class="hashtag-page-title">Posts tagged with #{{hashtag.name}}</h2>
+        <p class="hashtag-page-description">{{hashtag.post_count}} {{#if (eq hashtag.post_count 1)}}post{{else}}posts{{/if}} with this hashtag</p>
+      </div>
+      {{else}}
       <h2>What's on my mind</h2>
+      {{/if}}
+      
+      {{#if popularHashtags.length}}
+      <div class="popular-hashtags-list">
+        {{#each popularHashtags}}
+        <a href="/tag/{{name}}" class="popular-hashtag">#{{name}} <span class="hashtag-count">{{post_count}}</span></a>
+        {{/each}}
+      </div>
+      {{/if}}
       
       <div id="posts-container" class="timeline-container">
         {{#if posts.length}}

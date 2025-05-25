@@ -1,0 +1,104 @@
+/* hashtags.css - Styles for hashtag features */
+
+/* Timeline layout */
+.timeline {
+  max-width: 900px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* Post hashtags display */
+.post-hashtags {
+  margin-top: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.post-hashtag {
+  font-size: 0.85rem;
+  color: #667eea;
+  background-color: rgba(102, 126, 234, 0.1);
+  padding: 3px 8px;
+  border-radius: 12px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.post-hashtag:hover {
+  background-color: rgba(102, 126, 234, 0.2);
+  text-decoration: none;
+}
+
+/* Popular hashtags section */
+
+
+
+.popular-hashtags-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 1rem 0 1.5rem 0;
+}
+
+.popular-hashtag {
+  font-size: 0.85rem;
+  color: #667eea;
+  background-color: rgba(102, 126, 234, 0.1);
+  padding: 3px 8px;
+  border-radius: 12px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+}
+
+.popular-hashtag:hover {
+  background-color: rgba(102, 126, 234, 0.2);
+  text-decoration: none;
+}
+
+.hashtag-count {
+  font-size: 0.75rem;
+  margin-left: 5px;
+  opacity: 0.7;
+  background: rgba(102, 126, 234, 0.2);
+  padding: 1px 5px;
+  border-radius: 8px;
+}
+
+/* Hashtag page header */
+.hashtag-page-header {
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.hashtag-page-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #2d3748;
+}
+
+.hashtag-page-description {
+  font-size: 0.95rem;
+  color: #718096;
+}
+
+/* Mobile styles */
+@media (max-width: 640px) {
+  .post-hashtags {
+    margin-top: 6px;
+    gap: 6px;
+  }
+  
+  .post-hashtag {
+    font-size: 0.8rem;
+    padding: 2px 6px;
+  }
+  
+  .popular-hashtags {
+    padding: 0.75rem;
+  }
+}

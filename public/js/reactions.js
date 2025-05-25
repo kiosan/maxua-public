@@ -12,6 +12,9 @@ function postReactions(postId) {
     userReaction: null, // User's current reaction
     loading: false,
     showAllReactions: false, // Toggle for showing all reactions
+    isMobile: window.innerWidth < 768, // Track if we're on mobile
+    showThankYou: false, // Show thank you message
+    thankYouMessage: '', // The thank you message to show
     
     // Load reactions data from API
     async loadReactions() {
@@ -27,6 +30,20 @@ function postReactions(postId) {
           
           // Set up click outside listener
           this.setupClickOutside();
+          
+          // Check if we're on mobile or desktop and set up appropriate listeners
+          this.setupHoverListeners();
+          
+          // Update mobile status on window resize
+          window.addEventListener('resize', () => {
+            const wasMobile = this.isMobile;
+            this.isMobile = window.innerWidth < 768;
+            
+            // If changing between mobile and desktop, update listeners
+            if (wasMobile !== this.isMobile) {
+              this.setupHoverListeners();
+            }
+          });
         } else {
           console.error('Failed to load reactions');
         }
@@ -60,6 +77,59 @@ function postReactions(postId) {
       });
     },
     
+    // Set up hover listeners for desktop
+    setupHoverListeners() {
+      // Find the reactions container for this post
+      const container = document.querySelector(`.post-reactions-compact[data-post-id="${this.postId}"]`);
+      if (!container) return;
+      
+      // Clear any existing listeners
+      container.onmouseenter = null;
+      container.onmouseleave = null;
+      
+      if (!this.isMobile) {
+        // Desktop: use hover
+        container.onmouseenter = () => {
+          this.showAllReactions = true;
+        };
+        
+        container.onmouseleave = () => {
+          this.showAllReactions = false;
+        };
+      }
+    },
+    
+    // Random thank you messages
+    thankYouMessages: [
+      "Дякую, що приділили увагу!", 
+      "Оце так реакція! Дякую", 
+      "Ви зробили мій день кращим", 
+      "Мені приємно, що ви відреагували", 
+      "Обожнюю ваші реакції!", 
+      "О, дякую за увагу!", 
+      "Ваша реакція - як подарунок", 
+      "Ваша реакція має значення",
+      "Без вас цей пост - просто текст",
+      "Оце так честь, дякую!"
+    ],
+    
+    // Get a random thank you message
+    getRandomThankYou() {
+      const randomIndex = Math.floor(Math.random() * this.thankYouMessages.length);
+      return this.thankYouMessages[randomIndex];
+    },
+    
+    // Show thank you notification
+    showThankYouNotification() {
+      this.thankYouMessage = this.getRandomThankYou();
+      this.showThankYou = true;
+      
+      // Hide after 2 seconds
+      setTimeout(() => {
+        this.showThankYou = false;
+      }, 2000);
+    },
+    
     // Toggle a reaction (add, update, or remove)
     async toggleReaction(type) {
       if (this.loading) return;
@@ -79,15 +149,24 @@ function postReactions(postId) {
           // Store the user's reaction
           if (result.action === 'added' || result.action === 'updated') {
             this.userReaction = type;
+            // Show thank you message when reaction is added or updated
+            this.showThankYouNotification();
+            
+            // Only hide reactions on mobile after adding/updating
+            if (this.isMobile) {
+              this.showAllReactions = false;
+            }
           } else if (result.action === 'removed') {
             this.userReaction = null;
+            // Keep reactions visible on desktop if we're hovering
+            // Only hide on mobile after removing
+            if (this.isMobile) {
+              this.showAllReactions = false;
+            }
           }
           
           // Fetch fresh reaction counts from the server
           await this.refreshReactionCounts();
-          
-          // Hide all reactions after selection
-          this.showAllReactions = false;
         } else {
           console.error('Failed to toggle reaction');
         }
