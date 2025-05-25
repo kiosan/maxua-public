@@ -85,10 +85,12 @@ button.load-more {
       {{/if}}
       
       {{#if popularHashtags.length}}
-      <div class="popular-hashtags-list">
-        {{#each popularHashtags}}
-        <a href="/tag/{{name}}" class="popular-hashtag">#{{name}} <span class="hashtag-count">{{post_count}}</span></a>
-        {{/each}}
+      <div class="popular-hashtags">
+        <div class="popular-hashtags-list">
+          {{#each popularHashtags}}
+          <a href="/tag/{{name}}" class="popular-hashtag">#{{name}} <span class="popular-hashtag-count">({{post_count}})</span></a>
+          {{/each}}
+        </div>
       </div>
       {{/if}}
       

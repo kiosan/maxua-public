@@ -31,31 +31,43 @@
 }
 
 /* Popular hashtags section */
+.popular-hashtags {
+  margin: 1rem 0;
+}
 
-
+.popular-hashtags-title {
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  color: var(--color-text-secondary, #4a5568);
+}
 
 .popular-hashtags-list {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-  margin: 1rem 0 1.5rem 0;
+  gap: 12px;
+  margin: 0.5rem 0 1.5rem 0;
 }
 
 .popular-hashtag {
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   color: #667eea;
-  background-color: rgba(102, 126, 234, 0.1);
-  padding: 3px 8px;
-  border-radius: 12px;
   text-decoration: none;
   transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
   display: inline-flex;
   align-items: center;
 }
 
 .popular-hashtag:hover {
-  background-color: rgba(102, 126, 234, 0.2);
-  text-decoration: none;
+  text-decoration: underline;
+}
+
+.popular-hashtag-count {
+  font-size: 0.75rem;
+  color: var(--color-text-secondary, #718096);
+  margin-left: 3px;
 }
 
 .hashtag-count {

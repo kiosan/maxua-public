@@ -271,11 +271,18 @@ router.post('/post', authMiddleware, async (req, res) => {
         }
       }
       
-      // Process hashtags in the content
+      // Hashtag processing is now done above
+      
+      // Process hashtags for the post
       const hashtags = extractHashtags(content);
+      
+      // Determine if this is an edit operation
+      const isEdit = !!editPostId || !!draftId;
+      
+      // Save new hashtags with the isEdit flag
       if (hashtags.length > 0) {
-        // Pass false since we're already in a transaction
-        await savePostHashtags(post.id, hashtags, false);
+        // Pass false for transaction since we're already in one, and the isEdit flag
+        await savePostHashtags(post.id, hashtags, false, isEdit);
         console.log(`Saved ${hashtags.length} hashtags for post ${post.id}`);
       }
 

@@ -609,10 +609,13 @@ function formatMarkdown(text) {
   // Regular expression that matches hashtags but not within HTML tags or URLs
   // This regex matches #word that is either at the beginning of a line or after a space
   // and is followed by a word boundary or punctuation
-  const hashtagRegex = /(?<=^|\s)(#([a-zA-Z0-9_]+))(?=\b|[.,;:!?]|$)/g;
+  // Supports Latin and Ukrainian/Cyrillic characters
+  const hashtagRegex = /(?<=^|\s)(#([a-zA-Z0-9_а-яА-ЯіїєґІЇЄҐ]+))(?=\b|[.,;:!?]|$)/g;
   
   html = html.replace(hashtagRegex, (match, fullTag, tagName) => {
-    return `<a href="/tag/${tagName.toLowerCase()}" class="post-hashtag">${fullTag}</a>`;
+    // Ensure the tagName is properly encoded in the URL
+    const encodedTagName = encodeURIComponent(tagName.toLowerCase());
+    return `<a href="/tag/${encodedTagName}" class="post-hashtag">${fullTag}</a>`;
   });
   
   return html;

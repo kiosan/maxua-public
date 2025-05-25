@@ -15,7 +15,7 @@ function extractHashtags(content) {
   // Regular expression to match hashtags
   // Matches any word that starts with # and contains alphanumeric characters, Ukrainian Cyrillic letters
   // The hashtag must be preceded by a space, newline, or be at the start of the content
-  const hashtagRegex = /(?:^|\s)#([a-zA-Z0-9_\u0400-\u04FF\u0500-\u052F\u2DE0-\u2DFF\uA640-\uA69F]+)\b/g;
+  const hashtagRegex = /(?:^|\s)#([a-zA-Z0-9_а-яА-ЯіїєґІЇЄҐ]+)\b/g;
   
   const hashtags = [];
   let match;
@@ -38,9 +38,10 @@ function extractHashtags(content) {
  * @param {number} postId - The ID of the post
  * @param {string[]} hashtags - Array of hashtags (without the # symbol)
  * @param {boolean} manageTransaction - Whether this function should manage its own transaction
+ * @param {boolean} isEdit - Whether this is an edit of an existing post
  * @returns {Promise<void>}
  */
-async function savePostHashtags(postId, hashtags, manageTransaction = false) {
+async function savePostHashtags(postId, hashtags, manageTransaction = false, isEdit = false) {
   if (!postId || !hashtags || hashtags.length === 0) return;
   
   try {
@@ -65,11 +66,13 @@ async function savePostHashtags(postId, hashtags, manageTransaction = false) {
         // Use existing hashtag
         hashtagId = existingTag.rows[0].id;
         
-        // Update post_count
-        await runQuery(
-          'UPDATE hashtags SET post_count = post_count + 1 WHERE id = ?',
-          [hashtagId]
-        );
+        // Update post_count only if this is a new post, not an edit
+        if (!isEdit) {
+          await runQuery(
+            'UPDATE hashtags SET post_count = post_count + 1 WHERE id = ?',
+            [hashtagId]
+          );
+        }
       } else {
         // Create new hashtag
         const newTag = await runQuery(
@@ -88,6 +91,8 @@ async function savePostHashtags(postId, hashtags, manageTransaction = false) {
     
     // Only commit transaction if we're managing it
     if (manageTransaction) {
+      // Recalculate hashtag counts to ensure accuracy
+      await recalculateHashtagCounts();
       db.prepare('COMMIT').run();
     }
   } catch (error) {

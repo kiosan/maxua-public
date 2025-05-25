@@ -15,15 +15,17 @@ router.get('/tag/:tagName', async (req, res) => {
   try {
     const { tagName } = req.params;
     
-    // Validate tag name
-    if (!tagName || !/^[a-z0-9_]+$/i.test(tagName)) {
+    // Validate tag name - support both Latin and Cyrillic characters
+    if (!tagName) {
       return res.status(400).send(`<h1>Invalid hashtag</h1><p>Go <a href="/">home</a>?</p>`);
     }
     
-    // Get the hashtag details
+    // Get the hashtag details - handle decoding for proper comparison
+    const decodedTagName = decodeURIComponent(tagName);
+    
     const hashtagResult = await runQuery(
       'SELECT id, name, post_count FROM hashtags WHERE name = ?',
-      [tagName.toLowerCase()]
+      [decodedTagName.toLowerCase()]
     );
     
     if (hashtagResult.rows.length === 0) {
@@ -53,9 +55,9 @@ router.get('/tag/:tagName', async (req, res) => {
     }
     
     // Get all hashtags for all posts in one query
-    let postHashtags = [];
+    let postHashtags = { rows: [] };
     if (postIds.length > 0) {
-      postHashtags = await runQuery(
+      const result = await runQuery(
         `SELECT ph.post_id, h.id, h.name 
          FROM hashtags h
          INNER JOIN post_hashtags ph ON h.id = ph.hashtag_id
@@ -63,6 +65,7 @@ router.get('/tag/:tagName', async (req, res) => {
          ORDER BY h.name ASC`,
         postIds
       );
+      postHashtags.rows = result.rows || [];
     }
     
     // Group hashtags by post_id
