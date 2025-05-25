@@ -13,9 +13,9 @@ function extractHashtags(content) {
   if (!content) return [];
   
   // Regular expression to match hashtags
-  // Matches any word that starts with # and contains only alphanumeric characters
+  // Matches any word that starts with # and contains alphanumeric characters, Ukrainian Cyrillic letters
   // The hashtag must be preceded by a space, newline, or be at the start of the content
-  const hashtagRegex = /(?:^|\s)#([a-zA-Z0-9_]+)\b/g;
+  const hashtagRegex = /(?:^|\s)#([a-zA-Z0-9_\u0400-\u04FF\u0500-\u052F\u2DE0-\u2DFF\uA640-\uA69F]+)\b/g;
   
   const hashtags = [];
   let match;
