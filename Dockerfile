@@ -2,9 +2,9 @@ FROM node:22-alpine
 
 # Install SQLite dependencies
 RUN apk update && apk add \
-    sqlite3 \
+    sqlite \
     python3 \
-    build-essential \
+    build-base \
     && rm -rf /var/cache/apk/*
 
 # Create app directory
