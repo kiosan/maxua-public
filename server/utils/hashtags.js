@@ -135,7 +135,7 @@ async function getPostHashtags(postId) {
  * @param {number} limit - Number of hashtags to return
  * @returns {Promise<Array>} - Array of hashtag objects with id, name, and post_count
  */
-async function getPopularHashtags(limit = 10) {
+async function getPopularHashtags(limit = 5) {
   try {
     const result = await runQuery(
       `SELECT id, name, post_count 

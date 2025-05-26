@@ -10,6 +10,14 @@ RUN apk update && apk add \
 # Create app directory
 WORKDIR /app
 
+# Add this to your Dockerfile
+RUN apk add --no-cache dcron
+
+# Create a crontab file
+COPY crontab /etc/crontabs/root
+
+# Add this to your CMD or as an entrypoint script
+
 # Install app dependencies
 COPY package*.json ./
 RUN npm install
@@ -29,5 +37,15 @@ VOLUME /app/database
 # Expose port
 EXPOSE 8080
 
-# Run migrations and start the server
-CMD sh -c "npm start"
+# Create logs directory for cron output
+RUN mkdir -p logs && chmod -R 755 logs
+
+# Copy the entrypoint script
+COPY docker-entrypoint.sh /
+RUN chmod +x /docker-entrypoint.sh
+
+# Set the entrypoint
+ENTRYPOINT ["/docker-entrypoint.sh"]
+
+# Default command (will be overridden by entrypoint script)
+CMD ["node", "server/index.js"]

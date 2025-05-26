@@ -63,8 +63,16 @@ async function main() {
       process.exit(0);
     }
 
-    console.log(`✅ Daily digest sent successfully to ${result.sentCount} subscribers`);
-    console.log(`Subject: ${result.subject}`);
+    if (options.dryRun) {
+      console.log(`✅ [DRY RUN] Email would be sent to ${result.subscriberCount} subscribers`);
+    } else {
+      console.log(`✅ Daily digest sent successfully to ${result.sentCount}/${result.subscriberCount} subscribers`);
+    }
+    console.log(`Subject: "${result.subject}"`);
+    
+    if (options.dryRun) {
+      console.log('No emails were actually sent (dry run mode)');
+    }
     process.exit(0);
 
   } catch (error) {

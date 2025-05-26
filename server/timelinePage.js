@@ -161,7 +161,7 @@ exports.handler = async (event, context) => {
     ].join('\n');
     
     // Get popular hashtags for sidebar
-    const popularHashtags = await getPopularHashtags(10);
+    const popularHashtags = await getPopularHashtags(5);
     
     // Prepare template data
     const templateData = {

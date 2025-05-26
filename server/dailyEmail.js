@@ -1,6 +1,6 @@
 // server/dailyEmail.js - Daily digest email sender
 const { Resend } = require('resend');
-const { db, runQuery, formatDate, escapeHTML  } = require('./utils');
+const { db, runQuery, formatDate, escapeHTML, formatMarkdown } = require('./utils');
 const { render } = require('./templateEngine');
 const readline = require('readline');
 
@@ -251,11 +251,15 @@ async function sendDailyDigest(options = {}) {
       console.log(`Marked ${postIds.length} posts as sent in digest`);
     }
     
+    // In dry-run mode, consider all subscribers as successful
+    const reportedCount = dryRun ? subscribers.length : successCount;
+    
     return {
-      success: successCount > 0,
+      success: dryRun || successCount > 0,
       deliveryId: digestId,
       deliveryDbId,
-      sentCount: successCount,
+      sentCount: reportedCount,
+      subscriberCount: subscribers.length,
       errorCount: errorCount,
       subject: subjectLine
     };
@@ -277,13 +281,15 @@ async function sendDailyDigest(options = {}) {
 async function getUnsentPosts(limit = 5) {
   // Get total count of unsent posts first
   const countQuery = `
-    SELECT COUNT(*) FROM posts 
+    SELECT COUNT(*) as total_count FROM posts 
     WHERE status = 'public' 
     AND digest_sent IS NULL
   `;
   
   const countResult = await runQuery(countQuery);
-  const totalUnsent = parseInt(countResult.rows[0].count);
+  // SQLite might return the count with a different column name
+  const countValue = countResult.rows[0].total_count || countResult.rows[0]['COUNT(*)'] || 0;
+  const totalUnsent = parseInt(countValue);
   
   // Determine the actual limit to use
   let actualLimit = limit;
@@ -296,15 +302,28 @@ async function getUnsentPosts(limit = 5) {
   }
   
   // Get the posts
-  const query = `
-    SELECT * FROM posts p
-    WHERE status = 'public' 
-    AND digest_sent IS NULL
-    ORDER BY created_at DESC
-    LIMIT ?
-  `;
+  let query;
+  let result;
   
-  const result = await runQuery(query, [actualLimit]);
+  if (limit === 'all') {
+    // Don't use a parameter for LIMIT to avoid datatype issues
+    query = `
+      SELECT * FROM posts p
+      WHERE status = 'public' 
+      AND digest_sent IS NULL
+      ORDER BY created_at DESC
+    `;
+    result = await runQuery(query);
+  } else {
+    query = `
+      SELECT * FROM posts p
+      WHERE status = 'public' 
+      AND digest_sent IS NULL
+      ORDER BY created_at DESC
+      LIMIT ?
+    `;
+    result = await runQuery(query, [actualLimit]);
+  }
   
   return {
     posts: result.rows,
@@ -319,13 +338,14 @@ async function getUnsentPosts(limit = 5) {
  */
 function formatPostsForEmail(posts) {
   return posts.map(post => {
-    // Format the post data for the template, similar to timelinePage.js
-    const escapedContent = escapeHTML(post.content);
+    // Format the post data for the template, using Markdown
+    // Use the same formatMarkdown function used in the blog
+    const formattedContent = formatMarkdown(post.content);
     
     return {
       ...post,
       formatted_date: formatDate(post.created_at),
-      content_html: linkifyContent(escapedContent).replace(/\n/g, '<br>')
+      content_html: formattedContent
     };
   });
 }

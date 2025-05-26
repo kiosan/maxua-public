@@ -1,0 +1,4 @@
+# Run daily digest email at 8:00 AM every day
+0 8 * * * cd /app && node scripts/send-daily-digest.js >> /app/logs/digest.log 2>&1
+
+# Add a blank line at the end (required for cron)

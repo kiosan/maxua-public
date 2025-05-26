@@ -49,6 +49,27 @@
   margin: 0.5rem 0 1.5rem 0;
 }
 
+/* Mobile optimizations */
+@media (max-width: 640px) {
+  .popular-hashtags {
+    margin: 0.35rem 0;
+  }
+  
+  .popular-hashtags-list {
+    gap: 8px;
+    margin: 0 0 0.75rem 0;
+    line-height: 1.8;
+  }
+  
+  .popular-hashtag {
+    font-size: 0.85rem;
+  }
+  
+  .popular-hashtag-count {
+    font-size: 0.7rem;
+  }
+}
+
 .popular-hashtag {
   font-size: 0.9rem;
   color: #667eea;
