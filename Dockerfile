@@ -1,12 +1,11 @@
-FROM node:18-slim
+FROM node:22-alpine
 
 # Install SQLite dependencies
-RUN apt-get update && apt-get install -y \
+RUN apk update && apk add \
     sqlite3 \
     python3 \
     build-essential \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/cache/apk/*
 
 # Create app directory
 WORKDIR /app
