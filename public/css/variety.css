@@ -1,0 +1,185 @@
+/* variety.css — page-specific styles for /variety (book promo page).
+ * Inherits everything from main.css; only adds long-form reading tweaks.
+ */
+
+/* ---- Hero ---------------------------------------------------------------- */
+
+.variety-hero {
+  margin: 2.5rem 0 2rem;
+}
+
+.variety-title {
+  font-size: 2.2rem;
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.01em;
+}
+
+.variety-subtitle {
+  font-size: 1.2rem;
+  line-height: 1.4;
+  color: var(--color-text);
+  margin-bottom: 0.75rem;
+}
+
+.variety-byline {
+  font-size: 0.95rem;
+  color: var(--color-secondary-text);
+}
+
+/* ---- Long-form prose (About + chapter) ----------------------------------- */
+
+.variety-prose {
+  font-size: 1.1rem;
+  line-height: 1.7;
+  overflow-wrap: break-word;
+}
+
+.variety-prose p {
+  margin-bottom: 1.2em;
+}
+
+.variety-prose ul,
+.variety-prose ol {
+  margin: 0 0 1.2em;
+  padding-left: 1.6em;
+}
+
+.variety-prose li {
+  margin-bottom: 0.5em;
+}
+
+.variety-prose h2,
+.variety-prose h3,
+.variety-prose h4 {
+  margin-top: 2em;
+  margin-bottom: 0.75em;
+  line-height: 1.25;
+}
+
+.variety-prose h2 { font-size: 1.5rem; }
+.variety-prose h3 { font-size: 1.25rem; }
+
+.variety-prose blockquote {
+  border-left: 3px solid var(--color-accent);
+  padding-left: 1rem;
+  margin: 0 0 1.2em;
+  color: var(--color-secondary-text);
+  font-style: italic;
+}
+
+.variety-prose code {
+  background: #f5f5f5;
+  padding: 0.15em 0.4em;
+  border-radius: 3px;
+  font-size: 0.9em;
+}
+
+.variety-prose pre {
+  background: #f5f5f5;
+  padding: 1rem;
+  border-radius: 5px;
+  overflow-x: auto;
+  margin: 0 0 1.2em;
+}
+
+.variety-prose pre code {
+  background: none;
+  padding: 0;
+}
+
+.variety-prose hr {
+  border: 0;
+  border-top: 1px solid var(--color-border);
+  margin: 2em 0;
+}
+
+/* Diagrams: keep them inside the column, but never restyle their insides.
+ * The chapter's inline SVGs carry their own white background — only the
+ * outer box gets sized, no fill/stroke/color overrides. */
+.variety-chapter svg,
+.variety-chapter img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 1.5em auto;
+}
+
+.variety-chapter figure {
+  margin: 1.5em 0;
+}
+
+.variety-chapter figcaption {
+  font-size: 0.9rem;
+  color: var(--color-secondary-text);
+  text-align: center;
+}
+
+/* Wide content (tables etc.) scrolls inside itself, never the page */
+.variety-chapter table {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  border-collapse: collapse;
+  margin: 0 0 1.2em;
+}
+
+.variety-chapter th,
+.variety-chapter td {
+  border: 1px solid var(--color-border);
+  padding: 0.4em 0.7em;
+  text-align: left;
+}
+
+/* ---- Bridge line before the chapter -------------------------------------- */
+
+.variety-bridge {
+  font-size: 0.95rem;
+  color: var(--color-secondary-text);
+  font-style: italic;
+  margin-bottom: 1.5rem;
+}
+
+/* ---- Subscribe ----------------------------------------------------------- */
+
+.variety-subscribe h2 {
+  margin-top: 0;
+}
+
+.variety-subscribe p {
+  color: var(--color-secondary-text);
+  margin-bottom: 1.25rem;
+}
+
+.variety-substack {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.variety-substack iframe {
+  display: block;
+  max-width: 100%;
+}
+
+/* ---- Mobile -------------------------------------------------------------- */
+
+@media (max-width: 600px) {
+  .variety-hero {
+    margin-top: 1.5rem;
+  }
+
+  .variety-title {
+    font-size: 1.8rem;
+  }
+
+  .variety-subtitle {
+    font-size: 1.1rem;
+  }
+
+  /* main.css bumps body to 1.05rem here; keep prose at a comfortable size */
+  .variety-prose {
+    font-size: 1.05rem;
+    line-height: 1.7;
+  }
+}

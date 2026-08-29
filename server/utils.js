@@ -611,12 +611,12 @@ function formatMarkdown(text) {
   // Supports Latin and Ukrainian/Cyrillic characters
   const hashtagRegex = /(^|\s)(#[a-zA-Z0-9_а-яА-ЯіїєґІЇЄҐ]+)\b/g;
   
-  html = html.replace(hashtagRegex, (match, prefix, hashtag) => {
+  html = html.replace(hashtagRegex, (match, prefix, fullTag) => {
     // Extract the tag name without the # symbol
-    const tagName = hashtag.substring(1);
+    const tagName = fullTag.substring(1);
     // Ensure the tagName is properly encoded in the URL
     const encodedTagName = encodeURIComponent(tagName.toLowerCase());
-    return `${prefix}<a href="/tag/${encodedTagName}" class="post-hashtag">${hashtag}</a>`;
+    return `${prefix}<a href="https://sbondar.com/tag/${encodedTagName}" class="post-hashtag">${fullTag}</a>`;
   });
   
   return html;

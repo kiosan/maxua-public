@@ -315,6 +315,10 @@ app.use('/api/admin', adminRoutes);
 // Mount hashtag routes
 app.use('/', tagsRoutes);
 
+// Book promo page: /variety
+const varietyRoutes = require('./routes/variety');
+app.use('/', varietyRoutes);
+
 // Start the server
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {

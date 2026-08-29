@@ -162,6 +162,7 @@ registerPartial('email-digest', 'email-digest');
 registerPartial('profile-header', 'profile-header');
 registerPartial('post-card', 'post-card');
 registerPartial('subscription-form', 'subscription-form');
+registerPartial('variety-chapter', 'variety-chapter');
 
 module.exports = {
   render,

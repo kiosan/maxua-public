@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{pageTitle}}</title>
+
+  {{{metaTags}}}
+  {{{structuredData}}}
+
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="preload" href="/css/main.css?v=1237" as="style">
+  <link rel="stylesheet" href="/css/main.css?v=1237">
+  <link rel="stylesheet" href="/css/variety.css?v=1">
+</head>
+<body>
+  <main class="variety-page">
+    {{> profile-header activePage="variety"}}
+
+    <!-- 1. Hero -->
+    <header class="variety-hero">
+      <h1 class="variety-title">Requisite Variety</h1>
+      <p class="variety-subtitle">The Systems Method for Working with AI — Beyond Prompts and Tools</p>
+      <p class="variety-byline">A book by Sasha Bondar. Written in the open, in Ukrainian first — English essays coming.</p>
+    </header>
+
+    <!-- 2. About -->
+    <section class="variety-about variety-prose">
+      <p>Everyone has access to the same AI models. Yet the results differ by an order of magnitude. Why?</p>
+
+      <p>It's not the prompts. It's not the tools. It's who controls whom.</p>
+
+      <p>In 1956, cybernetician W. Ross Ashby formulated the law of requisite variety: only variety can absorb variety. A modern AI model produces an enormous variety of outputs. An engineer armed with prompt collections has a handful of templated reactions. In that pair, the question of who is steering is arithmetic, not willpower.</p>
+
+      <p>Power tools made carpenters faster — and made it easier to drill straight through the workpiece. AI is the power tool of knowledge work. This book is about keeping the feel of the material in your hands.</p>
+
+      <p>It gives you a method, not tips:</p>
+      <ul>
+        <li>See what you actually operate: not a model, but a system — you, the model, the context, the tools, the artifacts.</li>
+        <li>Separate your goal from the proxy the machine optimizes — the gap between them is where disappointment lives.</li>
+        <li>Build norms and control loops that turn one-off wins into repeatable results — and make agents safe to trust.</li>
+        <li>Understand AI slop as a diagnosis, not bad luck: low-variety input produces average output.</li>
+      </ul>
+
+      <p>Written primarily for software engineers. Useful for anyone who works with LLMs seriously. A short final part addresses managers: how to see whether a team is producing or merely circulating.</p>
+
+      <p>What's not inside: tool reviews, model comparisons, prompt collections. Everything in this book will still be true three model generations from now.</p>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- 3. Sample chapter -->
+    <section class="variety-sample">
+      <p class="variety-bridge">Read a full chapter below — in Ukrainian, the language the book is written in first.</p>
+
+      <article class="variety-chapter variety-prose" lang="uk">
+        {{> variety-chapter}}
+      </article>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- 4. Subscribe -->
+    <section class="variety-subscribe">
+      <h2>Get new chapters and essays</h2>
+      <p>English essays land in the Requisite Variety section of my newsletter; Ukrainian chapters — in the main feed. Pick what you need.</p>
+      <div class="variety-substack">
+        <iframe src="https://kiosan.substack.com/embed" width="480" height="320" style="border: 1px solid #EEE; background: white" frameborder="0" scrolling="no" title="Subscribe to the newsletter"></iframe>
+      </div>
+    </section>
+  </main>
+
+  {{> footer}}
+
+  <script type="module" src="/js/app.js"></script>
+</body>
+</html>
