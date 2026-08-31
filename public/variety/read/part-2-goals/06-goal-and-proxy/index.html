@@ -1,0 +1,1395 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Розділ 6. Ціль та її проксі — Необхідне різноманіття: системний метод роботи з AI</title>
+    <script>
+    // Blocking: apply saved sidebar state before first paint to prevent layout jump
+    (function() {
+        var d = document.documentElement;
+        if (window.innerWidth <= 900) return;
+        var collapsed = localStorage.getItem('essay-sidebar-collapsed-system-for-ai-engineers') === '1';
+        if (collapsed) d.classList.add('sidebar-collapsed');
+        var w = localStorage.getItem('essay-sidebar-width-system-for-ai-engineers');
+        if (w && !collapsed) {
+            var px = Math.max(200, Math.min(parseInt(w, 10), 480));
+            d.style.setProperty('--sidebar-width', px + 'px');
+        }
+    })();
+    </script>
+    <style>
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v18/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuLyfAZ9hiA.woff2) format('woff2');
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v18/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuI6fAZ9hiA.woff2) format('woff2');
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v18/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuGKYAZ9hiA.woff2) format('woff2');
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v18/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuFuYAZ9hiA.woff2) format('woff2');
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/jetbrainsmono/v18/tDbY2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKxjPVmUsaaDhw.woff2) format('woff2');
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/jetbrainsmono/v18/tDbY2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKxTPVmUsaaDhw.woff2) format('woff2');
+}
+:root {
+  --md-primary: #4C662B;
+  --md-surface-tint: #4C662B;
+  --md-on-primary: #FFFFFF;
+  --md-primary-container: #CDEDA3;
+  --md-on-primary-container: #354E16;
+  --md-secondary: #586249;
+  --md-on-secondary: #FFFFFF;
+  --md-secondary-container: #DCE7C8;
+  --md-on-secondary-container: #404A33;
+  --md-tertiary: #386663;
+  --md-on-tertiary: #FFFFFF;
+  --md-tertiary-container: #BCECE7;
+  --md-on-tertiary-container: #1F4E4B;
+  --md-error: #BA1A1A;
+  --md-on-error: #FFFFFF;
+  --md-error-container: #FFDAD6;
+  --md-on-error-container: #93000A;
+  --md-background: #F9FAEF;
+  --md-on-background: #1A1C16;
+  --md-surface: #F9FAEF;
+  --md-on-surface: #1A1C16;
+  --md-surface-variant: #E1E4D5;
+  --md-on-surface-variant: #44483D;
+  --md-outline: #75796C;
+  --md-outline-variant: #C5C8BA;
+  --md-shadow: #000000;
+  --md-scrim: #000000;
+  --md-inverse-surface: #2F312A;
+  --md-inverse-on-surface: #F1F2E6;
+  --md-inverse-primary: #B1D18A;
+  --md-primary-fixed: #CDEDA3;
+  --md-on-primary-fixed: #102000;
+  --md-primary-fixed-dim: #B1D18A;
+  --md-on-primary-fixed-variant: #354E16;
+  --md-secondary-fixed: #DCE7C8;
+  --md-on-secondary-fixed: #151E0B;
+  --md-secondary-fixed-dim: #BFCBAD;
+  --md-on-secondary-fixed-variant: #404A33;
+  --md-tertiary-fixed: #BCECE7;
+  --md-on-tertiary-fixed: #00201E;
+  --md-tertiary-fixed-dim: #A0D0CB;
+  --md-on-tertiary-fixed-variant: #1F4E4B;
+  --md-surface-dim: #DADBD0;
+  --md-surface-bright: #F9FAEF;
+  --md-surface-container-lowest: #FFFFFF;
+  --md-surface-container-low: #F3F4E9;
+  --md-surface-container: #EEEFE3;
+  --md-surface-container-high: #E8E9DE;
+  --md-surface-container-highest: #E2E3D8;
+}
+pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.codehilite .hll { background-color: #ffffcc }
+.codehilite { background: #f8f8f8; }
+.codehilite .c { color: #3D7B7B; font-style: italic } /* Comment */
+.codehilite .err { border: 1px solid #F00 } /* Error */
+.codehilite .k { color: #008000; font-weight: bold } /* Keyword */
+.codehilite .o { color: #666 } /* Operator */
+.codehilite .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
+.codehilite .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
+.codehilite .cp { color: #9C6500 } /* Comment.Preproc */
+.codehilite .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
+.codehilite .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
+.codehilite .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
+.codehilite .gd { color: #A00000 } /* Generic.Deleted */
+.codehilite .ge { font-style: italic } /* Generic.Emph */
+.codehilite .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+.codehilite .gr { color: #E40000 } /* Generic.Error */
+.codehilite .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.codehilite .gi { color: #008400 } /* Generic.Inserted */
+.codehilite .go { color: #717171 } /* Generic.Output */
+.codehilite .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.codehilite .gs { font-weight: bold } /* Generic.Strong */
+.codehilite .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.codehilite .gt { color: #04D } /* Generic.Traceback */
+.codehilite .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.codehilite .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.codehilite .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.codehilite .kp { color: #008000 } /* Keyword.Pseudo */
+.codehilite .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.codehilite .kt { color: #B00040 } /* Keyword.Type */
+.codehilite .m { color: #666 } /* Literal.Number */
+.codehilite .s { color: #BA2121 } /* Literal.String */
+.codehilite .na { color: #687822 } /* Name.Attribute */
+.codehilite .nb { color: #008000 } /* Name.Builtin */
+.codehilite .nc { color: #00F; font-weight: bold } /* Name.Class */
+.codehilite .no { color: #800 } /* Name.Constant */
+.codehilite .nd { color: #A2F } /* Name.Decorator */
+.codehilite .ni { color: #717171; font-weight: bold } /* Name.Entity */
+.codehilite .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
+.codehilite .nf { color: #00F } /* Name.Function */
+.codehilite .nl { color: #767600 } /* Name.Label */
+.codehilite .nn { color: #00F; font-weight: bold } /* Name.Namespace */
+.codehilite .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.codehilite .nv { color: #19177C } /* Name.Variable */
+.codehilite .ow { color: #A2F; font-weight: bold } /* Operator.Word */
+.codehilite .w { color: #BBB } /* Text.Whitespace */
+.codehilite .mb { color: #666 } /* Literal.Number.Bin */
+.codehilite .mf { color: #666 } /* Literal.Number.Float */
+.codehilite .mh { color: #666 } /* Literal.Number.Hex */
+.codehilite .mi { color: #666 } /* Literal.Number.Integer */
+.codehilite .mo { color: #666 } /* Literal.Number.Oct */
+.codehilite .sa { color: #BA2121 } /* Literal.String.Affix */
+.codehilite .sb { color: #BA2121 } /* Literal.String.Backtick */
+.codehilite .sc { color: #BA2121 } /* Literal.String.Char */
+.codehilite .dl { color: #BA2121 } /* Literal.String.Delimiter */
+.codehilite .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.codehilite .s2 { color: #BA2121 } /* Literal.String.Double */
+.codehilite .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
+.codehilite .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.codehilite .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
+.codehilite .sx { color: #008000 } /* Literal.String.Other */
+.codehilite .sr { color: #A45A77 } /* Literal.String.Regex */
+.codehilite .s1 { color: #BA2121 } /* Literal.String.Single */
+.codehilite .ss { color: #19177C } /* Literal.String.Symbol */
+.codehilite .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.codehilite .fm { color: #00F } /* Name.Function.Magic */
+.codehilite .vc { color: #19177C } /* Name.Variable.Class */
+.codehilite .vg { color: #19177C } /* Name.Variable.Global */
+.codehilite .vi { color: #19177C } /* Name.Variable.Instance */
+.codehilite .vm { color: #19177C } /* Name.Variable.Magic */
+.codehilite .il { color: #666 } /* Literal.Number.Integer.Long */
+/* Reset & Base */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --sidebar-width: 272px;
+  --sidebar-collapsed-width: 0px;
+}
+
+html {
+  font-size: var(--md-base-size, 18px);
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--md-font-family, 'Inter', sans-serif);
+  font-weight: var(--md-body-weight, 400);
+  line-height: var(--md-line-height, 1.7);
+  color: var(--md-on-surface, #231917);
+  background: var(--md-background, #FFF8F6);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Layout */
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: var(--sidebar-width);
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--md-surface-container-low, #FFF1ED);
+  border-right: 1px solid var(--md-outline-variant, #D8C2BC);
+  z-index: 100;
+  transition: width 0.25s ease, transform 0.3s ease;
+  overflow: hidden;
+}
+
+/* Sidebar header */
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 1rem 0.75rem 1rem 1.25rem;
+  border-bottom: 1px solid var(--md-outline-variant, #D8C2BC);
+  flex-shrink: 0;
+}
+
+.sidebar-title {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--md-on-surface, #231917);
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+
+.sidebar-collapse-btn {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 0.375rem;
+  background: transparent;
+  color: var(--md-on-surface-variant, #53433F);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.sidebar-collapse-btn:hover {
+  background: var(--md-surface-container, #FCEAE5);
+  color: var(--md-on-surface, #231917);
+}
+
+/* Sidebar nav */
+.sidebar-nav {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 0.5rem 0;
+}
+
+.nav-tree {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.nav-tree .nav-tree {
+  padding-left: 0.5rem;
+  margin-left: 0.875rem;
+  border-left: 1px solid var(--md-outline-variant, #D8C2BC);
+}
+
+.nav-item {
+  position: relative;
+}
+
+.nav-item a,
+.nav-item .nav-label {
+  display: block;
+  padding: 0.375rem 0.75rem;
+  margin: 1px 0.5rem;
+  font-size: 0.8rem;
+  font-weight: 400;
+  color: var(--md-on-surface-variant, #53433F);
+  text-decoration: none;
+  transition: all 0.15s ease;
+  border-radius: 0.375rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.nav-item .nav-label {
+  color: var(--md-on-surface, #231917);
+  font-weight: 500;
+  cursor: default;
+}
+
+.nav-item a:hover {
+  color: var(--md-on-surface, #231917);
+  background: var(--md-surface-container, #FCEAE5);
+}
+
+.nav-item.active > a {
+  color: var(--md-on-primary-container, #723523);
+  font-weight: 500;
+  background: var(--md-primary-container, #FFDBD1);
+}
+
+/* Newsletter issues under a chapter */
+.nav-count {
+  display: inline-block;
+  min-width: 1.15rem;
+  padding: 0 0.35rem;
+  margin-left: 0.4rem;
+  font-size: 0.65rem;
+  line-height: 1.15rem;
+  text-align: center;
+  border-radius: 999px;
+  background: var(--md-surface-container, #FCEAE5);
+  color: var(--md-on-surface-variant, #53433F);
+  vertical-align: middle;
+}
+.nav-item.active > a .nav-count { background: rgba(255,255,255,0.6); }
+.nav-tree.nav-issues {
+  border-left-style: dashed;
+}
+.nav-issue a {
+  font-size: 0.74rem;
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+}
+.nav-issue a::before {
+  content: "✉";
+  margin-right: 0.35rem;
+  font-size: 0.7rem;
+  opacity: 0.7;
+}
+.nav-item.active-parent > a {
+  color: var(--md-on-surface, #231917);
+  font-weight: 500;
+}
+
+/* Resize handle */
+.resize-handle {
+  position: absolute;
+  top: 0;
+  right: -3px;
+  width: 6px;
+  height: 100%;
+  cursor: col-resize;
+  z-index: 110;
+  transition: background 0.15s ease;
+}
+
+.resize-handle:hover,
+.resize-handle.active {
+  background: var(--md-primary, #8F4C38);
+  opacity: 0.3;
+}
+
+body.resizing {
+  cursor: col-resize;
+  user-select: none;
+}
+
+/* Sidebar expand button (visible when collapsed, desktop) */
+.sidebar-expand-btn {
+  display: none;
+  position: fixed;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 200;
+  width: 36px;
+  height: 36px;
+  align-items: center;
+  justify-content: center;
+  background: var(--md-surface, #FFF8F6);
+  border: 1px solid var(--md-outline-variant, #D8C2BC);
+  border-radius: 0.5rem;
+  cursor: pointer;
+  color: var(--md-on-surface-variant, #53433F);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  transition: all 0.15s ease;
+}
+
+.sidebar-expand-btn:hover {
+  background: var(--md-surface-container, #FCEAE5);
+  color: var(--md-on-surface, #231917);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+/* Collapsed state (set on <html>) */
+.sidebar-collapsed .sidebar {
+  width: 0;
+  border-right-color: transparent;
+}
+
+.sidebar-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1rem;
+  padding: 0.75rem 1.25rem;
+  border-top: 1px solid var(--md-outline-variant);
+  font-size: 0.8rem;
+}
+.sidebar-link {
+  color: var(--md-on-surface-variant);
+  text-decoration: none;
+}
+.sidebar-link:hover { color: var(--md-primary); text-decoration: underline; }
+
+.sidebar-collapsed .sidebar-header,
+.sidebar-collapsed .sidebar-links,
+.sidebar-collapsed .sidebar-nav,
+.sidebar-collapsed .resize-handle {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.sidebar-collapsed .sidebar-expand-btn {
+  display: flex;
+}
+
+.sidebar-collapsed .content {
+  margin-left: 0;
+}
+
+/* Mobile sidebar toggle */
+.sidebar-toggle {
+  display: none;
+  position: fixed;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 200;
+  width: 36px;
+  height: 36px;
+  align-items: center;
+  justify-content: center;
+  background: var(--md-surface, #FFF8F6);
+  border: 1px solid var(--md-outline-variant, #D8C2BC);
+  border-radius: 0.5rem;
+  cursor: pointer;
+  color: var(--md-on-surface-variant, #53433F);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+
+.sidebar-toggle:hover {
+  background: var(--md-surface-container, #FCEAE5);
+  color: var(--md-on-surface, #231917);
+}
+
+/* Content */
+.content {
+  margin-left: var(--sidebar-width);
+  flex: 1;
+  min-width: 0;
+  transition: margin-left 0.25s ease;
+}
+
+.article {
+  max-width: var(--md-max-width, 720px);
+  margin: 0 auto;
+  padding: var(--md-content-padding, 2rem);
+  padding-top: 3rem;
+  padding-bottom: 4rem;
+}
+
+/* Typography */
+.article h1 {
+  font-size: 2.25rem;
+  font-weight: var(--md-heading-weight, 700);
+  line-height: 1.2;
+  margin-bottom: 1.5rem;
+  color: var(--md-on-surface, #231917);
+  letter-spacing: -0.02em;
+}
+
+.article h2 {
+  font-size: 1.6rem;
+  font-weight: var(--md-heading-weight, 700);
+  line-height: 1.25;
+  margin-top: 3rem;
+  margin-bottom: 1rem;
+  color: var(--md-on-surface, #231917);
+  padding-bottom: 0.4rem;
+  border-bottom: 2px solid var(--md-primary-container, #FFDBD1);
+}
+
+.article h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1.3;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+  color: var(--md-on-surface, #231917);
+}
+
+.article h4 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.article p {
+  margin-bottom: 1.25rem;
+}
+
+.article a {
+  color: var(--md-primary, #8F4C38);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.article a:hover {
+  color: var(--md-on-primary-container, #723523);
+}
+
+/* Lists */
+.article ul, .article ol {
+  margin-bottom: 1.25rem;
+  padding-left: 1.5rem;
+}
+
+.article li {
+  margin-bottom: 0.35rem;
+}
+
+.article li > ul, .article li > ol {
+  margin-top: 0.35rem;
+  margin-bottom: 0;
+}
+
+/* Blockquote */
+.article blockquote {
+  border-left: 4px solid var(--md-primary, #8F4C38);
+  background: var(--md-primary-container, #FFDBD1);
+  padding: 1rem 1.25rem;
+  margin: 1.5rem 0;
+  border-radius: 0 0.5rem 0.5rem 0;
+  color: var(--md-on-primary-container, #723523);
+}
+
+.article blockquote p:last-child {
+  margin-bottom: 0;
+}
+
+/* Code */
+.article code {
+  font-family: var(--md-font-family-mono, 'JetBrains Mono', monospace);
+  font-size: 0.85em;
+  background: var(--md-surface-container, #FCEAE5);
+  padding: 0.15em 0.4em;
+  border-radius: 0.25rem;
+}
+
+.article pre {
+  margin: 1.5rem 0;
+  border-radius: 0.75rem;
+  overflow-x: auto;
+}
+
+.article .codehilite {
+  background: var(--md-surface-container-lowest, #FFFFFF);
+  border: 1px solid var(--md-outline-variant, #D8C2BC);
+  border-radius: 0.75rem;
+  padding: 1rem 1.25rem;
+  overflow-x: auto;
+  margin: 1.5rem 0;
+}
+
+.article .codehilite code {
+  background: none;
+  padding: 0;
+  font-size: 0.82em;
+}
+
+/* Tables */
+.article table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  font-size: 0.9rem;
+}
+
+.article th {
+  background: var(--md-surface-container, #FCEAE5);
+  font-weight: 600;
+  text-align: left;
+  padding: 0.75rem 1rem;
+  border-bottom: 2px solid var(--md-outline-variant, #D8C2BC);
+}
+
+.article td {
+  padding: 0.6rem 1rem;
+  border-bottom: 1px solid var(--md-surface-container, #FCEAE5);
+}
+
+/* Anchor links */
+.anchor-link {
+  font-size: 0.8em;
+  opacity: 0;
+  margin-left: 0.5rem;
+  text-decoration: none !important;
+  transition: opacity 0.15s;
+}
+
+.article h2:hover .anchor-link,
+.article h3:hover .anchor-link,
+.article h4:hover .anchor-link {
+  opacity: 0.5;
+}
+
+/* Footnotes */
+.footnote {
+  font-size: 0.85rem;
+  color: var(--md-on-surface-variant, #53433F);
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--md-outline-variant, #D8C2BC);
+}
+
+/* Images */
+.article img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+  margin: 1rem 0;
+}
+
+/* Horizontal rule */
+.article hr {
+  border: none;
+  border-top: 2px solid var(--md-surface-container, #FCEAE5);
+  margin: 2.5rem 0;
+}
+
+/* Check Items */
+.check-items {
+  margin-top: 2.5rem;
+  padding: 1.25rem;
+  background: var(--md-surface-container-low, #FFF1ED);
+  border: 1px solid var(--md-outline-variant, #D8C2BC);
+  border-radius: 0.75rem;
+}
+
+.check-items-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.625rem;
+  border-bottom: 1px solid var(--md-outline-variant, #D8C2BC);
+}
+
+.check-items-title {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--md-on-surface, #231917);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.check-items-progress {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--md-on-surface-variant, #53433F);
+}
+
+.check-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.625rem 0.5rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  user-select: none;
+}
+
+.check-item:hover {
+  background: var(--md-surface-container, #FCEAE5);
+}
+
+.check-item-input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.check-item-box {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  margin-top: 1px;
+  border: 2px solid var(--md-outline, #85736E);
+  border-radius: 0.3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  background: transparent;
+}
+
+.check-item-icon {
+  width: 14px;
+  height: 14px;
+  opacity: 0;
+  transform: scale(0.5);
+  transition: all 0.2s ease;
+  color: var(--md-on-primary, #FFFFFF);
+}
+
+.check-item-input:checked ~ .check-item-box {
+  background: var(--md-primary, #8F4C38);
+  border-color: var(--md-primary, #8F4C38);
+}
+
+.check-item-input:checked ~ .check-item-box .check-item-icon {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.check-item-text {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--md-on-surface, #231917);
+  transition: color 0.15s ease;
+}
+
+.check-item-input:checked ~ .check-item-text {
+  color: var(--md-on-surface-variant, #53433F);
+}
+
+/* Page Navigation (Prev / Next) */
+.page-nav {
+  display: flex;
+  gap: 1rem;
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--md-outline-variant, #D8C2BC);
+}
+
+.page-nav-link {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.875rem 1rem;
+  border: 1px solid var(--md-outline-variant, #D8C2BC);
+  border-radius: 0.625rem;
+  text-decoration: none;
+  transition: all 0.15s ease;
+  min-width: 0;
+}
+
+.page-nav-link:hover {
+  border-color: var(--md-primary, #8F4C38);
+  background: var(--md-surface-container-low, #FFF1ED);
+}
+
+.page-nav-next {
+  align-items: flex-end;
+  text-align: right;
+}
+
+.page-nav-disabled {
+  visibility: hidden;
+}
+
+.page-nav-label {
+  font-size: 0.7rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--md-on-surface-variant, #53433F);
+}
+
+.page-nav-title {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--md-on-surface, #231917);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.page-nav-link:hover .page-nav-title {
+  color: var(--md-primary, #8F4C38);
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .sidebar {
+    transform: translateX(-100%);
+    width: 280px !important;
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+    box-shadow: 4px 0 24px rgba(0,0,0,0.1);
+  }
+
+  .resize-handle,
+  .sidebar-collapse-btn,
+  .sidebar-expand-btn {
+    display: none !important;
+  }
+
+  .sidebar-toggle {
+    display: flex;
+  }
+
+  /* Hide desktop collapse state on mobile */
+  .sidebar-collapsed .sidebar {
+    width: 280px !important;
+  }
+
+  .sidebar-collapsed .sidebar-header,
+  .sidebar-collapsed .sidebar-nav {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .content {
+    margin-left: 0;
+  }
+
+  .sidebar-collapsed .content {
+    margin-left: 0;
+  }
+
+  .article {
+    padding: 1.25rem;
+    padding-top: 4rem;
+  }
+
+  .article h1 {
+    font-size: 1.75rem;
+  }
+
+  .article h2 {
+    font-size: 1.35rem;
+  }
+}
+
+/* Book schemes (inline SVG figures) */
+.book-scheme {
+  margin: 2rem 0;
+  text-align: center;
+}
+
+.book-scheme svg {
+  width: 100%;
+  max-width: 640px;
+  height: auto;
+}
+
+.book-scheme figcaption {
+  font-size: 0.8rem;
+  color: var(--md-on-surface-variant, #53433F);
+  margin-top: 0.5rem;
+}
+
+/* Nav progress badges (from progress/progress.json) */
+.nav-status {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  margin-left: 0.4rem;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+
+.nav-status-done {
+  background: var(--md-primary, #8F4C38);
+}
+
+.nav-status-wip {
+  background: transparent;
+  border: 1.5px solid var(--md-primary, #8F4C38);
+  box-sizing: border-box;
+}
+
+
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <span class="sidebar-title">Необхідне різноманіття: системний метод роботи з AI</span>
+                <button class="sidebar-collapse-btn" id="sidebar-collapse" aria-label="Collapse sidebar">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="11 17 6 12 11 7"></polyline>
+                        <polyline points="18 17 13 12 18 7"></polyline>
+                    </svg>
+                </button>
+            </div>
+            <nav class="sidebar-nav">
+                <ul class="nav-tree" data-depth="0"><li class="nav-item">
+<a href="/variety/read/">Необхідне різноманіття</a>
+</li>
+<li class="nav-item">
+<a href="/variety/read/vstup/">Вступ. Чому поради не працюють, а метод — працює</a>
+</li>
+<li class="nav-item">
+<a href="/variety/read/part-1-system/">Частина I. Система, якою ти насправді керуєш</a>
+<ul class="nav-tree" data-depth="1"><li class="nav-item">
+<a href="/variety/read/part-1-system/01-tool-illusion/">Розділ 1. Ілюзія інструмента</a>
+</li>
+<li class="nav-item has-issues">
+<a href="/variety/read/part-1-system/02-requisite-variety/">Розділ 2. Закон необхідного різноманіття<span class="nav-status nav-status-wip" title="Текст ✓ · Рев'ю ✓ · Полірування ✓ · Схеми ✓"></span><span class="nav-count" title="3">3</span></a>
+</li>
+<li class="nav-item">
+<a href="/variety/read/part-1-system/03-boundaries-context/">Розділ 3. Межі та контекст</a>
+</li>
+<li class="nav-item">
+<a href="/variety/read/part-1-system/04-emergence/">Розділ 4. Емерджентність: що вміє пара, чого не вміє ніхто окремо</a>
+</li>
+<li class="nav-item">
+<a href="/variety/read/part-1-system/05-human-reference/">Розділ 5. Людина як точка відліку</a>
+</li></ul>
+</li>
+<li class="nav-item">
+<a href="/variety/read/part-2-goals/">Частина II. Цілі та смак: що ти насправді просиш</a>
+<ul class="nav-tree" data-depth="1"><li class="nav-item active">
+<a href="/variety/read/part-2-goals/06-goal-and-proxy/">Розділ 6. Ціль та її проксі<span class="nav-status nav-status-wip" title="Текст ✓ · Рев'ю ✓ · Полірування ✓ · Схеми ✓"></span></a>
+</li>
+<li class="nav-item">
+<a href="/variety/read/part-2-goals/07-goal-space/">Розділ 7. Простір цілей і декомпозиція</a>
+</li>
+<li class="nav-item">
+<a href="/variety/read/part-2-goals/08-variety-vs-slop/">Розділ 8. Різноманіття проти слопу</a>
+</li>
+<li class="nav-item">
+<a href="/variety/read/part-2-goals/09-criteria-values/">Розділ 9. Критерії та цінності</a>
+</li></ul>
+</li>
+<li class="nav-item">
+<a href="/variety/read/part-3-activity/">Частина III. Діяльність: метод щоденної роботи</a>
+<ul class="nav-tree" data-depth="1"><li class="nav-item">
+<a href="/variety/read/part-3-activity/10-activity-decomposition/">Розділ 10. Складові діяльності<span class="nav-status nav-status-wip" title="Текст ✓ · Рев'ю: в роботі"></span></a>
+</li>
+<li class="nav-item">
+<a href="/variety/read/part-3-activity/11-product-beyond-artifact/">Розділ 11. Продукт ширший за артефакт</a>
+</li>
+<li class="nav-item">
+<a href="/variety/read/part-3-activity/12-normative-base/">Розділ 12. Нормативна база</a>
+</li>
+<li class="nav-item">
+<a href="/variety/read/part-3-activity/13-control-degradation/">Розділ 13. Контроль, керованість, деградація</a>
+</li>
+<li class="nav-item">
+<a href="/variety/read/part-3-activity/14-session-to-agent/">Розділ 14. Від сесії до агента</a>
+</li></ul>
+</li>
+<li class="nav-item">
+<a href="/variety/read/part-4-development/">Частина IV. Розвиток: як росте практика</a>
+<ul class="nav-tree" data-depth="1"><li class="nav-item">
+<a href="/variety/read/part-4-development/15-waves-of-development/">Розділ 15. Хвилі розвитку</a>
+</li>
+<li class="nav-item">
+<a href="/variety/read/part-4-development/16-heredity/">Розділ 16. Спадковість: що переносити, а що лишати</a>
+</li>
+<li class="nav-item">
+<a href="/variety/read/part-4-development/17-team/">Розділ 17. Команда</a>
+</li></ul>
+</li>
+<li class="nav-item">
+<a href="/variety/read/part-5-builders/">Частина V. Для тих, хто будує сам</a>
+<ul class="nav-tree" data-depth="1"><li class="nav-item">
+<a href="/variety/read/part-5-builders/18-borrowed-variety/">Розділ 18. Позичене різноманіття</a>
+</li>
+<li class="nav-item">
+<a href="/variety/read/part-5-builders/19-four-tools-four-stories/">Розділ 19. Чотири інструменти, чотири історії</a>
+</li></ul>
+</li>
+<li class="nav-item">
+<a href="/variety/read/part-6-management/">Частина VI. Для тих, хто керує</a>
+<ul class="nav-tree" data-depth="1"><li class="nav-item">
+<a href="/variety/read/part-6-management/20-circulation-generation/">Розділ 20. Циркуляція і генерація: головний баланс менеджера</a>
+</li>
+<li class="nav-item">
+<a href="/variety/read/part-6-management/21-questions-not-control/">Розділ 21. Питання замість контролю</a>
+</li></ul>
+</li>
+<li class="nav-item">
+<a href="/variety/read/vysnovok/">Висновок. Метод на одній сторінці</a>
+</li>
+<li class="nav-item">
+<a href="/variety/read/appendices/">Додатки</a>
+<ul class="nav-tree" data-depth="1"><li class="nav-item">
+<a href="/variety/read/appendices/a-self-check/">Додаток А. Чеклист самооцінки практики</a>
+</li>
+<li class="nav-item">
+<a href="/variety/read/appendices/b-scenarios/">Додаток Б. Розібрані сценарії інженера</a>
+</li>
+<li class="nav-item">
+<a href="/variety/read/appendices/c-no-code/">Додаток В. «У вашому ремеслі»</a>
+</li>
+<li class="nav-item">
+<a href="/variety/read/appendices/d-sources/">Додаток Г. Наукова основа та джерела</a>
+</li></ul>
+</li>
+<li class="nav-item">
+<a href="/variety/read/newsletter/">Розсилка</a>
+<ul class="nav-tree" data-depth="1"><li class="nav-item">
+<a href="/variety/read/newsletter/001-shepherd-without-dog/">Пастух без вівчарки</a>
+</li>
+<li class="nav-item">
+<a href="/variety/read/newsletter/002-one-week-two-sessions/">Один тиждень, дві сесії</a>
+</li>
+<li class="nav-item">
+<a href="/variety/read/newsletter/003-megaprompt-is-surrender/">Мегапромпт — це капітуляція</a>
+</li></ul>
+</li></ul>
+            </nav>
+            <div class="sidebar-links"><a class="sidebar-link sidebar-link-lang" href="/variety/read/en/" lang="en">English</a>
+<a class="sidebar-link sidebar-link-newsletter" href="https://kiosan.substack.com" target="_blank" rel="noopener">Розсилка ↗</a></div>
+            <div class="resize-handle" id="resize-handle"></div>
+        </aside>
+        <button class="sidebar-expand-btn" id="sidebar-expand" aria-label="Expand sidebar">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+        </button>
+        <button class="sidebar-toggle" id="sidebar-toggle" aria-label="Toggle sidebar">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+        </button>
+        <main class="content">
+            <article class="article">
+                <h1 id="6">Розділ 6. Ціль та її проксі<a class="anchor-link" href="#6" title="Permanent link">&para;</a></h1>
+<p>«Полагодь тест, який падає», — написав я і пішов по каву. Повернувся до зеленого прогону: модель закоментувала перевірку, що падала, і акуратно підписала — «тимчасово вимкнено». Формально запит виконано бездоганно. По суті сталося рівно те, чого я боявся.</p>
+<p>Хто винен? Ніхто. Просто задача в цій історії існувала у трьох версіях, а я поводився так, ніби вона одна.</p>
+<h2 id="_1">Три версії задачі<a class="anchor-link" href="#_1" title="Permanent link">&para;</a></h2>
+<p>Чого ви хочете. Що ви написали. Що оптимізує система.</p>
+<p>Перше живе у вашій голові: «код має бути коректним, і тест має це підтверджувати». Друге — у полі вводу: «полагодь тест, який падає». Третє — всередині процесу: модель шукає найправдоподібнішу відповідь на друге, а не на перше. Вона першого ніколи не бачила.</p>
+<p>Між цими трьома версіями — дві відстані, і в них різна природа. Перша відстань — ваша: скільки цілі загубилося при записі. Друга — системна: куди процес тягне те, що ви записали. Розчарування наприкінці сесії — сума обох відстаней. І це ще кращий випадок.</p>
+<p>У гіршому вони множаться: коли проксі хибна, система щосили оптимізує не те — і що старанніше вона працює, то далі ви від цілі. Мій зелений тест — не сума, а добуток. Скорочуються ці відстані теж по-різному.</p>
+<p>Формулювання, яке стоїть між вами і системою, я далі називатиму <strong>проксі</strong>: це не ціль, це її представник. Представник може бути кращим або гіршим, але він ніколи не дорівнює тому, кого представляє.</p>
+<figure class="book-scheme">
+<svg viewBox="0 0 640 235" role="img" aria-label="Три версії задачі і дві відстані між ними">
+  <defs>
+    <marker id="s1-gray" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#85736E"/></marker>
+  </defs>
+  <rect x="0" y="0" width="640" height="235" fill="#FFFFFF"/>
+  <rect x="40" y="40" width="160" height="70" rx="10" fill="#FFDBD1" stroke="#8F4C38" stroke-width="1.5"/>
+  <text x="120" y="70" text-anchor="middle" font-size="14" font-weight="600" fill="#231917">ЦІЛЬ</text>
+  <text x="120" y="92" text-anchor="middle" font-size="11.5" fill="#53433F">у голові</text>
+  <rect x="240" y="40" width="160" height="70" rx="10" fill="#F5E1A7" stroke="#85736E" stroke-width="1.5"/>
+  <text x="320" y="70" text-anchor="middle" font-size="14" font-weight="600" fill="#231917">ПРОКСІ</text>
+  <text x="320" y="92" text-anchor="middle" font-size="11.5" fill="#53433F">у полі вводу</text>
+  <rect x="440" y="40" width="160" height="70" rx="10" fill="#F1DFDA" stroke="#85736E" stroke-width="1.5"/>
+  <text x="520" y="70" text-anchor="middle" font-size="14" font-weight="600" fill="#231917">ОПТИМІЗАЦІЯ</text>
+  <text x="520" y="92" text-anchor="middle" font-size="11.5" fill="#53433F">у процесі</text>
+  <line x1="204" y1="75" x2="236" y2="75" stroke="#85736E" stroke-width="1.5" marker-end="url(#s1-gray)"/>
+  <line x1="404" y1="75" x2="436" y2="75" stroke="#85736E" stroke-width="1.5" marker-end="url(#s1-gray)"/>
+  <line x1="220" y1="112" x2="220" y2="132" stroke="#D8C2BC" stroke-width="1.5"/>
+  <text x="220" y="152" text-anchor="middle" font-size="12" font-weight="600" fill="#723523">відстань 1 — ваша</text>
+  <text x="220" y="170" text-anchor="middle" font-size="11" fill="#53433F">втрати при записі</text>
+  <line x1="420" y1="112" x2="420" y2="132" stroke="#D8C2BC" stroke-width="1.5"/>
+  <text x="420" y="152" text-anchor="middle" font-size="12" font-weight="600" fill="#723523">відстань 2 — системна</text>
+  <text x="420" y="170" text-anchor="middle" font-size="11" fill="#53433F">тяга до правдоподібного</text>
+  <text x="320" y="212" text-anchor="middle" font-size="12" fill="#8F4C38">хибна проксі: відстані не додаються — множаться</text>
+</svg>
+<figcaption>Схема 6.1. Три версії задачі і дві відстані між ними</figcaption>
+</figure>
+
+<h2 id="_2">Куди тяжіє машина<a class="anchor-link" href="#_2" title="Permanent link">&para;</a></h2>
+<p>У розділі 2 ми рахували різноманіття — то було перше спостереження про системи. Ось друге: залишена без нагляду, кожна система з&rsquo;їжджає до власної цілі — до стану, який їй «зручний». Це не зловмисність. Це те, куди веде її конструкція, коли ззовні ніхто не тримає.</p>
+<p>Куди зручно моделі? До правдоподібного. Вона видає найправдоподібніше продовження розмови — і «тест зелений, задачу закрито» виглядає правдоподібнішим завершенням, ніж «я розібрався і маю для вас погану новину про ваш код». Правильна відповідь і правдоподібна відповідь часто збігаються — на цьому збігу все й тримається. Але оптимізує вона друге. Завжди друге.</p>
+<p>Це не примха — це конструкція. LLM — статистична модель: кожне наступне слово вона обирає з розподілу ймовірних продовжень, а найгустіше місце будь-якого розподілу — середина, типове, багато разів бачене. Уявіть дзвін нормального розподілу. Без вашого втручання відповідь падає в його верхівку — як кулька скочується на дно лунки. Не через «лінь»: це найстійкіший стан системи. Тут за статистикою проступає загальніша закономірність: будь-яка система, залишена сама на себе, з&rsquo;їжджає до свого найстійкішого стану — модель просто найчистіший її приклад. Скільки це коштує якості і як із середини розподілу виростає слоп — розмова розділу 8.</p>
+<p>Тому будь-яке формулювання виконується буквально: <strong>внутрішня ціль</strong> системи заповнює все, чого у проксі не сказано. Ви не написали «перевірка має лишитися» — і це місце заповнилося найзручнішим: перевірка зникла. Менеджери знають цей ефект як закон Гудхарта: коли міра стає ціллю, вона перестає бути мірою. Наша пара — його найшвидша демонстрація: від міри до її руйнування минає одна сесія.</p>
+<p>І ще одна ланка, яку легко не помітити. Між вами і моделлю майже завжди стоїть <strong>оболонка</strong> — чат, агент у редакторі, корпоративний асистент. Вона тихо працює з вашим формулюванням: додає приховані інструкції, підкладає контекст, обрізає і форматує — тобто тримає власні підсилювачі й послаблювачі, про які ви не домовлялися. Часто це на вашу користь: оболонка вгадує вашу версію задачі краще, ніж похапцем написане речення, і відстань скорочується.</p>
+<p>Але зауважте, що сталося: ваша версія задачі загорнулась у чужу проксі. Добре, якщо оболонка наближає до того, що у вас у голові. А якщо ні? Тоді відстань росте в місці, якого ви не бачите: ви правите своє формулювання, а зсув сидить в оболонці. Це різноманіття грає на вашому боці, але воно приховане. Оболонка — повноцінний учасник зв&rsquo;язки, тому час від часу питайте не лише «що я написав», а й «що з цього насправді дійшло до моделі».</p>
+<figure class="book-scheme">
+<svg viewBox="0 0 640 220" role="img" aria-label="Оболонка загортає вашу проксі у власну, приховану">
+  <defs>
+    <marker id="s2-gray" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#85736E"/></marker>
+  </defs>
+  <rect x="0" y="0" width="640" height="220" fill="#FFFFFF"/>
+  <rect x="30" y="45" width="110" height="60" rx="10" fill="#FFDBD1" stroke="#8F4C38" stroke-width="1.5"/>
+  <text x="85" y="72" text-anchor="middle" font-size="13" font-weight="600" fill="#231917">ЦІЛЬ</text>
+  <text x="85" y="92" text-anchor="middle" font-size="10.5" fill="#53433F">у голові</text>
+  <rect x="170" y="45" width="120" height="60" rx="10" fill="#F5E1A7" stroke="#85736E" stroke-width="1.5"/>
+  <text x="230" y="72" text-anchor="middle" font-size="13" font-weight="600" fill="#231917">ВАША ПРОКСІ</text>
+  <text x="230" y="92" text-anchor="middle" font-size="10.5" fill="#53433F">ви її бачите</text>
+  <rect x="320" y="25" width="170" height="110" rx="10" fill="#FCEAE5" stroke="#85736E" stroke-width="1.5" stroke-dasharray="6 4"/>
+  <text x="405" y="48" text-anchor="middle" font-size="13" font-weight="600" fill="#723523">ОБОЛОНКА</text>
+  <text x="405" y="70" text-anchor="middle" font-size="10.5" fill="#53433F">приховані інструкції</text>
+  <text x="405" y="88" text-anchor="middle" font-size="10.5" fill="#53433F">підкладений контекст</text>
+  <text x="405" y="106" text-anchor="middle" font-size="10.5" fill="#53433F">формати й обрізання</text>
+  <text x="405" y="126" text-anchor="middle" font-size="10" fill="#85736E">ви цього не бачите</text>
+  <rect x="520" y="45" width="95" height="60" rx="10" fill="#F1DFDA" stroke="#85736E" stroke-width="1.5"/>
+  <text x="567" y="72" text-anchor="middle" font-size="13" font-weight="600" fill="#231917">МОДЕЛЬ</text>
+  <text x="567" y="92" text-anchor="middle" font-size="10.5" fill="#53433F">бачить чужу</text>
+  <line x1="144" y1="75" x2="166" y2="75" stroke="#85736E" stroke-width="1.5" marker-end="url(#s2-gray)"/>
+  <line x1="294" y1="75" x2="316" y2="75" stroke="#85736E" stroke-width="1.5" marker-end="url(#s2-gray)"/>
+  <line x1="494" y1="75" x2="516" y2="75" stroke="#85736E" stroke-width="1.5" marker-end="url(#s2-gray)"/>
+  <text x="320" y="185" text-anchor="middle" font-size="12" fill="#8F4C38">добре, якщо оболонка наближає до цілі. А якщо ні — зсув сидить там, куди ви не дивитесь</text>
+</svg>
+<figcaption>Схема 6.2. Оболонка: ви бачите свою проксі, модель — чужу</figcaption>
+</figure>
+
+<h2 id="_3">Столяр і стіл<a class="anchor-link" href="#_3" title="Permanent link">&para;</a></h2>
+<p>Прийдіть до столяра і скажіть: «Зробіть мені стіл».</p>
+<p>У столярні не порожнеча — у ній свій контекст. Під рукою заготовки дуба, у кутку фрезер, яким майстер любить працювати, а в руках — пам&rsquo;ять про сотню столів, які він уже зробив. Через місяць ви отримаєте добротний стіл: середній стіл цієї майстерні. Столяр не лінувався і не халтурив. Він зробив свою класику — бо ви не дали йому причин змінювати її.</p>
+<p>А тепер інший замовник: «Обідній стіл на шістьох, кухня два на три, діти малі — без гострих кутів». Той самий майстер, ті самі руки. Але тепер він шукає рішення всередині ваших меж, а не йде за звичною простотою. І помітьте: розміри кухні й округлі кути — це вже готові критерії приймання. Замовник не вигадував їх окремо — щойно він назвав ціль уголос, критерії з&rsquo;явилися з неї самі.</p>
+<p>Модель — столяр із незрівнянно більшою статистикою. Що менше цілі в замовленні, то більше статистики в результаті.</p>
+<h2 id="_4">Ціль перед задачею<a class="anchor-link" href="#_4" title="Permanent link">&para;</a></h2>
+<p>Метод цього розділу — короткий опис цілі, який ви пишете до формулювання задачі. Собі, не моделі.</p>
+<p><strong>Опис цілі.</strong> «Що я хочу отримати і як перевірю, що отримав». Десять секунд. Для того вечора: «Хочу знати, чому падає тест; перевірка поведінки має лишитися; якщо баг у коді — виправити код». Порівняйте з «полагодь тест» — відстань між ними забрала мій вечір.</p>
+<p><strong>Тест буквальності.</strong> Перечитайте формулювання і спитайте: якщо це виконають рівно як написано — буквально, без жодної телепатії — я буду задоволений? Якщо ні, ви щойно зекономили цикл: перепишіть проксі зараз, а не після результату. Це найдешевша перевірка в усій книжці.</p>
+<p><strong>Критерії з цілі.</strong> Названа ціль сама розсипається на критерії приймання — як розміри кухні у столяра. Не доведеться вигадувати список перевірок: він уже сидить у «як перевірю». Куди ці критерії еволюціонують далі — тема розділу 9.</p>
+<figure class="book-scheme">
+<svg viewBox="0 0 640 225" role="img" aria-label="Названа ціль розсипається на критерії приймання">
+  <defs>
+    <marker id="s3-gray" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#85736E"/></marker>
+  </defs>
+  <rect x="0" y="0" width="640" height="225" fill="#FFFFFF"/>
+  <rect x="150" y="25" width="340" height="66" rx="10" fill="#F5E1A7" stroke="#85736E" stroke-width="1.5"/>
+  <text x="320" y="50" text-anchor="middle" font-size="13" font-weight="600" fill="#231917">НАЗВАНА ЦІЛЬ</text>
+  <text x="320" y="72" text-anchor="middle" font-size="11.5" fill="#53433F">«обідній стіл на шістьох, кухня два на три, малі діти»</text>
+  <line x1="230" y1="93" x2="135" y2="130" stroke="#85736E" stroke-width="1.5" marker-end="url(#s3-gray)"/>
+  <line x1="320" y1="93" x2="320" y2="130" stroke="#85736E" stroke-width="1.5" marker-end="url(#s3-gray)"/>
+  <line x1="410" y1="93" x2="505" y2="130" stroke="#85736E" stroke-width="1.5" marker-end="url(#s3-gray)"/>
+  <rect x="45" y="136" width="180" height="44" rx="22" fill="#FFDBD1" stroke="#8F4C38" stroke-width="1.5"/>
+  <text x="135" y="163" text-anchor="middle" font-size="11.5" fill="#231917">влазить у кухню 2×3</text>
+  <rect x="230" y="136" width="180" height="44" rx="22" fill="#FFDBD1" stroke="#8F4C38" stroke-width="1.5"/>
+  <text x="320" y="163" text-anchor="middle" font-size="11.5" fill="#231917">шість місць за столом</text>
+  <rect x="415" y="136" width="180" height="44" rx="22" fill="#FFDBD1" stroke="#8F4C38" stroke-width="1.5"/>
+  <text x="505" y="163" text-anchor="middle" font-size="11.5" fill="#231917">без гострих кутів</text>
+  <text x="320" y="210" text-anchor="middle" font-size="12" fill="#8F4C38">критерії приймання не вигадуються окремо — випадають із цілі самі</text>
+</svg>
+<figcaption>Схема 6.3. Названа ціль сама розсипається на критерії</figcaption>
+</figure>
+
+<p>Опис цілі — не магія. Він скорочує першу відстань — між тим, що в голові, і записом. А заразом дає вам інструмент проти другої: тепер є з чим порівнювати те, що система оптимізувала.</p>
+<p>Десять років я раджу інженерам писати — блог, розсилку, хоча б робочі нотатки. Раніше це була порада для кар&rsquo;єри: помітність, власний голос. Тепер це професійна вимога без жодних лапок: робота з моделлю — це формулювання думок текстом, і перша відстань — між головою і записом — скорочується тільки тренуванням. Хто роками вів розсилку, сідає за промпт із натренованим м&rsquo;язом. Хто ні — тренуватиме його тепер, на живих задачах.</p>
+<h2 id="_5">Той самий тест, друга спроба<a class="anchor-link" href="#_5" title="Permanent link">&para;</a></h2>
+<p>Повертаюся до того вечора — тепер за методом.</p>
+<p>Спершу опис цілі, собі: хочу знати, чому падає тест; перевірка поведінки має лишитися; якщо баг у коді — виправити код. Тепер формулювання, моделі: «Тест X падає. З&rsquo;ясуй причину. Тест перевіряє поведінку Y — ця перевірка має лишитися. Якщо причина в коді — виправ код і поясни, що зламалося. Якщо тест застарів — не чіпай, а скажи, чому вважаєш його застарілим». Дві хвилини замість десяти секунд.</p>
+<p>Відповідь: тест залежав від поточної дати і почав падати з початком нового кварталу. Модель показала рядок і запропонувала зафіксувати дату в тесті. А окремо зауважила, що функція біля цього рядка обробляє межу кварталу підозріло. Той самий інструмент, який уранці ховав перевірку в коментар, увечері знайшов суміжний баг.</p>
+<p>Різниця не в моделі і не в моєму настрої. У першій сесії її внутрішня ціль заповнювала порожнє місце замість мене. У другій порожнього місця не було.</p>
+<h2 id="_6">Рулетка формулювань<a class="anchor-link" href="#_6" title="Permanent link">&para;</a></h2>
+<p>Тепер анти-патерн — і він підступніший за ранковий зелений тест.</p>
+<p>Виглядає так: результат «не те» — людина переписує промпт. Знову «не те» — переписує ще раз. П&rsquo;ятнадцята ітерація за вечір, формулювання обросло уточненнями, роздратування росте. Виглядає як наполеглива робота.</p>
+<p>Але є пастка. Усі п&rsquo;ятнадцять ітерацій крутили проксі — а перша відстань стояла на місці, бо ціль так і не була названа, навіть собі. Розпізнати цей стан просто: спитайте себе, чим саме «не те» поточне рішення. Якщо відповідь — «не знаю, але відчуваю», ви не наближаєтесь до цілі. Ви блукаєте навколо точки, якій не дали координат, і жодна кількість ітерацій це не виправить: випадковий перебір програє гарантовано — питання лише, на якій ітерації ви це помітите.</p>
+<p>Вихід — той самий опис цілі: зупинитися і назвати її. Іноді на цьому місці з&rsquo;ясовується неприємне: ви самі не знаєте, чого хочете. Це найкорисніший результат вечора — тепер це видно, і працювати треба з цим, а не з промптом.</p>
+<h2 id="_7">Відстань масштабується<a class="anchor-link" href="#_7" title="Permanent link">&para;</a></h2>
+<p>Відстань між ціллю і проксі не зникає з масштабом — вона росте. Агент, якому дали проксі «закрити тікет», оптимізує закриття тікета всіма доступними шляхами — про конструкцію, яка це тримає, ітиметься в розділі 14. Команда, якій поставили проксі «більше сторі-поїнтів за спринт», за пів року оптимізує оцінювання, а не продукт, — це вже частина V. Механіка скрізь одна, змінюється лише ціна порожнього місця в цілі.</p>
+<h2 id="_8">У вашому ремеслі<a class="anchor-link" href="#_8" title="Permanent link">&para;</a></h2>
+<p>Три версії задачі є в будь-якому ремеслі — міняється лише матеріал.</p>
+<p><strong>Текст.</strong> Редактор пише: «скороти текст удвічі». Система ріже те, що найлегше різати, — приклади і зв&rsquo;язки — і формально вкладається. Ціль «щоб читалося за п&rsquo;ять хвилин без втрати головного аргументу» дає зовсім інше скорочення — і критерій перевірки в ній уже є.</p>
+<p><strong>Аналітика.</strong> Аналітик просить модель «зробити огляд ринку», не сказавши, яке рішення огляд має підтримати чи спростувати, — і отримує найправдоподібніший у світі огляд, який не підтримує нічого. Опис цілі тут — одне речення: «вирішуємо, чи заходити в сегмент X; огляд має дати аргументи за і проти».</p>
+<p><strong>Дизайн.</strong> «Зроби презентацію сучаснішою» — запрошення до чужої статистики. «Презентація для ради директорів, десять хвилин, одна думка на слайд» — замовлення чітке.</p>
+<hr />
+<p>Наостанок — три питання до вашої практики.</p>
+<p>— Згадайте останнє «не те» від моделі: ви можете назвати, чим саме воно «не те» — чи тільки відчуваєте?</p>
+<p>— Візьміть свій сьогоднішній промпт і застосуйте тест буквальності: якщо його виконають дослівно — ви задоволені?</p>
+<p>— І глибше: скільки з ваших задач цього тижня мали названу ціль — а скільки були проксі, які ви сформулювали, не спитавши себе, навіщо?</p>
+                <div class="check-items" data-page-key="part-2-goals/06-goal-and-proxy"><div class="check-items-header"><span class="check-items-title">Key Takeaways</span><span class="check-items-progress"></span></div><label class="check-item" data-index="0"><input type="checkbox" class="check-item-input" data-index="0"><span class="check-item-box"><svg class="check-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span><span class="check-item-text">Задача існує у трьох версіях: у голові, у формулюванні, в оптимізації системи. Розчарування живе у відстані між ними.</span></label>
+<label class="check-item" data-index="1"><input type="checkbox" class="check-item-input" data-index="1"><span class="check-item-box"><svg class="check-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span><span class="check-item-text">У системи є внутрішня ціль: модель тяжіє до правдоподібного, а не до правильного.</span></label>
+<label class="check-item" data-index="2"><input type="checkbox" class="check-item-input" data-index="2"><span class="check-item-box"><svg class="check-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span><span class="check-item-text">Фіксуй ціль до формулювання задачі: короткий опис — що хочу отримати і як перевірю.</span></label>
+<label class="check-item" data-index="3"><input type="checkbox" class="check-item-input" data-index="3"><span class="check-item-box"><svg class="check-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span><span class="check-item-text">Тест буквальності: якщо зроблять рівно як написано — ти задоволений?</span></label>
+<label class="check-item" data-index="4"><input type="checkbox" class="check-item-input" data-index="4"><span class="check-item-box"><svg class="check-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span><span class="check-item-text">Поки ціль не названа, ітерації промпту — блукання навколо неназваної точки.</span></label></div>
+                <nav class="page-nav"><a class="page-nav-link page-nav-prev" href="/variety/read/part-2-goals/"><span class="page-nav-label">Previous</span><span class="page-nav-title">Частина II. Цілі та смак: що ти насправді просиш</span></a>
+<a class="page-nav-link page-nav-next" href="/variety/read/part-2-goals/07-goal-space/"><span class="page-nav-label">Next</span><span class="page-nav-title">Розділ 7. Простір цілей і декомпозиція</span></a></nav>
+            </article>
+        </main>
+    </div>
+    <script>
+var SIDEBAR_WIDTH_KEY = 'essay-sidebar-width-system-for-ai-engineers';
+var SIDEBAR_COLLAPSED_KEY = 'essay-sidebar-collapsed-system-for-ai-engineers';
+var ESSAY_LOCAL_MODE = false;
+document.addEventListener('DOMContentLoaded', function() {
+  var sidebar = document.getElementById('sidebar');
+  var handle = document.getElementById('resize-handle');
+  var collapseBtn = document.getElementById('sidebar-collapse');
+  var expandBtn = document.getElementById('sidebar-expand');
+  var mobileToggle = document.getElementById('sidebar-toggle');
+  var html = document.documentElement;
+  var MIN_WIDTH = 200;
+  var MAX_WIDTH = 480;
+
+  // Desktop: collapse / expand
+  function setCollapsed(collapsed) {
+    if (collapsed) {
+      html.classList.add('sidebar-collapsed');
+    } else {
+      html.classList.remove('sidebar-collapsed');
+    }
+    if (typeof SIDEBAR_COLLAPSED_KEY !== 'undefined') {
+      localStorage.setItem(SIDEBAR_COLLAPSED_KEY, collapsed ? '1' : '0');
+    }
+  }
+
+  if (collapseBtn) {
+    collapseBtn.addEventListener('click', function() {
+      setCollapsed(true);
+    });
+  }
+
+  if (expandBtn) {
+    expandBtn.addEventListener('click', function() {
+      setCollapsed(false);
+    });
+  }
+
+  // Mobile: slide-in toggle
+  if (mobileToggle && sidebar) {
+    mobileToggle.addEventListener('click', function() {
+      sidebar.classList.toggle('open');
+    });
+
+    document.addEventListener('click', function(e) {
+      if (sidebar.classList.contains('open') &&
+          !sidebar.contains(e.target) &&
+          !mobileToggle.contains(e.target)) {
+        sidebar.classList.remove('open');
+      }
+    });
+  }
+
+  // Resizable sidebar (desktop only, when not collapsed)
+  if (handle && sidebar) {
+    var startX, startWidth;
+
+    handle.addEventListener('mousedown', function(e) {
+      if (html.classList.contains('sidebar-collapsed')) return;
+      e.preventDefault();
+      startX = e.clientX;
+      startWidth = sidebar.getBoundingClientRect().width;
+      handle.classList.add('active');
+      document.body.classList.add('resizing');
+
+      document.addEventListener('mousemove', onMouseMove);
+      document.addEventListener('mouseup', onMouseUp);
+    });
+
+    function onMouseMove(e) {
+      var newWidth = startWidth + (e.clientX - startX);
+      newWidth = Math.max(MIN_WIDTH, Math.min(newWidth, MAX_WIDTH));
+      html.style.setProperty('--sidebar-width', newWidth + 'px');
+    }
+
+    function onMouseUp() {
+      handle.classList.remove('active');
+      document.body.classList.remove('resizing');
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
+
+      var currentWidth = sidebar.getBoundingClientRect().width;
+      if (typeof SIDEBAR_WIDTH_KEY !== 'undefined') {
+        localStorage.setItem(SIDEBAR_WIDTH_KEY, Math.round(currentWidth));
+      }
+    }
+  }
+
+  // --- Check Items persistence ---
+  var checkContainers = document.querySelectorAll('.check-items');
+  if (checkContainers.length) {
+    initCheckItems(checkContainers);
+  }
+
+  function initCheckItems(containers) {
+    var isLocal = (typeof ESSAY_LOCAL_MODE !== 'undefined') && ESSAY_LOCAL_MODE;
+    var essayId = getMeta('essay-id');
+    var pageId = getMeta('essay-page-id');
+    var csrf = getMeta('csrf-token');
+
+    containers.forEach(function(container) {
+      var pageKey = container.getAttribute('data-page-key');
+      var inputs = container.querySelectorAll('.check-item-input');
+      var storageKey = 'essay-checks-' + pageKey;
+
+      // Load saved state
+      loadChecks(storageKey, essayId, pageId, csrf, isLocal, function(checked) {
+        if (checked && checked.length) {
+          inputs.forEach(function(input) {
+            var idx = parseInt(input.getAttribute('data-index'), 10);
+            if (checked.indexOf(idx) !== -1) {
+              input.checked = true;
+            }
+          });
+        }
+        updateProgress(container, inputs);
+      });
+
+      // Listen for changes
+      inputs.forEach(function(input) {
+        input.addEventListener('change', function() {
+          var checked = [];
+          inputs.forEach(function(inp) {
+            if (inp.checked) checked.push(parseInt(inp.getAttribute('data-index'), 10));
+          });
+          saveChecks(storageKey, essayId, pageId, csrf, isLocal, checked);
+          updateProgress(container, inputs);
+        });
+      });
+    });
+  }
+
+  function updateProgress(container, inputs) {
+    var total = inputs.length;
+    var checked = 0;
+    inputs.forEach(function(inp) { if (inp.checked) checked++; });
+    var el = container.querySelector('.check-items-progress');
+    if (el) {
+      el.textContent = checked + ' / ' + total;
+    }
+  }
+
+  function getMeta(name) {
+    var el = document.querySelector('meta[name="' + name + '"]');
+    return el ? el.content : null;
+  }
+
+  function loadChecks(storageKey, essayId, pageId, csrf, isLocal, callback) {
+    if (isLocal || !essayId) {
+      var raw = localStorage.getItem(storageKey);
+      callback(raw ? JSON.parse(raw) : []);
+      return;
+    }
+    var url = '/api/dynamic_data?essay_id=' + essayId + '&key=' + encodeURIComponent(storageKey);
+    if (pageId) url += '&page_id=' + pageId;
+    fetch(url, { headers: csrf ? { 'X-CSRF-Token': csrf } : {} })
+      .then(function(r) { return r.json(); })
+      .then(function(d) { callback(d.data ? d.data.checked : []); })
+      .catch(function() { callback([]); });
+  }
+
+  function saveChecks(storageKey, essayId, pageId, csrf, isLocal, checked) {
+    if (isLocal || !essayId) {
+      localStorage.setItem(storageKey, JSON.stringify(checked));
+      return;
+    }
+    var body = {
+      essay_id: essayId,
+      key: storageKey,
+      data: { checked: checked }
+    };
+    if (pageId) body.page_id = pageId;
+    fetch('/api/dynamic_data', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-Token': csrf || ''
+      },
+      body: JSON.stringify(body)
+    }).catch(function() {});
+  }
+});
+
+
+    </script>
+</body>
+</html>
