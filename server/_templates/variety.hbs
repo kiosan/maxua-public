@@ -16,7 +16,13 @@
 </head>
 <body>
   <main class="variety-page">
-    {{> profile-header activePage="variety"}}
+    <header class="home-hero" style="display:flex;align-items:center;gap:1rem;margin:2.5rem 0 0.5rem;">
+      <a href="/"><img src="/images/me.jpeg" alt="Sasha Bondar" style="width:56px;height:56px;border-radius:50%;object-fit:cover;"></a>
+      <div>
+        <a href="/" style="font-weight:600;text-decoration:none;">Sasha Bondar</a>
+        <div style="font-size:0.85rem;color:var(--color-secondary-text,#666);">Engineer and entrepreneur</div>
+      </div>
+    </header>
 
     <!-- 1. Hero -->
     <header class="variety-hero">
@@ -72,7 +78,6 @@
     </section>
   </main>
 
-  {{> footer}}
 
   <script type="module" src="/js/app.js"></script>
 </body>
