@@ -283,7 +283,10 @@ app.get('/t/:topic', async (req, res) => {
 });
 
 // Set up SSR routes using the adapter
-app.get('/', createServerlessAdapter(timelinePage));
+// Landing: simple personal home; the posts timeline moved to /posts
+const homeRoutes = require('./routes/home');
+app.use('/', homeRoutes);
+app.get('/posts', createServerlessAdapter(timelinePage));
 app.get('/sitemap.xml', createServerlessAdapter(sitemap));
 
 // single page route

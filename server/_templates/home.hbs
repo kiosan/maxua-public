@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{pageTitle}}</title>
+
+  {{{metaTags}}}
+  {{{structuredData}}}
+
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="preload" href="/css/main.css?v=1237" as="style">
+  <link rel="stylesheet" href="/css/main.css?v=1237">
+  <style>
+    .home-page { max-width: 640px; margin: 0 auto; padding: 0 1rem; }
+    .home-hero { display: flex; align-items: center; gap: 1.25rem; margin: 3rem 0 2.5rem; }
+    .home-hero img { width: 96px; height: 96px; border-radius: 50%; object-fit: cover; }
+    .home-hero h1 { margin: 0 0 0.25rem; font-size: 1.8rem; letter-spacing: -0.01em; }
+    .home-hero p { margin: 0; color: var(--color-secondary-text, #666); }
+    .home-block { margin: 0 0 2.25rem; font-size: 1.1rem; line-height: 1.7; }
+    .home-block h2 { font-size: 1.25rem; margin: 0 0 0.5rem; }
+    .home-block p { margin: 0 0 0.75rem; }
+    .home-link { font-weight: 600; text-decoration: none; }
+    .home-link:hover { text-decoration: underline; }
+    .home-social { margin: 2.5rem 0 3rem; }
+  </style>
+</head>
+<body>
+  <main class="home-page">
+    <header class="home-hero">
+      <img src="/images/me.jpeg" alt="Sasha Bondar">
+      <div>
+        <h1>Sasha Bondar</h1>
+        <p>Engineer and entrepreneur.</p>
+      </div>
+    </header>
+
+    <section class="home-block">
+      <h2>I'm writing a book</h2>
+      <p><em>Requisite Variety</em> — a systems method for working with AI. Not prompt collections: a way to see your work with a model as a system and stay the one who steers. Written in the open; finished chapters go up as they're ready.</p>
+      <p><a class="home-link" href="/variety">About the book and chapters →</a></p>
+    </section>
+
+    <section class="home-block">
+      <h2>I run Reintech</h2>
+      <p><a href="https://reintech.io">Reintech</a> is a hiring marketplace for senior software engineers: candidates are vetted on how they actually think — an adversarial AI interview over their real work, then a human one — and companies hire from two-three finalists in days, with legal and payroll handled.</p>
+      <p><a class="home-link" href="https://reintech.io">reintech.io →</a></p>
+    </section>
+
+    <section class="home-social">
+      <a class="home-link" href="https://www.linkedin.com/in/obondar/">LinkedIn →</a>
+    </section>
+  </main>
+
+  {{> footer}}
+</body>
+</html>
