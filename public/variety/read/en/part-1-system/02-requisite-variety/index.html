@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Requisite Variety — Requisite Variety: A Systems Method for Working with AI</title>
+    <title>Chapter 2. The Law of Requisite Variety — Requisite Variety: A Systems Method for Working with AI</title>
     <script>
     // Blocking: apply saved sidebar state before first paint to prevent layout jump
     (function() {
@@ -953,12 +953,12 @@ body.resizing {
                 </button>
             </div>
             <nav class="sidebar-nav">
-                <ul class="nav-tree" data-depth="0"><li class="nav-item active">
+                <ul class="nav-tree" data-depth="0"><li class="nav-item">
 <a href="/variety/read/en/">Requisite Variety</a>
 </li>
 <li class="nav-item">
 <a href="/variety/read/en/part-1-system/">Part I. The system you actually control</a>
-<ul class="nav-tree" data-depth="1"><li class="nav-item">
+<ul class="nav-tree" data-depth="1"><li class="nav-item active">
 <a href="/variety/read/en/part-1-system/02-requisite-variety/">Chapter 2. The Law of Requisite Variety</a>
 </li></ul>
 </li>
@@ -994,18 +994,176 @@ body.resizing {
         </button>
         <main class="content">
             <article class="article">
-                <h1 id="requisite-variety">Requisite Variety<a class="anchor-link" href="#requisite-variety" title="Permanent link">&para;</a></h1>
-<p><strong>A Systems Method for Working with AI</strong></p>
-<p>Tips and prompt collections go stale within months. This book offers a method instead — a way to see your work with AI as a system, set goals, organize the activity and grow the practice — that will outlive any change of models.</p>
-<h2 id="finished-chapters">Finished chapters<a class="anchor-link" href="#finished-chapters" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="/variety/read/en/part-1-system/02-requisite-variety/">Chapter 2. The Law of Requisite Variety</a></li>
-<li><a href="/variety/read/en/part-2-goals/06-goal-and-proxy/">Chapter 6. A Goal and Its Proxy</a></li>
-<li><a href="/variety/read/en/part-3-activity/10-activity-decomposition/">Chapter 10. The Components of Activity</a></li>
-</ul>
-                
-                <nav class="page-nav"><span class="page-nav-link page-nav-prev page-nav-disabled"></span>
-<a class="page-nav-link page-nav-next" href="/variety/read/en/part-1-system/"><span class="page-nav-label">Next →</span></a></nav>
+                <h1 id="chapter-2-the-law-of-requisite-variety">Chapter 2. The Law of Requisite Variety<a class="anchor-link" href="#chapter-2-the-law-of-requisite-variety" title="Permanent link">&para;</a></h1>
+<p>Watch what you do after each answer from the model. You read it, spot something wrong, ask for a redo; you find something else — fix it by hand; then again. Every move you make is a reaction to what&rsquo;s already been generated, one item at a time.</p>
+<p>Now picture a shepherd trying to bring order to a flock on his own: he runs after one sheep, turns it back — and while he was turning it, five others have wandered off the other way. He isn&rsquo;t lazy and he isn&rsquo;t stupid. He simply has one pair of legs against a hundred. However many reactions he keeps at the ready, his position stays the same: he&rsquo;s the one chasing.</p>
+<p>Who controls whom in this pair? The question sounds rhetorical — the human, obviously, they write the prompts. Don&rsquo;t be so sure. In the previous chapter I proposed taking as the unit of analysis not the model but the pair: human + model + context + tools. This chapter is about the main law such a pair lives by. And the law says: control is a question of arithmetic, not of will.</p>
+<h2 id="only-variety-absorbs-variety">Only Variety Absorbs Variety<a class="anchor-link" href="#only-variety-absorbs-variety" title="Permanent link">&para;</a></h2>
+<p>In 1956 W. Ross Ashby formulated a law that cyberneticians consider their counterpart to the conservation of energy. It sounds dry: a regulator can hold a system in its target state only if the regulator&rsquo;s own variety is no less than the variety of the disturbances it has to deal with. The short form is harsher still: only variety absorbs variety.</p>
+<p><strong>Variety</strong> is the number of states a system can take. And here&rsquo;s a subtlety that usually gets skipped: what counts isn&rsquo;t every state, only the ones you can tell apart. Variety is always measured relative to the observer.</p>
+<p>A thermostat controls the boiler because for every state of the boiler it has a distinction and a response. Now imagine a thermostat that distinguishes only &ldquo;warm&rdquo; and &ldquo;cold,&rdquo; in a house where pipes can freeze, an air lock can form, a joint can start leaking. The thermostat isn&rsquo;t bad — it just has fewer states than the process does. It isn&rsquo;t controlling. It&rsquo;s reacting to the part of the process it can see.</p>
+<p>Now back to our pair. The model produces thousands of substantially different answers to the same request — different in the architecture of the solution, in hidden assumptions, in what it quietly decided not to do. How many of those differences do you distinguish? And for how many of the ones you do distinguish do you have a separate response ready in advance?</p>
+<p>That&rsquo;s the whole arithmetic. If the machine&rsquo;s variety aimed at you is greater than your variety aimed at it, the machine is in control. Not because it has intent. Intent has nothing to do with it. It&rsquo;s just that your working day starts being structured by its outputs: you fix what it decided to write, in the order it wrote it.</p>
+<aside class="book-callout">The tool has begun to define the activity. On paper, the subject is you. In practice — not anymore.</aside>
+
+<h2 id="the-four-roles">The Four Roles<a class="anchor-link" href="#the-four-roles" title="Permanent link">&para;</a></h2>
+<p>This arithmetic unfolds neatly into a scale. Depending on the ratio of your variety to the variety of the process, at any given moment you&rsquo;re playing one of four roles.</p>
+<p><strong>Captain.</strong> Your reserve of variety substantially exceeds what the task demands. Any fragment of the generated output you can assess, rework, or throw away — and you know what to replace it with. You&rsquo;re in control all the way up to rebuilding the whole solution.</p>
+<p><strong>Helmsman.</strong> Your reserve roughly equals the complexity of the process. Review barely keeps up with generation. One unexpected turn and you&rsquo;re already chasing.</p>
+<p><strong>Deckhand.</strong> You accept most of what&rsquo;s generated, fix small things, and can no longer always explain why the solution is the way it is. The direction of travel isn&rsquo;t set by you.</p>
+<p><strong>Passenger.</strong> You merge without reading. The system you&rsquo;re nominally building dictates the course of its own development, and your resources are just enough to keep servicing it.</p>
+<figure class="book-scheme">
+<svg viewBox="0 0 640 200" role="img" aria-label="The scale of four roles: from Captain to Passenger">
+  <defs>
+    <marker id="s2-gray" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#85736E"/></marker>
+    <marker id="s2-prim" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8F4C38"/></marker>
+  </defs>
+  <rect x="0" y="0" width="640" height="200" fill="#FFFFFF"/>
+  <text x="320" y="18" text-anchor="middle" font-size="12.5" fill="#53433F">your variety relative to the variety of the process</text>
+  <line x1="45" y1="34" x2="595" y2="34" stroke="#85736E" stroke-width="1.5" marker-end="url(#s2-gray)"/>
+  <text x="45" y="52" font-size="11.5" fill="#53433F">far greater</text>
+  <text x="585" y="52" text-anchor="end" font-size="11.5" fill="#53433F">far less</text>
+  <rect x="45" y="62" width="130" height="80" rx="8" fill="#FFDBD1" stroke="#8F4C38" stroke-width="1.5"/>
+  <text x="110" y="92" text-anchor="middle" font-size="13" font-weight="600" fill="#231917">CAPTAIN</text>
+  <text x="110" y="112" text-anchor="middle" font-size="11" fill="#53433F">in full</text>
+  <text x="110" y="128" text-anchor="middle" font-size="11" fill="#53433F">control</text>
+  <rect x="185" y="62" width="130" height="80" rx="8" fill="#F5E1A7" stroke="#85736E" stroke-width="1.5"/>
+  <text x="250" y="92" text-anchor="middle" font-size="13" font-weight="600" fill="#231917">HELMSMAN</text>
+  <text x="250" y="112" text-anchor="middle" font-size="11" fill="#53433F">barely</text>
+  <text x="250" y="128" text-anchor="middle" font-size="11" fill="#53433F">keeping up</text>
+  <rect x="325" y="62" width="130" height="80" rx="8" fill="#F1DFDA" stroke="#85736E" stroke-width="1.5"/>
+  <text x="390" y="92" text-anchor="middle" font-size="13" font-weight="600" fill="#231917">DECKHAND</text>
+  <text x="390" y="112" text-anchor="middle" font-size="11" fill="#53433F">fixing</text>
+  <text x="390" y="128" text-anchor="middle" font-size="11" fill="#53433F">small things</text>
+  <rect x="465" y="62" width="130" height="80" rx="8" fill="#D8C2BC" stroke="#53433F" stroke-width="1.5"/>
+  <text x="530" y="92" text-anchor="middle" font-size="13" font-weight="600" fill="#231917">PASSENGER</text>
+  <text x="530" y="112" text-anchor="middle" font-size="11" fill="#53433F">merging</text>
+  <text x="530" y="128" text-anchor="middle" font-size="11" fill="#53433F">unread</text>
+  <line x1="110" y1="164" x2="530" y2="164" stroke="#8F4C38" stroke-width="2" stroke-dasharray="6 5" marker-end="url(#s2-prim)"/>
+  <text x="320" y="188" text-anchor="middle" font-size="12" fill="#723523">the slide goes unnoticed</text>
+</svg>
+<figcaption>Figure 2.1. The four roles: who controls whom is a question of the ratio of varieties</figcaption>
+</figure>
+
+<p>The unpleasant property of this scale: you slide down it unnoticed, in a matter of weeks. Every session where you accepted a decision you hadn&rsquo;t examined shrinks your variety with respect to this codebase a little — and grows, a little, the variety of the thing you&rsquo;re trying to control. Pulling out of that skid is harder than not getting into it: a process that has picked up speed acquires momentum of its own, and the correction that cost ten minutes at the start can now cost days.</p>
+<p>Sounds hopeless? This is where the method comes in. Because Ashby&rsquo;s law isn&rsquo;t a verdict — it&rsquo;s the problem statement for control. It doesn&rsquo;t say &ldquo;the human loses.&rdquo; It says: to control, match the variety. And you can match it from two sides.</p>
+<h2 id="the-raft-and-the-yacht">The Raft and the Yacht<a class="anchor-link" href="#the-raft-and-the-yacht" title="Permanent link">&para;</a></h2>
+<p>You can see this best on the water.</p>
+<p>Wind has colossal variety: gusts, lulls, shifts in direction, squalls. A human against the wind is nothing: you physically can&rsquo;t blow back. A raft with a rag for a sail drifts wherever the wind pushes — that&rsquo;s a chat with no system behind it, and its passenger sincerely believes he&rsquo;s a captain because he&rsquo;s holding on to the mast.</p>
+<p>A yacht, though, sails against the wind. Not because the sailor has stronger arms and knows how to steer. Because between him and the wind there&rsquo;s a built system. The keel absorbs the sideways drift — it takes away from the wind the part of its variety that pushes off course. The sail, set at an angle, catches and amplifies the part that does useful work. And the sailor himself holds in his hands not the wind — he holds the course, the sheet, and the tiller: three controls with distinguishable states, each of which his body is trained for.</p>
+<p>Notice what the sailor doesn&rsquo;t do. He doesn&rsquo;t try to persuade the wind. He doesn&rsquo;t write the wind a longer instruction. He changed his own position in the system so that the wind&rsquo;s excess variety is absorbed by the structure, and its useful variety works for the course.</p>
+<p>This is <strong>variety engineering</strong> — the name Stafford Beer gave it when he carried Ashby&rsquo;s law from thermostats over to firms. It has exactly two levers.</p>
+<h2 id="two-levers">Two Levers<a class="anchor-link" href="#two-levers" title="Permanent link">&para;</a></h2>
+<p><strong>Lever one: amplify your own variety.</strong> Everything that increases the number of states you distinguish and the responses you keep ready. The sheepdog at the shepherd&rsquo;s side is an amplifier: his own variety, running faster than he can.</p>
+<p><strong>Decomposition.</strong> Split the task into smaller parts — and for each piece you suddenly have a ready assessment: this one&rsquo;s trivial, this one&rsquo;s risky, this one don&rsquo;t touch. A piece has less variety than the whole, and yours hasn&rsquo;t gone anywhere. You&rsquo;ve just improved the ratio without adding any variety of your own.</p>
+<p><strong>Criteria.</strong> &ldquo;Something&rsquo;s off here&rdquo; is a feeling, not a criterion: you can&rsquo;t lean on it. A written criterion turns the feeling into a visible state: &ldquo;if the code retries a request that must not be retried — that&rsquo;s unacceptable.&rdquo; Yesterday you might have caught it, or might not have. Today it&rsquo;s written down — and you check it every time, and before long a test does the checking for you. Every written criterion is one more state you distinguish.</p>
+<p><strong>Normative base.</strong> A style guide, a checklist, a project memory file — that&rsquo;s your variety preserved in text: an answer, found once, to a whole class of situations. You wrote it once, and it fires in every session. There&rsquo;s a separate chapter on this.</p>
+<p><strong>Variants.</strong> Ask for three implementations instead of one — and the model&rsquo;s sensitivity to phrasing, which used to plague you as instability, suddenly works for you: you compare, and comparison is the cheapest way to distinguish. Selecting from variants is an act of control available only to someone who has criteria.</p>
+<p><strong>Lever two: attenuate the machine&rsquo;s.</strong> Everything that reduces the number of states the machine can hand you. The fence around the pasture is an attenuator: there are fewer sheep able to wander off before the shepherd has moved a muscle.</p>
+<p><strong>Context boundary.</strong> What&rsquo;s in the session is what&rsquo;s in play: the model sees only what you gave it — the open files, the pasted code, the document, the instruction. Everything else doesn&rsquo;t exist for it, and you can use that: give it the one client file instead of the whole repository, and the class of solutions called &ldquo;rewrite the neighboring modules&rdquo; disappears on its own, because in its world those modules don&rsquo;t exist. The boundary isn&rsquo;t what you forbade — it&rsquo;s what you didn&rsquo;t show.</p>
+<p><strong>Response format.</strong> A schema, a template, &ldquo;first a five-line plan, then the code.&rdquo;</p>
+<p><strong>Tests and automated checks.</strong> Tests that a plausible fabrication can&rsquo;t get through. CI checks — a linter, a config schema, and where the language allows it, types that won&rsquo;t compile with an invented field.</p>
+<p><strong>Permissions.</strong> An agent with no access to the production database has its variety reduced by exactly one production database — and none of its &ldquo;initiative&rdquo; will ever reach you there.</p>
+<p>The second lever comes with a rule I earned through experience, and it&rsquo;s a hard one: an attenuator works when it&rsquo;s structural. A test is an attenuator: the unacceptable state physically doesn&rsquo;t pass. The phrase &ldquo;please don&rsquo;t add dependencies&rdquo; in a prompt is not an attenuator but a wish: the unacceptable state was possible before and remains possible. It&rsquo;s the same difference as between a keel and asking the wind to blow more evenly.</p>
+<figure class="book-scheme">
+<svg viewBox="0 0 640 350" role="img" aria-label="The two levers: amplifiers of your own variety and attenuators of the machine's">
+  <defs>
+    <marker id="s1-gray" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#85736E"/></marker>
+    <marker id="s1-prim" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8F4C38"/></marker>
+  </defs>
+  <rect x="0" y="0" width="640" height="350" fill="#FFFFFF"/>
+  <rect x="60" y="28" width="200" height="64" rx="10" fill="#FFDBD1" stroke="#8F4C38" stroke-width="1.5"/>
+  <text x="160" y="54" text-anchor="middle" font-size="15" font-weight="600" fill="#231917">HUMAN</text>
+  <text x="160" y="76" text-anchor="middle" font-size="12" fill="#53433F">distinctions and responses</text>
+  <rect x="380" y="28" width="200" height="64" rx="10" fill="#F5E1A7" stroke="#85736E" stroke-width="1.5"/>
+  <text x="480" y="54" text-anchor="middle" font-size="15" font-weight="600" fill="#231917">MODEL</text>
+  <text x="480" y="76" text-anchor="middle" font-size="12" fill="#53433F">countless possible outputs</text>
+  <line x1="268" y1="60" x2="372" y2="60" stroke="#85736E" stroke-width="1.5" marker-start="url(#s1-gray)" marker-end="url(#s1-gray)"/>
+  <text x="320" y="48" text-anchor="middle" font-size="11.5" fill="#53433F">interaction</text>
+  <line x1="160" y1="168" x2="160" y2="102" stroke="#8F4C38" stroke-width="2" marker-end="url(#s1-prim)"/>
+  <text x="172" y="140" font-size="11.5" fill="#723523">your variety grows</text>
+  <line x1="480" y1="168" x2="480" y2="102" stroke="#8F4C38" stroke-width="2" marker-end="url(#s1-prim)"/>
+  <text x="468" y="140" text-anchor="end" font-size="11.5" fill="#723523">the machine's variety falls</text>
+  <rect x="60" y="170" width="200" height="164" rx="10" fill="none" stroke="#D8C2BC" stroke-width="1.5"/>
+  <text x="160" y="196" text-anchor="middle" font-size="13" font-weight="600" fill="#723523">AMPLIFIERS</text>
+  <text x="160" y="224" text-anchor="middle" font-size="12.5" fill="#231917">decomposition</text>
+  <text x="160" y="250" text-anchor="middle" font-size="12.5" fill="#231917">criteria</text>
+  <text x="160" y="276" text-anchor="middle" font-size="12.5" fill="#231917">normative base</text>
+  <text x="160" y="302" text-anchor="middle" font-size="12.5" fill="#231917">variants</text>
+  <rect x="380" y="170" width="200" height="164" rx="10" fill="none" stroke="#D8C2BC" stroke-width="1.5"/>
+  <text x="480" y="196" text-anchor="middle" font-size="13" font-weight="600" fill="#534619">ATTENUATORS</text>
+  <text x="480" y="224" text-anchor="middle" font-size="12.5" fill="#231917">context boundary</text>
+  <text x="480" y="250" text-anchor="middle" font-size="12.5" fill="#231917">response format</text>
+  <text x="480" y="276" text-anchor="middle" font-size="12.5" fill="#231917">tests and CI checks</text>
+  <text x="480" y="302" text-anchor="middle" font-size="12.5" fill="#231917">permissions</text>
+</svg>
+<figcaption>Figure 2.2. Variety engineering: the two levers of one pair</figcaption>
+</figure>
+
+<h2 id="a-budget-that-doesnt-stretch">A Budget That Doesn&rsquo;t Stretch<a class="anchor-link" href="#a-budget-that-doesnt-stretch" title="Permanent link">&para;</a></h2>
+<p>There&rsquo;s a related regularity worth naming right away, because it will save you from the temptation to tighten every screw.</p>
+<p>In a working pair, the total slack never compresses to zero: clamp one dimension and you release another. Lock in a rigid output format — you&rsquo;ve lost the unexpected solutions that don&rsquo;t fit into it. Fence generation in with so many constraints that error is impossible — you&rsquo;ve got an executor that will never propose anything you didn&rsquo;t already know. Cover everything with tests down to the last detail — now any change of architecture costs rewriting a thousand tests, and the system sets like concrete.</p>
+<p>Let me calibrate the status of this claim right away. It&rsquo;s not a conservation law — there&rsquo;s no formula here. It&rsquo;s a regularity from practice: I can&rsquo;t prove it, but I have yet to see a pair that violated it.</p>
+<figure class="book-scheme">
+<svg viewBox="0 0 640 310" role="img" aria-label="A square of constant area deforms into a narrow rectangle: clamp one dimension and the other stretches">
+  <defs>
+    <marker id="s3-gray" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#85736E"/></marker>
+    <marker id="s3-prim" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8F4C38"/></marker>
+  </defs>
+  <rect x="0" y="0" width="640" height="310" fill="#FFFFFF"/>
+  <rect x="100" y="80" width="140" height="140" fill="#FFDBD1" stroke="#8F4C38" stroke-width="2"/>
+  <text x="170" y="145" text-anchor="middle" font-size="11.5" fill="#723523">the area is</text>
+  <text x="170" y="162" text-anchor="middle" font-size="11.5" fill="#723523">the control budget</text>
+  <line x1="100" y1="236" x2="240" y2="236" stroke="#85736E" stroke-width="1.5" marker-end="url(#s3-gray)"/>
+  <text x="170" y="256" text-anchor="middle" font-size="11.5" fill="#53433F">freedom of decisions</text>
+  <line x1="86" y1="220" x2="86" y2="80" stroke="#85736E" stroke-width="1.5" marker-end="url(#s3-gray)"/>
+  <text transform="rotate(-90 70 150)" x="70" y="150" text-anchor="middle" font-size="11.5" fill="#53433F">predictability</text>
+  <line x1="272" y1="150" x2="338" y2="150" stroke="#8F4C38" stroke-width="2" marker-end="url(#s3-prim)"/>
+  <text x="305" y="124" text-anchor="middle" font-size="11" fill="#723523">clamp down</text>
+  <text x="305" y="138" text-anchor="middle" font-size="11" fill="#723523">on format</text>
+  <rect x="400" y="25" width="80" height="245" fill="#FFDBD1" stroke="#8F4C38" stroke-width="2"/>
+  <text transform="rotate(-90 440 147)" x="440" y="147" text-anchor="middle" font-size="11.5" fill="#723523">roughly the same area</text>
+  <line x1="400" y1="286" x2="480" y2="286" stroke="#85736E" stroke-width="1.5" marker-end="url(#s3-gray)"/>
+  <text x="440" y="304" text-anchor="middle" font-size="11" fill="#53433F">less freedom</text>
+  <line x1="496" y1="270" x2="496" y2="25" stroke="#85736E" stroke-width="1.5" marker-end="url(#s3-gray)"/>
+  <text transform="rotate(-90 514 147)" x="514" y="147" text-anchor="middle" font-size="11" fill="#53433F">more predictability</text>
+</svg>
+<figcaption>Figure 2.3. The control budget: clamp one dimension and another stretches</figcaption>
+</figure>
+
+<p>This is no reason to give up on constraints. It&rsquo;s a reason to set them deliberately: decide in which dimension slack is dangerous — clamp down there — and in which the slack itself is the value — leave air there. Control is a resource with a budget, not a metric where more is always better.</p>
+<h2 id="one-week-two-sessions">One Week, Two Sessions<a class="anchor-link" href="#one-week-two-sessions" title="Permanent link">&para;</a></h2>
+<p>Now let&rsquo;s watch this mechanics inside a working week. The task is real and boring: add retries to the HTTP client in a legacy service.</p>
+<p><strong>Session one, Monday.</strong> I opened the client file and typed: &ldquo;add retries here.&rdquo; What sat in the space of possible answers at that second? Any of half a dozen libraries the project doesn&rsquo;t use. A hand-rolled decorator. A signature change that would creep through every call site. Retries on a POST that must not be repeated. An identical pause between attempts for everyone — so when the server goes down, a thousand clients knock again second for second, never letting it get back up. Out of that space the model picked one plausible solution — plausible, because that&rsquo;s what its internal pull is toward; chapter six is about that. I spent forty minutes on review, caught a retry of a non-idempotent request, asked for a redo — and got a new solution with a new distribution of problems. Second lap. Third.</p>
+<p><strong>Session two, Thursday.</strong> Same service, another retry task. Ten minutes went into constructing the prompt: boundary, criteria, format, tests. The boundary: the client file, the environment config, the line &ldquo;no new dependencies.&rdquo; The criteria, as a list: retry only idempotent methods; the pause between attempts grows and carries a random offset; three attempts maximum; on a 429, honor Retry-After; tests for 429, 503, and timeout are part of the task. The format: first a five-line plan, then the code. I read the plan in a minute and cut the excess with one line — while it was still a plan and not code.</p>
+<p>What happened to the space of possible results? On Monday it contained everything plausible. On Thursday — a few acceptable implementations whose differences come down to taste. Note: same model, same task, same hands. What changed is the structure the model works inside. My ten minutes of preparation are amplifiers: the criteria gave me distinctions, and the minute over the plan — a chance to remove a false assumption before it grew into code. The boundary, the format, and the tests are attenuators: the boundary took the extra files and dependencies out of play, the format kept code from appearing before the plan, the tests won&rsquo;t let through a retry in the wrong place. Whole classes of unacceptable solutions no longer pass in my system.</p>
+<p>The week&rsquo;s tally: two hours of laps on Monday against ten minutes of construction on Thursday. And those ten minutes I paid for the last time — the criteria have already moved into a checklist; the next task gets them for free.</p>
+<h2 id="the-megaprompt-is-a-surrender">The Megaprompt Is a Surrender<a class="anchor-link" href="#the-megaprompt-is-a-surrender" title="Permanent link">&para;</a></h2>
+<p>Now the typical mistake — framed as a violation of this law, not as &ldquo;bad practice.&rdquo;</p>
+<p>It looks like this. There&rsquo;s an instruction the model reads before every session, before your first message — the system prompt in a chat, a <code>CLAUDE.md</code> file or a skill in an agent, sometimes just a README you tell it to read first. After every failure this instruction grows: &ldquo;don&rsquo;t use library X,&rdquo; &ldquo;always write tests,&rdquo; &ldquo;never change signatures,&rdquo; &ldquo;don&rsquo;t invent config fields&rdquo;&hellip; A month later it&rsquo;s four hundred lines, and the engineer sincerely believes he&rsquo;s on top of things: look how many rules I&rsquo;ve written.</p>
+<p>But there&rsquo;s a circumstance this approach ignores. The text of such an instruction is itself an input with extra variety, and the longer it gets, the larger the space of ways to read it. Rules start to overlap and conflict, the model follows them selectively — and you now have two poorly controlled systems: the generation and the instruction itself. You tried to absorb the machine&rsquo;s variety with your weakest channel — words, which block nothing structurally. The raft has grown banners addressed to the wind, but that hasn&rsquo;t made it a yacht.</p>
+<p>The diagnosis under Ashby&rsquo;s law is precise: the human is growing not their variety but the volume of their wishes, and attenuating nothing — not one of the four hundred lines physically forbids anything. The position in the system hasn&rsquo;t changed.</p>
+<p>The cure is moving rules into structure, not shortening the text. Walk through the megaprompt with one question: what here can become structure? &ldquo;Always write tests&rdquo; becomes a CI step. &ldquo;Don&rsquo;t change signatures&rdquo; — an automated check of the public interface in the pipeline. &ldquo;Don&rsquo;t invent fields&rdquo; — a config schema. The response format — a template. After that extraction, four hundred lines leave a single page — the part that genuinely should be text: the task&rsquo;s context and the criteria. Every time I&rsquo;ve done this extraction, the result was paradoxical: the prompt gets shorter, control grows.</p>
+<h2 id="the-law-scales">The Law Scales<a class="anchor-link" href="#the-law-scales" title="Permanent link">&para;</a></h2>
+<p>Beer spent his life demonstrating that organizations run on the same mechanics. A firm survives while its control loops keep up with absorbing the environment&rsquo;s variety; it sinks when a board with three states (&ldquo;cut costs,&rdquo; &ldquo;hire,&rdquo; &ldquo;wait&rdquo;) is steering a market with a million. A management dashboard is an attenuator: thousands of events compressed into three numbers. A conversation with the team is an amplifier: you gain distinctions. Confusing these two instruments is the occupational disease of management, and we&rsquo;ll come back to it in Part V.</p>
+<p>Here I want to pin down one thing: the law scales. A session, an agent, a team, a company — at every level, control belongs to whoever&rsquo;s stock of distinctions and responses covers the variety of the process. So nothing you build for your own sessions in the coming chapters will go to waste: it&rsquo;s the same method that later unfolds onto working with agents and running teams.</p>
+<h2 id="in-your-craft">In Your Craft<a class="anchor-link" href="#in-your-craft" title="Permanent link">&para;</a></h2>
+<p>The law doesn&rsquo;t know what code is. Substitute your own craft — the arithmetic is the same.</p>
+<p><strong>Text.</strong> An editor who writes &ldquo;make the text livelier&rdquo; is sitting on the raft: that request has not a single distinguishable state. A set of samples to measure against and a list of banned turns of phrase are attenuators: a whole class of gray text doesn&rsquo;t get through. A style pinned down in a guide, examples of &ldquo;this, not that,&rdquo; a separate editing pass with its own checklist are amplifiers: you see more states in the text than you saw yesterday.</p>
+<p><strong>Analytics.</strong> An analyst with a template for the findings and a mandatory list of source checks is in control of the research. An analyst with the prompt &ldquo;analyze the market&rdquo; gets the most plausible report in the world — and no way to tell it from a correct one. The template and the list of checks are your distinctions, moved onto paper.</p>
+<p><strong>Design.</strong> &ldquo;Make it beautiful&rdquo; loses on variety even to the raft. A direction, three references, and a stack of constraints — grid, palette, banned moves — are attenuators. A separate selection pass over three variants is an amplifier: only someone with criteria can choose.</p>
+<hr />
+<p>To close — three questions for your own practice.</p>
+<p>— Think back to your last working session: how many states did you actually distinguish in the model&rsquo;s answer — and how many were most likely there?</p>
+<p>— What one structural attenuator could you put in place tomorrow — one that works without your attention?</p>
+<p>— And honestly: in which of the four roles did you spend the past week?</p>
+                <div class="check-items" data-page-key="part-1-system/02-requisite-variety"><div class="check-items-header"><span class="check-items-title">Key Takeaways</span><span class="check-items-progress"></span></div><label class="check-item" data-index="0"><input type="checkbox" class="check-item-input" data-index="0"><span class="check-item-box"><svg class="check-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span><span class="check-item-text">Whoever has more variety is in control. That's arithmetic, not a matter of will or job title.</span></label>
+<label class="check-item" data-index="1"><input type="checkbox" class="check-item-input" data-index="1"><span class="check-item-box"><svg class="check-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span><span class="check-item-text">The method is two levers: amplifiers of your own variety and attenuators of the machine's.</span></label>
+<label class="check-item" data-index="2"><input type="checkbox" class="check-item-input" data-index="2"><span class="check-item-box"><svg class="check-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span><span class="check-item-text">An attenuator works only when it's structural: a test, a CI check, a format — not a request in the prompt.</span></label>
+<label class="check-item" data-index="3"><input type="checkbox" class="check-item-input" data-index="3"><span class="check-item-box"><svg class="check-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span><span class="check-item-text">The control budget is finite: clamp one dimension and you pay with slack in another. Choose deliberately.</span></label>
+<label class="check-item" data-index="4"><input type="checkbox" class="check-item-input" data-index="4"><span class="check-item-box"><svg class="check-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span><span class="check-item-text">A longer prompt doesn't add control. Changing your own position in the system does.</span></label></div>
+                <nav class="page-nav"><a class="page-nav-link page-nav-prev" href="/variety/read/en/part-1-system/"><span class="page-nav-label">← Previous</span></a>
+<a class="page-nav-link page-nav-next" href="/variety/read/en/part-2-goals/"><span class="page-nav-label">Next →</span></a></nav>
             </article>
         </main>
     </div>

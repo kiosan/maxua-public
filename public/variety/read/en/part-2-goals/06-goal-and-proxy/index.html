@@ -1,17 +1,17 @@
 <!DOCTYPE html>
-<html lang="uk">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Розділ 6. Ціль та її проксі — Необхідне різноманіття: системний метод роботи з AI</title>
+    <title>Chapter 6. A Goal and Its Proxy — Requisite Variety: A Systems Method for Working with AI</title>
     <script>
     // Blocking: apply saved sidebar state before first paint to prevent layout jump
     (function() {
         var d = document.documentElement;
         if (window.innerWidth <= 900) return;
-        var collapsed = localStorage.getItem('essay-sidebar-collapsed-system-for-ai-engineers') === '1';
+        var collapsed = localStorage.getItem('essay-sidebar-collapsed-system-for-ai-engineers-en') === '1';
         if (collapsed) d.classList.add('sidebar-collapsed');
-        var w = localStorage.getItem('essay-sidebar-width-system-for-ai-engineers');
+        var w = localStorage.getItem('essay-sidebar-width-system-for-ai-engineers-en');
         if (w && !collapsed) {
             var px = Math.max(200, Math.min(parseInt(w, 10), 480));
             d.style.setProperty('--sidebar-width', px + 'px');
@@ -944,7 +944,7 @@ body.resizing {
     <div class="layout">
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-header">
-                <span class="sidebar-title">Необхідне різноманіття: системний метод роботи з AI</span>
+                <span class="sidebar-title">Requisite Variety: A Systems Method for Working with AI</span>
                 <button class="sidebar-collapse-btn" id="sidebar-collapse" aria-label="Collapse sidebar">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <polyline points="11 17 6 12 11 7"></polyline>
@@ -954,29 +954,28 @@ body.resizing {
             </div>
             <nav class="sidebar-nav">
                 <ul class="nav-tree" data-depth="0"><li class="nav-item">
-<a href="/variety/read/">Необхідне різноманіття</a>
+<a href="/variety/read/en/">Requisite Variety</a>
 </li>
 <li class="nav-item">
-<a href="/variety/read/part-1-system/">Частина I. Система, якою ти насправді керуєш</a>
+<a href="/variety/read/en/part-1-system/">Part I. The system you actually control</a>
 <ul class="nav-tree" data-depth="1"><li class="nav-item">
-<a href="/variety/read/part-1-system/02-requisite-variety/">Розділ 2. Закон необхідного різноманіття</a>
+<a href="/variety/read/en/part-1-system/02-requisite-variety/">Chapter 2. The Law of Requisite Variety</a>
 </li></ul>
 </li>
 <li class="nav-item">
-<a href="/variety/read/part-2-goals/">Частина II. Цілі та смак: що ти насправді просиш</a>
+<a href="/variety/read/en/part-2-goals/">Part II. Goals and taste: what you are really asking for</a>
 <ul class="nav-tree" data-depth="1"><li class="nav-item active">
-<a href="/variety/read/part-2-goals/06-goal-and-proxy/">Розділ 6. Ціль та її проксі</a>
+<a href="/variety/read/en/part-2-goals/06-goal-and-proxy/">Chapter 6. A Goal and Its Proxy</a>
 </li></ul>
 </li>
 <li class="nav-item">
-<a href="/variety/read/part-3-activity/">Частина III. Діяльність: метод щоденної роботи</a>
+<a href="/variety/read/en/part-3-activity/">Part III. Activity: the method of daily work</a>
 <ul class="nav-tree" data-depth="1"><li class="nav-item">
-<a href="/variety/read/part-3-activity/10-activity-decomposition/">Розділ 10. Складові діяльності</a>
+<a href="/variety/read/en/part-3-activity/10-activity-decomposition/">Chapter 10. The Components of Activity</a>
 </li></ul>
 </li></ul>
             </nav>
-            <div class="sidebar-links"><a class="sidebar-link sidebar-link-lang" href="/variety/read/en/" lang="en">English</a>
-<a class="sidebar-link sidebar-link-newsletter" href="https://kiosan.substack.com" target="_blank" rel="noopener">Розсилка ↗</a></div>
+            <div class="sidebar-links"><a class="sidebar-link sidebar-link-lang" href="/variety/read/" lang="uk">Українська</a></div>
             <div class="resize-handle" id="resize-handle"></div>
         </aside>
         <button class="sidebar-expand-btn" id="sidebar-expand" aria-label="Expand sidebar">
@@ -995,152 +994,149 @@ body.resizing {
         </button>
         <main class="content">
             <article class="article">
-                <h1 id="6">Розділ 6. Ціль та її проксі<a class="anchor-link" href="#6" title="Permanent link">&para;</a></h1>
-<div class="subscribe-embed"><iframe src="https://kiosan.substack.com/embed?transparent=1" width="480" height="320" style="border: 0; background: transparent" title="Підписатися на розсилку" loading="lazy" frameborder="0" scrolling="no"></iframe></div>
-
-<p>«Полагодь тест, який падає», — написав я і пішов по каву. Повернувся до зеленого прогону: модель закоментувала перевірку, що падала, і акуратно підписала — «тимчасово вимкнено». Формально запит виконано бездоганно. По суті сталося рівно те, чого я боявся.</p>
-<p>Хто винен? Ніхто. Просто задача в цій історії існувала у трьох версіях, а я поводився так, ніби вона одна.</p>
-<h2 id="_1">Три версії задачі<a class="anchor-link" href="#_1" title="Permanent link">&para;</a></h2>
-<p>Чого ви хочете. Що ви написали. Що оптимізує система.</p>
-<p>Перше живе у вашій голові: «код має бути коректним, і тест має це підтверджувати». Друге — у полі вводу: «полагодь тест, який падає». Третє — всередині процесу: модель шукає найправдоподібнішу відповідь на друге, а не на перше. Вона першого ніколи не бачила.</p>
-<p>Між цими трьома версіями — дві відстані, і в них різна природа. Перша відстань — ваша: скільки цілі загубилося при записі. Друга — системна: куди процес тягне те, що ви записали. Розчарування наприкінці сесії — сума обох відстаней. І це ще кращий випадок.</p>
-<p>У гіршому вони множаться: коли проксі хибна, система щосили оптимізує не те — і що старанніше вона працює, то далі ви від цілі. Мій зелений тест — не сума, а добуток. Скорочуються ці відстані теж по-різному.</p>
-<p>Формулювання, яке стоїть між вами і системою, я далі називатиму <strong>проксі</strong>: це не ціль, це її представник. Представник може бути кращим або гіршим, але він ніколи не дорівнює тому, кого представляє.</p>
+                <h1 id="chapter-6-a-goal-and-its-proxy">Chapter 6. A Goal and Its Proxy<a class="anchor-link" href="#chapter-6-a-goal-and-its-proxy" title="Permanent link">&para;</a></h1>
+<p>&ldquo;Fix the failing test,&rdquo; I typed, and went for coffee. I came back to a green run: the model had commented out the check that was failing and tidily annotated it — &ldquo;temporarily disabled.&rdquo; Formally, my request was fulfilled to the letter. In substance, the exact thing I was afraid of had just happened.</p>
+<p>Whose fault is that? Nobody&rsquo;s. The task in this story simply existed in three versions, and I acted as if there were only one.</p>
+<h2 id="three-versions-of-a-task">Three versions of a task<a class="anchor-link" href="#three-versions-of-a-task" title="Permanent link">&para;</a></h2>
+<p>What you want. What you wrote. What the system optimizes.</p>
+<p>The first lives in your head: &ldquo;the code should be correct, and the test should confirm it.&rdquo; The second lives in the input field: &ldquo;fix the failing test.&rdquo; The third lives inside the process: the model searches for the most plausible response to the second, not the first. It has never seen the first.</p>
+<p>Between these three versions lie two distances, and their nature differs. The first distance is yours: how much of the goal got lost in the writing down. The second is the system&rsquo;s: where the process pulls what you wrote. The disappointment at the end of a session is the sum of both distances. And that&rsquo;s the better case.</p>
+<p>In the worse case they multiply: when the proxy is wrong, the system pours all its effort into optimizing the wrong thing — and the harder it works, the farther you are from the goal. My green test wasn&rsquo;t a sum; it was a product. The two distances also shrink in different ways.</p>
+<p>The phrasing that stands between you and the system I will from here on call the <strong>proxy</strong>: it is not the goal, it is the goal&rsquo;s stand-in. A stand-in can be better or worse, but it never equals the one it stands in for.</p>
 <figure class="book-scheme">
-<svg viewBox="0 0 640 235" role="img" aria-label="Три версії задачі і дві відстані між ними">
+<svg viewBox="0 0 640 235" role="img" aria-label="Three versions of a task and the two distances between them">
   <defs>
     <marker id="s1-gray" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#85736E"/></marker>
   </defs>
   <rect x="0" y="0" width="640" height="235" fill="#FFFFFF"/>
   <rect x="40" y="40" width="160" height="70" rx="10" fill="#FFDBD1" stroke="#8F4C38" stroke-width="1.5"/>
-  <text x="120" y="70" text-anchor="middle" font-size="14" font-weight="600" fill="#231917">ЦІЛЬ</text>
-  <text x="120" y="92" text-anchor="middle" font-size="11.5" fill="#53433F">у голові</text>
+  <text x="120" y="70" text-anchor="middle" font-size="14" font-weight="600" fill="#231917">GOAL</text>
+  <text x="120" y="92" text-anchor="middle" font-size="11.5" fill="#53433F">in your head</text>
   <rect x="240" y="40" width="160" height="70" rx="10" fill="#F5E1A7" stroke="#85736E" stroke-width="1.5"/>
-  <text x="320" y="70" text-anchor="middle" font-size="14" font-weight="600" fill="#231917">ПРОКСІ</text>
-  <text x="320" y="92" text-anchor="middle" font-size="11.5" fill="#53433F">у полі вводу</text>
+  <text x="320" y="70" text-anchor="middle" font-size="14" font-weight="600" fill="#231917">PROXY</text>
+  <text x="320" y="92" text-anchor="middle" font-size="11.5" fill="#53433F">in the input field</text>
   <rect x="440" y="40" width="160" height="70" rx="10" fill="#F1DFDA" stroke="#85736E" stroke-width="1.5"/>
-  <text x="520" y="70" text-anchor="middle" font-size="14" font-weight="600" fill="#231917">ОПТИМІЗАЦІЯ</text>
-  <text x="520" y="92" text-anchor="middle" font-size="11.5" fill="#53433F">у процесі</text>
+  <text x="520" y="70" text-anchor="middle" font-size="14" font-weight="600" fill="#231917">OPTIMIZATION</text>
+  <text x="520" y="92" text-anchor="middle" font-size="11.5" fill="#53433F">in the process</text>
   <line x1="204" y1="75" x2="236" y2="75" stroke="#85736E" stroke-width="1.5" marker-end="url(#s1-gray)"/>
   <line x1="404" y1="75" x2="436" y2="75" stroke="#85736E" stroke-width="1.5" marker-end="url(#s1-gray)"/>
   <line x1="220" y1="112" x2="220" y2="132" stroke="#D8C2BC" stroke-width="1.5"/>
-  <text x="220" y="152" text-anchor="middle" font-size="12" font-weight="600" fill="#723523">відстань 1 — ваша</text>
-  <text x="220" y="170" text-anchor="middle" font-size="11" fill="#53433F">втрати при записі</text>
+  <text x="220" y="152" text-anchor="middle" font-size="12" font-weight="600" fill="#723523">distance 1 — yours</text>
+  <text x="220" y="170" text-anchor="middle" font-size="11" fill="#53433F">lost in the writing</text>
   <line x1="420" y1="112" x2="420" y2="132" stroke="#D8C2BC" stroke-width="1.5"/>
-  <text x="420" y="152" text-anchor="middle" font-size="12" font-weight="600" fill="#723523">відстань 2 — системна</text>
-  <text x="420" y="170" text-anchor="middle" font-size="11" fill="#53433F">тяга до правдоподібного</text>
-  <text x="320" y="212" text-anchor="middle" font-size="12" fill="#8F4C38">хибна проксі: відстані не додаються — множаться</text>
+  <text x="420" y="152" text-anchor="middle" font-size="12" font-weight="600" fill="#723523">distance 2 — the system's</text>
+  <text x="420" y="170" text-anchor="middle" font-size="11" fill="#53433F">the pull toward the plausible</text>
+  <text x="320" y="212" text-anchor="middle" font-size="12" fill="#8F4C38">a wrong proxy: the distances don't add up — they multiply</text>
 </svg>
-<figcaption>Схема 6.1. Три версії задачі і дві відстані між ними</figcaption>
+<figcaption>Figure 6.1. Three versions of a task and the two distances between them</figcaption>
 </figure>
 
-<h2 id="_2">Куди тяжіє машина<a class="anchor-link" href="#_2" title="Permanent link">&para;</a></h2>
-<p>У розділі 2 ми рахували різноманіття — то було перше спостереження про системи. Ось друге: залишена без нагляду, кожна система з&rsquo;їжджає до власної цілі — до стану, який їй «зручний». Це не зловмисність. Це те, куди веде її конструкція, коли ззовні ніхто не тримає.</p>
-<p>Куди зручно моделі? До правдоподібного. Вона видає найправдоподібніше продовження розмови — і «тест зелений, задачу закрито» виглядає правдоподібнішим завершенням, ніж «я розібрався і маю для вас погану новину про ваш код». Правильна відповідь і правдоподібна відповідь часто збігаються — на цьому збігу все й тримається. Але оптимізує вона друге. Завжди друге.</p>
-<p>Це не примха — це конструкція. LLM — статистична модель: кожне наступне слово вона обирає з розподілу ймовірних продовжень, а найгустіше місце будь-якого розподілу — середина, типове, багато разів бачене. Уявіть дзвін нормального розподілу. Без вашого втручання відповідь падає в його верхівку — як кулька скочується на дно лунки. Не через «лінь»: це найстійкіший стан системи. Тут за статистикою проступає загальніша закономірність: будь-яка система, залишена сама на себе, з&rsquo;їжджає до свого найстійкішого стану — модель просто найчистіший її приклад. Скільки це коштує якості і як із середини розподілу виростає слоп — розмова розділу 8.</p>
-<p>Тому будь-яке формулювання виконується буквально: <strong>внутрішня ціль</strong> системи заповнює все, чого у проксі не сказано. Ви не написали «перевірка має лишитися» — і це місце заповнилося найзручнішим: перевірка зникла. Менеджери знають цей ефект як закон Гудхарта: коли міра стає ціллю, вона перестає бути мірою. Наші дві сесії з тестом — його найшвидша демонстрація: від міри до її руйнування минає одна сесія.</p>
-<p>І ще одна ланка, яку легко не помітити. Між вами і моделлю майже завжди стоїть <strong>оболонка</strong> — чат, агент у редакторі, корпоративний асистент. Вона тихо працює з вашим формулюванням: додає приховані інструкції, підкладає контекст, обрізає і форматує — тобто тримає власні підсилювачі й послаблювачі, про які ви не домовлялися. Часто це на вашу користь: оболонка вгадує вашу версію задачі краще, ніж похапцем написане речення, і відстань скорочується.</p>
-<p>Але зауважте, що сталося: ваша версія задачі загорнулась у чужу проксі. Добре, якщо оболонка наближає до того, що у вас у голові. А якщо ні? Тоді відстань росте в місці, якого ви не бачите: ви правите своє формулювання, а зсув сидить в оболонці. Це різноманіття грає на вашому боці, але воно приховане. Оболонка — повноцінний учасник зв&rsquo;язки, тому час від часу питайте не лише «що я написав», а й «що з цього насправді дійшло до моделі».</p>
+<h2 id="the-machines-pull">The machine&rsquo;s pull<a class="anchor-link" href="#the-machines-pull" title="Permanent link">&para;</a></h2>
+<p>In Chapter 2 we counted variety — that was the first observation about systems. Here is the second: left unattended, every system slides toward a goal of its own — toward the state it finds &ldquo;comfortable.&rdquo; Not out of malice. It&rsquo;s where its construction takes it when nobody outside is holding on.</p>
+<p>What is comfortable for the model? The plausible. It produces the most plausible continuation of the conversation — and &ldquo;test green, task closed&rdquo; looks like a more plausible ending than &ldquo;I dug in, and I have bad news about your code.&rdquo; The correct answer and the plausible answer often coincide — that coincidence is what everything rests on. But what the model optimizes is the second. Always the second.</p>
+<p>This isn&rsquo;t a quirk — it&rsquo;s the construction. An LLM is a statistical model: it picks every next word from a distribution of likely continuations, and the densest place in any distribution is the middle — the typical, the seen-many-times. Picture the bell curve. Without your intervention, the answer lands at its peak — the way a marble rolls to the bottom of a dimple. Not out of &ldquo;laziness&rdquo;: that is the system&rsquo;s most stable state. Behind the statistics, a more general regularity shows through: any system left to itself slides toward its most stable state — the model is just its purest example. What this costs in quality, and how slop grows out of the middle of the distribution, is a conversation for Chapter 8.</p>
+<p>That&rsquo;s why every phrasing gets executed literally: the system&rsquo;s <strong>internal goal</strong> fills in everything the proxy leaves unsaid. You didn&rsquo;t write &ldquo;the check must stay&rdquo; — and that blank got filled with the most comfortable option: the check disappeared. Managers know this effect as Goodhart&rsquo;s law: when a measure becomes a target, it ceases to be a measure. Our two sessions with the test are its fastest demonstration: from measure to ruined measure in a single session.</p>
+<p>And one more link that&rsquo;s easy to miss. Between you and the model there is almost always a <strong>shell</strong> — the chat, the agent in your editor, the corporate assistant. It quietly works on your phrasing: adds hidden instructions, slips in context, trims and formats — in other words, it holds amplifiers and attenuators of its own that you never agreed to. Often this works in your favor: the shell guesses your version of the task better than a hastily typed sentence does, and the distance shrinks.</p>
+<p>But notice what just happened: your version of the task got wrapped in someone else&rsquo;s proxy. Good, if the shell brings the result closer to what&rsquo;s in your head. And if not? Then the distance grows in a place you can&rsquo;t see: you keep editing your phrasing, while the drift sits in the shell. That variety plays on your side, but it is hidden. The shell is a full participant in the pair, so every once in a while ask not only &ldquo;what did I write&rdquo; but also &ldquo;how much of it actually reached the model.&rdquo;</p>
 <figure class="book-scheme">
-<svg viewBox="0 0 640 220" role="img" aria-label="Оболонка загортає вашу проксі у власну, приховану">
+<svg viewBox="0 0 640 220" role="img" aria-label="The shell wraps your proxy in its own, hidden one">
   <defs>
     <marker id="s2-gray" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#85736E"/></marker>
   </defs>
   <rect x="0" y="0" width="640" height="220" fill="#FFFFFF"/>
   <rect x="30" y="45" width="110" height="60" rx="10" fill="#FFDBD1" stroke="#8F4C38" stroke-width="1.5"/>
-  <text x="85" y="72" text-anchor="middle" font-size="13" font-weight="600" fill="#231917">ЦІЛЬ</text>
-  <text x="85" y="92" text-anchor="middle" font-size="10.5" fill="#53433F">у голові</text>
+  <text x="85" y="72" text-anchor="middle" font-size="13" font-weight="600" fill="#231917">GOAL</text>
+  <text x="85" y="92" text-anchor="middle" font-size="10.5" fill="#53433F">in your head</text>
   <rect x="170" y="45" width="120" height="60" rx="10" fill="#F5E1A7" stroke="#85736E" stroke-width="1.5"/>
-  <text x="230" y="72" text-anchor="middle" font-size="13" font-weight="600" fill="#231917">ВАША ПРОКСІ</text>
-  <text x="230" y="92" text-anchor="middle" font-size="10.5" fill="#53433F">ви її бачите</text>
+  <text x="230" y="72" text-anchor="middle" font-size="13" font-weight="600" fill="#231917">YOUR PROXY</text>
+  <text x="230" y="92" text-anchor="middle" font-size="10.5" fill="#53433F">you see it</text>
   <rect x="320" y="25" width="170" height="110" rx="10" fill="#FCEAE5" stroke="#85736E" stroke-width="1.5" stroke-dasharray="6 4"/>
-  <text x="405" y="48" text-anchor="middle" font-size="13" font-weight="600" fill="#723523">ОБОЛОНКА</text>
-  <text x="405" y="70" text-anchor="middle" font-size="10.5" fill="#53433F">приховані інструкції</text>
-  <text x="405" y="88" text-anchor="middle" font-size="10.5" fill="#53433F">підкладений контекст</text>
-  <text x="405" y="106" text-anchor="middle" font-size="10.5" fill="#53433F">формати й обрізання</text>
-  <text x="405" y="126" text-anchor="middle" font-size="10" fill="#85736E">ви цього не бачите</text>
+  <text x="405" y="48" text-anchor="middle" font-size="13" font-weight="600" fill="#723523">SHELL</text>
+  <text x="405" y="70" text-anchor="middle" font-size="10.5" fill="#53433F">hidden instructions</text>
+  <text x="405" y="88" text-anchor="middle" font-size="10.5" fill="#53433F">injected context</text>
+  <text x="405" y="106" text-anchor="middle" font-size="10.5" fill="#53433F">formats and trimming</text>
+  <text x="405" y="126" text-anchor="middle" font-size="10" fill="#85736E">you don't see this</text>
   <rect x="520" y="45" width="95" height="60" rx="10" fill="#F1DFDA" stroke="#85736E" stroke-width="1.5"/>
-  <text x="567" y="72" text-anchor="middle" font-size="13" font-weight="600" fill="#231917">МОДЕЛЬ</text>
-  <text x="567" y="92" text-anchor="middle" font-size="10.5" fill="#53433F">бачить чужу</text>
+  <text x="567" y="72" text-anchor="middle" font-size="13" font-weight="600" fill="#231917">MODEL</text>
+  <text x="567" y="92" text-anchor="middle" font-size="10.5" fill="#53433F">sees another's</text>
   <line x1="144" y1="75" x2="166" y2="75" stroke="#85736E" stroke-width="1.5" marker-end="url(#s2-gray)"/>
   <line x1="294" y1="75" x2="316" y2="75" stroke="#85736E" stroke-width="1.5" marker-end="url(#s2-gray)"/>
   <line x1="494" y1="75" x2="516" y2="75" stroke="#85736E" stroke-width="1.5" marker-end="url(#s2-gray)"/>
-  <text x="320" y="185" text-anchor="middle" font-size="12" fill="#8F4C38">добре, якщо оболонка наближає до цілі. А якщо ні — зсув сидить там, куди ви не дивитесь</text>
+  <text x="320" y="185" text-anchor="middle" font-size="12" fill="#8F4C38">good if the shell brings you closer to the goal. If not — the drift sits where you aren't looking</text>
 </svg>
-<figcaption>Схема 6.2. Оболонка: ви бачите свою проксі, модель — чужу</figcaption>
+<figcaption>Figure 6.2. The shell: you see your proxy, the model sees another one</figcaption>
 </figure>
 
-<h2 id="_3">Столяр і стіл<a class="anchor-link" href="#_3" title="Permanent link">&para;</a></h2>
-<p>Прийдіть до столяра і скажіть: «Зробіть мені стіл».</p>
-<p>У столярні не порожнеча — у ній свій контекст. Під рукою заготовки дуба, у кутку фрезер, яким майстер любить працювати, а в руках — пам&rsquo;ять про сотню столів, які він уже зробив. Через місяць ви отримаєте добротний стіл: середній стіл цієї майстерні. Столяр не лінувався і не халтурив. Він зробив свою класику — бо ви не дали йому причин змінювати її.</p>
-<p>А тепер інший замовник: «Обідній стіл на шістьох, кухня два на три, діти малі — без гострих кутів». Той самий майстер, ті самі руки. Але тепер він шукає рішення всередині ваших меж, а не йде за звичною простотою. І помітьте: розміри кухні й округлі кути — це вже готові критерії приймання. Замовник не вигадував їх окремо — щойно він назвав ціль уголос, критерії з&rsquo;явилися з неї самі.</p>
-<p>Модель — столяр із незрівнянно більшою статистикою. Що менше цілі в замовленні, то більше статистики в результаті.</p>
-<h2 id="_4">Ціль перед задачею<a class="anchor-link" href="#_4" title="Permanent link">&para;</a></h2>
-<p>Метод цього розділу — короткий опис цілі, який ви пишете до формулювання задачі. Собі, не моделі.</p>
-<p><strong>Опис цілі.</strong> «Що я хочу отримати і як перевірю, що отримав». Десять секунд. Для того вечора: «Хочу знати, чому падає тест; перевірка поведінки має лишитися; якщо баг у коді — виправити код». Порівняйте з «полагодь тест» — відстань між ними забрала мій вечір.</p>
-<p><strong>Тест буквальності.</strong> Перечитайте формулювання і спитайте: якщо це виконають рівно як написано — буквально, без жодної телепатії — я буду задоволений? Якщо ні, ви щойно зекономили цикл: перепишіть проксі зараз, а не після результату. Це найдешевша перевірка в усій книжці.</p>
-<p><strong>Критерії з цілі.</strong> Названа ціль сама розсипається на критерії приймання — як розміри кухні у столяра. Не доведеться вигадувати список перевірок: він уже сидить у «як перевірю». Куди ці критерії еволюціонують далі — тема розділу 9.</p>
+<h2 id="the-carpenter-and-the-table">The carpenter and the table<a class="anchor-link" href="#the-carpenter-and-the-table" title="Permanent link">&para;</a></h2>
+<p>Walk into a carpenter&rsquo;s workshop and say: &ldquo;Make me a table.&rdquo;</p>
+<p>The workshop is not a void — it has a context of its own. Oak blanks within reach, a router in the corner the master likes working with, and in his hands the memory of a hundred tables he has already built. A month later you get a solid table: this workshop&rsquo;s average table. The carpenter wasn&rsquo;t lazy and didn&rsquo;t cut corners. He made his classic — because you gave him no reason to depart from it.</p>
+<p>Now a different customer: &ldquo;A dining table for six, the kitchen is two by three meters, the kids are small — no sharp corners.&rdquo; Same master, same hands. But now he&rsquo;s searching for a solution inside your constraints instead of following his usual groove. And notice: the kitchen dimensions and the rounded corners are ready-made acceptance criteria. The customer didn&rsquo;t invent them separately — the moment he named the goal out loud, the criteria fell out of it on their own.</p>
+<p>The model is a carpenter with incomparably more statistics. The less goal there is in the order, the more statistics there is in the result.</p>
+<h2 id="the-goal-before-the-task">The goal before the task<a class="anchor-link" href="#the-goal-before-the-task" title="Permanent link">&para;</a></h2>
+<p>The method of this chapter is a short note about the goal, written before you phrase the task. To yourself, not to the model.</p>
+<p><strong>The goal note.</strong> &ldquo;What I want to get and how I&rsquo;ll check that I got it.&rdquo; Ten seconds. For that evening: &ldquo;I want to know why the test fails; the behavior check must stay; if the bug is in the code — fix the code.&rdquo; Compare that with &ldquo;fix the test&rdquo; — the distance between the two cost me my evening.</p>
+<p><strong>The literalness test.</strong> Reread your phrasing and ask: if this gets done exactly as written — literally, with zero telepathy — will I be satisfied? If not, you&rsquo;ve just saved yourself a cycle: rewrite the proxy now, not after the result. This is the cheapest check in the whole book.</p>
+<p><strong>Criteria from the goal.</strong> A named goal breaks apart into acceptance criteria on its own — like the kitchen dimensions at the carpenter&rsquo;s. You won&rsquo;t have to invent a list of checks: it already sits inside &ldquo;how I&rsquo;ll check.&rdquo; Where these criteria evolve from there is the subject of Chapter 9.</p>
 <figure class="book-scheme">
-<svg viewBox="0 0 640 225" role="img" aria-label="Названа ціль розсипається на критерії приймання">
+<svg viewBox="0 0 640 225" role="img" aria-label="A named goal breaks apart into acceptance criteria">
   <defs>
     <marker id="s3-gray" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#85736E"/></marker>
   </defs>
   <rect x="0" y="0" width="640" height="225" fill="#FFFFFF"/>
   <rect x="150" y="25" width="340" height="66" rx="10" fill="#F5E1A7" stroke="#85736E" stroke-width="1.5"/>
-  <text x="320" y="50" text-anchor="middle" font-size="13" font-weight="600" fill="#231917">НАЗВАНА ЦІЛЬ</text>
-  <text x="320" y="72" text-anchor="middle" font-size="11.5" fill="#53433F">«обідній стіл на шістьох, кухня два на три, малі діти»</text>
+  <text x="320" y="50" text-anchor="middle" font-size="13" font-weight="600" fill="#231917">A NAMED GOAL</text>
+  <text x="320" y="72" text-anchor="middle" font-size="11.5" fill="#53433F">"dining table for six, kitchen two by three, small kids"</text>
   <line x1="230" y1="93" x2="135" y2="130" stroke="#85736E" stroke-width="1.5" marker-end="url(#s3-gray)"/>
   <line x1="320" y1="93" x2="320" y2="130" stroke="#85736E" stroke-width="1.5" marker-end="url(#s3-gray)"/>
   <line x1="410" y1="93" x2="505" y2="130" stroke="#85736E" stroke-width="1.5" marker-end="url(#s3-gray)"/>
   <rect x="45" y="136" width="180" height="44" rx="22" fill="#FFDBD1" stroke="#8F4C38" stroke-width="1.5"/>
-  <text x="135" y="163" text-anchor="middle" font-size="11.5" fill="#231917">влазить у кухню 2×3</text>
+  <text x="135" y="163" text-anchor="middle" font-size="11.5" fill="#231917">fits the 2×3 kitchen</text>
   <rect x="230" y="136" width="180" height="44" rx="22" fill="#FFDBD1" stroke="#8F4C38" stroke-width="1.5"/>
-  <text x="320" y="163" text-anchor="middle" font-size="11.5" fill="#231917">шість місць за столом</text>
+  <text x="320" y="163" text-anchor="middle" font-size="11.5" fill="#231917">six seats at the table</text>
   <rect x="415" y="136" width="180" height="44" rx="22" fill="#FFDBD1" stroke="#8F4C38" stroke-width="1.5"/>
-  <text x="505" y="163" text-anchor="middle" font-size="11.5" fill="#231917">без гострих кутів</text>
-  <text x="320" y="210" text-anchor="middle" font-size="12" fill="#8F4C38">критерії приймання не вигадуються окремо — випадають із цілі самі</text>
+  <text x="505" y="163" text-anchor="middle" font-size="11.5" fill="#231917">no sharp corners</text>
+  <text x="320" y="210" text-anchor="middle" font-size="12" fill="#8F4C38">acceptance criteria aren't invented separately — they fall out of the goal</text>
 </svg>
-<figcaption>Схема 6.3. Названа ціль сама розсипається на критерії</figcaption>
+<figcaption>Figure 6.3. A named goal breaks apart into criteria on its own</figcaption>
 </figure>
 
-<p>Опис цілі — не магія. Він скорочує першу відстань — між тим, що в голові, і записом. А заразом дає вам інструмент проти другої: тепер є з чим порівнювати те, що система оптимізувала.</p>
-<p>Десять років я раджу інженерам писати — блог, розсилку, хоча б робочі нотатки. Раніше це була порада для кар&rsquo;єри: помітність, власний голос. Тепер це професійна вимога без жодних лапок: робота з моделлю — це формулювання думок текстом, і перша відстань — між головою і записом — скорочується тільки тренуванням. Хто роками вів розсилку, сідає за промпт із натренованим м&rsquo;язом. Хто ні — тренуватиме його тепер, на живих задачах.</p>
-<h2 id="_5">Той самий тест, друга спроба<a class="anchor-link" href="#_5" title="Permanent link">&para;</a></h2>
-<p>Повертаюся до того вечора — тепер за методом.</p>
-<p>Спершу опис цілі, собі: хочу знати, чому падає тест; перевірка поведінки має лишитися; якщо баг у коді — виправити код. Тепер формулювання, моделі: «Тест X падає. З&rsquo;ясуй причину. Тест перевіряє поведінку Y — ця перевірка має лишитися. Якщо причина в коді — виправ код і поясни, що зламалося. Якщо тест застарів — не чіпай, а скажи, чому вважаєш його застарілим». Дві хвилини замість десяти секунд.</p>
-<p>Відповідь: тест залежав від поточної дати і почав падати з початком нового кварталу. Модель показала рядок і запропонувала зафіксувати дату в тесті. А окремо зауважила, що функція біля цього рядка обробляє межу кварталу підозріло. Той самий інструмент, який уранці ховав перевірку в коментар, увечері знайшов суміжний баг.</p>
-<p>Різниця не в моделі і не в моєму настрої. У першій сесії її внутрішня ціль заповнювала порожнє місце замість мене. У другій порожнього місця не було.</p>
-<h2 id="_6">Рулетка формулювань<a class="anchor-link" href="#_6" title="Permanent link">&para;</a></h2>
-<p>Тепер анти-патерн — і він підступніший за ранковий зелений тест.</p>
-<p>Виглядає так: результат «не те» — людина переписує промпт. Знову «не те» — переписує ще раз. П&rsquo;ятнадцята ітерація за вечір, формулювання обросло уточненнями, роздратування росте. Виглядає як наполеглива робота.</p>
-<p>Але є пастка. Усі п&rsquo;ятнадцять ітерацій крутили проксі — а перша відстань стояла на місці, бо ціль так і не була названа, навіть собі. Розпізнати цей стан просто: спитайте себе, чим саме «не те» поточне рішення. Якщо відповідь — «не знаю, але відчуваю», ви не наближаєтесь до цілі. Ви блукаєте навколо точки, якій не дали координат, і жодна кількість ітерацій це не виправить: випадковий перебір програє гарантовано — питання лише, на якій ітерації ви це помітите.</p>
-<p>Вихід — той самий опис цілі: зупинитися і назвати її. Іноді на цьому місці з&rsquo;ясовується неприємне: ви самі не знаєте, чого хочете. Це найкорисніший результат вечора — тепер це видно, і працювати треба з цим, а не з промптом.</p>
-<h2 id="_7">Відстань масштабується<a class="anchor-link" href="#_7" title="Permanent link">&para;</a></h2>
-<p>Відстань між ціллю і проксі не зникає з масштабом — вона росте. Агент, якому дали проксі «закрити тікет», оптимізує закриття тікета всіма доступними шляхами — про конструкцію, яка це тримає, ітиметься в розділі 14. Команда, якій поставили проксі «більше сторі-поїнтів за спринт», за пів року оптимізує оцінювання, а не продукт, — це вже частина V. Механіка скрізь одна, змінюється лише ціна порожнього місця в цілі.</p>
-<h2 id="_8">У вашому ремеслі<a class="anchor-link" href="#_8" title="Permanent link">&para;</a></h2>
-<p>Три версії задачі є в будь-якому ремеслі — міняється лише матеріал.</p>
-<p><strong>Текст.</strong> Редактор пише: «скороти текст удвічі». Система ріже те, що найлегше різати, — приклади і зв&rsquo;язки — і формально вкладається. Ціль «щоб читалося за п&rsquo;ять хвилин без втрати головного аргументу» дає зовсім інше скорочення — і критерій перевірки в ній уже є.</p>
-<p><strong>Аналітика.</strong> Аналітик просить модель «зробити огляд ринку», не сказавши, яке рішення огляд має підтримати чи спростувати, — і отримує найправдоподібніший у світі огляд, який не підтримує нічого. Опис цілі тут — одне речення: «вирішуємо, чи заходити в сегмент X; огляд має дати аргументи за і проти».</p>
-<p><strong>Дизайн.</strong> «Зроби презентацію сучаснішою» — запрошення до чужої статистики. «Презентація для ради директорів, десять хвилин, одна думка на слайд» — замовлення чітке.</p>
+<p>The goal note isn&rsquo;t magic. It shortens the first distance — between what&rsquo;s in your head and what&rsquo;s written down. And along the way it hands you a tool against the second: now there is something to compare the system&rsquo;s optimization against.</p>
+<p>For ten years I&rsquo;ve been telling engineers to write — a blog, a newsletter, at the very least working notes. It used to be career advice: visibility, a voice of your own. Now it&rsquo;s a professional requirement with no air quotes: working with a model is putting thought into text, and the first distance — between head and written word — shrinks only with training. Someone who has run a newsletter for years sits down to a prompt with a trained muscle. Someone who hasn&rsquo;t will be training it now, on live tasks.</p>
+<h2 id="the-same-test-second-try">The same test, second try<a class="anchor-link" href="#the-same-test-second-try" title="Permanent link">&para;</a></h2>
+<p>Back to that evening — this time by the method.</p>
+<p>First the goal note, to myself: I want to know why the test fails; the behavior check must stay; if the bug is in the code — fix the code. Now the phrasing, to the model: &ldquo;Test X is failing. Find the cause. The test checks behavior Y — that check must stay. If the cause is in the code — fix the code and explain what broke. If the test is outdated — don&rsquo;t touch it; tell me why you consider it outdated.&rdquo; Two minutes instead of ten seconds.</p>
+<p>The answer: the test depended on the current date and had started failing when the new quarter began. The model pointed to the line and proposed pinning the date in the test. And separately it remarked that the function next to that line handles the quarter boundary suspiciously. The same tool that hid a check inside a comment in the morning found an adjacent bug in the evening.</p>
+<p>The difference isn&rsquo;t the model, and it isn&rsquo;t my mood. In the first session, its internal goal was filling the blank space in my place. In the second, there was no blank space.</p>
+<h2 id="prompt-roulette">Prompt roulette<a class="anchor-link" href="#prompt-roulette" title="Permanent link">&para;</a></h2>
+<p>Now the anti-pattern — and it&rsquo;s sneakier than the morning&rsquo;s green test.</p>
+<p>It looks like this: the result is &ldquo;not it&rdquo; — the person rewrites the prompt. &ldquo;Not it&rdquo; again — rewrites once more. Fifteenth iteration of the evening, the phrasing has grown a crust of clarifications, the irritation is building. It looks like persistent work.</p>
+<p>But there&rsquo;s a catch. All fifteen iterations were spinning the proxy — while the first distance stood still, because the goal was never named, not even to yourself. The state is easy to recognize: ask yourself what exactly makes the current result &ldquo;not it.&rdquo; If the answer is &ldquo;I don&rsquo;t know, but I can feel it,&rdquo; you are not getting closer to the goal. You are wandering around a point you never gave coordinates, and no number of iterations will fix that: random search is guaranteed to lose — the only question is on which iteration you notice.</p>
+<p>The way out is the same goal note: stop and name the goal. Sometimes something unpleasant surfaces right there: you don&rsquo;t know what you want. That is the most useful result of the evening — now it&rsquo;s visible, and that is what you need to work on, not the prompt.</p>
+<h2 id="the-distance-scales">The distance scales<a class="anchor-link" href="#the-distance-scales" title="Permanent link">&para;</a></h2>
+<p>The distance between goal and proxy doesn&rsquo;t vanish with scale — it grows. An agent handed the proxy &ldquo;close the ticket&rdquo; optimizes ticket-closing by every available route — the construction that holds this in check is Chapter 14. A team handed the proxy &ldquo;more story points per sprint&rdquo; is, six months later, optimizing estimation rather than the product — that&rsquo;s Part V. The mechanics are the same everywhere; only the price of the blank space in the goal changes.</p>
+<h2 id="in-your-craft">In your craft<a class="anchor-link" href="#in-your-craft" title="Permanent link">&para;</a></h2>
+<p>The three versions of a task exist in every craft — only the material changes.</p>
+<p><strong>Text.</strong> An editor writes: &ldquo;cut the text in half.&rdquo; The system cuts whatever is easiest to cut — examples and connective tissue — and formally hits the target. The goal &ldquo;readable in five minutes without losing the main argument&rdquo; produces an entirely different cut — and the check criterion is already inside it.</p>
+<p><strong>Analytics.</strong> An analyst asks the model for &ldquo;a market overview&rdquo; without saying which decision the overview is supposed to support or refute — and gets the most plausible overview in the world, one that supports nothing. The goal note here is one sentence: &ldquo;we&rsquo;re deciding whether to enter segment X; the overview must give arguments for and against.&rdquo;</p>
+<p><strong>Design.</strong> &ldquo;Make the deck look more modern&rdquo; is an invitation to someone else&rsquo;s statistics. &ldquo;A deck for the board, ten minutes, one idea per slide&rdquo; is a clear order.</p>
 <hr />
-<p>Наостанок — три питання до вашої практики.</p>
-<p>— Згадайте останнє «не те» від моделі: ви можете назвати, чим саме воно «не те» — чи тільки відчуваєте?</p>
-<p>— Візьміть свій сьогоднішній промпт і застосуйте тест буквальності: якщо його виконають дослівно — ви задоволені?</p>
-<p>— І глибше: скільки з ваших задач цього тижня мали названу ціль — а скільки були проксі, які ви сформулювали, не спитавши себе, навіщо?</p>
-<div class="subscribe-embed"><iframe src="https://kiosan.substack.com/embed?transparent=1" width="480" height="320" style="border: 0; background: transparent" title="Підписатися на розсилку" loading="lazy" frameborder="0" scrolling="no"></iframe></div>
-                <div class="check-items" data-page-key="part-2-goals/06-goal-and-proxy"><div class="check-items-header"><span class="check-items-title">Key Takeaways</span><span class="check-items-progress"></span></div><label class="check-item" data-index="0"><input type="checkbox" class="check-item-input" data-index="0"><span class="check-item-box"><svg class="check-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span><span class="check-item-text">Задача існує у трьох версіях: у голові, у формулюванні, в оптимізації системи. Розчарування живе у відстані між ними.</span></label>
-<label class="check-item" data-index="1"><input type="checkbox" class="check-item-input" data-index="1"><span class="check-item-box"><svg class="check-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span><span class="check-item-text">У системи є внутрішня ціль: модель тяжіє до правдоподібного, а не до правильного.</span></label>
-<label class="check-item" data-index="2"><input type="checkbox" class="check-item-input" data-index="2"><span class="check-item-box"><svg class="check-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span><span class="check-item-text">Фіксуй ціль до формулювання задачі: короткий опис — що хочу отримати і як перевірю.</span></label>
-<label class="check-item" data-index="3"><input type="checkbox" class="check-item-input" data-index="3"><span class="check-item-box"><svg class="check-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span><span class="check-item-text">Тест буквальності: якщо зроблять рівно як написано — ти задоволений?</span></label>
-<label class="check-item" data-index="4"><input type="checkbox" class="check-item-input" data-index="4"><span class="check-item-box"><svg class="check-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span><span class="check-item-text">Поки ціль не названа, ітерації промпту — блукання навколо неназваної точки.</span></label></div>
-                <nav class="page-nav"><a class="page-nav-link page-nav-prev" href="/variety/read/part-2-goals/"><span class="page-nav-label">← Попередня</span></a>
-<a class="page-nav-link page-nav-next" href="/variety/read/part-3-activity/"><span class="page-nav-label">Наступна →</span></a></nav>
+<p>To close — three questions for your practice.</p>
+<p>— Recall the model&rsquo;s last &ldquo;not it&rdquo;: can you name what exactly makes it &ldquo;not it&rdquo; — or can you only feel it?</p>
+<p>— Take today&rsquo;s prompt and run the literalness test: if it gets done word for word — are you satisfied?</p>
+<p>— And deeper: how many of your tasks this week had a named goal — and how many were proxies you phrased without asking yourself why?</p>
+                <div class="check-items" data-page-key="part-2-goals/06-goal-and-proxy"><div class="check-items-header"><span class="check-items-title">Key Takeaways</span><span class="check-items-progress"></span></div><label class="check-item" data-index="0"><input type="checkbox" class="check-item-input" data-index="0"><span class="check-item-box"><svg class="check-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span><span class="check-item-text">A task exists in three versions: in your head, in the phrasing, in what the system optimizes. Disappointment lives in the distance between them.</span></label>
+<label class="check-item" data-index="1"><input type="checkbox" class="check-item-input" data-index="1"><span class="check-item-box"><svg class="check-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span><span class="check-item-text">The system has an internal goal: the model pulls toward the plausible, not the correct.</span></label>
+<label class="check-item" data-index="2"><input type="checkbox" class="check-item-input" data-index="2"><span class="check-item-box"><svg class="check-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span><span class="check-item-text">Write the goal down before phrasing the task: a short note — what I want and how I'll check.</span></label>
+<label class="check-item" data-index="3"><input type="checkbox" class="check-item-input" data-index="3"><span class="check-item-box"><svg class="check-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span><span class="check-item-text">The literalness test: if it gets done exactly as written — are you satisfied?</span></label>
+<label class="check-item" data-index="4"><input type="checkbox" class="check-item-input" data-index="4"><span class="check-item-box"><svg class="check-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span><span class="check-item-text">Until the goal is named, prompt iterations are wandering around an unnamed point.</span></label></div>
+                <nav class="page-nav"><a class="page-nav-link page-nav-prev" href="/variety/read/en/part-2-goals/"><span class="page-nav-label">← Previous</span></a>
+<a class="page-nav-link page-nav-next" href="/variety/read/en/part-3-activity/"><span class="page-nav-label">Next →</span></a></nav>
             </article>
         </main>
     </div>
     <script>
-var SIDEBAR_WIDTH_KEY = 'essay-sidebar-width-system-for-ai-engineers';
-var SIDEBAR_COLLAPSED_KEY = 'essay-sidebar-collapsed-system-for-ai-engineers';
+var SIDEBAR_WIDTH_KEY = 'essay-sidebar-width-system-for-ai-engineers-en';
+var SIDEBAR_COLLAPSED_KEY = 'essay-sidebar-collapsed-system-for-ai-engineers-en';
 var ESSAY_LOCAL_MODE = false;
 document.addEventListener('DOMContentLoaded', function() {
   var sidebar = document.getElementById('sidebar');

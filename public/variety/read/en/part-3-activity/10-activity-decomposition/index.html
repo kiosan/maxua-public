@@ -1,0 +1,1385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 10. The Components of Activity — Requisite Variety: A Systems Method for Working with AI</title>
+    <script>
+    // Blocking: apply saved sidebar state before first paint to prevent layout jump
+    (function() {
+        var d = document.documentElement;
+        if (window.innerWidth <= 900) return;
+        var collapsed = localStorage.getItem('essay-sidebar-collapsed-system-for-ai-engineers-en') === '1';
+        if (collapsed) d.classList.add('sidebar-collapsed');
+        var w = localStorage.getItem('essay-sidebar-width-system-for-ai-engineers-en');
+        if (w && !collapsed) {
+            var px = Math.max(200, Math.min(parseInt(w, 10), 480));
+            d.style.setProperty('--sidebar-width', px + 'px');
+        }
+    })();
+    </script>
+    <style>
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v18/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuLyfAZ9hiA.woff2) format('woff2');
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v18/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuI6fAZ9hiA.woff2) format('woff2');
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v18/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuGKYAZ9hiA.woff2) format('woff2');
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v18/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuFuYAZ9hiA.woff2) format('woff2');
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/jetbrainsmono/v18/tDbY2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKxjPVmUsaaDhw.woff2) format('woff2');
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/jetbrainsmono/v18/tDbY2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKxTPVmUsaaDhw.woff2) format('woff2');
+}
+:root {
+  --md-primary: #4C662B;
+  --md-surface-tint: #4C662B;
+  --md-on-primary: #FFFFFF;
+  --md-primary-container: #CDEDA3;
+  --md-on-primary-container: #354E16;
+  --md-secondary: #586249;
+  --md-on-secondary: #FFFFFF;
+  --md-secondary-container: #DCE7C8;
+  --md-on-secondary-container: #404A33;
+  --md-tertiary: #386663;
+  --md-on-tertiary: #FFFFFF;
+  --md-tertiary-container: #BCECE7;
+  --md-on-tertiary-container: #1F4E4B;
+  --md-error: #BA1A1A;
+  --md-on-error: #FFFFFF;
+  --md-error-container: #FFDAD6;
+  --md-on-error-container: #93000A;
+  --md-background: #F9FAEF;
+  --md-on-background: #1A1C16;
+  --md-surface: #F9FAEF;
+  --md-on-surface: #1A1C16;
+  --md-surface-variant: #E1E4D5;
+  --md-on-surface-variant: #44483D;
+  --md-outline: #75796C;
+  --md-outline-variant: #C5C8BA;
+  --md-shadow: #000000;
+  --md-scrim: #000000;
+  --md-inverse-surface: #2F312A;
+  --md-inverse-on-surface: #F1F2E6;
+  --md-inverse-primary: #B1D18A;
+  --md-primary-fixed: #CDEDA3;
+  --md-on-primary-fixed: #102000;
+  --md-primary-fixed-dim: #B1D18A;
+  --md-on-primary-fixed-variant: #354E16;
+  --md-secondary-fixed: #DCE7C8;
+  --md-on-secondary-fixed: #151E0B;
+  --md-secondary-fixed-dim: #BFCBAD;
+  --md-on-secondary-fixed-variant: #404A33;
+  --md-tertiary-fixed: #BCECE7;
+  --md-on-tertiary-fixed: #00201E;
+  --md-tertiary-fixed-dim: #A0D0CB;
+  --md-on-tertiary-fixed-variant: #1F4E4B;
+  --md-surface-dim: #DADBD0;
+  --md-surface-bright: #F9FAEF;
+  --md-surface-container-lowest: #FFFFFF;
+  --md-surface-container-low: #F3F4E9;
+  --md-surface-container: #EEEFE3;
+  --md-surface-container-high: #E8E9DE;
+  --md-surface-container-highest: #E2E3D8;
+}
+pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.codehilite .hll { background-color: #ffffcc }
+.codehilite { background: #f8f8f8; }
+.codehilite .c { color: #3D7B7B; font-style: italic } /* Comment */
+.codehilite .err { border: 1px solid #F00 } /* Error */
+.codehilite .k { color: #008000; font-weight: bold } /* Keyword */
+.codehilite .o { color: #666 } /* Operator */
+.codehilite .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
+.codehilite .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
+.codehilite .cp { color: #9C6500 } /* Comment.Preproc */
+.codehilite .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
+.codehilite .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
+.codehilite .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
+.codehilite .gd { color: #A00000 } /* Generic.Deleted */
+.codehilite .ge { font-style: italic } /* Generic.Emph */
+.codehilite .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+.codehilite .gr { color: #E40000 } /* Generic.Error */
+.codehilite .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.codehilite .gi { color: #008400 } /* Generic.Inserted */
+.codehilite .go { color: #717171 } /* Generic.Output */
+.codehilite .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.codehilite .gs { font-weight: bold } /* Generic.Strong */
+.codehilite .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.codehilite .gt { color: #04D } /* Generic.Traceback */
+.codehilite .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.codehilite .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.codehilite .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.codehilite .kp { color: #008000 } /* Keyword.Pseudo */
+.codehilite .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.codehilite .kt { color: #B00040 } /* Keyword.Type */
+.codehilite .m { color: #666 } /* Literal.Number */
+.codehilite .s { color: #BA2121 } /* Literal.String */
+.codehilite .na { color: #687822 } /* Name.Attribute */
+.codehilite .nb { color: #008000 } /* Name.Builtin */
+.codehilite .nc { color: #00F; font-weight: bold } /* Name.Class */
+.codehilite .no { color: #800 } /* Name.Constant */
+.codehilite .nd { color: #A2F } /* Name.Decorator */
+.codehilite .ni { color: #717171; font-weight: bold } /* Name.Entity */
+.codehilite .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
+.codehilite .nf { color: #00F } /* Name.Function */
+.codehilite .nl { color: #767600 } /* Name.Label */
+.codehilite .nn { color: #00F; font-weight: bold } /* Name.Namespace */
+.codehilite .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.codehilite .nv { color: #19177C } /* Name.Variable */
+.codehilite .ow { color: #A2F; font-weight: bold } /* Operator.Word */
+.codehilite .w { color: #BBB } /* Text.Whitespace */
+.codehilite .mb { color: #666 } /* Literal.Number.Bin */
+.codehilite .mf { color: #666 } /* Literal.Number.Float */
+.codehilite .mh { color: #666 } /* Literal.Number.Hex */
+.codehilite .mi { color: #666 } /* Literal.Number.Integer */
+.codehilite .mo { color: #666 } /* Literal.Number.Oct */
+.codehilite .sa { color: #BA2121 } /* Literal.String.Affix */
+.codehilite .sb { color: #BA2121 } /* Literal.String.Backtick */
+.codehilite .sc { color: #BA2121 } /* Literal.String.Char */
+.codehilite .dl { color: #BA2121 } /* Literal.String.Delimiter */
+.codehilite .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.codehilite .s2 { color: #BA2121 } /* Literal.String.Double */
+.codehilite .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
+.codehilite .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.codehilite .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
+.codehilite .sx { color: #008000 } /* Literal.String.Other */
+.codehilite .sr { color: #A45A77 } /* Literal.String.Regex */
+.codehilite .s1 { color: #BA2121 } /* Literal.String.Single */
+.codehilite .ss { color: #19177C } /* Literal.String.Symbol */
+.codehilite .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.codehilite .fm { color: #00F } /* Name.Function.Magic */
+.codehilite .vc { color: #19177C } /* Name.Variable.Class */
+.codehilite .vg { color: #19177C } /* Name.Variable.Global */
+.codehilite .vi { color: #19177C } /* Name.Variable.Instance */
+.codehilite .vm { color: #19177C } /* Name.Variable.Magic */
+.codehilite .il { color: #666 } /* Literal.Number.Integer.Long */
+/* Reset & Base */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --sidebar-width: 272px;
+  --sidebar-collapsed-width: 0px;
+}
+
+html {
+  font-size: var(--md-base-size, 18px);
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--md-font-family, 'Inter', sans-serif);
+  font-weight: var(--md-body-weight, 400);
+  line-height: var(--md-line-height, 1.7);
+  color: var(--md-on-surface, #231917);
+  background: var(--md-background, #FFF8F6);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Layout */
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: var(--sidebar-width);
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--md-surface-container-low, #FFF1ED);
+  border-right: 1px solid var(--md-outline-variant, #D8C2BC);
+  z-index: 100;
+  transition: width 0.25s ease, transform 0.3s ease;
+  overflow: hidden;
+}
+
+/* Sidebar header */
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 1rem 0.75rem 1rem 1.25rem;
+  border-bottom: 1px solid var(--md-outline-variant, #D8C2BC);
+  flex-shrink: 0;
+}
+
+.sidebar-title {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--md-on-surface, #231917);
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+
+.sidebar-collapse-btn {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 0.375rem;
+  background: transparent;
+  color: var(--md-on-surface-variant, #53433F);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.sidebar-collapse-btn:hover {
+  background: var(--md-surface-container, #FCEAE5);
+  color: var(--md-on-surface, #231917);
+}
+
+/* Sidebar nav */
+.sidebar-nav {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 0.5rem 0;
+}
+
+.nav-tree {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.nav-tree .nav-tree {
+  padding-left: 0.5rem;
+  margin-left: 0.875rem;
+  border-left: 1px solid var(--md-outline-variant, #D8C2BC);
+}
+
+.nav-item {
+  position: relative;
+}
+
+.nav-item a,
+.nav-item .nav-label {
+  display: block;
+  padding: 0.375rem 0.75rem;
+  margin: 1px 0.5rem;
+  font-size: 0.8rem;
+  font-weight: 400;
+  color: var(--md-on-surface-variant, #53433F);
+  text-decoration: none;
+  transition: all 0.15s ease;
+  border-radius: 0.375rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.nav-item .nav-label {
+  color: var(--md-on-surface, #231917);
+  font-weight: 500;
+  cursor: default;
+}
+
+.nav-item a:hover {
+  color: var(--md-on-surface, #231917);
+  background: var(--md-surface-container, #FCEAE5);
+}
+
+.nav-item.active > a {
+  color: var(--md-on-primary-container, #723523);
+  font-weight: 500;
+  background: var(--md-primary-container, #FFDBD1);
+}
+
+/* Newsletter issues under a chapter */
+.nav-count {
+  display: inline-block;
+  min-width: 1.15rem;
+  padding: 0 0.35rem;
+  margin-left: 0.4rem;
+  font-size: 0.65rem;
+  line-height: 1.15rem;
+  text-align: center;
+  border-radius: 999px;
+  background: var(--md-surface-container, #FCEAE5);
+  color: var(--md-on-surface-variant, #53433F);
+  vertical-align: middle;
+}
+.nav-item.active > a .nav-count { background: rgba(255,255,255,0.6); }
+.nav-tree.nav-issues {
+  border-left-style: dashed;
+}
+.nav-issue a {
+  font-size: 0.74rem;
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+}
+.nav-issue a::before {
+  content: "✉";
+  margin-right: 0.35rem;
+  font-size: 0.7rem;
+  opacity: 0.7;
+}
+.nav-item.active-parent > a {
+  color: var(--md-on-surface, #231917);
+  font-weight: 500;
+}
+
+/* Resize handle */
+.resize-handle {
+  position: absolute;
+  top: 0;
+  right: -3px;
+  width: 6px;
+  height: 100%;
+  cursor: col-resize;
+  z-index: 110;
+  transition: background 0.15s ease;
+}
+
+.resize-handle:hover,
+.resize-handle.active {
+  background: var(--md-primary, #8F4C38);
+  opacity: 0.3;
+}
+
+body.resizing {
+  cursor: col-resize;
+  user-select: none;
+}
+
+/* Sidebar expand button (visible when collapsed, desktop) */
+.sidebar-expand-btn {
+  display: none;
+  position: fixed;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 200;
+  width: 36px;
+  height: 36px;
+  align-items: center;
+  justify-content: center;
+  background: var(--md-surface, #FFF8F6);
+  border: 1px solid var(--md-outline-variant, #D8C2BC);
+  border-radius: 0.5rem;
+  cursor: pointer;
+  color: var(--md-on-surface-variant, #53433F);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  transition: all 0.15s ease;
+}
+
+.sidebar-expand-btn:hover {
+  background: var(--md-surface-container, #FCEAE5);
+  color: var(--md-on-surface, #231917);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+/* Collapsed state (set on <html>) */
+.sidebar-collapsed .sidebar {
+  width: 0;
+  border-right-color: transparent;
+}
+
+.sidebar-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1rem;
+  padding: 0.75rem 1.25rem;
+  border-top: 1px solid var(--md-outline-variant);
+  font-size: 0.8rem;
+}
+.sidebar-link {
+  color: var(--md-on-surface-variant);
+  text-decoration: none;
+}
+.sidebar-link:hover { color: var(--md-primary); text-decoration: underline; }
+
+.sidebar-collapsed .sidebar-header,
+.sidebar-collapsed .sidebar-links,
+.sidebar-collapsed .sidebar-nav,
+.sidebar-collapsed .resize-handle {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.sidebar-collapsed .sidebar-expand-btn {
+  display: flex;
+}
+
+.sidebar-collapsed .content {
+  margin-left: 0;
+}
+
+/* Mobile sidebar toggle */
+.sidebar-toggle {
+  display: none;
+  position: fixed;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 200;
+  width: 36px;
+  height: 36px;
+  align-items: center;
+  justify-content: center;
+  background: var(--md-surface, #FFF8F6);
+  border: 1px solid var(--md-outline-variant, #D8C2BC);
+  border-radius: 0.5rem;
+  cursor: pointer;
+  color: var(--md-on-surface-variant, #53433F);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+
+.sidebar-toggle:hover {
+  background: var(--md-surface-container, #FCEAE5);
+  color: var(--md-on-surface, #231917);
+}
+
+/* Content */
+.content {
+  margin-left: var(--sidebar-width);
+  flex: 1;
+  min-width: 0;
+  transition: margin-left 0.25s ease;
+}
+
+.article {
+  max-width: var(--md-max-width, 720px);
+  margin: 0 auto;
+  padding: var(--md-content-padding, 2rem);
+  padding-top: 3rem;
+  padding-bottom: 4rem;
+}
+
+/* Typography */
+.article h1 {
+  font-size: 2.25rem;
+  font-weight: var(--md-heading-weight, 700);
+  line-height: 1.2;
+  margin-bottom: 1.5rem;
+  color: var(--md-on-surface, #231917);
+  letter-spacing: -0.02em;
+}
+
+.article h2 {
+  font-size: 1.6rem;
+  font-weight: var(--md-heading-weight, 700);
+  line-height: 1.25;
+  margin-top: 3rem;
+  margin-bottom: 1rem;
+  color: var(--md-on-surface, #231917);
+  padding-bottom: 0.4rem;
+  border-bottom: 2px solid var(--md-primary-container, #FFDBD1);
+}
+
+.article h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1.3;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+  color: var(--md-on-surface, #231917);
+}
+
+.article h4 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.article p {
+  margin-bottom: 1.25rem;
+}
+
+.article a {
+  color: var(--md-primary, #8F4C38);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.article a:hover {
+  color: var(--md-on-primary-container, #723523);
+}
+
+/* Lists */
+.article ul, .article ol {
+  margin-bottom: 1.25rem;
+  padding-left: 1.5rem;
+}
+
+.article li {
+  margin-bottom: 0.35rem;
+}
+
+.article li > ul, .article li > ol {
+  margin-top: 0.35rem;
+  margin-bottom: 0;
+}
+
+/* Blockquote */
+.article blockquote {
+  border-left: 4px solid var(--md-primary, #8F4C38);
+  background: var(--md-primary-container, #FFDBD1);
+  padding: 1rem 1.25rem;
+  margin: 1.5rem 0;
+  border-radius: 0 0.5rem 0.5rem 0;
+  color: var(--md-on-primary-container, #723523);
+}
+
+.article blockquote p:last-child {
+  margin-bottom: 0;
+}
+
+/* Code */
+.article code {
+  font-family: var(--md-font-family-mono, 'JetBrains Mono', monospace);
+  font-size: 0.85em;
+  background: var(--md-surface-container, #FCEAE5);
+  padding: 0.15em 0.4em;
+  border-radius: 0.25rem;
+}
+
+.article pre {
+  margin: 1.5rem 0;
+  border-radius: 0.75rem;
+  overflow-x: auto;
+}
+
+.article .codehilite {
+  background: var(--md-surface-container-lowest, #FFFFFF);
+  border: 1px solid var(--md-outline-variant, #D8C2BC);
+  border-radius: 0.75rem;
+  padding: 1rem 1.25rem;
+  overflow-x: auto;
+  margin: 1.5rem 0;
+}
+
+.article .codehilite code {
+  background: none;
+  padding: 0;
+  font-size: 0.82em;
+}
+
+/* Tables */
+.article table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  font-size: 0.9rem;
+}
+
+.article th {
+  background: var(--md-surface-container, #FCEAE5);
+  font-weight: 600;
+  text-align: left;
+  padding: 0.75rem 1rem;
+  border-bottom: 2px solid var(--md-outline-variant, #D8C2BC);
+}
+
+.article td {
+  padding: 0.6rem 1rem;
+  border-bottom: 1px solid var(--md-surface-container, #FCEAE5);
+}
+
+/* Anchor links */
+.anchor-link {
+  font-size: 0.8em;
+  opacity: 0;
+  margin-left: 0.5rem;
+  text-decoration: none !important;
+  transition: opacity 0.15s;
+}
+
+.article h2:hover .anchor-link,
+.article h3:hover .anchor-link,
+.article h4:hover .anchor-link {
+  opacity: 0.5;
+}
+
+/* Footnotes */
+.footnote {
+  font-size: 0.85rem;
+  color: var(--md-on-surface-variant, #53433F);
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--md-outline-variant, #D8C2BC);
+}
+
+/* Images */
+.article img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+  margin: 1rem 0;
+}
+
+/* Horizontal rule */
+.article hr {
+  border: none;
+  border-top: 2px solid var(--md-surface-container, #FCEAE5);
+  margin: 2.5rem 0;
+}
+
+/* Check Items */
+.check-items {
+  margin-top: 2.5rem;
+  padding: 1.25rem;
+  background: var(--md-surface-container-low, #FFF1ED);
+  border: 1px solid var(--md-outline-variant, #D8C2BC);
+  border-radius: 0.75rem;
+}
+
+.check-items-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.625rem;
+  border-bottom: 1px solid var(--md-outline-variant, #D8C2BC);
+}
+
+.check-items-title {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--md-on-surface, #231917);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.check-items-progress {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--md-on-surface-variant, #53433F);
+}
+
+.check-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.625rem 0.5rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  user-select: none;
+}
+
+.check-item:hover {
+  background: var(--md-surface-container, #FCEAE5);
+}
+
+.check-item-input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.check-item-box {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  margin-top: 1px;
+  border: 2px solid var(--md-outline, #85736E);
+  border-radius: 0.3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  background: transparent;
+}
+
+.check-item-icon {
+  width: 14px;
+  height: 14px;
+  opacity: 0;
+  transform: scale(0.5);
+  transition: all 0.2s ease;
+  color: var(--md-on-primary, #FFFFFF);
+}
+
+.check-item-input:checked ~ .check-item-box {
+  background: var(--md-primary, #8F4C38);
+  border-color: var(--md-primary, #8F4C38);
+}
+
+.check-item-input:checked ~ .check-item-box .check-item-icon {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.check-item-text {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--md-on-surface, #231917);
+  transition: color 0.15s ease;
+}
+
+.check-item-input:checked ~ .check-item-text {
+  color: var(--md-on-surface-variant, #53433F);
+}
+
+/* Page Navigation (Prev / Next) */
+.page-nav {
+  display: flex;
+  gap: 1rem;
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--md-outline-variant, #D8C2BC);
+}
+
+.page-nav-link {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.875rem 1rem;
+  border: 1px solid var(--md-outline-variant, #D8C2BC);
+  border-radius: 0.625rem;
+  text-decoration: none;
+  transition: all 0.15s ease;
+  min-width: 0;
+}
+
+.page-nav-link:hover {
+  border-color: var(--md-primary, #8F4C38);
+  background: var(--md-surface-container-low, #FFF1ED);
+}
+
+.page-nav-next {
+  align-items: flex-end;
+  text-align: right;
+}
+
+.page-nav-disabled {
+  visibility: hidden;
+}
+
+.page-nav-label {
+  font-size: 0.7rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--md-on-surface-variant, #53433F);
+}
+
+.page-nav-title {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--md-on-surface, #231917);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.page-nav-link:hover .page-nav-title {
+  color: var(--md-primary, #8F4C38);
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .sidebar {
+    transform: translateX(-100%);
+    width: 280px !important;
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+    box-shadow: 4px 0 24px rgba(0,0,0,0.1);
+  }
+
+  .resize-handle,
+  .sidebar-collapse-btn,
+  .sidebar-expand-btn {
+    display: none !important;
+  }
+
+  .sidebar-toggle {
+    display: flex;
+  }
+
+  /* Hide desktop collapse state on mobile */
+  .sidebar-collapsed .sidebar {
+    width: 280px !important;
+  }
+
+  .sidebar-collapsed .sidebar-header,
+  .sidebar-collapsed .sidebar-nav {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .content {
+    margin-left: 0;
+  }
+
+  .sidebar-collapsed .content {
+    margin-left: 0;
+  }
+
+  .article {
+    padding: 1.25rem;
+    padding-top: 4rem;
+  }
+
+  .article h1 {
+    font-size: 1.75rem;
+  }
+
+  .article h2 {
+    font-size: 1.35rem;
+  }
+}
+
+/* Book schemes (inline SVG figures) */
+.book-scheme {
+  margin: 2rem 0;
+  text-align: center;
+}
+
+.book-scheme svg {
+  width: 100%;
+  max-width: 640px;
+  height: auto;
+}
+
+.book-scheme figcaption {
+  font-size: 0.8rem;
+  color: var(--md-on-surface-variant, #53433F);
+  margin-top: 0.5rem;
+}
+
+/* Nav progress badges (from progress/progress.json) */
+.nav-status {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  margin-left: 0.4rem;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+
+.nav-status-done {
+  background: var(--md-primary, #8F4C38);
+}
+
+.nav-status-wip {
+  background: transparent;
+  border: 1.5px solid var(--md-primary, #8F4C38);
+  box-sizing: border-box;
+}
+
+/* Book callout — одна сильна думка, винесена в окремий блок (pull quote) */
+.book-callout {
+  margin: 2.25rem 0;
+  padding: 0.4rem 0 0.4rem 1.4rem;
+  border-left: 3px solid var(--md-primary, #8F4C38);
+  font-size: 1.18em;
+  line-height: 1.55;
+  font-weight: 500;
+  color: var(--md-on-primary-container, #723523);
+}
+@media print {
+  .book-callout { break-inside: avoid; }
+}
+
+/* Substack subscribe embed on published chapter pages */
+.subscribe-embed {
+  margin: 1.75rem 0;
+  display: flex;
+  justify-content: center;
+}
+.subscribe-embed iframe {
+  max-width: 100%;
+}
+
+
+    </style>
+<script async data-id="101511163" src="//static.getclicky.com/js"></script>
+</head>
+<body>
+    <div class="layout">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <span class="sidebar-title">Requisite Variety: A Systems Method for Working with AI</span>
+                <button class="sidebar-collapse-btn" id="sidebar-collapse" aria-label="Collapse sidebar">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="11 17 6 12 11 7"></polyline>
+                        <polyline points="18 17 13 12 18 7"></polyline>
+                    </svg>
+                </button>
+            </div>
+            <nav class="sidebar-nav">
+                <ul class="nav-tree" data-depth="0"><li class="nav-item">
+<a href="/variety/read/en/">Requisite Variety</a>
+</li>
+<li class="nav-item">
+<a href="/variety/read/en/part-1-system/">Part I. The system you actually control</a>
+<ul class="nav-tree" data-depth="1"><li class="nav-item">
+<a href="/variety/read/en/part-1-system/02-requisite-variety/">Chapter 2. The Law of Requisite Variety</a>
+</li></ul>
+</li>
+<li class="nav-item">
+<a href="/variety/read/en/part-2-goals/">Part II. Goals and taste: what you are really asking for</a>
+<ul class="nav-tree" data-depth="1"><li class="nav-item">
+<a href="/variety/read/en/part-2-goals/06-goal-and-proxy/">Chapter 6. A Goal and Its Proxy</a>
+</li></ul>
+</li>
+<li class="nav-item">
+<a href="/variety/read/en/part-3-activity/">Part III. Activity: the method of daily work</a>
+<ul class="nav-tree" data-depth="1"><li class="nav-item active">
+<a href="/variety/read/en/part-3-activity/10-activity-decomposition/">Chapter 10. The Components of Activity</a>
+</li></ul>
+</li></ul>
+            </nav>
+            <div class="sidebar-links"><a class="sidebar-link sidebar-link-lang" href="/variety/read/" lang="uk">Українська</a></div>
+            <div class="resize-handle" id="resize-handle"></div>
+        </aside>
+        <button class="sidebar-expand-btn" id="sidebar-expand" aria-label="Expand sidebar">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+        </button>
+        <button class="sidebar-toggle" id="sidebar-toggle" aria-label="Toggle sidebar">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+        </button>
+        <main class="content">
+            <article class="article">
+                <h1 id="chapter-10-the-components-of-activity">Chapter 10. The Components of Activity<a class="anchor-link" href="#chapter-10-the-components-of-activity" title="Permanent link">&para;</a></h1>
+<p>&ldquo;Get the task done&rdquo; — that&rsquo;s roughly what most requests boil down to when we talk about working with a model. For a long time I saw nothing strange in that — until I noticed that the task, singular, doesn&rsquo;t exist. There are five different actions we&rsquo;ve learned to call by one word — and the model does some of them well, some passably, and one it cannot do for you at all. Not from weakness. By construction.</p>
+<p>In Chapter 2 I talked about decomposing the task as an amplifier of your own variety. This chapter is about decomposition of a different kind: not of what we do, but of how we do it. This time it&rsquo;s the activity itself we&rsquo;ll have to take apart.</p>
+<h2 id="five-actions-not-one">Five actions, not one<a class="anchor-link" href="#five-actions-not-one" title="Permanent link">&para;</a></h2>
+<p>Every engineering task passes through five components.</p>
+<p><strong>Understand.</strong> Build your own picture of what you&rsquo;re dealing with: what this task is even about and why anyone needs it; how the part of the system you&rsquo;ll be changing is put together, and what it depends on; where the task&rsquo;s boundaries run — what&rsquo;s in, what deliberately stays out; and what can go wrong — where the fragile spots are, and what it costs if they break. The specification, the verification criteria, and the call on whether this is ready to enter the system all come out of this picture.</p>
+<p><strong>Specify.</strong> Turn the picture into text you can work with: what should come out, what must not happen, how we&rsquo;ll know it&rsquo;s done. These are the same proxies and the same goal note from Chapter 6 — only now you can see where they come from: from understanding, and from nothing else. A specification with no picture behind it is a set of plausible words the model will gladly complete with assumptions of its own.</p>
+<p><strong>Generate.</strong> Get the artifact itself — code, a migration, a config, a test, a piece of documentation. The only component where the result can be seen and touched within a minute — which is why it&rsquo;s the one we&rsquo;ve learned to call &ldquo;the work.&rdquo; In fact it&rsquo;s the cheapest of the five: you can get as many variants here as you like, and none of them is worth anything on its own until it passes the next component.</p>
+<p><strong>Verify.</strong> Make sure at two levels: that what was generated matches the specification — and that the specification still matches the understanding, because halfway through it often turns out the picture was incomplete. The first level is covered by tests, automated checks in CI, and review; the second — only by a person who remembers what all of this is for. A green run closes the first level and says nothing about the second.</p>
+<p><strong>Integrate.</strong> Build it into the living system — and into the living team. The merge, the deploy, the data migration, the documentation change — that&rsquo;s the visible part. The invisible part: new knowledge about the system has to appear in the team&rsquo;s heads — what changed, why this way, where the fragile spot is now. Without it the code is in production and the understanding isn&rsquo;t, and the next task in this module starts from zero. This component can stretch across weeks while generation takes a day. Because integration isn&rsquo;t deploying code — it&rsquo;s new knowledge in the team&rsquo;s heads and new behavior in your users&rsquo; lives.</p>
+<p>Why components and not stages? Stages run in sequence. Components are independent: none of them follows from the rest. You can perfectly specify something you never understood — the specification will be flawless and wrong. You can perfectly verify something that will never be integrated. You can generate a ton of code without verifying a single line. Each component gets done or doesn&rsquo;t get done on its own, and success in one says nothing about another.</p>
+<p>Two regularities follow from this independence — I&rsquo;d watched them for years without having a name for either.</p>
+<p>The first: each component has its own curve. They grow separately and atrophy separately. In a year, an engineer can double their generation speed and quietly lose the skill of reading other people&rsquo;s code — because generation happens daily, and no attention is left for other people&rsquo;s code and other people&rsquo;s decisions. A component you don&rsquo;t feed wastes away — no matter how brilliantly the other four are going.</p>
+<figure class="book-scheme">
+<svg viewBox="0 0 640 240" role="img" aria-label="Two curves: generation grows with practice, understanding declines without exercise">
+  <defs>
+    <marker id="s1-ax" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#85736E"/></marker>
+  </defs>
+  <rect x="0" y="0" width="640" height="240" fill="#FFFFFF"/>
+  <line x1="60" y1="200" x2="590" y2="200" stroke="#85736E" stroke-width="1.5" marker-end="url(#s1-ax)"/>
+  <line x1="60" y1="200" x2="60" y2="30" stroke="#85736E" stroke-width="1.5" marker-end="url(#s1-ax)"/>
+  <text x="592" y="222" text-anchor="end" font-size="11.5" fill="#53433F">months of practice</text>
+  <text x="66" y="42" font-size="11.5" fill="#53433F">skill</text>
+  <path d="M60,150 C180,130 330,95 560,55" fill="none" stroke="#8F4C38" stroke-width="2.5"/>
+  <text x="556" y="44" text-anchor="end" font-size="13" font-weight="600" fill="#723523">generate</text>
+  <path d="M60,140 C180,150 330,170 560,190" fill="none" stroke="#85736E" stroke-width="2" stroke-dasharray="6 5"/>
+  <text x="556" y="182" text-anchor="end" font-size="13" font-weight="600" fill="#53433F">understand</text>
+  <text x="320" y="120" text-anchor="middle" font-size="11.5" fill="#8F4C38">daily exercise</text>
+  <text x="200" y="190" text-anchor="middle" font-size="11.5" fill="#53433F">no exercise — the skill wastes away</text>
+</svg>
+<figcaption>Figure 10.1. Each component has its own curve: the one you don't feed wastes away</figcaption>
+</figure>
+
+<p>The second: the chain is stable only when it&rsquo;s closed. Integrate is not the end — it&rsquo;s the entry into understand for the next task: what you build in today is what you&rsquo;ll have to understand tomorrow. If the circle is broken and understanding doesn&rsquo;t come back, every next task starts with less knowledge of the system than the one before. You&rsquo;re moving forward through a codebase that grows more foreign to you by the day.</p>
+<figure class="book-scheme">
+<svg viewBox="0 0 640 400" role="img" aria-label="Five components closed in a circle; integrate feeds back into understand for the next task">
+  <defs>
+    <marker id="s2-g" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#85736E"/></marker>
+    <marker id="s2-p" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8F4C38"/></marker>
+  </defs>
+  <rect x="0" y="0" width="640" height="400" fill="#FFFFFF"/>
+  <rect x="245" y="40" width="150" height="40" rx="10" fill="#FFDBD1" stroke="#8F4C38" stroke-width="1.5"/>
+  <text x="320" y="65" text-anchor="middle" font-size="13" font-weight="600" fill="#231917">understand</text>
+  <rect x="415" y="140" width="160" height="40" rx="10" fill="#FFF" stroke="#85736E" stroke-width="1.5"/>
+  <text x="495" y="165" text-anchor="middle" font-size="13" fill="#231917">specify</text>
+  <rect x="390" y="300" width="150" height="40" rx="10" fill="#FFF" stroke="#85736E" stroke-width="1.5"/>
+  <text x="465" y="325" text-anchor="middle" font-size="13" fill="#231917">generate</text>
+  <rect x="105" y="300" width="150" height="40" rx="10" fill="#FFF" stroke="#85736E" stroke-width="1.5"/>
+  <text x="180" y="325" text-anchor="middle" font-size="13" fill="#231917">verify</text>
+  <rect x="70" y="140" width="150" height="40" rx="10" fill="#FFF" stroke="#85736E" stroke-width="1.5"/>
+  <text x="145" y="165" text-anchor="middle" font-size="13" fill="#231917">integrate</text>
+  <line x1="382" y1="84" x2="462" y2="136" stroke="#85736E" stroke-width="1.5" marker-end="url(#s2-g)"/>
+  <line x1="493" y1="184" x2="478" y2="296" stroke="#85736E" stroke-width="1.5" marker-end="url(#s2-g)"/>
+  <line x1="386" y1="320" x2="259" y2="320" stroke="#85736E" stroke-width="1.5" marker-end="url(#s2-g)"/>
+  <line x1="168" y1="296" x2="150" y2="184" stroke="#85736E" stroke-width="1.5" marker-end="url(#s2-g)"/>
+  <line x1="180" y1="136" x2="258" y2="86" stroke="#8F4C38" stroke-width="2.5" marker-end="url(#s2-p)"/>
+  <text x="118" y="96" text-anchor="middle" font-size="11.5" fill="#8F4C38">knowledge returns</text>
+  <text x="118" y="111" text-anchor="middle" font-size="11.5" fill="#8F4C38">into the next task</text>
+  <text x="320" y="215" text-anchor="middle" font-size="12" fill="#53433F">break the circle —</text>
+  <text x="320" y="232" text-anchor="middle" font-size="12" fill="#53433F">and every next task starts</text>
+  <text x="320" y="249" text-anchor="middle" font-size="12" fill="#53433F">with less knowledge of the system</text>
+  <text x="320" y="385" text-anchor="middle" font-size="12" fill="#8F4C38">what's integrated today is what you'll have to understand tomorrow</text>
+</svg>
+<figcaption>Figure 10.2. The chain of components is stable only when it's closed</figcaption>
+</figure>
+
+<h2 id="hands-on-the-yoke">Hands on the yoke<a class="anchor-link" href="#hands-on-the-yoke" title="Permanent link">&para;</a></h2>
+<p>Aviation lived through this story forty years before us.</p>
+<p>The autopilot didn&rsquo;t arrive to replace the pilot — it arrived to take one component off the pilot&rsquo;s hands. Holding course and altitude for hours is monotonous work, and the machine does it better: steadier, without fatigue, without distraction. This is pure generation: there&rsquo;s a specification — course, altitude, speed — and the autopilot executes it. Pilots handed this component over completely, and they were right to.</p>
+<p>But look at what stayed in the cockpit. The pilot still understands the situation: the weather ahead, the state of the machine, what this vibration means. He still specifies — sets the autopilot&rsquo;s mode and parameters. He still verifies — checks the instruments against what he feels himself. And he integrates — fits the flight into the schedule, the controllers, the crew. The autopilot took one of five components. Four remained — and holding them got harder. While your hands are on the yoke, attention holds itself: the plane demands it every second through effort and vibration. When automation holds the course, the hands have nothing to do — and watching over a system that does everything itself, and does it well, turned out to be separate, hard work that humans are bad at.</p>
+<p>And here is what decades of experience showed. Crews perform worst not when the autopilot is working, and not when there is none. They perform worst at the moment it disengages and hands the plane back. A pilot who has spent years only entering parameters suddenly has to feel the machine with his hands — and the component has atrophied, because nothing fed it. The aircraft is sound, the weather is acceptable, and the crew loses it anyway, because the understanding of the situation has long lived not in the pilot but in the system that just said &ldquo;your airplane.&rdquo; Aviation has a bleak nickname for such pilots — children of the magenta line: the route line on the display they learned to follow without asking where it leads.</p>
+<p>Aviation&rsquo;s answer was not to give up the autopilot. Its answer was a map: which modes of automation exist, which one you&rsquo;re in right now, what exactly the machine is doing at this moment and what you are — plus mandatory hours of hand-flying, so the component handed to the machine doesn&rsquo;t die in the human entirely.</p>
+<p>That is this chapter&rsquo;s method. Now — what it&rsquo;s made of.</p>
+<h2 id="who-decides-here">Who decides here<a class="anchor-link" href="#who-decides-here" title="Permanent link">&para;</a></h2>
+<p>Inside each of the five components there are three positions. The <strong>subject</strong> is the one who decides: asks the questions, chooses, accepts. The <strong>means</strong> is what the action is done through. The <strong>object</strong> is what it&rsquo;s done to.</p>
+<p>Take understanding an unfamiliar module. The object is the module. The means — the editor, the debugger, git blame, and now the model. In the input field sits your prompt: &ldquo;show me where this function is called.&rdquo; The subject is you: the question is yours, and you decide what the next one will be and when the understanding is enough to move on. The model here is a more powerful means than anything we&rsquo;ve had before. But a means.</p>
+<p>Now change a few words in the prompt: &ldquo;explain this module to me.&rdquo; Same object. Same means. And the subject? Who decides what matters in the module and what doesn&rsquo;t, what to mention and what to skip, when the explanation is enough? The model. The questions are now asked by the model itself — its own, plausible ones, straight from Chapter 6. You&rsquo;ll read the explanation and believe you&rsquo;ve understood — but the understanding wasn&rsquo;t formed by your head.</p>
+<aside class="book-callout">A few words in a prompt — and you've moved from subject to object: now you're the one being explained to.</aside>
+
+<p>Here is the mechanism that makes the four roles from Chapter 2 so treacherous: you don&rsquo;t go from Captain to Passenger by decision — you go by phrasing. Nobody says &ldquo;I hand understanding to the machine.&rdquo; They say &ldquo;explain&rdquo; instead of &ldquo;show me where.&rdquo; And from that moment the means sets the course of the work: the model has produced a solution — and you&rsquo;re fixing it, piece by piece, in the order it generated it. The work is humming, but you didn&rsquo;t write its plan.</p>
+<figure class="book-scheme">
+<svg viewBox="0 0 640 250" role="img" aria-label="Two prompts swap the positions: «show me where» keeps you the subject, «explain» makes you the object">
+  <defs>
+    <marker id="s3-g" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#85736E"/></marker>
+  </defs>
+  <rect x="0" y="0" width="640" height="250" fill="#FFFFFF"/>
+  <line x1="341" y1="30" x2="341" y2="195" stroke="#D8C2BC" stroke-width="1.5" stroke-dasharray="5 5"/>
+
+  <text x="176" y="42" text-anchor="middle" font-size="13" font-weight="600" fill="#231917">"show me where it's called"</text>
+  <rect x="30" y="68" width="80" height="38" rx="9" fill="#FFDBD1" stroke="#8F4C38" stroke-width="1.5"/>
+  <text x="70" y="92" text-anchor="middle" font-size="13" font-weight="600" fill="#231917">you</text>
+  <text x="70" y="130" text-anchor="middle" font-size="11" fill="#723523">subject</text>
+  <line x1="114" y1="87" x2="132" y2="87" stroke="#85736E" stroke-width="1.5" marker-end="url(#s3-g)"/>
+  <rect x="136" y="68" width="80" height="38" rx="9" fill="#F5E1A7" stroke="#85736E" stroke-width="1.5"/>
+  <text x="176" y="92" text-anchor="middle" font-size="13" fill="#231917">model</text>
+  <text x="176" y="130" text-anchor="middle" font-size="11" fill="#53433F">means</text>
+  <line x1="220" y1="87" x2="238" y2="87" stroke="#85736E" stroke-width="1.5" marker-end="url(#s3-g)"/>
+  <rect x="242" y="68" width="80" height="38" rx="9" fill="#F1DFDA" stroke="#85736E" stroke-width="1.5"/>
+  <text x="282" y="92" text-anchor="middle" font-size="13" fill="#231917">module</text>
+  <text x="282" y="130" text-anchor="middle" font-size="11" fill="#53433F">object</text>
+  <text x="176" y="158" text-anchor="middle" font-size="11" fill="#53433F">the questions are yours</text>
+
+  <text x="458" y="42" text-anchor="middle" font-size="13" font-weight="600" fill="#231917">"explain this module to me"</text>
+  <rect x="360" y="68" width="90" height="38" rx="9" fill="#FFDBD1" stroke="#8F4C38" stroke-width="1.5"/>
+  <text x="405" y="92" text-anchor="middle" font-size="13" font-weight="600" fill="#231917">model</text>
+  <text x="405" y="130" text-anchor="middle" font-size="11" fill="#723523">subject</text>
+  <line x1="454" y1="87" x2="472" y2="87" stroke="#85736E" stroke-width="1.5" marker-end="url(#s3-g)"/>
+  <rect x="476" y="68" width="80" height="38" rx="9" fill="#F1DFDA" stroke="#85736E" stroke-width="1.5"/>
+  <text x="516" y="92" text-anchor="middle" font-size="13" fill="#231917">you</text>
+  <text x="516" y="130" text-anchor="middle" font-size="11" fill="#53433F">object</text>
+  <text x="405" y="158" text-anchor="middle" font-size="11" fill="#53433F">asks its own questions</text>
+  <text x="516" y="158" text-anchor="middle" font-size="11" fill="#53433F">being explained to</text>
+
+  <text x="320" y="222" text-anchor="middle" font-size="12" fill="#8F4C38">a few words in the prompt — and the positions have swapped</text>
+</svg>
+<figcaption>Figure 10.3. Same module, same model — the phrasing decides who the subject is</figcaption>
+</figure>
+
+<p>So in every component the question is the same one: who decides here? Not &ldquo;is the model involved&rdquo; — it&rsquo;s involved everywhere, and that&rsquo;s fine. But who asks the questions and who accepts the answer.</p>
+<h2 id="the-delegation-map">The delegation map<a class="anchor-link" href="#the-delegation-map" title="Permanent link">&para;</a></h2>
+<p>Now the map itself. Each component gets its own level of model involvement: one we hand over fully, three partially, one never.</p>
+<p><strong>Generate — fully.</strong> This is the component worth handing over without regret — the way pilots handed over holding the course. The model generates faster, steadier, and doesn&rsquo;t tire. Your position here is not to write code yourself &ldquo;to keep the skill alive&rdquo;: the skill of typing code by hand is worth exactly as much as it feeds understanding, and understanding is fed by reading and verifying, not by typing. Handing generation over fully, you stay the subject at the entry (specification) and at the exit (verification) — and that&rsquo;s enough.</p>
+<p>In the next three components the model is a means and the subject is you, and the boundary runs right through the middle of the component.</p>
+<p><strong>Specify — partially.</strong> The model can expand your goal note into acceptance criteria, find a case you missed, propose a structure. But what the goal is, you decide: a proxy the model formulated for itself is a proxy the model will optimize.</p>
+<p><strong>Verify — partially.</strong> The model will write tests, do a first review, catch the obvious. But a test you didn&rsquo;t conceive verifies its understanding, not yours. So the criteria are yours — and at least one test for each of them, too.</p>
+<p><strong>Integrate — partially.</strong> The model will do the merge, fix up the config, write the release note. But the decision &ldquo;this is ready to enter the system&rdquo; belongs to whoever will answer for the system at three in the morning.</p>
+<p><strong>Understand — never.</strong> And here a clarification is needed, or the rule will be read wrong. &ldquo;Never&rdquo; does not mean &ldquo;without the model.&rdquo; The model is the best means of understanding engineers have ever had: it answers &ldquo;where,&rdquo; &ldquo;why,&rdquo; &ldquo;what happens if&rdquo; in seconds, from any point in the codebase. Use it generously. What you must not hand over is something else — the position of the subject: letting the model decide what matters here, and accepting that decision without asking a single question of your own. The test is simple: after a session of understanding, can you explain the module to a colleague with no model at hand? If yes — the understanding is yours. If no — it stayed in the session and will end with it.</p>
+<p>Why is this the one component that can&rsquo;t be delegated when the rest can? Not because the model understands code worse. Often it understands better. But understanding is the reference point for the other four. Whoever understands defines what the task even is: where its boundaries lie, what counts as success, what can be left alone. Specification, verification, and integration are performed from the position of the one who understands. If that position belongs to the model, you perform the other four components from someone else&rsquo;s position — and you perform them as the object, even if you press every button yourself.</p>
+<p>There is also a more general rule you can test any component against before handing it over. The result of a component has to hold up on its own — by its composition, not by an external prop. Generated code holds up on its own: it either passes the tests or it doesn&rsquo;t, and the session that produced it isn&rsquo;t needed for that. Understanding that lives only in the model&rsquo;s context does not hold up: take away the session, and there is nobody on the team who knows why the module is the way it is. Systems assembled by an external force stand exactly as long as the force stays.</p>
+<figure class="book-scheme">
+<svg viewBox="0 0 640 330" role="img" aria-label="The delegation map: the model's share in each of the five components and what stays with you">
+  <defs></defs>
+  <rect x="0" y="0" width="640" height="330" fill="#FFFFFF"/>
+  <text x="180" y="34" font-size="11.5" fill="#53433F">the model's share of the component</text>
+  <text x="470" y="34" font-size="11.5" fill="#53433F">stays with you</text>
+  <text x="24" y="72" font-size="13" font-weight="600" fill="#231917">understand</text>
+  <rect x="180" y="56" width="270" height="20" rx="4" fill="#FFF" stroke="#D8C2BC"/>
+  <rect x="180" y="56" width="65" height="20" rx="4" fill="#FFDBD1" stroke="#8F4C38"/>
+  <text x="470" y="66" font-size="12" font-weight="600" fill="#723523">never</text>
+  <text x="470" y="81" font-size="11" fill="#53433F">the questions are yours</text>
+  <text x="24" y="124" font-size="13" font-weight="600" fill="#231917">specify</text>
+  <rect x="180" y="108" width="270" height="20" rx="4" fill="#FFF" stroke="#D8C2BC"/>
+  <rect x="180" y="108" width="135" height="20" rx="4" fill="#FFDBD1" stroke="#8F4C38"/>
+  <text x="470" y="118" font-size="12" font-weight="600" fill="#723523">partially</text>
+  <text x="470" y="133" font-size="11" fill="#53433F">the goal is yours</text>
+  <text x="24" y="176" font-size="13" font-weight="600" fill="#231917">generate</text>
+  <rect x="180" y="160" width="270" height="20" rx="4" fill="#FFF" stroke="#D8C2BC"/>
+  <rect x="180" y="160" width="245" height="20" rx="4" fill="#FFDBD1" stroke="#8F4C38"/>
+  <text x="470" y="170" font-size="12" font-weight="600" fill="#723523">fully</text>
+  <text x="470" y="185" font-size="11" fill="#53433F">entry and exit are yours</text>
+  <text x="24" y="228" font-size="13" font-weight="600" fill="#231917">verify</text>
+  <rect x="180" y="212" width="270" height="20" rx="4" fill="#FFF" stroke="#D8C2BC"/>
+  <rect x="180" y="212" width="135" height="20" rx="4" fill="#FFDBD1" stroke="#8F4C38"/>
+  <text x="470" y="222" font-size="12" font-weight="600" fill="#723523">partially</text>
+  <text x="470" y="237" font-size="11" fill="#53433F">criteria and your own test</text>
+  <text x="24" y="280" font-size="13" font-weight="600" fill="#231917">integrate</text>
+  <rect x="180" y="264" width="270" height="20" rx="4" fill="#FFF" stroke="#D8C2BC"/>
+  <rect x="180" y="264" width="110" height="20" rx="4" fill="#FFDBD1" stroke="#8F4C38"/>
+  <text x="470" y="274" font-size="12" font-weight="600" fill="#723523">partially</text>
+  <text x="470" y="289" font-size="11" fill="#53433F">the "ready" decision</text>
+  <text x="320" y="316" text-anchor="middle" font-size="12" fill="#8F4C38">however much the model does, the subject in every component is still you</text>
+</svg>
+<figcaption>Figure 10.4. The delegation map: one component the model runs fully, three partially, and in one it is only a means</figcaption>
+</figure>
+
+<h2 id="one-module-two-sessions">One module, two sessions<a class="anchor-link" href="#one-module-two-sessions" title="Permanent link">&para;</a></h2>
+<p>The task is real: add CSV export to the reports module in a legacy service that we didn&rsquo;t write, and not this year.</p>
+<p><strong>Session one.</strong> A single prompt: &ldquo;Here&rsquo;s the reports module. Explain how it works and add CSV export with the same filters as the current HTML report.&rdquo; The model gave three paragraphs of explanation — I skimmed them, they sounded plausible — and four hundred lines of code. Tests green; review read the code, not the module; merged on Monday.</p>
+<p>Two weeks later — a ticket: for one client, the sums in the CSV don&rsquo;t match the HTML report. Who on the team knows why? Nobody. The module was understood by a session that no longer exists. I opened a new chat, asked for an explanation again — and got a different one, also plausible. Two days of debugging established: the module had two filtering paths — an old one and a new one behind a feature flag — and the CSV had hooked into the old one, because the model picked the more plausible of the two. The three paragraphs of explanation never mentioned the flag. Not because the model hid it — because nobody asked.</p>
+<p><strong>Session two,</strong> a different task in the same module, done by the method. First — an hour of understanding, the model as a means: &ldquo;show me every place the filters are applied,&rdquo; &ldquo;how do these two paths differ,&rdquo; &ldquo;who turns this flag on and for whom.&rdquo; The questions mine, the answers its, and after each one — my decision where to dig next. Within an hour I could draw the module on a whiteboard — and did, for myself. Then the specification: five criteria, among them &ldquo;works for both filtering paths, a test for each.&rdquo; Then generation — handed over fully, four hundred lines in three minutes. Verification: the tests for the two paths I wrote myself before generating; the review was done by the model, and it found an encoding problem I would have missed. Integration — myself: the diagram stayed on the whiteboard, and the module&rsquo;s documentation gained a paragraph — two traces of understanding that will outlive the session.</p>
+<p>The score: an hour of &ldquo;unnecessary&rdquo; reading against two days of debugging. And one more difference the hours don&rsquo;t show: after the second session, a human on the team understands the module. After the first — nobody does.</p>
+<h2 id="code-nobody-understands">Code nobody understands<a class="anchor-link" href="#code-nobody-understands" title="Permanent link">&para;</a></h2>
+<p>This chapter&rsquo;s anti-pattern is the most common one I see right now, and the hardest to spot, because it looks like productivity.</p>
+<p>The team generates fast. Tickets get closed. The code passes the tests. But ask anyone &ldquo;why is this module built this way&rdquo; — and you&rsquo;ll get &ldquo;that&rsquo;s how it came out of the model.&rdquo; Explanations of the code are sought from the model, not from people; review reads diffs, not the system; onboarding a new engineer is &ldquo;ask the chat.&rdquo; The understanding of the system belongs to no one. It&rsquo;s scattered across sessions that have been closed.</p>
+<p>The diagnosis, by this chapter&rsquo;s rule: the component understand has been handed over fully — not by decision, but by a thousand small &ldquo;explain&rdquo;s instead of &ldquo;show me where&rdquo;s. The system was assembled by an external force in an unnatural order — the code appeared before the understanding — and it stands as long as the force stays. And that force is a session that lives for an hour.</p>
+<p>This code is not bad. It&rsquo;s often better than what hands would have written. But it stands on a prop that is no longer there, and the first non-typical situation — a bug that won&rsquo;t reproduce, a requirements change that touches two modules at once — is the moment the autopilot disengages and tells the team &ldquo;your airplane.&rdquo; And the team that has spent years only entering parameters discovers it cannot feel the machine with its hands.</p>
+<p>The cure is not a rewrite and not a ban on generation. The cure is returning the component. A separate session of understanding over the code that already exists: not &ldquo;explain,&rdquo; but &ldquo;show me where,&rdquo; &ldquo;why are there two paths here,&rdquo; &ldquo;what breaks if.&rdquo; A diagram on the whiteboard, a paragraph in the documentation, a review conversation about the system instead of the diffs. Understanding that outlives the session is the one line in the result of your work that the model cannot generate for you. The other lines of that result — that&rsquo;s Chapter 11.</p>
+<h2 id="the-components-scale">The components scale<a class="anchor-link" href="#the-components-scale" title="Permanent link">&para;</a></h2>
+<p>So far we&rsquo;ve been taking apart a single session. The same map works levels above.</p>
+<p>The agent is the next level. It differs from a chat in that it performs several components in a row without you: sets itself intermediate tasks, generates, verifies its own result, moves on. An agent is components handed over wholesale. The question to ask it is the same as for a single session, only the price of a mistake is higher: who is the subject in understand? If the agent itself decides what matters in the task and what can be skipped, you&rsquo;ve handed the autopilot not just the course but the understanding of the weather. How to build a construction that keeps the agent in the position of a means — that&rsquo;s Chapter 14.</p>
+<p>The team is one more level up. The five components get distributed among people: someone talks to the customer, someone writes requirements, someone generates with the model, someone verifies, someone builds it into the system. The distribution itself is fine — until all the understanding has gathered in one head. The temptation is the same as with the model: hand understand to the one person &ldquo;who&rsquo;s on top of it&rdquo; and leave the rest with execution. Half a year later that one person goes on vacation — and the team finds itself in the same position as the engineer with a module understood only by a closed session.</p>
+<p>The mechanics are the same at every level. What changes is only who owns the understanding — and what its loss costs.</p>
+<h2 id="in-your-craft">In your craft<a class="anchor-link" href="#in-your-craft" title="Permanent link">&para;</a></h2>
+<p>The five components don&rsquo;t know what code is. Substitute your own material.</p>
+<p><strong>Text.</strong> An editor who writes to the model &ldquo;read these interviews and write an article&rdquo; has handed over understand: what mattered in those interviews, the model decided. The one who first asks — &ldquo;which claims repeat across three sources,&rdquo; &ldquo;where do they contradict each other&rdquo; — and then specifies the thesis and hands over generating the draft, remains the author. The difference shows a month later: the first can&rsquo;t answer a reader&rsquo;s &ldquo;where is this from&rdquo;; the second can.</p>
+<p><strong>Analytics.</strong> A dashboard the model generated on &ldquo;show me what&rsquo;s important in this data&rdquo; is a picture of someone else&rsquo;s understanding. The analyst who first formulated three questions to the data and then handed over building the charts is the subject; they know what&rsquo;s not on the dashboard, and that knowledge is worth more than the dashboard itself.</p>
+<p><strong>Design.</strong> &ldquo;Make a mockup for this feature&rdquo; — generation and understanding in one prompt; the mockup will be plausible and foreign. The designer who first worked through the user&rsquo;s scenario — themselves, with the model as a means: &ldquo;what states can this screen have,&rdquo; &ldquo;what does the user do when the data doesn&rsquo;t load&rdquo; — and then handed over generating the variants, gets a mockup they can defend in front of the team.</p>
+<hr />
+<p>To close — three questions for your own practice.</p>
+<p>— Take your last task with a model and lay it out into the five components: in which of them were you the subject — and in which, no longer?</p>
+<p>— Is there a module in your codebase that only a session that no longer exists understands? How did you find out — and what happens at three in the morning?</p>
+<p>— And deeper: when did you last ask the model &ldquo;show me where&rdquo; instead of &ldquo;explain&rdquo;?</p>
+                <div class="check-items" data-page-key="part-3-activity/10-activity-decomposition"><div class="check-items-header"><span class="check-items-title">Key Takeaways</span><span class="check-items-progress"></span></div><label class="check-item" data-index="0"><input type="checkbox" class="check-item-input" data-index="0"><span class="check-item-box"><svg class="check-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span><span class="check-item-text">A task is not one action but five: understand, specify, generate, verify, integrate. Delegate a component, not the task.</span></label>
+<label class="check-item" data-index="1"><input type="checkbox" class="check-item-input" data-index="1"><span class="check-item-box"><svg class="check-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span><span class="check-item-text">Every component has a subject, a means, and an object. The positions swap without warning — check who decides.</span></label>
+<label class="check-item" data-index="2"><input type="checkbox" class="check-item-input" data-index="2"><span class="check-item-box"><svg class="check-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span><span class="check-item-text">Generate can be handed over fully. Understand — never. Not because the model can't, but because understanding belongs to whoever answers for the result.</span></label>
+<label class="check-item" data-index="3"><input type="checkbox" class="check-item-input" data-index="3"><span class="check-item-box"><svg class="check-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span><span class="check-item-text">The model as a means of understanding — yes; the model as the subject of understanding — no. The difference is who asks the questions.</span></label>
+<label class="check-item" data-index="4"><input type="checkbox" class="check-item-input" data-index="4"><span class="check-item-box"><svg class="check-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span><span class="check-item-text">Code held up by the session that produced it collapses with that session. Understanding is the one component you cannot defer.</span></label></div>
+                <nav class="page-nav"><a class="page-nav-link page-nav-prev" href="/variety/read/en/part-3-activity/"><span class="page-nav-label">← Previous</span></a>
+<span class="page-nav-link page-nav-next page-nav-disabled"></span></nav>
+            </article>
+        </main>
+    </div>
+    <script>
+var SIDEBAR_WIDTH_KEY = 'essay-sidebar-width-system-for-ai-engineers-en';
+var SIDEBAR_COLLAPSED_KEY = 'essay-sidebar-collapsed-system-for-ai-engineers-en';
+var ESSAY_LOCAL_MODE = false;
+document.addEventListener('DOMContentLoaded', function() {
+  var sidebar = document.getElementById('sidebar');
+  var handle = document.getElementById('resize-handle');
+  var collapseBtn = document.getElementById('sidebar-collapse');
+  var expandBtn = document.getElementById('sidebar-expand');
+  var mobileToggle = document.getElementById('sidebar-toggle');
+  var html = document.documentElement;
+  var MIN_WIDTH = 200;
+  var MAX_WIDTH = 480;
+
+  // Desktop: collapse / expand
+  function setCollapsed(collapsed) {
+    if (collapsed) {
+      html.classList.add('sidebar-collapsed');
+    } else {
+      html.classList.remove('sidebar-collapsed');
+    }
+    if (typeof SIDEBAR_COLLAPSED_KEY !== 'undefined') {
+      localStorage.setItem(SIDEBAR_COLLAPSED_KEY, collapsed ? '1' : '0');
+    }
+  }
+
+  if (collapseBtn) {
+    collapseBtn.addEventListener('click', function() {
+      setCollapsed(true);
+    });
+  }
+
+  if (expandBtn) {
+    expandBtn.addEventListener('click', function() {
+      setCollapsed(false);
+    });
+  }
+
+  // Mobile: slide-in toggle
+  if (mobileToggle && sidebar) {
+    mobileToggle.addEventListener('click', function() {
+      sidebar.classList.toggle('open');
+    });
+
+    document.addEventListener('click', function(e) {
+      if (sidebar.classList.contains('open') &&
+          !sidebar.contains(e.target) &&
+          !mobileToggle.contains(e.target)) {
+        sidebar.classList.remove('open');
+      }
+    });
+  }
+
+  // Resizable sidebar (desktop only, when not collapsed)
+  if (handle && sidebar) {
+    var startX, startWidth;
+
+    handle.addEventListener('mousedown', function(e) {
+      if (html.classList.contains('sidebar-collapsed')) return;
+      e.preventDefault();
+      startX = e.clientX;
+      startWidth = sidebar.getBoundingClientRect().width;
+      handle.classList.add('active');
+      document.body.classList.add('resizing');
+
+      document.addEventListener('mousemove', onMouseMove);
+      document.addEventListener('mouseup', onMouseUp);
+    });
+
+    function onMouseMove(e) {
+      var newWidth = startWidth + (e.clientX - startX);
+      newWidth = Math.max(MIN_WIDTH, Math.min(newWidth, MAX_WIDTH));
+      html.style.setProperty('--sidebar-width', newWidth + 'px');
+    }
+
+    function onMouseUp() {
+      handle.classList.remove('active');
+      document.body.classList.remove('resizing');
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
+
+      var currentWidth = sidebar.getBoundingClientRect().width;
+      if (typeof SIDEBAR_WIDTH_KEY !== 'undefined') {
+        localStorage.setItem(SIDEBAR_WIDTH_KEY, Math.round(currentWidth));
+      }
+    }
+  }
+
+  // --- Check Items persistence ---
+  var checkContainers = document.querySelectorAll('.check-items');
+  if (checkContainers.length) {
+    initCheckItems(checkContainers);
+  }
+
+  function initCheckItems(containers) {
+    var isLocal = (typeof ESSAY_LOCAL_MODE !== 'undefined') && ESSAY_LOCAL_MODE;
+    var essayId = getMeta('essay-id');
+    var pageId = getMeta('essay-page-id');
+    var csrf = getMeta('csrf-token');
+
+    containers.forEach(function(container) {
+      var pageKey = container.getAttribute('data-page-key');
+      var inputs = container.querySelectorAll('.check-item-input');
+      var storageKey = 'essay-checks-' + pageKey;
+
+      // Load saved state
+      loadChecks(storageKey, essayId, pageId, csrf, isLocal, function(checked) {
+        if (checked && checked.length) {
+          inputs.forEach(function(input) {
+            var idx = parseInt(input.getAttribute('data-index'), 10);
+            if (checked.indexOf(idx) !== -1) {
+              input.checked = true;
+            }
+          });
+        }
+        updateProgress(container, inputs);
+      });
+
+      // Listen for changes
+      inputs.forEach(function(input) {
+        input.addEventListener('change', function() {
+          var checked = [];
+          inputs.forEach(function(inp) {
+            if (inp.checked) checked.push(parseInt(inp.getAttribute('data-index'), 10));
+          });
+          saveChecks(storageKey, essayId, pageId, csrf, isLocal, checked);
+          updateProgress(container, inputs);
+        });
+      });
+    });
+  }
+
+  function updateProgress(container, inputs) {
+    var total = inputs.length;
+    var checked = 0;
+    inputs.forEach(function(inp) { if (inp.checked) checked++; });
+    var el = container.querySelector('.check-items-progress');
+    if (el) {
+      el.textContent = checked + ' / ' + total;
+    }
+  }
+
+  function getMeta(name) {
+    var el = document.querySelector('meta[name="' + name + '"]');
+    return el ? el.content : null;
+  }
+
+  function loadChecks(storageKey, essayId, pageId, csrf, isLocal, callback) {
+    if (isLocal || !essayId) {
+      var raw = localStorage.getItem(storageKey);
+      callback(raw ? JSON.parse(raw) : []);
+      return;
+    }
+    var url = '/api/dynamic_data?essay_id=' + essayId + '&key=' + encodeURIComponent(storageKey);
+    if (pageId) url += '&page_id=' + pageId;
+    fetch(url, { headers: csrf ? { 'X-CSRF-Token': csrf } : {} })
+      .then(function(r) { return r.json(); })
+      .then(function(d) { callback(d.data ? d.data.checked : []); })
+      .catch(function() { callback([]); });
+  }
+
+  function saveChecks(storageKey, essayId, pageId, csrf, isLocal, checked) {
+    if (isLocal || !essayId) {
+      localStorage.setItem(storageKey, JSON.stringify(checked));
+      return;
+    }
+    var body = {
+      essay_id: essayId,
+      key: storageKey,
+      data: { checked: checked }
+    };
+    if (pageId) body.page_id = pageId;
+    fetch('/api/dynamic_data', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-Token': csrf || ''
+      },
+      body: JSON.stringify(body)
+    }).catch(function() {});
+  }
+});
+
+
+    </script>
+</body>
+</html>
