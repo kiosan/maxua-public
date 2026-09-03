@@ -912,6 +912,20 @@ body.resizing {
   box-sizing: border-box;
 }
 
+/* Book callout — одна сильна думка, винесена в окремий блок (pull quote) */
+.book-callout {
+  margin: 2.25rem 0;
+  padding: 0.4rem 0 0.4rem 1.4rem;
+  border-left: 3px solid var(--md-primary, #8F4C38);
+  font-size: 1.18em;
+  line-height: 1.55;
+  font-weight: 500;
+  color: var(--md-on-primary-container, #723523);
+}
+@media print {
+  .book-callout { break-inside: avoid; }
+}
+
 
     </style>
 <script async data-id="101511163" src="//static.getclicky.com/js"></script>
@@ -942,6 +956,12 @@ body.resizing {
 <a href="/variety/read/part-2-goals/">Частина II. Цілі та смак: що ти насправді просиш</a>
 <ul class="nav-tree" data-depth="1"><li class="nav-item active">
 <a href="/variety/read/part-2-goals/06-goal-and-proxy/">Розділ 6. Ціль та її проксі</a>
+</li></ul>
+</li>
+<li class="nav-item">
+<a href="/variety/read/part-3-activity/">Частина III. Діяльність: метод щоденної роботи</a>
+<ul class="nav-tree" data-depth="1"><li class="nav-item">
+<a href="/variety/read/part-3-activity/10-activity-decomposition/">Розділ 10. Складові діяльності</a>
 </li></ul>
 </li></ul>
             </nav>
@@ -1101,7 +1121,7 @@ body.resizing {
 <label class="check-item" data-index="3"><input type="checkbox" class="check-item-input" data-index="3"><span class="check-item-box"><svg class="check-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span><span class="check-item-text">Тест буквальності: якщо зроблять рівно як написано — ти задоволений?</span></label>
 <label class="check-item" data-index="4"><input type="checkbox" class="check-item-input" data-index="4"><span class="check-item-box"><svg class="check-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span><span class="check-item-text">Поки ціль не названа, ітерації промпту — блукання навколо неназваної точки.</span></label></div>
                 <nav class="page-nav"><a class="page-nav-link page-nav-prev" href="/variety/read/part-2-goals/"><span class="page-nav-label">← Попередня</span></a>
-<span class="page-nav-link page-nav-next page-nav-disabled"></span></nav>
+<a class="page-nav-link page-nav-next" href="/variety/read/part-3-activity/"><span class="page-nav-label">Наступна →</span></a></nav>
             </article>
         </main>
     </div>
