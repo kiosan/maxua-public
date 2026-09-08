@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chapter 6. A Goal and Its Proxy — Requisite Variety: A Systems Method for Working with AI</title>
+    <meta name="essay-page-key" content="en/part-2-goals/06-goal-and-proxy">
     <script>
     // Blocking: apply saved sidebar state before first paint to prevent layout jump
     (function() {
@@ -1113,7 +1114,7 @@ body.resizing {
 <h2 id="prompt-roulette">Prompt roulette<a class="anchor-link" href="#prompt-roulette" title="Permanent link">&para;</a></h2>
 <p>Now the anti-pattern — and it&rsquo;s sneakier than the morning&rsquo;s green test.</p>
 <p>It looks like this: the result is &ldquo;not it&rdquo; — the person rewrites the prompt. &ldquo;Not it&rdquo; again — rewrites once more. Fifteenth iteration of the evening, the phrasing has grown a crust of clarifications, the irritation is building. It looks like persistent work.</p>
-<p>But there&rsquo;s a catch. All fifteen iterations were spinning the proxy — while the first distance stood still, because the goal was never named, not even to yourself. The state is easy to recognize: ask yourself what exactly makes the current result &ldquo;not it.&rdquo; If the answer is &ldquo;I don&rsquo;t know, but I can feel it,&rdquo; you are not getting closer to the goal. You are wandering around a point you never gave coordinates, and no number of iterations will fix that: random search is guaranteed to lose — the only question is on which iteration you notice.</p>
+<p>But there&rsquo;s a nuance. All fifteen iterations were spinning the proxy — while the first distance stood still, because the goal was never named, not even to yourself. The state is easy to recognize: ask yourself what exactly makes the current result &ldquo;not it.&rdquo; If the answer is &ldquo;I don&rsquo;t know, but I can feel it,&rdquo; you are not getting closer to the goal. You are wandering around a point you never gave coordinates, and no number of iterations will fix that: random search is guaranteed to lose — the only question is on which iteration you notice.</p>
 <p>The way out is the same goal note: stop and name the goal. Sometimes something unpleasant surfaces right there: you don&rsquo;t know what you want. That is the most useful result of the evening — now it&rsquo;s visible, and that is what you need to work on, not the prompt.</p>
 <h2 id="the-distance-scales">The distance scales<a class="anchor-link" href="#the-distance-scales" title="Permanent link">&para;</a></h2>
 <p>The distance between goal and proxy doesn&rsquo;t vanish with scale — it grows. An agent handed the proxy &ldquo;close the ticket&rdquo; optimizes ticket-closing by every available route — the construction that holds this in check is Chapter 14. A team handed the proxy &ldquo;more story points per sprint&rdquo; is, six months later, optimizing estimation rather than the product — that&rsquo;s Part V. The mechanics are the same everywhere; only the price of the blank space in the goal changes.</p>
@@ -1142,6 +1143,7 @@ body.resizing {
 var SIDEBAR_WIDTH_KEY = 'essay-sidebar-width-system-for-ai-engineers-en';
 var SIDEBAR_COLLAPSED_KEY = 'essay-sidebar-collapsed-system-for-ai-engineers-en';
 var ESSAY_LOCAL_MODE = false;
+var ESSAY_PAGE_KEY = "en/part-2-goals/06-goal-and-proxy";
 document.addEventListener('DOMContentLoaded', function() {
   var sidebar = document.getElementById('sidebar');
   var handle = document.getElementById('resize-handle');
