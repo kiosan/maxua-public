@@ -959,6 +959,74 @@ body.resizing {
 }
 
 /* Substack subscribe embed on published chapter pages */
+/* Leanpub banner under the chapter title (public site only) */
+.leanpub-banner {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  margin: 1.5rem 0 2rem;
+  padding: 1rem 1.25rem;
+  border: 1px solid var(--md-outline-variant, #D8C2BC);
+  border-radius: 12px;
+  background: var(--md-surface-container-low, #FFF8F6);
+  color: inherit;
+  text-decoration: none;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+.leanpub-banner,
+.leanpub-banner:hover,
+.leanpub-banner:visited,
+.leanpub-banner span {
+  text-decoration: none !important;
+  border-bottom: 0 !important;
+  background-image: none !important;
+}
+.leanpub-banner:hover {
+  text-decoration: none;
+  box-shadow: 0 10px 28px -14px rgba(0, 0, 0, 0.35);
+  transform: translateY(-1px);
+}
+.leanpub-banner-cover {
+  flex: 0 0 auto;
+  width: 84px;
+  height: auto;
+  border-radius: 3px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15), 0 8px 18px -10px rgba(0, 0, 0, 0.4);
+  margin: 0 !important;
+}
+.leanpub-banner-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  min-width: 0;
+}
+.leanpub-banner-kicker {
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--md-on-surface-variant, #53433F);
+}
+.leanpub-banner-title {
+  font-weight: 600;
+  font-size: 1.05rem;
+  color: var(--md-on-surface, #231917);
+}
+.leanpub-banner-text {
+  font-size: 0.9rem;
+  line-height: 1.45;
+  color: var(--md-on-surface-variant, #53433F);
+}
+.leanpub-banner-button {
+  margin-top: 0.35rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--md-primary, #8F4C38);
+}
+@media (max-width: 520px) {
+  .leanpub-banner { gap: 0.9rem; padding: 0.85rem 1rem; }
+  .leanpub-banner-cover { width: 64px; }
+}
+
 .subscribe-embed {
   margin: 1.75rem 0;
   display: flex;
@@ -1031,8 +1099,7 @@ body.resizing {
         <main class="content">
             <article class="article">
                 <h1 id="2">Розділ 2. Закон необхідного різноманіття<a class="anchor-link" href="#2" title="Permanent link">&para;</a></h1>
-<div class="subscribe-embed"><iframe src="https://kiosan.substack.com/embed?transparent=1" width="480" height="320" style="border: 0; background: transparent" title="Підписатися на розсилку" loading="lazy" frameborder="0" scrolling="no"></iframe></div>
-
+<p><a class="leanpub-banner" href="https://leanpub.com/requisite-variety-ua" target="_blank" rel="noopener"><img class="leanpub-banner-cover" src="/images/variety-cover-uk-sm.png" width="280" height="400" alt="Обкладинка книжки «Необхідне різноманіття»" loading="lazy" decoding="async"><span class="leanpub-banner-body"><span class="leanpub-banner-kicker">Книжка на Leanpub</span><span class="leanpub-banner-title">Необхідне різноманіття</span><span class="leanpub-banner-text">Книжка пишеться відкрито. Купіть її раз — і отримуватимете нові розділи в PDF та EPUB у міру публікації.</span><span class="leanpub-banner-button">Придбати на Leanpub →</span></span></a></p>
 <p>Що ми робимо після відповіді моделі? Прочитали, оцінили, попросили переробити; знаходимо ще щось — підправили руками; далі знову. Кожен крок — реакція на згенероване.</p>
 <p>Уявіть пастуха, який намагається контролювати отару сам: біжить за однією вівцею, повертає її — а поки повертав, п&rsquo;ять інших вже розбрелися. Він не лінивий, але впоратися не може. У нього просто одна пара ніг проти сотні. Отара овець генерує різноманіття швидше і більше за можливі реакції пастуха, він завжди буде наздоганяти.</p>
 <p>Повернімося від отари до сесії з моделлю. Хто в цій парі — ви і модель — ким керує? Питання ніби риторичне — людина пише промпти, значить керує. Але глянемо детальніше. У попередньому розділі я запропонував вважати одиницею аналізу не модель, а зв&rsquo;язку: людина + модель + контекст + інструменти. Цей розділ — саме про закон керування, який визначає хто ким керує. Цікаво, що керування в основі — питання арифметики, а не зусиль і навичок.</p>
