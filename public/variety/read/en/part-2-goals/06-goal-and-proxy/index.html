@@ -365,6 +365,37 @@ body {
   font-size: 0.7rem;
   opacity: 0.7;
 }
+.nav-issue.nav-maxims a::before {
+  content: "\275D";
+}
+
+/* Maxims page (Substack Notes drafts) */
+.maxim {
+  margin: 0 0 1.6rem;
+  padding: 0 0 1.2rem;
+  border-bottom: 1px solid var(--md-outline-variant, #D8C2BC);
+}
+.maxim-text {
+  font-size: 1.05rem;
+  line-height: 1.55;
+  margin: 0 0 0.9rem;
+}
+.maxim-text .maxim-p { margin: 0 0 0.6rem; }
+.maxim-alt {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--md-on-surface-variant, #53433F);
+  margin: 0 0 0.5rem;
+  padding-left: 0.9rem;
+  border-left: 2px solid var(--md-outline-variant, #D8C2BC);
+}
+.maxim-alt .maxim-p { margin: 0 0 0.45rem; }
+.maxim-meta {
+  font-size: 0.72rem;
+  color: var(--md-outline, #85736E);
+  margin: 0;
+}
+
 .nav-item.active-parent > a {
   color: var(--md-on-surface, #231917);
   font-weight: 500;
@@ -973,6 +1004,9 @@ body.resizing {
 <a href="/variety/read/en/part-3-activity/">Part III. Activity: the method of daily work</a>
 <ul class="nav-tree" data-depth="1"><li class="nav-item">
 <a href="/variety/read/en/part-3-activity/10-activity-decomposition/">Chapter 10. The Components of Activity</a>
+</li>
+<li class="nav-item">
+<a href="/variety/read/en/part-3-activity/13-control-degradation/">Chapter 13. Control, Controllability, Degradation</a>
 </li></ul>
 </li></ul>
             </nav>
@@ -999,16 +1033,16 @@ body.resizing {
                 <h1 id="chapter-6-a-goal-and-its-proxy">Chapter 6. A Goal and Its Proxy<a class="anchor-link" href="#chapter-6-a-goal-and-its-proxy" title="Permanent link">&para;</a></h1>
 <div class="subscribe-embed"><iframe src="https://kiosan.substack.com/embed?transparent=1" width="480" height="320" style="border: 0; background: transparent" title="Subscribe to the newsletter" loading="lazy" frameborder="0" scrolling="no"></iframe></div>
 
-<p>&ldquo;Fix the failing test,&rdquo; I typed, and went for coffee. I came back to a green run: the model had commented out the check that was failing and tidily annotated it — &ldquo;temporarily disabled.&rdquo; Formally, my request was fulfilled to the letter. In substance, the exact thing I was afraid of had just happened.</p>
-<p>Whose fault is that? Nobody&rsquo;s. The task in this story simply existed in three versions, and I acted as if there were only one.</p>
-<h2 id="three-versions-of-a-task">Three versions of a task<a class="anchor-link" href="#three-versions-of-a-task" title="Permanent link">&para;</a></h2>
+<p>&ldquo;Fix the failing test,&rdquo; I typed, and went for tea. I came back to passing tests: the model had commented out the check that was failing and left a comment — &ldquo;temporarily disabled.&rdquo; Formally, my request was fulfilled to the letter. In substance, it was quiet sabotage.</p>
+<p>Whose fault is that? Nobody&rsquo;s. The goal in this story simply existed on three levels, and I acted as if there were only one.</p>
+<h2 id="a-goal-on-three-levels">A goal on three levels<a class="anchor-link" href="#a-goal-on-three-levels" title="Permanent link">&para;</a></h2>
 <p>What you want. What you wrote. What the system optimizes.</p>
 <p>The first lives in your head: &ldquo;the code should be correct, and the test should confirm it.&rdquo; The second lives in the input field: &ldquo;fix the failing test.&rdquo; The third lives inside the process: the model searches for the most plausible response to the second, not the first. It has never seen the first.</p>
-<p>Between these three versions lie two distances, and their nature differs. The first distance is yours: how much of the goal got lost in the writing down. The second is the system&rsquo;s: where the process pulls what you wrote. The disappointment at the end of a session is the sum of both distances. And that&rsquo;s the better case.</p>
+<p>Between these three levels lie two distances, and their nature differs. The first distance is yours: how much of the goal got lost in the writing down. The second is the system&rsquo;s: where the process pulls what you wrote. The disappointment at the end of a session is the sum of both distances. And that&rsquo;s the better case.</p>
 <p>In the worse case they multiply: when the proxy is wrong, the system pours all its effort into optimizing the wrong thing — and the harder it works, the farther you are from the goal. My green test wasn&rsquo;t a sum; it was a product. The two distances also shrink in different ways.</p>
 <p>The phrasing that stands between you and the system I will from here on call the <strong>proxy</strong>: it is not the goal, it is the goal&rsquo;s stand-in. A stand-in can be better or worse, but it never equals the one it stands in for.</p>
 <figure class="book-scheme">
-<svg viewBox="0 0 640 235" role="img" aria-label="Three versions of a task and the two distances between them">
+<svg viewBox="0 0 640 235" role="img" aria-label="A goal on three levels and the two distances between them">
   <defs>
     <marker id="s1-gray" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#85736E"/></marker>
   </defs>
@@ -1032,15 +1066,15 @@ body.resizing {
   <text x="420" y="170" text-anchor="middle" font-size="11" fill="#53433F">the pull toward the plausible</text>
   <text x="320" y="212" text-anchor="middle" font-size="12" fill="#8F4C38">a wrong proxy: the distances don't add up — they multiply</text>
 </svg>
-<figcaption>Figure 6.1. Three versions of a task and the two distances between them</figcaption>
+<figcaption>Figure 6.1. A goal on three levels and the two distances between them</figcaption>
 </figure>
 
 <h2 id="the-machines-pull">The machine&rsquo;s pull<a class="anchor-link" href="#the-machines-pull" title="Permanent link">&para;</a></h2>
-<p>In Chapter 2 we counted variety — that was the first observation about systems. Here is the second: left unattended, every system slides toward a goal of its own — toward the state it finds &ldquo;comfortable.&rdquo; Not out of malice. It&rsquo;s where its construction takes it when nobody outside is holding on.</p>
-<p>What is comfortable for the model? The plausible. It produces the most plausible continuation of the conversation — and &ldquo;test green, task closed&rdquo; looks like a more plausible ending than &ldquo;I dug in, and I have bad news about your code.&rdquo; The correct answer and the plausible answer often coincide — that coincidence is what everything rests on. But what the model optimizes is the second. Always the second.</p>
-<p>This isn&rsquo;t a quirk — it&rsquo;s the construction. An LLM is a statistical model: it picks every next word from a distribution of likely continuations, and the densest place in any distribution is the middle — the typical, the seen-many-times. Picture the bell curve. Without your intervention, the answer lands at its peak — the way a marble rolls to the bottom of a dimple. Not out of &ldquo;laziness&rdquo;: that is the system&rsquo;s most stable state. Behind the statistics, a more general regularity shows through: any system left to itself slides toward its most stable state — the model is just its purest example. What this costs in quality, and how slop grows out of the middle of the distribution, is a conversation for Chapter 8.</p>
-<p>That&rsquo;s why every phrasing gets executed literally: the system&rsquo;s <strong>internal goal</strong> fills in everything the proxy leaves unsaid. You didn&rsquo;t write &ldquo;the check must stay&rdquo; — and that blank got filled with the most comfortable option: the check disappeared. Managers know this effect as Goodhart&rsquo;s law: when a measure becomes a target, it ceases to be a measure. Our two sessions with the test are its fastest demonstration: from measure to ruined measure in a single session.</p>
-<p>And one more link that&rsquo;s easy to miss. Between you and the model there is almost always a <strong>shell</strong> — the chat, the agent in your editor, the corporate assistant. It quietly works on your phrasing: adds hidden instructions, slips in context, trims and formats — in other words, it holds amplifiers and attenuators of its own that you never agreed to. Often this works in your favor: the shell guesses your version of the task better than a hastily typed sentence does, and the distance shrinks.</p>
+<p>In Chapter 2 we counted variety — that was the first observation about systems. Here is the second: left unattended, every system slides toward a goal of its own — toward the state it finds &ldquo;comfortable.&rdquo; It&rsquo;s where its construction takes it when nobody outside is holding on.</p>
+<p>What is comfortable for the model? The plausible. It produces the most plausible continuation of the conversation — and &ldquo;test green, task closed&rdquo; looks like a more plausible ending than &ldquo;I dug in, and I have bad news about your code.&rdquo; The correct answer and the plausible answer often coincide — that coincidence is what everything rests on. But what the model optimizes is the second: not whether the answer is correct, but whether it is plausible. Always plausibility.</p>
+<p>This is one of the regularities of systems. An LLM is a statistical model: it picks every next word from a distribution of likely continuations, and the densest place in any distribution is the middle — the typical, the seen-many-times. Picture the bell curve. Without your intervention, the answer lands at its peak — the way a marble rolls to the bottom of a dimple. Not out of &ldquo;laziness&rdquo;: that is the system&rsquo;s most stable state. Behind the statistics, a more general regularity shows through: any system left to itself slides toward its most stable state — the model is just its purest example. What this costs in quality, and how slop grows out of the middle of the distribution, is a conversation for Chapter 8.</p>
+<p>That&rsquo;s why every phrasing gets executed literally: the system&rsquo;s <strong>internal goal</strong> fills in everything the proxy leaves unsaid. You didn&rsquo;t write &ldquo;the check must stay&rdquo; — and that blank got filled with the most comfortable option: the check disappeared. Managers know this effect as Goodhart&rsquo;s law: when a measure becomes a target, it ceases to be a measure. Here is the mechanism. A green test is a measure: it says something about the code as long as nobody tries to make it green directly. The moment you typed &ldquo;fix the test,&rdquo; green went from measure to target — and the system took the shortest path to it, straight past what it was supposed to measure. The test is green, but it no longer says anything about the code. Our two sessions with the test are the law&rsquo;s fastest demonstration: from measure to ruined measure in a single session.</p>
+<p>And one more link that&rsquo;s easy to miss. Between you and the model there is almost always a <strong>shell</strong> — the chat, the agent in your editor, the corporate assistant, the harness you assembled yourself. It quietly works on your phrasing: adds hidden instructions, plugs in skills you may not know about or have long forgotten, slips in context, trims and formats — in other words, it holds amplifiers and attenuators of its own that you never agreed to. Often this works in your favor: the shell guesses your version of the task better than a hastily typed sentence does, and the distance shrinks.</p>
 <p>But notice what just happened: your version of the task got wrapped in someone else&rsquo;s proxy. Good, if the shell brings the result closer to what&rsquo;s in your head. And if not? Then the distance grows in a place you can&rsquo;t see: you keep editing your phrasing, while the drift sits in the shell. That variety plays on your side, but it is hidden. The shell is a full participant in the pair, so every once in a while ask not only &ldquo;what did I write&rdquo; but also &ldquo;how much of it actually reached the model.&rdquo;</p>
 <figure class="book-scheme">
 <svg viewBox="0 0 640 220" role="img" aria-label="The shell wraps your proxy in its own, hidden one">
@@ -1075,9 +1109,9 @@ body.resizing {
 <p>Walk into a carpenter&rsquo;s workshop and say: &ldquo;Make me a table.&rdquo;</p>
 <p>The workshop is not a void — it has a context of its own. Oak blanks within reach, a router in the corner the master likes working with, and in his hands the memory of a hundred tables he has already built. A month later you get a solid table: this workshop&rsquo;s average table. The carpenter wasn&rsquo;t lazy and didn&rsquo;t cut corners. He made his classic — because you gave him no reason to depart from it.</p>
 <p>Now a different customer: &ldquo;A dining table for six, the kitchen is two by three meters, the kids are small — no sharp corners.&rdquo; Same master, same hands. But now he&rsquo;s searching for a solution inside your constraints instead of following his usual groove. And notice: the kitchen dimensions and the rounded corners are ready-made acceptance criteria. The customer didn&rsquo;t invent them separately — the moment he named the goal out loud, the criteria fell out of it on their own.</p>
-<p>The model is a carpenter with incomparably more statistics. The less goal there is in the order, the more statistics there is in the result.</p>
+<p>The model is a carpenter with incomparably more statistics. The fewer detailed criteria there are in the order, the more statistics there is in the result.</p>
 <h2 id="the-goal-before-the-task">The goal before the task<a class="anchor-link" href="#the-goal-before-the-task" title="Permanent link">&para;</a></h2>
-<p>The method of this chapter is a short note about the goal, written before you phrase the task. To yourself, not to the model.</p>
+<p>The idea of this chapter: you need a short note about the goal, written before you phrase the task. To yourself, not to the model.</p>
 <p><strong>The goal note.</strong> &ldquo;What I want to get and how I&rsquo;ll check that I got it.&rdquo; Ten seconds. For that evening: &ldquo;I want to know why the test fails; the behavior check must stay; if the bug is in the code — fix the code.&rdquo; Compare that with &ldquo;fix the test&rdquo; — the distance between the two cost me my evening.</p>
 <p><strong>The literalness test.</strong> Reread your phrasing and ask: if this gets done exactly as written — literally, with zero telepathy — will I be satisfied? If not, you&rsquo;ve just saved yourself a cycle: rewrite the proxy now, not after the result. This is the cheapest check in the whole book.</p>
 <p><strong>Criteria from the goal.</strong> A named goal breaks apart into acceptance criteria on its own — like the kitchen dimensions at the carpenter&rsquo;s. You won&rsquo;t have to invent a list of checks: it already sits inside &ldquo;how I&rsquo;ll check.&rdquo; Where these criteria evolve from there is the subject of Chapter 9.</p>
@@ -1114,12 +1148,12 @@ body.resizing {
 <h2 id="prompt-roulette">Prompt roulette<a class="anchor-link" href="#prompt-roulette" title="Permanent link">&para;</a></h2>
 <p>Now the anti-pattern — and it&rsquo;s sneakier than the morning&rsquo;s green test.</p>
 <p>It looks like this: the result is &ldquo;not it&rdquo; — the person rewrites the prompt. &ldquo;Not it&rdquo; again — rewrites once more. Fifteenth iteration of the evening, the phrasing has grown a crust of clarifications, the irritation is building. It looks like persistent work.</p>
-<p>But there&rsquo;s a nuance. All fifteen iterations were spinning the proxy — while the first distance stood still, because the goal was never named, not even to yourself. The state is easy to recognize: ask yourself what exactly makes the current result &ldquo;not it.&rdquo; If the answer is &ldquo;I don&rsquo;t know, but I can feel it,&rdquo; you are not getting closer to the goal. You are wandering around a point you never gave coordinates, and no number of iterations will fix that: random search is guaranteed to lose — the only question is on which iteration you notice.</p>
-<p>The way out is the same goal note: stop and name the goal. Sometimes something unpleasant surfaces right there: you don&rsquo;t know what you want. That is the most useful result of the evening — now it&rsquo;s visible, and that is what you need to work on, not the prompt.</p>
+<p>All fifteen iterations were spinning the proxy — while the first distance stood still, because the goal was never named, not even to yourself. The state is easy to recognize: ask yourself what exactly makes the current result &ldquo;not it.&rdquo; If the answer is &ldquo;I don&rsquo;t know, but I can feel it,&rdquo; you are not getting closer to the goal. You are wandering around a point you never gave coordinates, and no number of iterations will fix that: random search is guaranteed to lose — the only question is on which iteration you notice.</p>
+<p>The way out is the same goal note: stop and name the goal. Sometimes something unpleasant surfaces right there: you don&rsquo;t know what you want. That is the most useful result — now it&rsquo;s visible, and that is what you need to work on, not the prompt.</p>
 <h2 id="the-distance-scales">The distance scales<a class="anchor-link" href="#the-distance-scales" title="Permanent link">&para;</a></h2>
 <p>The distance between goal and proxy doesn&rsquo;t vanish with scale — it grows. An agent handed the proxy &ldquo;close the ticket&rdquo; optimizes ticket-closing by every available route — the construction that holds this in check is Chapter 14. A team handed the proxy &ldquo;more story points per sprint&rdquo; is, six months later, optimizing estimation rather than the product — that&rsquo;s Part V. The mechanics are the same everywhere; only the price of the blank space in the goal changes.</p>
 <h2 id="in-your-craft">In your craft<a class="anchor-link" href="#in-your-craft" title="Permanent link">&para;</a></h2>
-<p>The three versions of a task exist in every craft — only the material changes.</p>
+<p>In every craft the goal lives on three levels — only the material changes.</p>
 <p><strong>Text.</strong> An editor writes: &ldquo;cut the text in half.&rdquo; The system cuts whatever is easiest to cut — examples and connective tissue — and formally hits the target. The goal &ldquo;readable in five minutes without losing the main argument&rdquo; produces an entirely different cut — and the check criterion is already inside it.</p>
 <p><strong>Analytics.</strong> An analyst asks the model for &ldquo;a market overview&rdquo; without saying which decision the overview is supposed to support or refute — and gets the most plausible overview in the world, one that supports nothing. The goal note here is one sentence: &ldquo;we&rsquo;re deciding whether to enter segment X; the overview must give arguments for and against.&rdquo;</p>
 <p><strong>Design.</strong> &ldquo;Make the deck look more modern&rdquo; is an invitation to someone else&rsquo;s statistics. &ldquo;A deck for the board, ten minutes, one idea per slide&rdquo; is a clear order.</p>
@@ -1129,7 +1163,7 @@ body.resizing {
 <p>— Take today&rsquo;s prompt and run the literalness test: if it gets done word for word — are you satisfied?</p>
 <p>— And deeper: how many of your tasks this week had a named goal — and how many were proxies you phrased without asking yourself why?</p>
 <div class="subscribe-embed"><iframe src="https://kiosan.substack.com/embed?transparent=1" width="480" height="320" style="border: 0; background: transparent" title="Subscribe to the newsletter" loading="lazy" frameborder="0" scrolling="no"></iframe></div>
-                <div class="check-items" data-page-key="part-2-goals/06-goal-and-proxy"><div class="check-items-header"><span class="check-items-title">Key Takeaways</span><span class="check-items-progress"></span></div><label class="check-item" data-index="0"><input type="checkbox" class="check-item-input" data-index="0"><span class="check-item-box"><svg class="check-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span><span class="check-item-text">A task exists in three versions: in your head, in the phrasing, in what the system optimizes. Disappointment lives in the distance between them.</span></label>
+                <div class="check-items" data-page-key="part-2-goals/06-goal-and-proxy"><div class="check-items-header"><span class="check-items-title">Key Takeaways</span><span class="check-items-progress"></span></div><label class="check-item" data-index="0"><input type="checkbox" class="check-item-input" data-index="0"><span class="check-item-box"><svg class="check-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span><span class="check-item-text">A goal exists on three levels: in your head, in the phrasing, in what the system optimizes. Disappointment lives in the distance between them.</span></label>
 <label class="check-item" data-index="1"><input type="checkbox" class="check-item-input" data-index="1"><span class="check-item-box"><svg class="check-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span><span class="check-item-text">The system has an internal goal: the model pulls toward the plausible, not the correct.</span></label>
 <label class="check-item" data-index="2"><input type="checkbox" class="check-item-input" data-index="2"><span class="check-item-box"><svg class="check-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span><span class="check-item-text">Write the goal down before phrasing the task: a short note — what I want and how I'll check.</span></label>
 <label class="check-item" data-index="3"><input type="checkbox" class="check-item-input" data-index="3"><span class="check-item-box"><svg class="check-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span><span class="check-item-text">The literalness test: if it gets done exactly as written — are you satisfied?</span></label>

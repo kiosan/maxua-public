@@ -1,0 +1,1466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 13. Control, Controllability, Degradation — Requisite Variety: A Systems Method for Working with AI</title>
+    <meta name="essay-page-key" content="en/part-3-activity/13-control-degradation">
+    <script>
+    // Blocking: apply saved sidebar state before first paint to prevent layout jump
+    (function() {
+        var d = document.documentElement;
+        if (window.innerWidth <= 900) return;
+        var collapsed = localStorage.getItem('essay-sidebar-collapsed-system-for-ai-engineers-en') === '1';
+        if (collapsed) d.classList.add('sidebar-collapsed');
+        var w = localStorage.getItem('essay-sidebar-width-system-for-ai-engineers-en');
+        if (w && !collapsed) {
+            var px = Math.max(200, Math.min(parseInt(w, 10), 480));
+            d.style.setProperty('--sidebar-width', px + 'px');
+        }
+    })();
+    </script>
+    <style>
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v18/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuLyfAZ9hiA.woff2) format('woff2');
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v18/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuI6fAZ9hiA.woff2) format('woff2');
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v18/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuGKYAZ9hiA.woff2) format('woff2');
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v18/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuFuYAZ9hiA.woff2) format('woff2');
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/jetbrainsmono/v18/tDbY2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKxjPVmUsaaDhw.woff2) format('woff2');
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/jetbrainsmono/v18/tDbY2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKxTPVmUsaaDhw.woff2) format('woff2');
+}
+:root {
+  --md-primary: #4C662B;
+  --md-surface-tint: #4C662B;
+  --md-on-primary: #FFFFFF;
+  --md-primary-container: #CDEDA3;
+  --md-on-primary-container: #354E16;
+  --md-secondary: #586249;
+  --md-on-secondary: #FFFFFF;
+  --md-secondary-container: #DCE7C8;
+  --md-on-secondary-container: #404A33;
+  --md-tertiary: #386663;
+  --md-on-tertiary: #FFFFFF;
+  --md-tertiary-container: #BCECE7;
+  --md-on-tertiary-container: #1F4E4B;
+  --md-error: #BA1A1A;
+  --md-on-error: #FFFFFF;
+  --md-error-container: #FFDAD6;
+  --md-on-error-container: #93000A;
+  --md-background: #F9FAEF;
+  --md-on-background: #1A1C16;
+  --md-surface: #F9FAEF;
+  --md-on-surface: #1A1C16;
+  --md-surface-variant: #E1E4D5;
+  --md-on-surface-variant: #44483D;
+  --md-outline: #75796C;
+  --md-outline-variant: #C5C8BA;
+  --md-shadow: #000000;
+  --md-scrim: #000000;
+  --md-inverse-surface: #2F312A;
+  --md-inverse-on-surface: #F1F2E6;
+  --md-inverse-primary: #B1D18A;
+  --md-primary-fixed: #CDEDA3;
+  --md-on-primary-fixed: #102000;
+  --md-primary-fixed-dim: #B1D18A;
+  --md-on-primary-fixed-variant: #354E16;
+  --md-secondary-fixed: #DCE7C8;
+  --md-on-secondary-fixed: #151E0B;
+  --md-secondary-fixed-dim: #BFCBAD;
+  --md-on-secondary-fixed-variant: #404A33;
+  --md-tertiary-fixed: #BCECE7;
+  --md-on-tertiary-fixed: #00201E;
+  --md-tertiary-fixed-dim: #A0D0CB;
+  --md-on-tertiary-fixed-variant: #1F4E4B;
+  --md-surface-dim: #DADBD0;
+  --md-surface-bright: #F9FAEF;
+  --md-surface-container-lowest: #FFFFFF;
+  --md-surface-container-low: #F3F4E9;
+  --md-surface-container: #EEEFE3;
+  --md-surface-container-high: #E8E9DE;
+  --md-surface-container-highest: #E2E3D8;
+}
+pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.codehilite .hll { background-color: #ffffcc }
+.codehilite { background: #f8f8f8; }
+.codehilite .c { color: #3D7B7B; font-style: italic } /* Comment */
+.codehilite .err { border: 1px solid #F00 } /* Error */
+.codehilite .k { color: #008000; font-weight: bold } /* Keyword */
+.codehilite .o { color: #666 } /* Operator */
+.codehilite .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
+.codehilite .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
+.codehilite .cp { color: #9C6500 } /* Comment.Preproc */
+.codehilite .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
+.codehilite .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
+.codehilite .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
+.codehilite .gd { color: #A00000 } /* Generic.Deleted */
+.codehilite .ge { font-style: italic } /* Generic.Emph */
+.codehilite .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+.codehilite .gr { color: #E40000 } /* Generic.Error */
+.codehilite .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.codehilite .gi { color: #008400 } /* Generic.Inserted */
+.codehilite .go { color: #717171 } /* Generic.Output */
+.codehilite .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.codehilite .gs { font-weight: bold } /* Generic.Strong */
+.codehilite .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.codehilite .gt { color: #04D } /* Generic.Traceback */
+.codehilite .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.codehilite .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.codehilite .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.codehilite .kp { color: #008000 } /* Keyword.Pseudo */
+.codehilite .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.codehilite .kt { color: #B00040 } /* Keyword.Type */
+.codehilite .m { color: #666 } /* Literal.Number */
+.codehilite .s { color: #BA2121 } /* Literal.String */
+.codehilite .na { color: #687822 } /* Name.Attribute */
+.codehilite .nb { color: #008000 } /* Name.Builtin */
+.codehilite .nc { color: #00F; font-weight: bold } /* Name.Class */
+.codehilite .no { color: #800 } /* Name.Constant */
+.codehilite .nd { color: #A2F } /* Name.Decorator */
+.codehilite .ni { color: #717171; font-weight: bold } /* Name.Entity */
+.codehilite .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
+.codehilite .nf { color: #00F } /* Name.Function */
+.codehilite .nl { color: #767600 } /* Name.Label */
+.codehilite .nn { color: #00F; font-weight: bold } /* Name.Namespace */
+.codehilite .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.codehilite .nv { color: #19177C } /* Name.Variable */
+.codehilite .ow { color: #A2F; font-weight: bold } /* Operator.Word */
+.codehilite .w { color: #BBB } /* Text.Whitespace */
+.codehilite .mb { color: #666 } /* Literal.Number.Bin */
+.codehilite .mf { color: #666 } /* Literal.Number.Float */
+.codehilite .mh { color: #666 } /* Literal.Number.Hex */
+.codehilite .mi { color: #666 } /* Literal.Number.Integer */
+.codehilite .mo { color: #666 } /* Literal.Number.Oct */
+.codehilite .sa { color: #BA2121 } /* Literal.String.Affix */
+.codehilite .sb { color: #BA2121 } /* Literal.String.Backtick */
+.codehilite .sc { color: #BA2121 } /* Literal.String.Char */
+.codehilite .dl { color: #BA2121 } /* Literal.String.Delimiter */
+.codehilite .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.codehilite .s2 { color: #BA2121 } /* Literal.String.Double */
+.codehilite .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
+.codehilite .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.codehilite .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
+.codehilite .sx { color: #008000 } /* Literal.String.Other */
+.codehilite .sr { color: #A45A77 } /* Literal.String.Regex */
+.codehilite .s1 { color: #BA2121 } /* Literal.String.Single */
+.codehilite .ss { color: #19177C } /* Literal.String.Symbol */
+.codehilite .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.codehilite .fm { color: #00F } /* Name.Function.Magic */
+.codehilite .vc { color: #19177C } /* Name.Variable.Class */
+.codehilite .vg { color: #19177C } /* Name.Variable.Global */
+.codehilite .vi { color: #19177C } /* Name.Variable.Instance */
+.codehilite .vm { color: #19177C } /* Name.Variable.Magic */
+.codehilite .il { color: #666 } /* Literal.Number.Integer.Long */
+/* Reset & Base */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --sidebar-width: 272px;
+  --sidebar-collapsed-width: 0px;
+}
+
+html {
+  font-size: var(--md-base-size, 18px);
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--md-font-family, 'Inter', sans-serif);
+  font-weight: var(--md-body-weight, 400);
+  line-height: var(--md-line-height, 1.7);
+  color: var(--md-on-surface, #231917);
+  background: var(--md-background, #FFF8F6);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Layout */
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: var(--sidebar-width);
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--md-surface-container-low, #FFF1ED);
+  border-right: 1px solid var(--md-outline-variant, #D8C2BC);
+  z-index: 100;
+  transition: width 0.25s ease, transform 0.3s ease;
+  overflow: hidden;
+}
+
+/* Sidebar header */
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 1rem 0.75rem 1rem 1.25rem;
+  border-bottom: 1px solid var(--md-outline-variant, #D8C2BC);
+  flex-shrink: 0;
+}
+
+.sidebar-title {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--md-on-surface, #231917);
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+
+.sidebar-collapse-btn {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 0.375rem;
+  background: transparent;
+  color: var(--md-on-surface-variant, #53433F);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.sidebar-collapse-btn:hover {
+  background: var(--md-surface-container, #FCEAE5);
+  color: var(--md-on-surface, #231917);
+}
+
+/* Sidebar nav */
+.sidebar-nav {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 0.5rem 0;
+}
+
+.nav-tree {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.nav-tree .nav-tree {
+  padding-left: 0.5rem;
+  margin-left: 0.875rem;
+  border-left: 1px solid var(--md-outline-variant, #D8C2BC);
+}
+
+.nav-item {
+  position: relative;
+}
+
+.nav-item a,
+.nav-item .nav-label {
+  display: block;
+  padding: 0.375rem 0.75rem;
+  margin: 1px 0.5rem;
+  font-size: 0.8rem;
+  font-weight: 400;
+  color: var(--md-on-surface-variant, #53433F);
+  text-decoration: none;
+  transition: all 0.15s ease;
+  border-radius: 0.375rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.nav-item .nav-label {
+  color: var(--md-on-surface, #231917);
+  font-weight: 500;
+  cursor: default;
+}
+
+.nav-item a:hover {
+  color: var(--md-on-surface, #231917);
+  background: var(--md-surface-container, #FCEAE5);
+}
+
+.nav-item.active > a {
+  color: var(--md-on-primary-container, #723523);
+  font-weight: 500;
+  background: var(--md-primary-container, #FFDBD1);
+}
+
+/* Newsletter issues under a chapter */
+.nav-count {
+  display: inline-block;
+  min-width: 1.15rem;
+  padding: 0 0.35rem;
+  margin-left: 0.4rem;
+  font-size: 0.65rem;
+  line-height: 1.15rem;
+  text-align: center;
+  border-radius: 999px;
+  background: var(--md-surface-container, #FCEAE5);
+  color: var(--md-on-surface-variant, #53433F);
+  vertical-align: middle;
+}
+.nav-item.active > a .nav-count { background: rgba(255,255,255,0.6); }
+.nav-tree.nav-issues {
+  border-left-style: dashed;
+}
+.nav-issue a {
+  font-size: 0.74rem;
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+}
+.nav-issue a::before {
+  content: "✉";
+  margin-right: 0.35rem;
+  font-size: 0.7rem;
+  opacity: 0.7;
+}
+.nav-issue.nav-maxims a::before {
+  content: "\275D";
+}
+
+/* Maxims page (Substack Notes drafts) */
+.maxim {
+  margin: 0 0 1.6rem;
+  padding: 0 0 1.2rem;
+  border-bottom: 1px solid var(--md-outline-variant, #D8C2BC);
+}
+.maxim-text {
+  font-size: 1.05rem;
+  line-height: 1.55;
+  margin: 0 0 0.9rem;
+}
+.maxim-text .maxim-p { margin: 0 0 0.6rem; }
+.maxim-alt {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--md-on-surface-variant, #53433F);
+  margin: 0 0 0.5rem;
+  padding-left: 0.9rem;
+  border-left: 2px solid var(--md-outline-variant, #D8C2BC);
+}
+.maxim-alt .maxim-p { margin: 0 0 0.45rem; }
+.maxim-meta {
+  font-size: 0.72rem;
+  color: var(--md-outline, #85736E);
+  margin: 0;
+}
+
+.nav-item.active-parent > a {
+  color: var(--md-on-surface, #231917);
+  font-weight: 500;
+}
+
+/* Resize handle */
+.resize-handle {
+  position: absolute;
+  top: 0;
+  right: -3px;
+  width: 6px;
+  height: 100%;
+  cursor: col-resize;
+  z-index: 110;
+  transition: background 0.15s ease;
+}
+
+.resize-handle:hover,
+.resize-handle.active {
+  background: var(--md-primary, #8F4C38);
+  opacity: 0.3;
+}
+
+body.resizing {
+  cursor: col-resize;
+  user-select: none;
+}
+
+/* Sidebar expand button (visible when collapsed, desktop) */
+.sidebar-expand-btn {
+  display: none;
+  position: fixed;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 200;
+  width: 36px;
+  height: 36px;
+  align-items: center;
+  justify-content: center;
+  background: var(--md-surface, #FFF8F6);
+  border: 1px solid var(--md-outline-variant, #D8C2BC);
+  border-radius: 0.5rem;
+  cursor: pointer;
+  color: var(--md-on-surface-variant, #53433F);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  transition: all 0.15s ease;
+}
+
+.sidebar-expand-btn:hover {
+  background: var(--md-surface-container, #FCEAE5);
+  color: var(--md-on-surface, #231917);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+/* Collapsed state (set on <html>) */
+.sidebar-collapsed .sidebar {
+  width: 0;
+  border-right-color: transparent;
+}
+
+.sidebar-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1rem;
+  padding: 0.75rem 1.25rem;
+  border-top: 1px solid var(--md-outline-variant);
+  font-size: 0.8rem;
+}
+.sidebar-link {
+  color: var(--md-on-surface-variant);
+  text-decoration: none;
+}
+.sidebar-link:hover { color: var(--md-primary); text-decoration: underline; }
+
+.sidebar-collapsed .sidebar-header,
+.sidebar-collapsed .sidebar-links,
+.sidebar-collapsed .sidebar-nav,
+.sidebar-collapsed .resize-handle {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.sidebar-collapsed .sidebar-expand-btn {
+  display: flex;
+}
+
+.sidebar-collapsed .content {
+  margin-left: 0;
+}
+
+/* Mobile sidebar toggle */
+.sidebar-toggle {
+  display: none;
+  position: fixed;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 200;
+  width: 36px;
+  height: 36px;
+  align-items: center;
+  justify-content: center;
+  background: var(--md-surface, #FFF8F6);
+  border: 1px solid var(--md-outline-variant, #D8C2BC);
+  border-radius: 0.5rem;
+  cursor: pointer;
+  color: var(--md-on-surface-variant, #53433F);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+
+.sidebar-toggle:hover {
+  background: var(--md-surface-container, #FCEAE5);
+  color: var(--md-on-surface, #231917);
+}
+
+/* Content */
+.content {
+  margin-left: var(--sidebar-width);
+  flex: 1;
+  min-width: 0;
+  transition: margin-left 0.25s ease;
+}
+
+.article {
+  max-width: var(--md-max-width, 720px);
+  margin: 0 auto;
+  padding: var(--md-content-padding, 2rem);
+  padding-top: 3rem;
+  padding-bottom: 4rem;
+}
+
+/* Typography */
+.article h1 {
+  font-size: 2.25rem;
+  font-weight: var(--md-heading-weight, 700);
+  line-height: 1.2;
+  margin-bottom: 1.5rem;
+  color: var(--md-on-surface, #231917);
+  letter-spacing: -0.02em;
+}
+
+.article h2 {
+  font-size: 1.6rem;
+  font-weight: var(--md-heading-weight, 700);
+  line-height: 1.25;
+  margin-top: 3rem;
+  margin-bottom: 1rem;
+  color: var(--md-on-surface, #231917);
+  padding-bottom: 0.4rem;
+  border-bottom: 2px solid var(--md-primary-container, #FFDBD1);
+}
+
+.article h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1.3;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+  color: var(--md-on-surface, #231917);
+}
+
+.article h4 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.article p {
+  margin-bottom: 1.25rem;
+}
+
+.article a {
+  color: var(--md-primary, #8F4C38);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.article a:hover {
+  color: var(--md-on-primary-container, #723523);
+}
+
+/* Lists */
+.article ul, .article ol {
+  margin-bottom: 1.25rem;
+  padding-left: 1.5rem;
+}
+
+.article li {
+  margin-bottom: 0.35rem;
+}
+
+.article li > ul, .article li > ol {
+  margin-top: 0.35rem;
+  margin-bottom: 0;
+}
+
+/* Blockquote */
+.article blockquote {
+  border-left: 4px solid var(--md-primary, #8F4C38);
+  background: var(--md-primary-container, #FFDBD1);
+  padding: 1rem 1.25rem;
+  margin: 1.5rem 0;
+  border-radius: 0 0.5rem 0.5rem 0;
+  color: var(--md-on-primary-container, #723523);
+}
+
+.article blockquote p:last-child {
+  margin-bottom: 0;
+}
+
+/* Code */
+.article code {
+  font-family: var(--md-font-family-mono, 'JetBrains Mono', monospace);
+  font-size: 0.85em;
+  background: var(--md-surface-container, #FCEAE5);
+  padding: 0.15em 0.4em;
+  border-radius: 0.25rem;
+}
+
+.article pre {
+  margin: 1.5rem 0;
+  border-radius: 0.75rem;
+  overflow-x: auto;
+}
+
+.article .codehilite {
+  background: var(--md-surface-container-lowest, #FFFFFF);
+  border: 1px solid var(--md-outline-variant, #D8C2BC);
+  border-radius: 0.75rem;
+  padding: 1rem 1.25rem;
+  overflow-x: auto;
+  margin: 1.5rem 0;
+}
+
+.article .codehilite code {
+  background: none;
+  padding: 0;
+  font-size: 0.82em;
+}
+
+/* Tables */
+.article table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  font-size: 0.9rem;
+}
+
+.article th {
+  background: var(--md-surface-container, #FCEAE5);
+  font-weight: 600;
+  text-align: left;
+  padding: 0.75rem 1rem;
+  border-bottom: 2px solid var(--md-outline-variant, #D8C2BC);
+}
+
+.article td {
+  padding: 0.6rem 1rem;
+  border-bottom: 1px solid var(--md-surface-container, #FCEAE5);
+}
+
+/* Anchor links */
+.anchor-link {
+  font-size: 0.8em;
+  opacity: 0;
+  margin-left: 0.5rem;
+  text-decoration: none !important;
+  transition: opacity 0.15s;
+}
+
+.article h2:hover .anchor-link,
+.article h3:hover .anchor-link,
+.article h4:hover .anchor-link {
+  opacity: 0.5;
+}
+
+/* Footnotes */
+.footnote {
+  font-size: 0.85rem;
+  color: var(--md-on-surface-variant, #53433F);
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--md-outline-variant, #D8C2BC);
+}
+
+/* Images */
+.article img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+  margin: 1rem 0;
+}
+
+/* Horizontal rule */
+.article hr {
+  border: none;
+  border-top: 2px solid var(--md-surface-container, #FCEAE5);
+  margin: 2.5rem 0;
+}
+
+/* Check Items */
+.check-items {
+  margin-top: 2.5rem;
+  padding: 1.25rem;
+  background: var(--md-surface-container-low, #FFF1ED);
+  border: 1px solid var(--md-outline-variant, #D8C2BC);
+  border-radius: 0.75rem;
+}
+
+.check-items-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.625rem;
+  border-bottom: 1px solid var(--md-outline-variant, #D8C2BC);
+}
+
+.check-items-title {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--md-on-surface, #231917);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.check-items-progress {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--md-on-surface-variant, #53433F);
+}
+
+.check-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.625rem 0.5rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  user-select: none;
+}
+
+.check-item:hover {
+  background: var(--md-surface-container, #FCEAE5);
+}
+
+.check-item-input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.check-item-box {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  margin-top: 1px;
+  border: 2px solid var(--md-outline, #85736E);
+  border-radius: 0.3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  background: transparent;
+}
+
+.check-item-icon {
+  width: 14px;
+  height: 14px;
+  opacity: 0;
+  transform: scale(0.5);
+  transition: all 0.2s ease;
+  color: var(--md-on-primary, #FFFFFF);
+}
+
+.check-item-input:checked ~ .check-item-box {
+  background: var(--md-primary, #8F4C38);
+  border-color: var(--md-primary, #8F4C38);
+}
+
+.check-item-input:checked ~ .check-item-box .check-item-icon {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.check-item-text {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--md-on-surface, #231917);
+  transition: color 0.15s ease;
+}
+
+.check-item-input:checked ~ .check-item-text {
+  color: var(--md-on-surface-variant, #53433F);
+}
+
+/* Page Navigation (Prev / Next) */
+.page-nav {
+  display: flex;
+  gap: 1rem;
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--md-outline-variant, #D8C2BC);
+}
+
+.page-nav-link {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.875rem 1rem;
+  border: 1px solid var(--md-outline-variant, #D8C2BC);
+  border-radius: 0.625rem;
+  text-decoration: none;
+  transition: all 0.15s ease;
+  min-width: 0;
+}
+
+.page-nav-link:hover {
+  border-color: var(--md-primary, #8F4C38);
+  background: var(--md-surface-container-low, #FFF1ED);
+}
+
+.page-nav-next {
+  align-items: flex-end;
+  text-align: right;
+}
+
+.page-nav-disabled {
+  visibility: hidden;
+}
+
+.page-nav-label {
+  font-size: 0.7rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--md-on-surface-variant, #53433F);
+}
+
+.page-nav-title {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--md-on-surface, #231917);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.page-nav-link:hover .page-nav-title {
+  color: var(--md-primary, #8F4C38);
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .sidebar {
+    transform: translateX(-100%);
+    width: 280px !important;
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+    box-shadow: 4px 0 24px rgba(0,0,0,0.1);
+  }
+
+  .resize-handle,
+  .sidebar-collapse-btn,
+  .sidebar-expand-btn {
+    display: none !important;
+  }
+
+  .sidebar-toggle {
+    display: flex;
+  }
+
+  /* Hide desktop collapse state on mobile */
+  .sidebar-collapsed .sidebar {
+    width: 280px !important;
+  }
+
+  .sidebar-collapsed .sidebar-header,
+  .sidebar-collapsed .sidebar-nav {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .content {
+    margin-left: 0;
+  }
+
+  .sidebar-collapsed .content {
+    margin-left: 0;
+  }
+
+  .article {
+    padding: 1.25rem;
+    padding-top: 4rem;
+  }
+
+  .article h1 {
+    font-size: 1.75rem;
+  }
+
+  .article h2 {
+    font-size: 1.35rem;
+  }
+}
+
+/* Book schemes (inline SVG figures) */
+.book-scheme {
+  margin: 2rem 0;
+  text-align: center;
+}
+
+.book-scheme svg {
+  width: 100%;
+  max-width: 640px;
+  height: auto;
+}
+
+.book-scheme figcaption {
+  font-size: 0.8rem;
+  color: var(--md-on-surface-variant, #53433F);
+  margin-top: 0.5rem;
+}
+
+/* Nav progress badges (from progress/progress.json) */
+.nav-status {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  margin-left: 0.4rem;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+
+.nav-status-done {
+  background: var(--md-primary, #8F4C38);
+}
+
+.nav-status-wip {
+  background: transparent;
+  border: 1.5px solid var(--md-primary, #8F4C38);
+  box-sizing: border-box;
+}
+
+/* Book callout — одна сильна думка, винесена в окремий блок (pull quote) */
+.book-callout {
+  margin: 2.25rem 0;
+  padding: 0.4rem 0 0.4rem 1.4rem;
+  border-left: 3px solid var(--md-primary, #8F4C38);
+  font-size: 1.18em;
+  line-height: 1.55;
+  font-weight: 500;
+  color: var(--md-on-primary-container, #723523);
+}
+@media print {
+  .book-callout { break-inside: avoid; }
+}
+
+/* Substack subscribe embed on published chapter pages */
+.subscribe-embed {
+  margin: 1.75rem 0;
+  display: flex;
+  justify-content: center;
+}
+.subscribe-embed iframe {
+  max-width: 100%;
+}
+
+
+    </style>
+<script async data-id="101511163" src="//static.getclicky.com/js"></script>
+</head>
+<body>
+    <div class="layout">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <span class="sidebar-title">Requisite Variety: A Systems Method for Working with AI</span>
+                <button class="sidebar-collapse-btn" id="sidebar-collapse" aria-label="Collapse sidebar">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="11 17 6 12 11 7"></polyline>
+                        <polyline points="18 17 13 12 18 7"></polyline>
+                    </svg>
+                </button>
+            </div>
+            <nav class="sidebar-nav">
+                <ul class="nav-tree" data-depth="0"><li class="nav-item">
+<a href="/variety/read/en/">Requisite Variety</a>
+</li>
+<li class="nav-item">
+<a href="/variety/read/en/part-1-system/">Part I. The system you actually control</a>
+<ul class="nav-tree" data-depth="1"><li class="nav-item">
+<a href="/variety/read/en/part-1-system/02-requisite-variety/">Chapter 2. The Law of Requisite Variety</a>
+</li></ul>
+</li>
+<li class="nav-item">
+<a href="/variety/read/en/part-2-goals/">Part II. Goals and taste: what you are really asking for</a>
+<ul class="nav-tree" data-depth="1"><li class="nav-item">
+<a href="/variety/read/en/part-2-goals/06-goal-and-proxy/">Chapter 6. A Goal and Its Proxy</a>
+</li></ul>
+</li>
+<li class="nav-item">
+<a href="/variety/read/en/part-3-activity/">Part III. Activity: the method of daily work</a>
+<ul class="nav-tree" data-depth="1"><li class="nav-item">
+<a href="/variety/read/en/part-3-activity/10-activity-decomposition/">Chapter 10. The Components of Activity</a>
+</li>
+<li class="nav-item active">
+<a href="/variety/read/en/part-3-activity/13-control-degradation/">Chapter 13. Control, Controllability, Degradation</a>
+</li></ul>
+</li></ul>
+            </nav>
+            <div class="sidebar-links"><a class="sidebar-link sidebar-link-lang" href="/variety/read/" lang="uk">Українська</a>
+<a class="sidebar-link sidebar-link-newsletter" href="https://kiosan.substack.com" target="_blank" rel="noopener">Newsletter ↗</a></div>
+            <div class="resize-handle" id="resize-handle"></div>
+        </aside>
+        <button class="sidebar-expand-btn" id="sidebar-expand" aria-label="Expand sidebar">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+        </button>
+        <button class="sidebar-toggle" id="sidebar-toggle" aria-label="Toggle sidebar">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+        </button>
+        <main class="content">
+            <article class="article">
+                <h1 id="chapter-13-control-controllability-degradation">Chapter 13. Control, Controllability, Degradation<a class="anchor-link" href="#chapter-13-control-controllability-degradation" title="Permanent link">&para;</a></h1>
+<div class="subscribe-embed"><iframe src="https://kiosan.substack.com/embed?transparent=1" width="480" height="320" style="border: 0; background: transparent" title="Subscribe to the newsletter" loading="lazy" frameborder="0" scrolling="no"></iframe></div>
+
+<p>For several months our pipeline had a static code analyzer in it — SonarQube, a tool that reads code and looks for typical problems. It was configured any old way: two thousand warnings nobody ever opened, and a quality gate set so it wouldn&rsquo;t get in the way of releases. Every run — seven minutes of waiting. One morning I switched it off.</p>
+<p>Not on principle — I was tired of waiting on a step that changed nothing. I meant to tell the team, then got distracted. A couple of weeks passed before somebody asked where the badge in the pull request had gone.</p>
+<p>For a couple of weeks the team worked without a tool that our process diagram called &ldquo;code quality control.&rdquo; And nobody noticed — not because the team is inattentive. There was nothing to notice: in all that time the step had never produced a single signal anyone reacted to. It sat in the pipeline the way an old breaker panel sits in a hallway, with nobody ever opening it.</p>
+<p>So what kept code quality within bounds those couple of weeks? The same things as before: peer review, tests, and habit. The analyzer had nothing to do with it — and hadn&rsquo;t for a long time. The control we &ldquo;had&rdquo; existed only as a phantom step in the pipeline.</p>
+<p>Out of this story grows the chapter&rsquo;s question: what exactly keeps the system within acceptable limits in the minute when you aren&rsquo;t looking? The title has three words, and they are three answers to it. What to hold it with — control. How much to let go — controllability. And how to notice that the thing doing the holding hasn&rsquo;t held anything in a long while — degradation.</p>
+<p>The previous chapter, on the normative base, led to norms that hold without you. Here — what that stability costs, and what it threatens.</p>
+<h2 id="an-equilibrium-you-pay-for">An equilibrium you pay for<a class="anchor-link" href="#an-equilibrium-you-pay-for" title="Permanent link">&para;</a></h2>
+<p>There are two ways a system stays within acceptable limits.</p>
+<p>The first: the acceptable state coincides with where the system gravitates on its own. A marble at the bottom of a dimple sits in the center not because anyone is holding it there — that is its most stable state. Nothing needs holding.</p>
+<p>The second: the acceptable state is maintained by continuous effort from outside. Your body holds thirty-six point six degrees not because that temperature is natural for a lump of protein, but because every second it spends energy on it: sweats, shivers, constricts the vessels. Physiologists call this <strong>homeostasis</strong>. There is an equilibrium, but it&rsquo;s an active one: stop paying, and within a few hours the temperature settles to that of the room.</p>
+<p>Control of the &ldquo;I read everything that gets generated&rdquo; kind is the second type. The system stays within bounds as long as you&rsquo;re reading. Get distracted, get tired, step out for coffee — and nothing but your attention was holding it there. Worse: such a system falls apart not when attention disappears for good, but at the first short dip of attention below a critical level. One evening of skimming is enough.</p>
+<p>Chapter 10 showed this with pilots: watching over something that does everything itself, and does it well, is separate work that humans are bad at. Building control on what you&rsquo;re weak at — that is control by willpower.</p>
+<p>In Chapter 2 I derived a rule for the attenuator: it works only when it&rsquo;s structural. Here the same rule is carried through to a whole construction. A <strong>control loop</strong> is three actions: observe, compare against a threshold, return within acceptable limits or stop. And the question for each of the three is the same: is the construction doing it — or are you?</p>
+<aside class="book-callout">Control is not how carefully you read. It's what keeps the system within acceptable limits when you aren't reading.</aside>
+
+<p>I&rsquo;m not urging you to stop reading code. I&rsquo;m suggesting you answer for yourself what keeps the system within bounds when you aren&rsquo;t reading it. If nothing — you don&rsquo;t have control. You have a habit that hasn&rsquo;t let you down yet.</p>
+<h2 id="the-breaker-panel">The breaker panel<a class="anchor-link" href="#the-breaker-panel" title="Permanent link">&para;</a></h2>
+<p>Open the breaker panel in your hallway.</p>
+<p>A row of circuit breakers, each with its own rating: six amps for the lighting, sixteen for the outlets, twenty-five for the stove. When the current in a line exceeds the rating, the breaker trips — click, and the room goes dark. It doesn&rsquo;t ask whether you&rsquo;re busy right now. It doesn&rsquo;t wait for you to smell something burning. It doesn&rsquo;t rely on you remembering how many appliances you&rsquo;ve plugged in. The limit load is written into the construction. The construction fires on its own — at four in the morning the same as at ten.</p>
+<p>Look closer at the rating. It isn&rsquo;t about trusting the appliances — it&rsquo;s about the wire. The thin lighting wire gets a six-amp breaker not because anyone distrusts the lamps, but because a bigger current would melt it. How much a line can be allowed is decided not by wishes but by what the line can withstand. Want a higher rating — run a thicker wire.</p>
+<p>Second. A breaker measures only the current that flows through it. A line run straight from the meter, bypassing the panel — it happens in old buildings — doesn&rsquo;t exist for the breakers. They protect their own wire and know nothing about anyone else&rsquo;s.</p>
+<p>Third. A breaker doesn&rsquo;t decide what to do next. It stops and waits for a human. It trips — you walk to the hallway, look at what happened, and decide: unplug the heater, or run that new wire after all. The construction stops; the human decides. A breaker that &ldquo;sorted things out&rdquo; by itself and switched the line back on wouldn&rsquo;t be protection — it would be a fire on a delay.</p>
+<p>Fourth. Next to the breakers stands a residual-current device — the one that catches current leaking where it shouldn&rsquo;t — and on it a small Test button. The manual says to press it every month: the device should click, and that is the only proof it&rsquo;s still capable of tripping. How many times have you pressed it? I have — twice in ten years, and only when an electrician came by and reminded me. The device stands there, looks reliable, and nobody knows whether it still catches anything.</p>
+<p>And fifth, the worst. In old buildings you find a jumper: where a fuse blew, someone jammed in a piece of wire instead. From the outside the loop is in place — the fuses in the panel, same as ever. Inside — nothing. Any current will pass, and you&rsquo;ll find out about it together with your neighbors.</p>
+<p>The rating, the line that bypasses the panel, the trip, the Test button, the jumper. Five details — and we&rsquo;ll find each of them further on in work with a model.</p>
+<h2 id="the-loop-sees-only-the-trace">The loop sees only the trace<a class="anchor-link" href="#the-loop-sees-only-the-trace" title="Permanent link">&para;</a></h2>
+<p>You can control only what isn&rsquo;t completely closed off. A subsystem that works &ldquo;inside itself&rdquo; and gives nothing to the outside is, to whoever is outside, a point: it exists, but there&rsquo;s nothing to look in through. Concealment has nothing to do with it. An agent that spent three hours rewriting a module and showed you the finished result hid nothing — it&rsquo;s just that three hours of its work left no trace that could be compared against what&rsquo;s allowed. You see the final state, and everything between it and the start never existed for your loop. A breaker measures only the current that passes through it. An agent that goes to the database or the internet past your check script is a line run around the panel: it&rsquo;s doing something, and your breaker knows nothing about it.</p>
+<p>Hence the first rule: the trace is a requirement, not a wish. A plan before code. A report after every <strong>portion</strong> — as much work as the system does in one pass before a check: five files, one module, one migration. A test for every criterion, not &ldquo;there are tests.&rdquo; Without a trace you&rsquo;re controlling not the process but your own picture of it.</p>
+<p>And the second rule, the less pleasant one. Zero on your instrument is not &ldquo;nothing there.&rdquo; It&rsquo;s &ldquo;nothing the instrument can distinguish.&rdquo; How many problems did the analyzer find in those couple of weeks? Zero — it wasn&rsquo;t there. How many did it find the month before? Also zero, and back then we called that &ldquo;quality is normal.&rdquo; The difference between those two zeros isn&rsquo;t visible from inside, and here&rsquo;s why.</p>
+<p>Every instrument has a sensitivity threshold, and everything below it reads as zero. A kitchen scale rounds to ten grams. Put an empty bowl on it, zero it — and drop in a pinch of salt: the scale shows the same zero.</p>
+<p>Same with the analyzer: with its threshold set &ldquo;so it wouldn&rsquo;t get in the way of releases,&rdquo; it showed zero both when there really were no problems and when there were, but smaller than its threshold. Its zero meant not &ldquo;no problems&rdquo; but &ldquo;nothing among what I&rsquo;m configured to notice.&rdquo; And the higher the threshold is raised, the more such a zero holds — until the day it holds everything, and the instrument can be switched off: nobody will see the difference.</p>
+<figure class="book-scheme">
+<svg viewBox="0 0 640 265" role="img" aria-label="The same signal at a low and a high threshold: at the high one the instrument reads zero">
+  <defs></defs>
+  <rect x="0" y="0" width="640" height="265" fill="#FFFFFF"/>
+  <text x="170" y="34" text-anchor="middle" font-size="13" font-weight="600" fill="#231917">low threshold</text>
+  <text x="470" y="34" text-anchor="middle" font-size="13" font-weight="600" fill="#231917">high threshold</text>
+  <rect x="47" y="170" width="22" height="30" rx="2" fill="#D8C2BC"/>
+  <rect x="79" y="145" width="22" height="55" rx="2" fill="#8F4C38"/>
+  <rect x="111" y="180" width="22" height="20" rx="2" fill="#D8C2BC"/>
+  <rect x="143" y="115" width="22" height="85" rx="2" fill="#8F4C38"/>
+  <rect x="175" y="155" width="22" height="45" rx="2" fill="#D8C2BC"/>
+  <rect x="207" y="130" width="22" height="70" rx="2" fill="#8F4C38"/>
+  <rect x="239" y="175" width="22" height="25" rx="2" fill="#D8C2BC"/>
+  <rect x="271" y="100" width="22" height="100" rx="2" fill="#8F4C38"/>
+  <rect x="347" y="170" width="22" height="30" rx="2" fill="#D8C2BC"/>
+  <rect x="379" y="145" width="22" height="55" rx="2" fill="#D8C2BC"/>
+  <rect x="411" y="180" width="22" height="20" rx="2" fill="#D8C2BC"/>
+  <rect x="443" y="115" width="22" height="85" rx="2" fill="#D8C2BC"/>
+  <rect x="475" y="155" width="22" height="45" rx="2" fill="#D8C2BC"/>
+  <rect x="507" y="130" width="22" height="70" rx="2" fill="#D8C2BC"/>
+  <rect x="539" y="175" width="22" height="25" rx="2" fill="#D8C2BC"/>
+  <rect x="571" y="100" width="22" height="100" rx="2" fill="#D8C2BC"/>
+  <line x1="40" y1="200" x2="300" y2="200" stroke="#85736E" stroke-width="1.5"/>
+  <line x1="340" y1="200" x2="600" y2="200" stroke="#85736E" stroke-width="1.5"/>
+  <line x1="40" y1="150" x2="300" y2="150" stroke="#723523" stroke-width="1.5" stroke-dasharray="6 4"/>
+  <line x1="340" y1="90" x2="600" y2="90" stroke="#723523" stroke-width="1.5" stroke-dasharray="6 4"/>
+  <text x="302" y="146" text-anchor="end" font-size="11" fill="#723523">threshold</text>
+  <text x="602" y="86" text-anchor="end" font-size="11" fill="#723523">threshold</text>
+  <text x="170" y="224" text-anchor="middle" font-size="12" fill="#53433F">four problems visible</text>
+  <text x="470" y="224" text-anchor="middle" font-size="12" fill="#53433F">zero — and the problems are the same</text>
+  <text x="320" y="252" text-anchor="middle" font-size="12" fill="#8F4C38">everything below the threshold reads as zero</text>
+</svg>
+<figcaption>Figure 13.1. The instrument's zero: the higher the threshold, the more the zero holds</figcaption>
+</figure>
+
+<p>There&rsquo;s also a price. For a system to be observable, it has to be open: part of what it does must come out — into a report, into a table, into a stop with a question for you. That outlet isn&rsquo;t free.</p>
+<p>The system leaves its trace out of the same resource it does the work with: every report is tokens, every stop is time, every review is your attention. The more you want to see, the larger the share of its resource the system gives to being seen rather than to the job itself. And the larger the share the loop eats, the less that work resembles the work you set out to control. A breaker in the panel eats almost none of the current it passes, and that is exactly why one can be put on every line.</p>
+<p>A loop that takes half the process&rsquo;s resource isn&rsquo;t control — it&rsquo;s an expensive way of reading everything yourself. And its fate is predictable: sooner or later it gets switched off by the very people it protects. Seven minutes of waiting on a run that changed nothing — that&rsquo;s how I switched off the analyzer.</p>
+<h2 id="how-much-to-let-go">How much to let go<a class="anchor-link" href="#how-much-to-let-go" title="Permanent link">&para;</a></h2>
+<p>Now the rating.</p>
+<p><strong>Controllability</strong> is a property of the system that determines how much autonomy it can be given. And unlike trust, it can be measured: how much effort it costs to bring the system back within acceptable limits once it has left them. Each such case — the work stopped and came back to you, by an escalation rule or because you noticed a deviation and stepped in — I&rsquo;ll call a <strong>stop</strong> from here on.</p>
+<p>Every system has a minimum effort — exactly enough to remove the deviation. And there&rsquo;s the real effort: with searching, figuring out, redoing. The real one is always larger. The gap between them is the loss of controllability.</p>
+<p>An agent deviated in two files out of fifty, and you fixed two files — controllability is high. It deviated in two, and you had to reread all fifty because there&rsquo;s no knowing which two — low, though the number of mistakes is the same. The difference isn&rsquo;t in the agent. The difference is whether it left a trace.</p>
+<figure class="book-scheme">
+<svg viewBox="0 0 640 265" role="img" aria-label="Minimum and real effort to return: with a trace they are nearly equal, without a trace the real one is many times larger">
+  <defs></defs>
+  <rect x="0" y="0" width="640" height="265" fill="#FFFFFF"/>
+  <text x="320" y="30" text-anchor="middle" font-size="12" fill="#53433F">the agent deviated in two files out of fifty</text>
+  <text x="160" y="60" text-anchor="middle" font-size="13" font-weight="600" fill="#231917">with a trace</text>
+  <text x="450" y="60" text-anchor="middle" font-size="13" font-weight="600" fill="#231917">without a trace</text>
+  <rect x="95" y="170" width="55" height="40" rx="3" fill="#FFDBD1" stroke="#8F4C38" stroke-width="1.5"/>
+  <rect x="170" y="165" width="55" height="45" rx="3" fill="#8F4C38"/>
+  <rect x="385" y="170" width="55" height="40" rx="3" fill="#FFDBD1" stroke="#8F4C38" stroke-width="1.5"/>
+  <rect x="460" y="78" width="55" height="132" rx="3" fill="#8F4C38"/>
+  <line x1="60" y1="210" x2="260" y2="210" stroke="#85736E" stroke-width="1.5"/>
+  <line x1="350" y1="210" x2="550" y2="210" stroke="#85736E" stroke-width="1.5"/>
+  <text x="122" y="226" text-anchor="middle" font-size="11" fill="#53433F">minimum</text>
+  <text x="197" y="226" text-anchor="middle" font-size="11" fill="#53433F">real</text>
+  <text x="412" y="226" text-anchor="middle" font-size="11" fill="#53433F">minimum</text>
+  <text x="487" y="226" text-anchor="middle" font-size="11" fill="#53433F">real</text>
+  <text x="160" y="244" text-anchor="middle" font-size="11.5" fill="#53433F">fix two files</text>
+  <text x="450" y="244" text-anchor="middle" font-size="11.5" fill="#53433F">reread all fifty</text>
+  <line x1="535" y1="80" x2="535" y2="168" stroke="#723523" stroke-width="1.5"/>
+  <line x1="530" y1="80" x2="540" y2="80" stroke="#723523" stroke-width="1.5"/>
+  <line x1="530" y1="168" x2="540" y2="168" stroke="#723523" stroke-width="1.5"/>
+  <text x="545" y="112" font-size="11" fill="#723523">the gap —</text>
+  <text x="545" y="127" font-size="11" fill="#723523">lost</text>
+  <text x="545" y="142" font-size="11" fill="#723523">controllability</text>
+</svg>
+<figcaption>Figure 13.2. Controllability is the gap between the minimum and the real effort to return within acceptable limits</figcaption>
+</figure>
+
+<p>That&rsquo;s why the <strong>scope of autonomy</strong> is not an advance of trust but the result of a measurement. Work is handed over in portions, and stops are counted. Zero stops out of twenty portions — the portion can be increased. Every third one stops — it has to be reduced, no matter how much you&rsquo;d like to go faster. The rating is chosen for the wire, not for the appetite.</p>
+<p>When is control possible at all? Two of the three conditions you already know. The first is from Chapter 2: your variety must be greater than the subsystem&rsquo;s; if an agent produces more states overnight than you can distinguish in a morning, controlling it won&rsquo;t work however much effort you put in — only chasing after it.</p>
+<p>The second is from Chapter 6: the closer the subsystem&rsquo;s internal goal is to the one you need, the cheaper the control; for an agent whose goal is &ldquo;the tests pass,&rdquo; an empty test contradicts nothing, and you&rsquo;re the one who&rsquo;ll pay for every such test.</p>
+<p>The third is new: the subsystem should have few goals. Controlling a process with one goal is cheaper than with five; an agent told to migrate the tests and &ldquo;tidy up the code while you&rsquo;re at it&rdquo; is two lines on one breaker: when it trips, you won&rsquo;t know which one did it.</p>
+<p>And one more regularity — about critical mass. Autonomy can be granted as long as what remains of your resource is larger than what the system has managed to do. Four hundred files overnight is more than you&rsquo;ll read in a morning. In the minute when the volume of what&rsquo;s done exceeds your capacity to evaluate it, you&rsquo;re no longer the one in control: the product dictates to you what to do with it. You have to merge — because redoing is even more expensive. That&rsquo;s why thresholds are set before the start. After the start there&rsquo;s nothing left to set — only reading to finish. What remains of your resource is that wire. The rating is chosen for it.</p>
+<p>One caveat.</p>
+<p>There is a kind of system that never argues and does exactly what it&rsquo;s told, first time. It looks like perfect controllability. Systems theory regards this with suspicion: a system with no goal of its own really is perfectly controllable — it can be led along any trajectory without resistance. But that&rsquo;s a symptom, not a merit of the loop. A model that answers &ldquo;yes, done&rdquo; to any phrasing of yours has nothing in it to resist a wrong phrasing. It will carry out the wrong one as diligently as the right one — and the result will be accepted as right in both cases.</p>
+<p>Such a system needs <strong>springiness</strong>. A spring can be compressed harder than its norm — and it will allow it, but with every millimeter the resistance grows, and the hand itself feels where it&rsquo;s already too much. That&rsquo;s how I want the system I control to be: so it can be loaded beyond the usual, but so it tells you itself that this is too much — asks again, objects, refuses. A system without resistance is not a spring but putty: it takes any shape and says nothing about whether the shape is wrong. Springiness is not the same as controllability: controllability measures how much it costs to bring the system back; springiness — whether it will tell you it&rsquo;s already too much.</p>
+<h2 id="four-elements-of-the-loop">Four elements of the loop<a class="anchor-link" href="#four-elements-of-the-loop" title="Permanent link">&para;</a></h2>
+<p>Those three actions rest on four elements of construction.</p>
+<p><strong>Tolerance zone.</strong> What&rsquo;s acceptable is written down in advance — and written so it can be checked without you. Not &ldquo;do it carefully,&rdquo; but: the number of checks in a test file doesn&rsquo;t go down; there are no changes outside the tests directory; no new dependencies added; coverage doesn&rsquo;t drop; the error rate in the logs after the deploy is no higher than before it. These are the attenuators from Chapter 2 — context boundary, format, tests, permissions — assembled into one fence. In the panel this is the breaker&rsquo;s rating: how much the line is allowed is written down in advance and doesn&rsquo;t depend on who&rsquo;s home right now. And the rule is the same: a tolerance works only when it&rsquo;s structural. A line in the prompt saying &ldquo;don&rsquo;t delete checks&rdquo; is a wish. A script that counts the checks before and after and goes red when there are fewer — that&rsquo;s a tolerance.</p>
+<p><strong>Visible trace.</strong> What comes out after every portion, in a form that can be compared against the tolerance in a minute. A plan before code. A table &ldquo;file — before — after — status&rdquo; instead of the word &ldquo;done.&rdquo; A test for every criterion. And not only tests: the application&rsquo;s logs and the logs of the workers that serve it; error counters and response time; memory and CPU consumption. A service that writes only &ldquo;started&rdquo; to its log is as invisible to the loop as an agent that says &ldquo;done.&rdquo; The trace is the wire run through the breaker so the breaker has something to measure.</p>
+<p><strong>Escalation point.</strong> A specific state in which the system stops and hands control back to a human. Not &ldquo;let me know if something&rsquo;s off&rdquo; — to that phrasing the subsystem will respond with its own idea of &ldquo;off,&rdquo; and that idea is plausible, not correct. But like this: &ldquo;if a test can&rsquo;t be converted mechanically and what it checks would have to change — don&rsquo;t touch it, add it to the list and move on&rdquo;; &ldquo;if a test fails in a file you didn&rsquo;t change — stop&rdquo;; &ldquo;if an error in the logs repeats more often than once a minute for five minutes running — call a human: create a ticket, send an email.&rdquo; In the panel this is the breaker tripping. And notice what the breaker does after the click: nothing. It waits. An escalation that decides by itself how to work around the problem is a breaker switching the line back on.</p>
+<p><strong>Staged autonomy.</strong> The scope of autonomy is increased by measured controllability, not by feel. First a small portion, and you read every file. It goes smoothly, without escalations — we increase the portion and now read the table and the script, not the files. If there too the stops come only by the defined escalation rule — we launch the rest in one pass. And in the other direction too: two stops not by the rule — we cut the portion in half. Expand from the hard layers to the soft: first autonomy in what the script checks, then in what only a human checks.</p>
+<figure class="book-scheme">
+<svg viewBox="0 0 640 300" role="img" aria-label="The control loop: three actions in a circle and the four elements of construction they rest on">
+  <defs>
+    <marker id="s3-a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8F4C38"/></marker>
+  </defs>
+  <rect x="0" y="0" width="640" height="300" fill="#FFFFFF"/>
+  <rect x="245" y="40" width="150" height="40" rx="10" fill="#FFF" stroke="#85736E" stroke-width="1.5"/>
+  <text x="320" y="65" text-anchor="middle" font-size="13" fill="#231917">observe</text>
+  <rect x="420" y="170" width="200" height="52" rx="10" fill="#FFF" stroke="#85736E" stroke-width="1.5"/>
+  <text x="520" y="192" text-anchor="middle" font-size="13" fill="#231917">compare</text>
+  <text x="520" y="210" text-anchor="middle" font-size="13" fill="#231917">against a threshold</text>
+  <rect x="20" y="170" width="200" height="52" rx="10" fill="#FFF" stroke="#85736E" stroke-width="1.5"/>
+  <text x="120" y="192" text-anchor="middle" font-size="13" fill="#231917">return within limits</text>
+  <text x="120" y="210" text-anchor="middle" font-size="13" fill="#231917">or stop</text>
+  <line x1="380" y1="82" x2="478" y2="166" stroke="#8F4C38" stroke-width="2" marker-end="url(#s3-a)"/>
+  <line x1="416" y1="196" x2="226" y2="196" stroke="#8F4C38" stroke-width="2" marker-end="url(#s3-a)"/>
+  <line x1="160" y1="166" x2="258" y2="84" stroke="#8F4C38" stroke-width="2" marker-end="url(#s3-a)"/>
+  <rect x="420" y="44" width="110" height="28" rx="8" fill="#FFDBD1" stroke="#8F4C38" stroke-width="1.5"/>
+  <text x="475" y="63" text-anchor="middle" font-size="11.5" font-weight="600" fill="#723523">visible trace</text>
+  <line x1="395" y1="58" x2="420" y2="58" stroke="#8F4C38" stroke-width="1.5" stroke-dasharray="3 3"/>
+  <rect x="465" y="242" width="110" height="28" rx="8" fill="#FFDBD1" stroke="#8F4C38" stroke-width="1.5"/>
+  <text x="520" y="261" text-anchor="middle" font-size="11.5" font-weight="600" fill="#723523">tolerance zone</text>
+  <line x1="520" y1="222" x2="520" y2="242" stroke="#8F4C38" stroke-width="1.5" stroke-dasharray="3 3"/>
+  <rect x="55" y="242" width="130" height="28" rx="8" fill="#FFDBD1" stroke="#8F4C38" stroke-width="1.5"/>
+  <text x="120" y="261" text-anchor="middle" font-size="11.5" font-weight="600" fill="#723523">escalation point</text>
+  <line x1="120" y1="222" x2="120" y2="242" stroke="#8F4C38" stroke-width="1.5" stroke-dasharray="3 3"/>
+  <rect x="30" y="96" width="150" height="28" rx="8" fill="#FFDBD1" stroke="#8F4C38" stroke-width="1.5"/>
+  <text x="105" y="115" text-anchor="middle" font-size="11.5" font-weight="600" fill="#723523">staged autonomy</text>
+  <line x1="180" y1="110" x2="204" y2="124" stroke="#8F4C38" stroke-width="1.5" stroke-dasharray="3 3"/>
+  <text x="320" y="150" text-anchor="middle" font-size="11.5" fill="#53433F">the next portion —</text>
+  <text x="320" y="166" text-anchor="middle" font-size="11.5" fill="#53433F">larger or smaller, as measured</text>
+  <text x="320" y="292" text-anchor="middle" font-size="12" fill="#8F4C38">every element is construction, not human attention</text>
+</svg>
+<figcaption>Figure 13.3. The control loop: three actions in a circle, four elements of construction beneath them</figcaption>
+</figure>
+
+<p>If this construction seems unfamiliar, look at Kubernetes — a system that starts and restarts services across many machines on its own: all four elements are already assembled there, only for services rather than agents. A service has to answer a health check itself — that&rsquo;s the trace requirement: what didn&rsquo;t answer doesn&rsquo;t exist for the orchestrator. The memory limit and the CPU target are the tolerance by which it adds or removes replicas. A container that has crashed several times in a row the orchestrator stops restarting and waits for a human — escalation. And a new version is rolled out not to all replicas at once but to one, then to a share, then to the rest — staged autonomy. None of the engineers sits watching these services. The construction watches for them.</p>
+<h2 id="four-hundred-tests-in-one-night">Four hundred tests in one night<a class="anchor-link" href="#four-hundred-tests-in-one-night" title="Permanent link">&para;</a></h2>
+<p>Now all of this on a single task — a boring, big one: move four hundred test files from one framework to another.</p>
+<p><strong>First attempt.</strong> I described the task, gave the agent the tests directory, and went to bed. In the morning — a green run and a pull request touching four hundred files. The first twenty I read carefully. The next forty — skimmed. The rest I merged: the tests passed, after all.</p>
+<p>A week later a colleague asked why the discount-calculation test doesn&rsquo;t check anything. I opened the file: the assertions inside were gone; what remained was a function call and a green check mark. There turned out to be forty such files.</p>
+<p>The agent broke nothing — it optimized &ldquo;the tests pass,&rdquo; because that&rsquo;s exactly what stood in my phrasing, and the model&rsquo;s internal &ldquo;motivation&rdquo; filled in the rest. Forty tests that check nothing are forty jumpers: the loop is there on the outside, nothing inside. And what was I controlling? Formally — everything: I was reading, wasn&rsquo;t I. In fact control ended at file twenty together with my attention, and four hundred files had exceeded what remained of my resource before I even woke up.</p>
+<p><strong>Second attempt,</strong> with a control loop.</p>
+<p>First the tolerance, before the start. A script that for each file counts the checks before and after and goes red if there are fewer. The rule &ldquo;no changes outside the tests directory,&rdquo; checked by the same script. Coverage doesn&rsquo;t drop. Ten minutes on the script — that&rsquo;s the wire a breaker can now be put on.</p>
+<p>Then the trace. After every portion the agent returns a table: file, checks before, checks after, status. Not &ldquo;done&rdquo; — a table I read in a minute.</p>
+<p>Then escalation. &ldquo;If a test can&rsquo;t be converted mechanically — what it checks or the call order would have to change — don&rsquo;t touch it. Add it to the &lsquo;by hand&rsquo; list and move on. If a test fails in a file you didn&rsquo;t change — stop and show me.&rdquo;</p>
+<p>And staging. First portion — five files, I read each one. Zero stops. Second — fifty; I read the table and the script, don&rsquo;t open the files. Two stops, both by the escalation rule: two tests called a function that doesn&rsquo;t exist in the new framework, and the agent set them aside instead of making them pass. That is exactly the behavior I wanted to measure: the system reached the limit and stopped, instead of driving through it. Third portion — the remaining three hundred forty-five, in one pass, with the script and the table: twenty-one stops, all by the rule.</p>
+<p>The score. The first night produced four hundred files with passing tests, forty of which were empty, and nobody saw it for a week. The second day produced three hundred seventy-seven converted files and twenty-three set aside on the &ldquo;by hand&rdquo; list. Those I converted myself in half a day — and every one of them truly needed a decision the agent had no right to make.</p>
+<p>But the main difference isn&rsquo;t in the numbers. After the first night I had no way of knowing whether this agent, on this task, could be given four hundred files. Now I do: zero out of five, two out of fifty, twenty-one out of three hundred forty-five — and not one outside the rule. The next migration in this project can start not with five files but with fifty, and that isn&rsquo;t trust. It&rsquo;s a rating chosen for the wire.</p>
+<figure class="book-scheme">
+<svg viewBox="0 0 640 280" role="img" aria-label="Three portions of the scenario: 5, 50 and 345 files; stops 0, 2 and 21, all by the escalation rule">
+  <defs>
+    <marker id="s4-a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#85736E"/></marker>
+  </defs>
+  <rect x="0" y="0" width="640" height="280" fill="#FFFFFF"/>
+  <text x="320" y="30" text-anchor="middle" font-size="12" fill="#53433F">the portion grows by measured controllability, not by trust</text>
+  <rect x="80" y="190" width="120" height="30" rx="4" fill="#FFDBD1" stroke="#8F4C38" stroke-width="1.5"/>
+  <rect x="260" y="110" width="120" height="110" rx="4" fill="#FFDBD1" stroke="#8F4C38" stroke-width="1.5"/>
+  <rect x="440" y="60" width="120" height="160" rx="4" fill="#FFDBD1" stroke="#8F4C38" stroke-width="1.5"/>
+  <line x1="60" y1="220" x2="580" y2="220" stroke="#85736E" stroke-width="1.5"/>
+  <text x="140" y="211" text-anchor="middle" font-size="14" font-weight="600" fill="#231917">5</text>
+  <text x="320" y="170" text-anchor="middle" font-size="14" font-weight="600" fill="#231917">50</text>
+  <text x="500" y="145" text-anchor="middle" font-size="14" font-weight="600" fill="#231917">345</text>
+  <text x="140" y="176" text-anchor="middle" font-size="11.5" fill="#723523">stops: 0</text>
+  <text x="320" y="96" text-anchor="middle" font-size="11.5" fill="#723523">stops: 2</text>
+  <text x="500" y="46" text-anchor="middle" font-size="11.5" fill="#723523">stops: 21</text>
+  <line x1="208" y1="200" x2="252" y2="200" stroke="#85736E" stroke-width="1.5" marker-end="url(#s4-a)"/>
+  <line x1="388" y1="200" x2="432" y2="200" stroke="#85736E" stroke-width="1.5" marker-end="url(#s4-a)"/>
+  <text x="140" y="240" text-anchor="middle" font-size="11.5" fill="#53433F">files</text>
+  <text x="140" y="256" text-anchor="middle" font-size="11.5" fill="#53433F">I read each one</text>
+  <text x="320" y="240" text-anchor="middle" font-size="11.5" fill="#53433F">files</text>
+  <text x="320" y="256" text-anchor="middle" font-size="11.5" fill="#53433F">table and script</text>
+  <text x="500" y="240" text-anchor="middle" font-size="11.5" fill="#53433F">files</text>
+  <text x="500" y="256" text-anchor="middle" font-size="11.5" fill="#53433F">in one pass</text>
+  <text x="320" y="274" text-anchor="middle" font-size="12" fill="#8F4C38">all twenty-three stops by the escalation rule, not one outside it</text>
+</svg>
+<figcaption>Figure 13.4. The scenario's portions: 5, 50, and 345 files; stops 0, 2, and 21</figcaption>
+</figure>
+
+<h2 id="when-everything-works-is-that-good">When everything works, is that good?<a class="anchor-link" href="#when-everything-works-is-that-good" title="Permanent link">&para;</a></h2>
+<p>So far this has been about how to make your <strong>practice</strong> stable — your established way of working with a model: norms, prompts, checks, loops, the team&rsquo;s habits. Stable — so that acceptable limits hold without you. That would seem to be the goal: a system that keeps itself within bounds while you sleep.</p>
+<p>But there&rsquo;s a nuance, and it&rsquo;s unpleasant precisely because it looks like success.</p>
+<p>A system that has fully stabilized stops giving off a signal. Not because it hides anything — because it has nothing to report: everything within tolerance, not a single failure, zero stops. And that is exactly what makes it invisible. You stop looking, because there&rsquo;s nothing to look at. And what nobody looks at changes over time in whatever way suits it — that regularity from Chapter 6 works not only against the model but against your practice too.</p>
+<p>A stable practice and a rusted one — one that&rsquo;s still performed but no longer fits the model, the tasks, or the team — look the same from outside. Neither demands attention. Both give an acceptable result. The difference is in one thing: does the practice still measure something — or does it only repeat?</p>
+<p>How does a practice rust? First the rules stop changing. The system prompt, written for the model of the time, still tells it: answer briefly, don&rsquo;t add libraries, a five-line plan first. The model has changed twice since then; the tasks — from small fixes to migrations; the team — by half. The prompt is the same.</p>
+<p>The objection is familiar and strong: it works — don&rsquo;t touch it. Only &ldquo;works&rdquo; here means nobody is complaining, not that anybody has checked. Which of those lines the model still needs, which it ignores, and which now get in its way — nobody knows, because the system gives off nothing but &ldquo;all clear.&rdquo; It&rsquo;s running in circles: the same thing a thousand times, and nobody remembers what it was protecting against.</p>
+<p>Then a crust grows. Procedures get more numerous, not fewer: a forty-item review checklist, three stages of sign-off, a mandatory report. Each of them once answered a real problem. Now they are layers through which an outside signal no longer reaches the inside; the longer the practice stays in its stable phase, the thicker the crust — and the less those inside are able to see that it&rsquo;s there. A proposal to change something is met not with an argument but with &ldquo;that&rsquo;s how we do things here.&rdquo;</p>
+<p>And one more thing that&rsquo;s easy to miss. The shell from Chapter 6 — the chat, the agent in the editor, the harness — doesn&rsquo;t stand still either: with every update it absorbs what you once wrote into your skills and system prompts yourself. Half your rules the shell already does on its own, and you keep carrying them with you and paying for them in context. So checking &ldquo;is this still needed&rdquo; — and deleting what no longer is — is as much a part of practice as adding a new rule.</p>
+<p>And finally the practice starts working for itself. More runs, more prompts, more agents — the same quality. Activity is high, and there&rsquo;s no product from it: all the energy goes to keeping its own wheel turning. &ldquo;We don&rsquo;t have problems with that&rdquo; — ask how you know. If the answer is &ldquo;nothing&rsquo;s happened in a long time,&rdquo; what you have is not a measurement but an absence of signal. The breaker with the Test button nobody presses hasn&rsquo;t tripped in a long time either.</p>
+<p>And the main thing about this state: a rusted practice doesn&rsquo;t break. It goes on working — at a lower level, sometimes even decently on individual tasks — and that&rsquo;s exactly why it goes unnoticed. A breakdown is visible: a red test, a release derailed. Degeneration isn&rsquo;t: the checks are silent, the release is on time, only there are fewer distinctions inside, and nobody measures how many are left. A campfire that has burned out still looks like a campfire from outside — the same charred logs, the same outline. Only it gives no more heat.</p>
+<p>What to do about it? Not wait for the practice to rust, but rebuild it as it approaches stability — precisely when everything is calm and nothing asks to be touched. Keep at least one open zone in the loop: a measurement against a fixed reference that the practice can&rsquo;t &ldquo;pass&rdquo; automatically. And from time to time let in someone else&rsquo;s eyes — a person with different blind spots, who will ask &ldquo;and how do you know?&rdquo; without knowing that&rsquo;s not how things are done here.</p>
+<h2 id="the-green-ritual">The green ritual<a class="anchor-link" href="#the-green-ritual" title="Permanent link">&para;</a></h2>
+<p>Back to the analyzer from the start of the chapter — it reads differently now.</p>
+<p>Everything was there: the tool stood in place, the run ran, the badge in the pull request lit up. The loop was in place on the outside. Inside — a jumper: thresholds set so as not to get in the way, warnings nobody read, and the distinction it was installed for had vanished long before I switched it off. My two weeks without the analyzer were the Test button, pressed by accident. The breaker didn&rsquo;t click.</p>
+<p>In its broader form the anti-pattern looks like this. A team has a review prompt: the model runs every pull request through a checklist and gives it a score. Six months ago it caught a few real problems, and it was made mandatory. Ever since — green. Every pull request, every day. The team is confident: we have automated review. Nobody remembers when it last found anything, and nobody is bothered: if it finds nothing, everything&rsquo;s fine.</p>
+<p>One day someone, out of curiosity, planted a bug in a pull request — an obvious one, the kind the checklist should have caught with its first item. Green.</p>
+<p>The diagnosis by this chapter&rsquo;s law: &ldquo;all clear&rdquo; isn&rsquo;t a signal if you don&rsquo;t know whether the system can say &ldquo;stop.&rdquo; Why it stopped being able to doesn&rsquo;t matter: the model changed and reads the checklist differently; the checklist grew items and the model follows them selectively, like the megaprompt from Chapter 2; or even six months ago it only caught what happened to coincide with its own idea of a problem. What matters is that nobody measured it.</p>
+<p>The cure isn&rsquo;t a new prompt. The cure is the Test button: on a schedule, plant a bug in the system that it must catch, and see whether it does. In testing this technique has long had a name — mutation: break the code deliberately and check whether the tests go red. The same technique works for any loop — a review, a linter, a checklist, a person on sign-off.</p>
+<p>And second: measure against a reference, not against a feeling. Two numbers a month: how many problems the loop caught, and how many of those that reached production it should have caught. Those two numbers are the only way to find out what&rsquo;s in your panel: a breaker or a jumper.</p>
+<p>We brought the analyzer back later — with three rules instead of two thousand warnings, a threshold that blocks the merge, and the date of the next check in the calendar. Now it goes red once every two weeks, and every time someone walks to the hallway to see what happened.</p>
+<h2 id="the-loop-scales">The loop scales<a class="anchor-link" href="#the-loop-scales" title="Permanent link">&para;</a></h2>
+<p>An agent is a loop assembled into a construction: tolerance, trace, escalation, and staging, handed to the subsystem together with the task; that&rsquo;s the next chapter.</p>
+<p>A team is the same loop one level up: a review process that finds nothing for six months is a green ritual at the scale of a department, and the question for it is the same: what keeps the team within bounds in the minute the team lead is on vacation?</p>
+<p>A company is one more level: a dashboard that has shown green metrics for three years, and a board of directors that long ago stopped asking whether it&rsquo;s capable of showing red.</p>
+<p>The mechanics are the same at every level. Only the price of the jumper changes.</p>
+<h2 id="in-your-craft">In your craft<a class="anchor-link" href="#in-your-craft" title="Permanent link">&para;</a></h2>
+<p>The loop doesn&rsquo;t know what code is. Every craft has a breaker panel.</p>
+<p><strong>Text.</strong> An editor who personally proofreads every generated paragraph is control by willpower: it holds up to the hundredth paragraph, and after that they&rsquo;re skimming. The tolerance is a list of banned phrases and a sentence-length check that the run does without the editor; escalation — &ldquo;if the source has no such quote — flag it, don&rsquo;t invent one.&rdquo; And the Test button: once a month, plant a paragraph with a made-up quote and see whether the loop catches it.</p>
+<p><strong>Analytics.</strong> A report that passes the same check every month and every month &ldquo;adds up&rdquo; is a candidate for a green ritual. Ask: when did this check last find anything? If never — plant an error in one row of the data and see whether the report goes red. The controllability of an analytics process is measured the same way: how much effort it costs to find exactly where the numbers diverged.</p>
+<p><strong>Design.</strong> A guideline that hasn&rsquo;t changed while the product changed twice is a rusted rule. An automated check of contrast and spacing is a breaker in the panel: it trips without the designer. And &ldquo;do it in our style&rdquo; with no way to check whether it is our style is confidence without measurement — and the more confident the team, the farther it is from the reference.</p>
+<hr />
+<p>To close — three questions for your practice.</p>
+<p>— Name one loop in your work that rests on construction — and one that rests on you being attentive. What happens to the second when you take a vacation?</p>
+<p>— When did your automated check — a test, a linter, a review prompt — last show red? If you don&rsquo;t remember — how do you know it still works?</p>
+<p>— And deeper: what in your pipeline could be switched off for a couple of weeks without anyone noticing?</p>
+<div class="subscribe-embed"><iframe src="https://kiosan.substack.com/embed?transparent=1" width="480" height="320" style="border: 0; background: transparent" title="Subscribe to the newsletter" loading="lazy" frameborder="0" scrolling="no"></iframe></div>
+                <div class="check-items" data-page-key="part-3-activity/13-control-degradation"><div class="check-items-header"><span class="check-items-title">Key Takeaways</span><span class="check-items-progress"></span></div><label class="check-item" data-index="0"><input type="checkbox" class="check-item-input" data-index="0"><span class="check-item-box"><svg class="check-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span><span class="check-item-text">Control is not how carefully you read. It's what keeps the system within acceptable limits when you aren't reading.</span></label>
+<label class="check-item" data-index="1"><input type="checkbox" class="check-item-input" data-index="1"><span class="check-item-box"><svg class="check-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span><span class="check-item-text">The loop sees only the trace. What never came out isn't controlled, however closely you watch.</span></label>
+<label class="check-item" data-index="2"><input type="checkbox" class="check-item-input" data-index="2"><span class="check-item-box"><svg class="check-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span><span class="check-item-text">Controllability is measured by the effort it takes to bring the system back within limits, not by a feeling of trust. Autonomy is granted by measurement, in portions.</span></label>
+<label class="check-item" data-index="3"><input type="checkbox" class="check-item-input" data-index="3"><span class="check-item-box"><svg class="check-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span><span class="check-item-text">An escalation point is a specific state in which the system stops and waits. Not 'let me know if something's off.'</span></label>
+<label class="check-item" data-index="4"><input type="checkbox" class="check-item-input" data-index="4"><span class="check-item-box"><svg class="check-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span><span class="check-item-text">A stable practice is as silent as a rusted one. 'All clear' is not a signal until you've checked that the system can still say 'stop.'</span></label></div>
+                <nav class="page-nav"><a class="page-nav-link page-nav-prev" href="/variety/read/en/part-3-activity/10-activity-decomposition/"><span class="page-nav-label">← Previous</span></a>
+<span class="page-nav-link page-nav-next page-nav-disabled"></span></nav>
+            </article>
+        </main>
+    </div>
+    <script>
+var SIDEBAR_WIDTH_KEY = 'essay-sidebar-width-system-for-ai-engineers-en';
+var SIDEBAR_COLLAPSED_KEY = 'essay-sidebar-collapsed-system-for-ai-engineers-en';
+var ESSAY_LOCAL_MODE = false;
+var ESSAY_PAGE_KEY = "en/part-3-activity/13-control-degradation";
+document.addEventListener('DOMContentLoaded', function() {
+  var sidebar = document.getElementById('sidebar');
+  var handle = document.getElementById('resize-handle');
+  var collapseBtn = document.getElementById('sidebar-collapse');
+  var expandBtn = document.getElementById('sidebar-expand');
+  var mobileToggle = document.getElementById('sidebar-toggle');
+  var html = document.documentElement;
+  var MIN_WIDTH = 200;
+  var MAX_WIDTH = 480;
+
+  // Desktop: collapse / expand
+  function setCollapsed(collapsed) {
+    if (collapsed) {
+      html.classList.add('sidebar-collapsed');
+    } else {
+      html.classList.remove('sidebar-collapsed');
+    }
+    if (typeof SIDEBAR_COLLAPSED_KEY !== 'undefined') {
+      localStorage.setItem(SIDEBAR_COLLAPSED_KEY, collapsed ? '1' : '0');
+    }
+  }
+
+  if (collapseBtn) {
+    collapseBtn.addEventListener('click', function() {
+      setCollapsed(true);
+    });
+  }
+
+  if (expandBtn) {
+    expandBtn.addEventListener('click', function() {
+      setCollapsed(false);
+    });
+  }
+
+  // Mobile: slide-in toggle
+  if (mobileToggle && sidebar) {
+    mobileToggle.addEventListener('click', function() {
+      sidebar.classList.toggle('open');
+    });
+
+    document.addEventListener('click', function(e) {
+      if (sidebar.classList.contains('open') &&
+          !sidebar.contains(e.target) &&
+          !mobileToggle.contains(e.target)) {
+        sidebar.classList.remove('open');
+      }
+    });
+  }
+
+  // Resizable sidebar (desktop only, when not collapsed)
+  if (handle && sidebar) {
+    var startX, startWidth;
+
+    handle.addEventListener('mousedown', function(e) {
+      if (html.classList.contains('sidebar-collapsed')) return;
+      e.preventDefault();
+      startX = e.clientX;
+      startWidth = sidebar.getBoundingClientRect().width;
+      handle.classList.add('active');
+      document.body.classList.add('resizing');
+
+      document.addEventListener('mousemove', onMouseMove);
+      document.addEventListener('mouseup', onMouseUp);
+    });
+
+    function onMouseMove(e) {
+      var newWidth = startWidth + (e.clientX - startX);
+      newWidth = Math.max(MIN_WIDTH, Math.min(newWidth, MAX_WIDTH));
+      html.style.setProperty('--sidebar-width', newWidth + 'px');
+    }
+
+    function onMouseUp() {
+      handle.classList.remove('active');
+      document.body.classList.remove('resizing');
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
+
+      var currentWidth = sidebar.getBoundingClientRect().width;
+      if (typeof SIDEBAR_WIDTH_KEY !== 'undefined') {
+        localStorage.setItem(SIDEBAR_WIDTH_KEY, Math.round(currentWidth));
+      }
+    }
+  }
+
+  // --- Check Items persistence ---
+  var checkContainers = document.querySelectorAll('.check-items');
+  if (checkContainers.length) {
+    initCheckItems(checkContainers);
+  }
+
+  function initCheckItems(containers) {
+    var isLocal = (typeof ESSAY_LOCAL_MODE !== 'undefined') && ESSAY_LOCAL_MODE;
+    var essayId = getMeta('essay-id');
+    var pageId = getMeta('essay-page-id');
+    var csrf = getMeta('csrf-token');
+
+    containers.forEach(function(container) {
+      var pageKey = container.getAttribute('data-page-key');
+      var inputs = container.querySelectorAll('.check-item-input');
+      var storageKey = 'essay-checks-' + pageKey;
+
+      // Load saved state
+      loadChecks(storageKey, essayId, pageId, csrf, isLocal, function(checked) {
+        if (checked && checked.length) {
+          inputs.forEach(function(input) {
+            var idx = parseInt(input.getAttribute('data-index'), 10);
+            if (checked.indexOf(idx) !== -1) {
+              input.checked = true;
+            }
+          });
+        }
+        updateProgress(container, inputs);
+      });
+
+      // Listen for changes
+      inputs.forEach(function(input) {
+        input.addEventListener('change', function() {
+          var checked = [];
+          inputs.forEach(function(inp) {
+            if (inp.checked) checked.push(parseInt(inp.getAttribute('data-index'), 10));
+          });
+          saveChecks(storageKey, essayId, pageId, csrf, isLocal, checked);
+          updateProgress(container, inputs);
+        });
+      });
+    });
+  }
+
+  function updateProgress(container, inputs) {
+    var total = inputs.length;
+    var checked = 0;
+    inputs.forEach(function(inp) { if (inp.checked) checked++; });
+    var el = container.querySelector('.check-items-progress');
+    if (el) {
+      el.textContent = checked + ' / ' + total;
+    }
+  }
+
+  function getMeta(name) {
+    var el = document.querySelector('meta[name="' + name + '"]');
+    return el ? el.content : null;
+  }
+
+  function loadChecks(storageKey, essayId, pageId, csrf, isLocal, callback) {
+    if (isLocal || !essayId) {
+      var raw = localStorage.getItem(storageKey);
+      callback(raw ? JSON.parse(raw) : []);
+      return;
+    }
+    var url = '/api/dynamic_data?essay_id=' + essayId + '&key=' + encodeURIComponent(storageKey);
+    if (pageId) url += '&page_id=' + pageId;
+    fetch(url, { headers: csrf ? { 'X-CSRF-Token': csrf } : {} })
+      .then(function(r) { return r.json(); })
+      .then(function(d) { callback(d.data ? d.data.checked : []); })
+      .catch(function() { callback([]); });
+  }
+
+  function saveChecks(storageKey, essayId, pageId, csrf, isLocal, checked) {
+    if (isLocal || !essayId) {
+      localStorage.setItem(storageKey, JSON.stringify(checked));
+      return;
+    }
+    var body = {
+      essay_id: essayId,
+      key: storageKey,
+      data: { checked: checked }
+    };
+    if (pageId) body.page_id = pageId;
+    fetch('/api/dynamic_data', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-Token': csrf || ''
+      },
+      body: JSON.stringify(body)
+    }).catch(function() {});
+  }
+});
+
+
+    </script>
+</body>
+</html>
