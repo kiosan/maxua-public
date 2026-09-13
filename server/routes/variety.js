@@ -8,7 +8,7 @@ const templateEngine = require('../templateEngine');
 const { generateMetaTags, generateBreadcrumbsSchema, generatePersonSchema } = require('../seo');
 
 const PAGE_TITLE = 'Requisite Variety: The Systems Method for Working with AI';
-const PAGE_DESCRIPTION = 'Everyone has access to the same AI models. Yet the results differ by an order of magnitude.';
+const PAGE_DESCRIPTION = 'Everyone has access to the same AI models. Yet the results differ by an order of magnitude. A method built on twentieth-century systems theory, not on tools: tools come and go, the regularities stay.';
 const DOMAIN = 'https://sbondar.com';
 
 /**
@@ -23,7 +23,7 @@ router.get('/variety', (req, res) => {
       description: PAGE_DESCRIPTION,
       url,
       type: 'article',
-      keywords: 'Requisite Variety, Ashby, cybernetics, AI, LLM, systems thinking, software engineering, Sasha Bondar'
+      keywords: 'Requisite Variety, Ashby, Stafford Beer, cybernetics, systems theory, AI, LLM, systems thinking, software engineering, Sasha Bondar'
     });
 
     const structuredData = [
