@@ -24,6 +24,11 @@
     .home-link { font-weight: 600; text-decoration: none; }
     .home-link:hover { text-decoration: underline; }
     .home-social { margin: 2.5rem 0 3rem; }
+    .home-book { display: flex; align-items: flex-start; gap: 1.5rem; }
+    .home-cover { flex: 0 0 auto; line-height: 0; }
+    .home-cover img { width: 120px; height: auto; border-radius: 3px; box-shadow: 0 1px 2px rgba(0,0,0,0.12), 0 10px 24px -12px rgba(0,0,0,0.35); }
+    .home-book-text { flex: 1 1 auto; min-width: 0; }
+    @media (max-width: 480px) { .home-book { gap: 1rem; } .home-cover img { width: 92px; } }
   </style>
   <script async data-id="101511163" src="//static.getclicky.com/js"></script>
 </head>
@@ -37,10 +42,13 @@
       </div>
     </header>
 
-    <section class="home-block">
+    <section class="home-block home-book">
+      <a class="home-cover" href="/variety"><img src="/images/variety-cover-en-sm.png" width="280" height="400" alt="Requisite Variety — book cover" loading="lazy" decoding="async"></a>
+      <div class="home-book-text">
       <h2>I'm writing a book</h2>
       <p><em>Requisite Variety</em> — a systems method for working with AI. Not prompt collections: a way to see your work with a model as a system and stay the one who steers. Written in the open; finished chapters go up as they're ready.</p>
       <p><a class="home-link" href="/variety">About the book and chapters →</a></p>
+      </div>
     </section>
 
     <section class="home-block">

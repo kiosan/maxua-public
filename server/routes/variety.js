@@ -23,6 +23,7 @@ router.get('/variety', (req, res) => {
       description: PAGE_DESCRIPTION,
       url,
       type: 'article',
+      image: `${DOMAIN}/images/variety-cover-en-og.png`,
       keywords: 'Requisite Variety, Ashby, Stafford Beer, cybernetics, systems theory, AI, LLM, systems thinking, software engineering, Sasha Bondar'
     });
 
