@@ -18,7 +18,9 @@ function generateMetaTags(options = {}) {
     keywords = 'startups, programming, AI, tech, Reintech.io, Ukraine',
     author = 'Sasha Bondar',
     publishedTime = null,
-    modifiedTime = null
+    modifiedTime = null,
+    locale = 'en_US',
+    alternates = [] // [{ lang: 'en', url }, { lang: 'uk', url }] — hreflang twins of this page
   } = options;
 
   // Basic meta tags
@@ -30,6 +32,8 @@ function generateMetaTags(options = {}) {
     
     <!-- Canonical URL -->
     <link rel="canonical" href="${url}">
+    ${alternates.map((a) => `<link rel="alternate" hreflang="${a.lang}" href="${a.url}">`).join('\n    ')}
+    ${alternates.length ? `<link rel="alternate" hreflang="x-default" href="${(alternates.find((a) => a.lang === 'en') || alternates[0]).url}">` : ''}
     
     <!-- Open Graph tags -->
     <meta property="og:title" content="${escapeHtml(title)}">
@@ -37,7 +41,7 @@ function generateMetaTags(options = {}) {
     <meta property="og:url" content="${url}">
     <meta property="og:type" content="${type}">
     <meta property="og:site_name" content="Sasha Bondar">
-    <meta property="og:locale" content="en_US">
+    <meta property="og:locale" content="${locale}">
   `;
 
   // Add image if available

@@ -1,36 +1,42 @@
 /**
- * Route for the /variety page — promo page for the "Requisite Variety" book
+ * Route for the /variety page — promo page for the "Requisite Variety" book,
+ * in English (/variety) and Ukrainian (/uk/variety).
  */
 
 const express = require('express');
 const router = express.Router();
 const templateEngine = require('../templateEngine');
 const { generateMetaTags, generateBreadcrumbsSchema, generatePersonSchema } = require('../seo');
+const locales = require('../locales/site');
+const { redirectToPreferred, localizedPath, SUPPORTED } = require('../lang');
 
-const PAGE_TITLE = 'Requisite Variety: The Systems Method for Working with AI';
-const PAGE_DESCRIPTION = 'Everyone has access to the same AI models. Yet the results differ by an order of magnitude. A method built on twentieth-century systems theory, not on tools: tools come and go, the regularities stay.';
 const DOMAIN = 'https://sbondar.com';
 
 /**
- * Render the book promo page
+ * Render the book promo page in one language.
+ * @param {string} lang 'en' | 'uk'
  */
-router.get('/variety', (req, res) => {
+function renderVariety(lang, req, res) {
   try {
-    const url = `${DOMAIN}/variety`;
+    const t = locales[lang];
+    const path = localizedPath(lang, '/variety');
+    const url = `${DOMAIN}${path}`;
 
     const metaTags = generateMetaTags({
-      title: PAGE_TITLE,
-      description: PAGE_DESCRIPTION,
+      title: t.variety.title,
+      description: t.variety.description,
       url,
       type: 'article',
-      image: `${DOMAIN}/images/variety-cover-en-og.png`,
-      keywords: 'Requisite Variety, Ashby, Stafford Beer, cybernetics, systems theory, AI, LLM, systems thinking, software engineering, Sasha Bondar'
+      image: `${DOMAIN}${t.variety.ogImage}`,
+      keywords: t.variety.keywords,
+      locale: t.ogLocale,
+      alternates: SUPPORTED.map((code) => ({ lang: code, url: `${DOMAIN}${localizedPath(code, '/variety')}` }))
     });
 
     const structuredData = [
       generateBreadcrumbsSchema([
-        { name: 'Home', url: '/' },
-        { name: 'Requisite Variety', url: '/variety' }
+        { name: t.variety.breadcrumbHome, url: localizedPath(lang, '/') },
+        { name: t.variety.breadcrumbBook, url: path }
       ], DOMAIN),
       generatePersonSchema({
         sameAs: ['https://www.linkedin.com/in/obondar/']
@@ -38,10 +44,18 @@ router.get('/variety', (req, res) => {
     ].join('\n');
 
     const html = templateEngine.render('variety', {
-      pageTitle: PAGE_TITLE,
+      pageTitle: t.variety.title,
       metaTags,
       structuredData,
-      activePage: 'variety'
+      activePage: 'variety',
+      lang,
+      isUk: lang === 'uk',
+      t,
+      homeHref: localizedPath(lang, '/'),
+      switchTo: {
+        uk: `/lang/uk?next=${encodeURIComponent(localizedPath('uk', '/variety'))}`,
+        en: `/lang/en?next=${encodeURIComponent(localizedPath('en', '/variety'))}`
+      }
     });
 
     res.send(html);
@@ -49,6 +63,9 @@ router.get('/variety', (req, res) => {
     console.error('Error rendering /variety page:', error);
     res.status(500).send(`<h1>500 - Server Error</h1><p>${error.message}</p>`);
   }
-});
+}
+
+router.get('/variety', redirectToPreferred('/variety'), (req, res) => renderVariety('en', req, res));
+router.get('/uk/variety', (req, res) => renderVariety('uk', req, res));
 
 module.exports = router;

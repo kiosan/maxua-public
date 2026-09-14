@@ -101,6 +101,10 @@ app.use('/images', express.static(path.join(__dirname, '../public/images'), {
   maxAge: '1y' // Cache images for a year
 }));
 
+// Book promo page: /variety and /uk/variety — mounted BEFORE the static catch-all,
+// otherwise serve-static answers /variety with a 301 to /variety/ (public/variety/ is a directory).
+app.use('/', require('./routes/variety'));
+
 // Catch-all fallback for other static files (e.g. favicon, robots.txt)
 app.use(express.static(path.join(__dirname, '../public')));
 
@@ -285,6 +289,7 @@ app.get('/t/:topic', async (req, res) => {
 // Set up SSR routes using the adapter
 // Landing: simple personal home; the posts timeline moved to /posts
 const homeRoutes = require('./routes/home');
+app.use('/', require('./lang').router); // /lang/:code — UA/EN switcher
 app.use('/', homeRoutes);
 app.get('/posts', createServerlessAdapter(timelinePage));
 app.get('/sitemap.xml', createServerlessAdapter(sitemap));
@@ -318,9 +323,6 @@ app.use('/api/admin', adminRoutes);
 // Mount hashtag routes
 app.use('/', tagsRoutes);
 
-// Book promo page: /variety
-const varietyRoutes = require('./routes/variety');
-app.use('/', varietyRoutes);
 
 // Start the server
 const PORT = process.env.PORT || 8080;

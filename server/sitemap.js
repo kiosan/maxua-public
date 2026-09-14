@@ -13,6 +13,9 @@ exports.handler = async (event, context) => {
     // Add static pages
     const staticPages = [
       { url: '/', priority: '1.0', changefreq: 'daily' },
+      { url: '/uk', priority: '0.9', changefreq: 'weekly' },
+      { url: '/variety', priority: '0.9', changefreq: 'weekly' },
+      { url: '/uk/variety', priority: '0.9', changefreq: 'weekly' },
       { url: '/about', priority: '0.8', changefreq: 'monthly' },
       { url: '/books', priority: '0.7', changefreq: 'weekly' },
     ];

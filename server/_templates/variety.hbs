@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{t.htmlLang}}">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,67 +12,46 @@
   <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
   <link rel="preload" href="/css/main.css?v=1237" as="style">
   <link rel="stylesheet" href="/css/main.css?v=1237">
-  <link rel="stylesheet" href="/css/variety.css?v=2">
+  <link rel="stylesheet" href="/css/variety.css?v=3">
   <script async data-id="101511163" src="//static.getclicky.com/js"></script>
 </head>
 <body>
   <main class="variety-page">
     <header class="home-hero" style="display:flex;align-items:center;gap:1rem;margin:2.5rem 0 0.5rem;">
-      <a href="/"><img src="/images/me.jpeg" alt="Sasha Bondar" style="width:56px;height:56px;border-radius:50%;object-fit:cover;"></a>
+      <a href="{{homeHref}}"><img src="/images/me.jpeg" alt="{{t.person.name}}" style="width:56px;height:56px;border-radius:50%;object-fit:cover;"></a>
       <div>
-        <a href="/" style="font-weight:600;text-decoration:none;">Sasha Bondar</a>
-        <div style="font-size:0.85rem;color:var(--color-secondary-text,#666);">Engineer and entrepreneur</div>
+        <a href="{{homeHref}}" style="font-weight:600;text-decoration:none;">{{t.person.name}}</a>
+        <div style="font-size:0.85rem;color:var(--color-secondary-text,#666);">{{t.person.tagline}}</div>
       </div>
+      {{> lang-switch}}
     </header>
 
     <!-- 1. Hero -->
     <header class="variety-hero">
       <div class="variety-hero-text">
-        <h1 class="variety-title">Requisite Variety</h1>
-        <p class="variety-subtitle">The Systems Method for Working with AI — Beyond Prompts and Tools</p>
-        <p class="variety-byline">A book by Sasha Bondar. Written in the open, in Ukrainian first — English essays coming.</p>
+        <h1 class="variety-title">{{t.variety.heroTitle}}</h1>
+        <p class="variety-subtitle">{{t.variety.heroSubtitle}}</p>
+        <p class="variety-byline">{{t.variety.heroByline}}</p>
       </div>
-      <a class="variety-cover" href="/variety/read/en/">
-        <img src="/images/variety-cover-en.png" width="560" height="800" alt="Requisite Variety — book cover: a blue morpho butterfly on cream" loading="eager" decoding="async">
+      <a class="variety-cover" href="{{t.variety.coverHref}}">
+        <img src="{{t.variety.coverImage}}" width="560" height="800" alt="{{t.variety.coverAlt}}" loading="eager" decoding="async">
       </a>
     </header>
 
     <!-- 2. About -->
     <section class="variety-about variety-prose">
-      <p>Everyone has access to the same AI models. Yet the results differ by an order of magnitude. Why?</p>
-
-      <p>It's not the prompts. It's not the tools. It's who controls whom.</p>
-
-      <p>In 1956, cybernetician W. Ross Ashby formulated the law of requisite variety: only variety can absorb variety. A modern AI model produces an enormous variety of outputs. An engineer armed with prompt collections has a handful of templated reactions. In that pair, the question of who is steering is arithmetic, not willpower.</p>
-
-      <p>Ashby's law is the door, not the house. Behind it stands the systems theory of the twentieth century — Ashby himself, Stafford Beer, and the general theory of systems and activity that grew out of cybernetics. Every system drifts toward a goal of its own. Activity breaks into components that don't substitute for one another. Norms are variety stored in writing. Control is a tolerance zone built into the design, not a matter of attention. A system that has stabilized goes quiet — and rusts unnoticed. The book takes these regularities and gives them the language of daily engineering practice.</p>
-
-      <p>Tools come and go. The model you use today will be replaced before this book is finished; the agent you'll run next year doesn't exist yet. The regularities stay, because they are about how systems behave, not about how a particular tool is built. Learn them once — and you can work with any new tool, now and whatever comes after.</p>
-
-      <p>Power tools made carpenters faster — and made it easier to drill straight through the workpiece. AI is the power tool of knowledge work. This book is about keeping the feel of the material in your hands.</p>
-
-      <p>It gives you a method, not tips:</p>
-      <ul>
-        <li>See what you actually operate: not a model, but a system — you, the model, the context, the tools, the artifacts.</li>
-        <li>Separate your goal from the proxy the machine optimizes — the gap between them is where disappointment lives.</li>
-        <li>Build norms and control loops that turn one-off wins into repeatable results — and make agents safe to trust.</li>
-        <li>Understand AI slop as a diagnosis, not bad luck: low-variety input produces average output.</li>
-      </ul>
-
-      <p>Written primarily for software engineers. Useful for anyone who works with LLMs seriously. A short final part addresses managers: how to see whether a team is producing or merely circulating.</p>
-
-      <p>What's not inside: tool reviews, model comparisons, prompt collections. Everything in this book will still be true three model generations from now.</p>
+      {{{t.variety.about}}}
     </section>
 
     <div class="section-divider"></div>
 
     <!-- 3. Read the chapters -->
     <section class="variety-sample">
-      <p class="variety-bridge">The book is being written in the open — finished chapters are up, with diagrams, as they reach a stable state.</p>
+      <p class="variety-bridge">{{t.variety.bridge}}</p>
 
       <p class="variety-read-links">
-        <a class="variety-read-link" href="/variety/read/" lang="uk">Читати розділи українською →</a><br>
-        <a class="variety-read-link" href="/variety/read/en/">Read the chapters in English →</a>
+        <a class="variety-read-link" href="{{t.variety.readPrimary.href}}" lang="{{t.variety.readPrimary.lang}}">{{t.variety.readPrimary.text}}</a><br>
+        <a class="variety-read-link" href="{{t.variety.readSecondary.href}}" lang="{{t.variety.readSecondary.lang}}">{{t.variety.readSecondary.text}}</a>
       </p>
     </section>
 
@@ -80,10 +59,10 @@
 
     <!-- 4. Subscribe -->
     <section class="variety-subscribe">
-      <h2>Get new chapters and essays</h2>
-      <p>English essays land in the Requisite Variety section of my newsletter; Ukrainian chapters — in the main feed. Pick what you need.</p>
+      <h2>{{t.variety.subscribeHeading}}</h2>
+      <p>{{t.variety.subscribeText}}</p>
       <div class="variety-substack">
-        <iframe src="https://kiosan.substack.com/embed" width="480" height="320" style="border: 1px solid #EEE; background: white" frameborder="0" scrolling="no" title="Subscribe to the newsletter"></iframe>
+        <iframe src="https://kiosan.substack.com/embed" width="480" height="320" style="border: 1px solid #EEE; background: white" frameborder="0" scrolling="no" title="{{t.variety.subscribeIframeTitle}}"></iframe>
       </div>
     </section>
   </main>

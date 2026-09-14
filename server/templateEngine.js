@@ -163,6 +163,7 @@ registerPartial('profile-header', 'profile-header');
 registerPartial('post-card', 'post-card');
 registerPartial('subscription-form', 'subscription-form');
 registerPartial('variety-chapter', 'variety-chapter');
+registerPartial('lang-switch', 'lang-switch');
 
 module.exports = {
   render,
