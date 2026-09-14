@@ -97,7 +97,7 @@ const uk = {
     breadcrumbBook: 'Необхідне різноманіття',
     heroTitle: 'Необхідне різноманіття',
     heroSubtitle: 'Системний метод роботи з AI — поза промптами й інструментами',
-    heroByline: 'Книжка Саші Бондаря. Пишеться відкрито, українською; англійське дзеркало — слідом.',
+    heroByline: 'Книжка Саші Бондара. Пишеться відкрито, українською; англійське дзеркало — слідом.',
     coverHref: '/variety/read/',
     coverImage: '/images/variety-cover-uk.png',
     ogImage: '/images/variety-cover-uk-og.png',
