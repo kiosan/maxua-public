@@ -130,7 +130,7 @@ const uk = {
     bridge: 'Книжка пишеться відкрито — готові розділи зі схемами з\'являються тут, щойно текст стабілізується.',
     readPrimary: { href: '/variety/read/', lang: 'uk', text: 'Читати розділи українською →' },
     readSecondary: { href: '/variety/read/en/', lang: 'en', text: 'Read the chapters in English →' },
-    subscribeHeading: 'Нові розділи й есеї — на пошту',
+    subscribeHeading: 'Нові розділи — на пошту',
     subscribeText: 'Українські розділи виходять в основній стрічці моєї розсилки; англійські есеї — в секції Requisite Variety. Обирайте, що потрібно.',
     subscribeIframeTitle: 'Підписатися на розсилку'
   }
