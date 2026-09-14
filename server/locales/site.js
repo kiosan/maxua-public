@@ -31,7 +31,7 @@ const en = {
     breadcrumbBook: 'Requisite Variety',
     heroTitle: 'Requisite Variety',
     heroSubtitle: 'The Systems Method for Working with AI — Beyond Prompts and Tools',
-    heroByline: 'A book by Sasha Bondar. Written in the open, in Ukrainian first — English essays coming.',
+    heroByline: 'Written in the open, in Ukrainian first — English essays coming.',
     coverHref: '/variety/read/en/',
     coverImage: '/images/variety-cover-en.png',
     ogImage: '/images/variety-cover-en-og.png',
