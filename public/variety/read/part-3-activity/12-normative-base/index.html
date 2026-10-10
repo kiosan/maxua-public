@@ -1,0 +1,1513 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Розділ 12. Нормативна база — Необхідне різноманіття: системний метод роботи з AI</title>
+    <meta name="essay-page-key" content="uk/part-3-activity/12-normative-base">
+    <script>
+    // Blocking: apply saved sidebar state before first paint to prevent layout jump
+    (function() {
+        var d = document.documentElement;
+        if (window.innerWidth <= 900) return;
+        var collapsed = localStorage.getItem('essay-sidebar-collapsed-system-for-ai-engineers') === '1';
+        if (collapsed) d.classList.add('sidebar-collapsed');
+        var w = localStorage.getItem('essay-sidebar-width-system-for-ai-engineers');
+        if (w && !collapsed) {
+            var px = Math.max(200, Math.min(parseInt(w, 10), 480));
+            d.style.setProperty('--sidebar-width', px + 'px');
+        }
+    })();
+    </script>
+    <style>
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v18/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuLyfAZ9hiA.woff2) format('woff2');
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v18/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuI6fAZ9hiA.woff2) format('woff2');
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v18/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuGKYAZ9hiA.woff2) format('woff2');
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v18/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuFuYAZ9hiA.woff2) format('woff2');
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/jetbrainsmono/v18/tDbY2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKxjPVmUsaaDhw.woff2) format('woff2');
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/jetbrainsmono/v18/tDbY2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKxTPVmUsaaDhw.woff2) format('woff2');
+}
+:root {
+  --md-primary: #4C662B;
+  --md-surface-tint: #4C662B;
+  --md-on-primary: #FFFFFF;
+  --md-primary-container: #CDEDA3;
+  --md-on-primary-container: #354E16;
+  --md-secondary: #586249;
+  --md-on-secondary: #FFFFFF;
+  --md-secondary-container: #DCE7C8;
+  --md-on-secondary-container: #404A33;
+  --md-tertiary: #386663;
+  --md-on-tertiary: #FFFFFF;
+  --md-tertiary-container: #BCECE7;
+  --md-on-tertiary-container: #1F4E4B;
+  --md-error: #BA1A1A;
+  --md-on-error: #FFFFFF;
+  --md-error-container: #FFDAD6;
+  --md-on-error-container: #93000A;
+  --md-background: #F9FAEF;
+  --md-on-background: #1A1C16;
+  --md-surface: #F9FAEF;
+  --md-on-surface: #1A1C16;
+  --md-surface-variant: #E1E4D5;
+  --md-on-surface-variant: #44483D;
+  --md-outline: #75796C;
+  --md-outline-variant: #C5C8BA;
+  --md-shadow: #000000;
+  --md-scrim: #000000;
+  --md-inverse-surface: #2F312A;
+  --md-inverse-on-surface: #F1F2E6;
+  --md-inverse-primary: #B1D18A;
+  --md-primary-fixed: #CDEDA3;
+  --md-on-primary-fixed: #102000;
+  --md-primary-fixed-dim: #B1D18A;
+  --md-on-primary-fixed-variant: #354E16;
+  --md-secondary-fixed: #DCE7C8;
+  --md-on-secondary-fixed: #151E0B;
+  --md-secondary-fixed-dim: #BFCBAD;
+  --md-on-secondary-fixed-variant: #404A33;
+  --md-tertiary-fixed: #BCECE7;
+  --md-on-tertiary-fixed: #00201E;
+  --md-tertiary-fixed-dim: #A0D0CB;
+  --md-on-tertiary-fixed-variant: #1F4E4B;
+  --md-surface-dim: #DADBD0;
+  --md-surface-bright: #F9FAEF;
+  --md-surface-container-lowest: #FFFFFF;
+  --md-surface-container-low: #F3F4E9;
+  --md-surface-container: #EEEFE3;
+  --md-surface-container-high: #E8E9DE;
+  --md-surface-container-highest: #E2E3D8;
+}
+pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.codehilite .hll { background-color: #ffffcc }
+.codehilite { background: #f8f8f8; }
+.codehilite .c { color: #3D7B7B; font-style: italic } /* Comment */
+.codehilite .err { border: 1px solid #F00 } /* Error */
+.codehilite .k { color: #008000; font-weight: bold } /* Keyword */
+.codehilite .o { color: #666 } /* Operator */
+.codehilite .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
+.codehilite .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
+.codehilite .cp { color: #9C6500 } /* Comment.Preproc */
+.codehilite .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
+.codehilite .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
+.codehilite .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
+.codehilite .gd { color: #A00000 } /* Generic.Deleted */
+.codehilite .ge { font-style: italic } /* Generic.Emph */
+.codehilite .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+.codehilite .gr { color: #E40000 } /* Generic.Error */
+.codehilite .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.codehilite .gi { color: #008400 } /* Generic.Inserted */
+.codehilite .go { color: #717171 } /* Generic.Output */
+.codehilite .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.codehilite .gs { font-weight: bold } /* Generic.Strong */
+.codehilite .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.codehilite .gt { color: #04D } /* Generic.Traceback */
+.codehilite .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.codehilite .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.codehilite .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.codehilite .kp { color: #008000 } /* Keyword.Pseudo */
+.codehilite .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.codehilite .kt { color: #B00040 } /* Keyword.Type */
+.codehilite .m { color: #666 } /* Literal.Number */
+.codehilite .s { color: #BA2121 } /* Literal.String */
+.codehilite .na { color: #687822 } /* Name.Attribute */
+.codehilite .nb { color: #008000 } /* Name.Builtin */
+.codehilite .nc { color: #00F; font-weight: bold } /* Name.Class */
+.codehilite .no { color: #800 } /* Name.Constant */
+.codehilite .nd { color: #A2F } /* Name.Decorator */
+.codehilite .ni { color: #717171; font-weight: bold } /* Name.Entity */
+.codehilite .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
+.codehilite .nf { color: #00F } /* Name.Function */
+.codehilite .nl { color: #767600 } /* Name.Label */
+.codehilite .nn { color: #00F; font-weight: bold } /* Name.Namespace */
+.codehilite .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.codehilite .nv { color: #19177C } /* Name.Variable */
+.codehilite .ow { color: #A2F; font-weight: bold } /* Operator.Word */
+.codehilite .w { color: #BBB } /* Text.Whitespace */
+.codehilite .mb { color: #666 } /* Literal.Number.Bin */
+.codehilite .mf { color: #666 } /* Literal.Number.Float */
+.codehilite .mh { color: #666 } /* Literal.Number.Hex */
+.codehilite .mi { color: #666 } /* Literal.Number.Integer */
+.codehilite .mo { color: #666 } /* Literal.Number.Oct */
+.codehilite .sa { color: #BA2121 } /* Literal.String.Affix */
+.codehilite .sb { color: #BA2121 } /* Literal.String.Backtick */
+.codehilite .sc { color: #BA2121 } /* Literal.String.Char */
+.codehilite .dl { color: #BA2121 } /* Literal.String.Delimiter */
+.codehilite .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.codehilite .s2 { color: #BA2121 } /* Literal.String.Double */
+.codehilite .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
+.codehilite .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.codehilite .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
+.codehilite .sx { color: #008000 } /* Literal.String.Other */
+.codehilite .sr { color: #A45A77 } /* Literal.String.Regex */
+.codehilite .s1 { color: #BA2121 } /* Literal.String.Single */
+.codehilite .ss { color: #19177C } /* Literal.String.Symbol */
+.codehilite .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.codehilite .fm { color: #00F } /* Name.Function.Magic */
+.codehilite .vc { color: #19177C } /* Name.Variable.Class */
+.codehilite .vg { color: #19177C } /* Name.Variable.Global */
+.codehilite .vi { color: #19177C } /* Name.Variable.Instance */
+.codehilite .vm { color: #19177C } /* Name.Variable.Magic */
+.codehilite .il { color: #666 } /* Literal.Number.Integer.Long */
+/* Reset & Base */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --sidebar-width: 272px;
+  --sidebar-collapsed-width: 0px;
+}
+
+html {
+  font-size: var(--md-base-size, 18px);
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--md-font-family, 'Inter', sans-serif);
+  font-weight: var(--md-body-weight, 400);
+  line-height: var(--md-line-height, 1.7);
+  color: var(--md-on-surface, #231917);
+  background: var(--md-background, #FFF8F6);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Layout */
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: var(--sidebar-width);
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--md-surface-container-low, #FFF1ED);
+  border-right: 1px solid var(--md-outline-variant, #D8C2BC);
+  z-index: 100;
+  transition: width 0.25s ease, transform 0.3s ease;
+  overflow: hidden;
+}
+
+/* Sidebar header */
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 1rem 0.75rem 1rem 1.25rem;
+  border-bottom: 1px solid var(--md-outline-variant, #D8C2BC);
+  flex-shrink: 0;
+}
+
+.sidebar-title {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--md-on-surface, #231917);
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+
+.sidebar-collapse-btn {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 0.375rem;
+  background: transparent;
+  color: var(--md-on-surface-variant, #53433F);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.sidebar-collapse-btn:hover {
+  background: var(--md-surface-container, #FCEAE5);
+  color: var(--md-on-surface, #231917);
+}
+
+/* Sidebar nav */
+.sidebar-nav {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 0.5rem 0;
+}
+
+.nav-tree {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.nav-tree .nav-tree {
+  padding-left: 0.5rem;
+  margin-left: 0.875rem;
+  border-left: 1px solid var(--md-outline-variant, #D8C2BC);
+}
+
+.nav-item {
+  position: relative;
+}
+
+.nav-item a,
+.nav-item .nav-label {
+  display: block;
+  padding: 0.375rem 0.75rem;
+  margin: 1px 0.5rem;
+  font-size: 0.8rem;
+  font-weight: 400;
+  color: var(--md-on-surface-variant, #53433F);
+  text-decoration: none;
+  transition: all 0.15s ease;
+  border-radius: 0.375rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.nav-item .nav-label {
+  color: var(--md-on-surface, #231917);
+  font-weight: 500;
+  cursor: default;
+}
+
+.nav-item a:hover {
+  color: var(--md-on-surface, #231917);
+  background: var(--md-surface-container, #FCEAE5);
+}
+
+.nav-item.active > a {
+  color: var(--md-on-primary-container, #723523);
+  font-weight: 500;
+  background: var(--md-primary-container, #FFDBD1);
+}
+
+/* Newsletter issues under a chapter */
+.nav-count {
+  display: inline-block;
+  min-width: 1.15rem;
+  padding: 0 0.35rem;
+  margin-left: 0.4rem;
+  font-size: 0.65rem;
+  line-height: 1.15rem;
+  text-align: center;
+  border-radius: 999px;
+  background: var(--md-surface-container, #FCEAE5);
+  color: var(--md-on-surface-variant, #53433F);
+  vertical-align: middle;
+}
+.nav-item.active > a .nav-count { background: rgba(255,255,255,0.6); }
+.nav-tree.nav-issues {
+  border-left-style: dashed;
+}
+.nav-issue a {
+  font-size: 0.74rem;
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+}
+.nav-issue a::before {
+  content: "✉";
+  margin-right: 0.35rem;
+  font-size: 0.7rem;
+  opacity: 0.7;
+}
+.nav-issue.nav-maxims a::before {
+  content: "\275D";
+}
+
+/* Maxims page (Substack Notes drafts) */
+.maxim {
+  margin: 0 0 1.6rem;
+  padding: 0 0 1.2rem;
+  border-bottom: 1px solid var(--md-outline-variant, #D8C2BC);
+}
+.maxim-text {
+  font-size: 1.05rem;
+  line-height: 1.55;
+  margin: 0 0 0.9rem;
+}
+.maxim-text .maxim-p { margin: 0 0 0.6rem; }
+.maxim-alt {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--md-on-surface-variant, #53433F);
+  margin: 0 0 0.5rem;
+  padding-left: 0.9rem;
+  border-left: 2px solid var(--md-outline-variant, #D8C2BC);
+}
+.maxim-alt .maxim-p { margin: 0 0 0.45rem; }
+.maxim-meta {
+  font-size: 0.72rem;
+  color: var(--md-outline, #85736E);
+  margin: 0;
+}
+
+.nav-item.active-parent > a {
+  color: var(--md-on-surface, #231917);
+  font-weight: 500;
+}
+
+/* Resize handle */
+.resize-handle {
+  position: absolute;
+  top: 0;
+  right: -3px;
+  width: 6px;
+  height: 100%;
+  cursor: col-resize;
+  z-index: 110;
+  transition: background 0.15s ease;
+}
+
+.resize-handle:hover,
+.resize-handle.active {
+  background: var(--md-primary, #8F4C38);
+  opacity: 0.3;
+}
+
+body.resizing {
+  cursor: col-resize;
+  user-select: none;
+}
+
+/* Sidebar expand button (visible when collapsed, desktop) */
+.sidebar-expand-btn {
+  display: none;
+  position: fixed;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 200;
+  width: 36px;
+  height: 36px;
+  align-items: center;
+  justify-content: center;
+  background: var(--md-surface, #FFF8F6);
+  border: 1px solid var(--md-outline-variant, #D8C2BC);
+  border-radius: 0.5rem;
+  cursor: pointer;
+  color: var(--md-on-surface-variant, #53433F);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  transition: all 0.15s ease;
+}
+
+.sidebar-expand-btn:hover {
+  background: var(--md-surface-container, #FCEAE5);
+  color: var(--md-on-surface, #231917);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+/* Collapsed state (set on <html>) */
+.sidebar-collapsed .sidebar {
+  width: 0;
+  border-right-color: transparent;
+}
+
+.sidebar-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1rem;
+  padding: 0.75rem 1.25rem;
+  border-top: 1px solid var(--md-outline-variant);
+  font-size: 0.8rem;
+}
+.sidebar-link {
+  color: var(--md-on-surface-variant);
+  text-decoration: none;
+}
+.sidebar-link:hover { color: var(--md-primary); text-decoration: underline; }
+
+.sidebar-collapsed .sidebar-header,
+.sidebar-collapsed .sidebar-links,
+.sidebar-collapsed .sidebar-nav,
+.sidebar-collapsed .resize-handle {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.sidebar-collapsed .sidebar-expand-btn {
+  display: flex;
+}
+
+.sidebar-collapsed .content {
+  margin-left: 0;
+}
+
+/* Mobile sidebar toggle */
+.sidebar-toggle {
+  display: none;
+  position: fixed;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 200;
+  width: 36px;
+  height: 36px;
+  align-items: center;
+  justify-content: center;
+  background: var(--md-surface, #FFF8F6);
+  border: 1px solid var(--md-outline-variant, #D8C2BC);
+  border-radius: 0.5rem;
+  cursor: pointer;
+  color: var(--md-on-surface-variant, #53433F);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+
+.sidebar-toggle:hover {
+  background: var(--md-surface-container, #FCEAE5);
+  color: var(--md-on-surface, #231917);
+}
+
+/* Content */
+.content {
+  margin-left: var(--sidebar-width);
+  flex: 1;
+  min-width: 0;
+  transition: margin-left 0.25s ease;
+}
+
+.article {
+  max-width: var(--md-max-width, 720px);
+  margin: 0 auto;
+  padding: var(--md-content-padding, 2rem);
+  padding-top: 3rem;
+  padding-bottom: 4rem;
+}
+
+/* Typography */
+.article h1 {
+  font-size: 2.25rem;
+  font-weight: var(--md-heading-weight, 700);
+  line-height: 1.2;
+  margin-bottom: 1.5rem;
+  color: var(--md-on-surface, #231917);
+  letter-spacing: -0.02em;
+}
+
+.article h2 {
+  font-size: 1.6rem;
+  font-weight: var(--md-heading-weight, 700);
+  line-height: 1.25;
+  margin-top: 3rem;
+  margin-bottom: 1rem;
+  color: var(--md-on-surface, #231917);
+  padding-bottom: 0.4rem;
+  border-bottom: 2px solid var(--md-primary-container, #FFDBD1);
+}
+
+.article h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1.3;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+  color: var(--md-on-surface, #231917);
+}
+
+.article h4 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.article p {
+  margin-bottom: 1.25rem;
+}
+
+.article a {
+  color: var(--md-primary, #8F4C38);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.article a:hover {
+  color: var(--md-on-primary-container, #723523);
+}
+
+/* Lists */
+.article ul, .article ol {
+  margin-bottom: 1.25rem;
+  padding-left: 1.5rem;
+}
+
+.article li {
+  margin-bottom: 0.35rem;
+}
+
+.article li > ul, .article li > ol {
+  margin-top: 0.35rem;
+  margin-bottom: 0;
+}
+
+/* Blockquote */
+.article blockquote {
+  border-left: 4px solid var(--md-primary, #8F4C38);
+  background: var(--md-primary-container, #FFDBD1);
+  padding: 1rem 1.25rem;
+  margin: 1.5rem 0;
+  border-radius: 0 0.5rem 0.5rem 0;
+  color: var(--md-on-primary-container, #723523);
+}
+
+.article blockquote p:last-child {
+  margin-bottom: 0;
+}
+
+/* Code */
+.article code {
+  font-family: var(--md-font-family-mono, 'JetBrains Mono', monospace);
+  font-size: 0.85em;
+  background: var(--md-surface-container, #FCEAE5);
+  padding: 0.15em 0.4em;
+  border-radius: 0.25rem;
+}
+
+.article pre {
+  margin: 1.5rem 0;
+  border-radius: 0.75rem;
+  overflow-x: auto;
+}
+
+.article .codehilite {
+  background: var(--md-surface-container-lowest, #FFFFFF);
+  border: 1px solid var(--md-outline-variant, #D8C2BC);
+  border-radius: 0.75rem;
+  padding: 1rem 1.25rem;
+  overflow-x: auto;
+  margin: 1.5rem 0;
+}
+
+.article .codehilite code {
+  background: none;
+  padding: 0;
+  font-size: 0.82em;
+}
+
+/* Tables */
+.article table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  font-size: 0.9rem;
+}
+
+.article th {
+  background: var(--md-surface-container, #FCEAE5);
+  font-weight: 600;
+  text-align: left;
+  padding: 0.75rem 1rem;
+  border-bottom: 2px solid var(--md-outline-variant, #D8C2BC);
+}
+
+.article td {
+  padding: 0.6rem 1rem;
+  border-bottom: 1px solid var(--md-surface-container, #FCEAE5);
+}
+
+/* Anchor links */
+.anchor-link {
+  font-size: 0.8em;
+  opacity: 0;
+  margin-left: 0.5rem;
+  text-decoration: none !important;
+  transition: opacity 0.15s;
+}
+
+.article h2:hover .anchor-link,
+.article h3:hover .anchor-link,
+.article h4:hover .anchor-link {
+  opacity: 0.5;
+}
+
+/* Footnotes */
+.footnote {
+  font-size: 0.85rem;
+  color: var(--md-on-surface-variant, #53433F);
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--md-outline-variant, #D8C2BC);
+}
+
+/* Images */
+.article img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+  margin: 1rem 0;
+}
+
+/* Horizontal rule */
+.article hr {
+  border: none;
+  border-top: 2px solid var(--md-surface-container, #FCEAE5);
+  margin: 2.5rem 0;
+}
+
+/* Check Items */
+.check-items {
+  margin-top: 2.5rem;
+  padding: 1.25rem;
+  background: var(--md-surface-container-low, #FFF1ED);
+  border: 1px solid var(--md-outline-variant, #D8C2BC);
+  border-radius: 0.75rem;
+}
+
+.check-items-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.625rem;
+  border-bottom: 1px solid var(--md-outline-variant, #D8C2BC);
+}
+
+.check-items-title {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--md-on-surface, #231917);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.check-items-progress {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--md-on-surface-variant, #53433F);
+}
+
+.check-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.625rem 0.5rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  user-select: none;
+}
+
+.check-item:hover {
+  background: var(--md-surface-container, #FCEAE5);
+}
+
+.check-item-input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.check-item-box {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  margin-top: 1px;
+  border: 2px solid var(--md-outline, #85736E);
+  border-radius: 0.3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  background: transparent;
+}
+
+.check-item-icon {
+  width: 14px;
+  height: 14px;
+  opacity: 0;
+  transform: scale(0.5);
+  transition: all 0.2s ease;
+  color: var(--md-on-primary, #FFFFFF);
+}
+
+.check-item-input:checked ~ .check-item-box {
+  background: var(--md-primary, #8F4C38);
+  border-color: var(--md-primary, #8F4C38);
+}
+
+.check-item-input:checked ~ .check-item-box .check-item-icon {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.check-item-text {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--md-on-surface, #231917);
+  transition: color 0.15s ease;
+}
+
+.check-item-input:checked ~ .check-item-text {
+  color: var(--md-on-surface-variant, #53433F);
+}
+
+/* Page Navigation (Prev / Next) */
+.page-nav {
+  display: flex;
+  gap: 1rem;
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--md-outline-variant, #D8C2BC);
+}
+
+.page-nav-link {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.875rem 1rem;
+  border: 1px solid var(--md-outline-variant, #D8C2BC);
+  border-radius: 0.625rem;
+  text-decoration: none;
+  transition: all 0.15s ease;
+  min-width: 0;
+}
+
+.page-nav-link:hover {
+  border-color: var(--md-primary, #8F4C38);
+  background: var(--md-surface-container-low, #FFF1ED);
+}
+
+.page-nav-next {
+  align-items: flex-end;
+  text-align: right;
+}
+
+.page-nav-disabled {
+  visibility: hidden;
+}
+
+.page-nav-label {
+  font-size: 0.7rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--md-on-surface-variant, #53433F);
+}
+
+.page-nav-title {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--md-on-surface, #231917);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.page-nav-link:hover .page-nav-title {
+  color: var(--md-primary, #8F4C38);
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .sidebar {
+    transform: translateX(-100%);
+    width: 280px !important;
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+    box-shadow: 4px 0 24px rgba(0,0,0,0.1);
+  }
+
+  .resize-handle,
+  .sidebar-collapse-btn,
+  .sidebar-expand-btn {
+    display: none !important;
+  }
+
+  .sidebar-toggle {
+    display: flex;
+  }
+
+  /* Hide desktop collapse state on mobile */
+  .sidebar-collapsed .sidebar {
+    width: 280px !important;
+  }
+
+  .sidebar-collapsed .sidebar-header,
+  .sidebar-collapsed .sidebar-nav {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .content {
+    margin-left: 0;
+  }
+
+  .sidebar-collapsed .content {
+    margin-left: 0;
+  }
+
+  .article {
+    padding: 1.25rem;
+    padding-top: 4rem;
+  }
+
+  .article h1 {
+    font-size: 1.75rem;
+  }
+
+  .article h2 {
+    font-size: 1.35rem;
+  }
+}
+
+/* Book schemes (inline SVG figures) */
+.book-scheme {
+  margin: 2rem 0;
+  text-align: center;
+}
+
+.book-scheme svg {
+  width: 100%;
+  max-width: 640px;
+  height: auto;
+}
+
+.book-scheme figcaption {
+  font-size: 0.8rem;
+  color: var(--md-on-surface-variant, #53433F);
+  margin-top: 0.5rem;
+}
+
+/* Nav progress badges (from progress/progress.json) */
+.nav-status {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  margin-left: 0.4rem;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+
+.nav-status-done {
+  background: var(--md-primary, #8F4C38);
+}
+
+.nav-status-wip {
+  background: transparent;
+  border: 1.5px solid var(--md-primary, #8F4C38);
+  box-sizing: border-box;
+}
+
+/* Book callout — одна сильна думка, винесена в окремий блок (pull quote) */
+.book-callout {
+  margin: 2.25rem 0;
+  padding: 0.4rem 0 0.4rem 1.4rem;
+  border-left: 3px solid var(--md-primary, #8F4C38);
+  font-size: 1.18em;
+  line-height: 1.55;
+  font-weight: 500;
+  color: var(--md-on-primary-container, #723523);
+}
+@media print {
+  .book-callout { break-inside: avoid; }
+}
+
+/* Substack subscribe embed on published chapter pages */
+/* Leanpub banner under the chapter title (public site only) */
+.leanpub-banner {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  margin: 1.5rem 0 2rem;
+  padding: 1rem 1.25rem;
+  border: 1px solid var(--md-outline-variant, #D8C2BC);
+  border-radius: 12px;
+  background: var(--md-surface-container-low, #FFF8F6);
+  color: inherit;
+  text-decoration: none;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+.leanpub-banner,
+.leanpub-banner:hover,
+.leanpub-banner:visited,
+.leanpub-banner span {
+  text-decoration: none !important;
+  border-bottom: 0 !important;
+  background-image: none !important;
+}
+.leanpub-banner:hover {
+  text-decoration: none;
+  box-shadow: 0 10px 28px -14px rgba(0, 0, 0, 0.35);
+  transform: translateY(-1px);
+}
+.leanpub-banner-cover {
+  flex: 0 0 auto;
+  width: 84px;
+  height: auto;
+  border-radius: 3px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15), 0 8px 18px -10px rgba(0, 0, 0, 0.4);
+  margin: 0 !important;
+}
+.leanpub-banner-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  min-width: 0;
+}
+.leanpub-banner-kicker {
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--md-on-surface-variant, #53433F);
+}
+.leanpub-banner-title {
+  font-weight: 600;
+  font-size: 1.05rem;
+  color: var(--md-on-surface, #231917);
+}
+.leanpub-banner-text {
+  font-size: 0.9rem;
+  line-height: 1.45;
+  color: var(--md-on-surface-variant, #53433F);
+}
+.leanpub-banner-button {
+  margin-top: 0.35rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--md-primary, #8F4C38);
+}
+@media (max-width: 520px) {
+  .leanpub-banner { gap: 0.9rem; padding: 0.85rem 1rem; }
+  .leanpub-banner-cover { width: 64px; }
+}
+
+.subscribe-embed {
+  margin: 1.75rem 0;
+  display: flex;
+  justify-content: center;
+}
+.subscribe-embed iframe {
+  max-width: 100%;
+}
+
+
+    </style>
+<script async data-id="101511163" src="//static.getclicky.com/js"></script>
+</head>
+<body>
+    <div class="layout">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <span class="sidebar-title">Необхідне різноманіття: системний метод роботи з AI</span>
+                <button class="sidebar-collapse-btn" id="sidebar-collapse" aria-label="Collapse sidebar">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="11 17 6 12 11 7"></polyline>
+                        <polyline points="18 17 13 12 18 7"></polyline>
+                    </svg>
+                </button>
+            </div>
+            <nav class="sidebar-nav">
+                <ul class="nav-tree" data-depth="0"><li class="nav-item">
+<a href="/variety/read/">Необхідне різноманіття</a>
+</li>
+<li class="nav-item">
+<a href="/variety/read/part-1-system/">Частина I. Система, якою ти насправді керуєш</a>
+<ul class="nav-tree" data-depth="1"><li class="nav-item">
+<a href="/variety/read/part-1-system/02-requisite-variety/">Розділ 2. Закон необхідного різноманіття</a>
+</li></ul>
+</li>
+<li class="nav-item">
+<a href="/variety/read/part-2-goals/">Частина II. Цілі та смак: що ти насправді просиш</a>
+<ul class="nav-tree" data-depth="1"><li class="nav-item">
+<a href="/variety/read/part-2-goals/06-goal-and-proxy/">Розділ 6. Ціль та її проксі</a>
+</li></ul>
+</li>
+<li class="nav-item">
+<a href="/variety/read/part-3-activity/">Частина III. Діяльність: метод щоденної роботи</a>
+<ul class="nav-tree" data-depth="1"><li class="nav-item">
+<a href="/variety/read/part-3-activity/10-activity-decomposition/">Розділ 10. Складові діяльності</a>
+</li>
+<li class="nav-item active">
+<a href="/variety/read/part-3-activity/12-normative-base/">Розділ 12. Нормативна база</a>
+</li>
+<li class="nav-item">
+<a href="/variety/read/part-3-activity/13-control-degradation/">Розділ 13. Контроль, керованість, деградація</a>
+</li></ul>
+</li></ul>
+            </nav>
+            <div class="sidebar-links"><a class="sidebar-link sidebar-link-lang" href="/variety/read/en/" lang="en">English</a>
+<a class="sidebar-link sidebar-link-newsletter" href="https://kiosan.substack.com" target="_blank" rel="noopener">Розсилка ↗</a></div>
+            <div class="resize-handle" id="resize-handle"></div>
+        </aside>
+        <button class="sidebar-expand-btn" id="sidebar-expand" aria-label="Expand sidebar">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+        </button>
+        <button class="sidebar-toggle" id="sidebar-toggle" aria-label="Toggle sidebar">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+        </button>
+        <main class="content">
+            <article class="article">
+                <h1 id="12">Розділ 12. Нормативна база<a class="anchor-link" href="#12" title="Permanent link">&para;</a></h1>
+<p><a class="leanpub-banner" href="https://leanpub.com/requisite-variety-ua" target="_blank" rel="noopener"><img class="leanpub-banner-cover" src="/images/variety-cover-uk-sm.png" width="280" height="400" alt="Обкладинка книжки «Необхідне різноманіття»" loading="lazy" decoding="async"><span class="leanpub-banner-body"><span class="leanpub-banner-kicker">Книжка на Leanpub</span><span class="leanpub-banner-title">Необхідне різноманіття</span><span class="leanpub-banner-text">Книжка пишеться відкрито. Купіть її раз — і отримуватимете нові розділи в PDF та EPUB у міру публікації.</span><span class="leanpub-banner-button">Придбати на Leanpub →</span></span></a></p>
+<p>Цю книжку я пишу з агентом. У розділі 2 він написав «управління» — я виправив на «керування». У розділі 6 — виправив знову. Після третього разу це стало рядком у стайлгайді книжки, і далі слово не з&rsquo;являлось.</p>
+<p>У розділі 13 я порахував, скільки разів у тексті трапилось слово «зелений»: двадцять чотири. Кожне окремо було доречним — «зелений прогін», «зелена галочка». Разом — двадцять чотири згадки зеленого на один розділ. Ще один рядок у стайлгайді: «зелений» лише там, де він конкретний.</p>
+<p>Стайлгайду не було до першого розділу. Він ріс із правок: зустрів — поміняв; зустрів ще раз — поміняв; на третій раз записав. Зараз у ньому триста рядків, і жодного я не придумав наперед. Кожен — моє зауваження, яке повторилось.</p>
+<p>Що відрізняє знахідку від норми? У розділі 2 я назвав нормативну базу підсилювачем — різноманіттям, законсервованим у текст, — і пообіцяв окремий розділ. Ось він.</p>
+<h2 id="_1">Двічі — збіг, тричі — клас<a class="anchor-link" href="#_1" title="Permanent link">&para;</a></h2>
+<p>Норма з&rsquo;являється не з одної ситуації, а з повторення.</p>
+<p>Один вдалий результат — це все-таки поки один результат, і в ньому відбиток усього, що було навколо: вашого формулювання, часу дня, того, скільки ви встигли прочитати. Людина як прилад нестабільна: та сама задача, та сама людина, вранці і ввечері — різні відповіді. Тому з одного результату не видно, що в ньому ваше рішення, а що збіг обставин. Порівняйте три — і те, що збереглось у всіх трьох, і є рішення. Решта — шум.</p>
+<p>Звідси визначення. <strong>Норма</strong> — це записана реакція з інструкціями на клас ситуацій, які у вас повторюються. Ключове слово — клас. Один випадок — випадок. Два — збіг. Три — клас, і відповідь на нього варто записати, бо буде й четвертий.</p>
+<figure class="book-scheme">
+<svg viewBox="0 0 640 300" role="img" aria-label="Три результати однієї задачі: те, що повторилось у всіх трьох, — рішення, решта — шум">
+  <defs>
+    <marker id="s1-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#85736E"/></marker>
+  </defs>
+  <rect x="0" y="0" width="640" height="300" fill="#FFFFFF"/>
+  <text x="120" y="34" text-anchor="middle" font-size="13" font-weight="600" fill="#231917">раз — випадок</text>
+  <text x="320" y="34" text-anchor="middle" font-size="13" font-weight="600" fill="#231917">двічі — збіг</text>
+  <text x="520" y="34" text-anchor="middle" font-size="13" font-weight="600" fill="#231917">тричі — клас</text>
+  <rect x="40" y="50" width="160" height="110" rx="10" fill="#FFFFFF" stroke="#D8C2BC" stroke-width="1.5"/>
+  <rect x="240" y="50" width="160" height="110" rx="10" fill="#FFFFFF" stroke="#D8C2BC" stroke-width="1.5"/>
+  <rect x="440" y="50" width="160" height="110" rx="10" fill="#FFFFFF" stroke="#D8C2BC" stroke-width="1.5"/>
+  <circle cx="80" cy="85" r="10" fill="#8F4C38"/>
+  <circle cx="150" cy="125" r="10" fill="#8F4C38"/>
+  <circle cx="125" cy="78" r="9" fill="#D8C2BC"/>
+  <circle cx="70" cy="135" r="9" fill="#D8C2BC"/>
+  <circle cx="175" cy="88" r="9" fill="#D8C2BC"/>
+  <circle cx="280" cy="85" r="10" fill="#8F4C38"/>
+  <circle cx="350" cy="125" r="10" fill="#8F4C38"/>
+  <circle cx="330" cy="72" r="9" fill="#D8C2BC"/>
+  <circle cx="275" cy="132" r="9" fill="#D8C2BC"/>
+  <circle cx="380" cy="100" r="9" fill="#D8C2BC"/>
+  <circle cx="480" cy="85" r="10" fill="#8F4C38"/>
+  <circle cx="550" cy="125" r="10" fill="#8F4C38"/>
+  <circle cx="515" cy="105" r="9" fill="#D8C2BC"/>
+  <circle cx="575" cy="72" r="9" fill="#D8C2BC"/>
+  <circle cx="470" cy="138" r="9" fill="#D8C2BC"/>
+  <text x="120" y="178" text-anchor="middle" font-size="11" fill="#53433F">результат 1</text>
+  <text x="320" y="178" text-anchor="middle" font-size="11" fill="#53433F">результат 2</text>
+  <text x="520" y="178" text-anchor="middle" font-size="11" fill="#53433F">результат 3</text>
+  <line x1="120" y1="186" x2="250" y2="218" stroke="#85736E" stroke-width="1.5" marker-end="url(#s1-arrow)"/>
+  <line x1="320" y1="186" x2="320" y2="216" stroke="#85736E" stroke-width="1.5" marker-end="url(#s1-arrow)"/>
+  <line x1="520" y1="186" x2="390" y2="218" stroke="#85736E" stroke-width="1.5" marker-end="url(#s1-arrow)"/>
+  <rect x="200" y="222" width="240" height="46" rx="10" fill="#FFDBD1"/>
+  <circle cx="228" cy="245" r="10" fill="#8F4C38"/>
+  <circle cx="254" cy="245" r="10" fill="#8F4C38"/>
+  <text x="276" y="241" font-size="12" font-weight="600" fill="#723523">збереглось у всіх трьох —</text>
+  <text x="276" y="257" font-size="12" font-weight="600" fill="#723523">рішення, його записуємо</text>
+  <circle cx="478" cy="245" r="9" fill="#D8C2BC"/>
+  <text x="494" y="249" font-size="12" fill="#53433F">решта — шум</text>
+  <text x="320" y="290" text-anchor="middle" font-size="12" fill="#8F4C38">з одного результату не видно, що в ньому рішення, а що збіг обставин</text>
+</svg>
+<figcaption>Схема 12.1. Двічі — збіг, тричі — клас: рішення — те, що повторилось у всіх трьох результатах</figcaption>
+</figure>
+
+<p>Поки норми немає, «добре» на рев&rsquo;ю — думка, і в кожного своя: три рев&rsquo;юери на один пул-реквест дадуть три оцінки, і всі три обґрунтовані. Записана норма перетворює оцінку на порівняння: ось із чим рівняємо, ось відхилення. Наступний розділ, про контроль, будуватиме на цьому зону допуску: норма каже, що правильно, контур перевіряє, чи процес не вийшов за її межі.</p>
+<p>І ще одне: норма повертається в практику. <strong>Практика</strong> — усталений спосіб працювати з агентом: промпти, перевірки, звички команди. Практика створює норми, а норми ведуть практику далі. Це замкнене коло.</p>
+<aside class="book-callout">Один успіх — випадок. Повторений і записаний — норма. Різниця між ними — відтворюваність.</aside>
+
+<h2 id="_2">Кухня<a class="anchor-link" href="#_2" title="Permanent link">&para;</a></h2>
+<p>Уявимо кухню ресторану о шостій вечора.</p>
+<p>Лінійний кухар ставить стейк на пательню. Він не куштує, не прикидає і не радиться: на стіні картка. Стейк, двісті п&rsquo;ятдесят грамів; пательня розігріта до першого диму; дві хвилини на бік; потім п&rsquo;ять хвилин відпочити під фольгою, щоб сік не витік на дошку; готовий — скоринка темна, всередині п&rsquo;ятдесят чотири градуси за термометром. Шефа на кухні немає, але стейк на смак такий самий, ніби його готував сам шеф.</p>
+<p>Цю картку не написали в день відкриття. Шеф зробив цей стейк сотні разів — на цій плиті, з м&rsquo;ясом від цього постачальника — так він виділив, що в процесі стале і може бути формалізоване, а що — емоційний фон. Так з&rsquo;явилась картка-інструкція. У ній чотири блоки: назва страви; що робити, крок за кроком; навіщо — «відпочити, щоб сік не витік»; і як перевірити, що вийшло, — термометр, а не «на око». Шеф виділив це все з нескінченного різноманіття варіантів готування, і тепер воно спрацьовує кожного разу без нього. Нова точка мережі відкривається з папкою карток, а не з шефом.</p>
+<p>А тепер сцена домашня.</p>
+<p>Ми купуємо товсту книгу відомого шефа — шістсот сторінок, тверда обкладинка — і думаємо стати великим кухарем. Готуємо з неї один рецепт. Найімовірніше — жодного. Книга стоїть на полиці, і ми час від часу торкаємось її поглядом із теплим відчуттям. Я знаю це з власної полиці.</p>
+<p>Що ми купили? Не норми — бажаний стан. Рецепт у книзі і картка на кухні виглядають однаково: ті самі чотири блоки, ті самі грами й хвилини. Різниця не в тексті. За карткою — сто вечорів на цій кухні. За рецептом — сто вечорів на чужій. Книга обіцяє, що чужі повтори замінять наші.</p>
+<p>І ще одна деталь із кухні. Картку писали під ту плиту. Поставили нову, індукційну — і «дві хвилини на бік» дають інший стейк. Картка та сама, кухня інша.</p>
+<h2 id="_3">Чому норма працює без вас<a class="anchor-link" href="#_3" title="Permanent link">&para;</a></h2>
+<p>Тепер механізм роботи норми — три складові.</p>
+<p>Перша — арифметика розділу 2. Норма — це розрізнення, винесене з голови назовні. Поки воно в голові, воно працює, доки ви уважні і доки пам&rsquo;ятаєте. У файлі — працює, коли ви втомлені, у відпустці, коли за клавіатурою колега або працює агент. Кожна записана норма — плюс один стан, який розрізняє вже не ваша увага, а записаний текст. Ви написали її раз, а спрацьовує вона в кожній сесії — і в кожній сесії кожного з команди.</p>
+<p>Друга складова — про розуміння. Розділ 10 показав: частину діяльності «зрозуміти» не можна віддавати AI. Норма з блоком «чому» переносить шматок розуміння через межу сесії: наступного разу його читають, а не відтворюють з нуля. «Не пишемо down-метод у міграціях, бо відкат у нас робиться зі знімка бази» — і людина, яка бачить цей рядок уперше, знає не тільки що, а й чому така норма існує. Норма без «чому» переносить лише припис. Її можуть виконувати і після того, як причина зникла, — і ніхто не помітить, що вона вже не актуальна.</p>
+<p>Третя складова — про агента. Колега читає стайлгайд раз, під час онбордингу, і за тиждень пам&rsquo;ятає з нього три рядки. Це нормально: у колеги є голова, і решту він відновить із контексту. Агент читає нормативну базу на початку кожної сесії і виконує буквально — так само буквально, як «поправ тест» у розділі 6. Тому норма для агента множить усе, що в ній записано: і рішення, і помилки. Приклад «так/не так», який для людини звучав би педантично, для агента — єдина робоча форма: він не здогадається, що ви мали на увазі.</p>
+<p>Умова, без якої три складові не працюють. Норма має бути в сесії. Це межа контексту: що в сесії — те і в грі, агент бачить лише те, що йому показали, — відкриті файли, вставлений текст, інструкцію на вході. Стайлгайд на вікі, на який ніхто не дав посилання, для агента не існує — норма, якої немає в сесії, не керує нічим.</p>
+<h2 id="_4">Що робить запис нормою<a class="anchor-link" href="#_4" title="Permanent link">&para;</a></h2>
+<p>Чотири блоки — ті самі, що в картці на кухні. Покажу на одній нормі з реального файлу пам&rsquo;яті проєкту.</p>
+<p><strong>Ситуація.</strong> Коли це застосовувати — клас, названий явно: «у міграціях бази даних». Норма без «коли» діє або скрізь, і тоді це шум, або ніде, і тоді це побажання.</p>
+<p><strong>Рішення.</strong> Що робити, конкретно і для буквального читача: «down-метод не пишемо; кожному індексу — явна назва за шаблоном <code>idx_&lt;таблиця&gt;_&lt;поля&gt;</code>». Один приклад «так», один «не так».</p>
+<p><strong>Чому.</strong> Одним рядком: «відкат робимо зі знімка бази, тому down-метод не виконується ніколи, а автоматичні назви індексів у двох середовищах відрізнялись і зламали деплой». Цей блок дає перевірити за пів року, чи норма ще потрібна: зникла причина — знімайте норму, змінилась — перепишіть.</p>
+<p><strong>Перевірка.</strong> Як дізнатись, що виконано: «лінтер міграцій у CI падає на down-методі і на індексі в хибному форматі». Тут норма зі слів переходить у структуру — це те саме лікування мегапромпта з розділу 2, тільки тепер зрозуміло, звідки беруться рядки для винесення в структуру.</p>
+<figure class="book-scheme">
+<svg viewBox="0 0 640 290" role="img" aria-label="Чотири блоки норми: ситуація, рішення, чому, перевірка — у картці на кухні і в нормі про міграції">
+  <defs></defs>
+  <rect x="0" y="0" width="640" height="290" fill="#FFFFFF"/>
+  <text x="270" y="32" text-anchor="middle" font-size="13" font-weight="600" fill="#231917">картка на кухні</text>
+  <text x="500" y="32" text-anchor="middle" font-size="13" font-weight="600" fill="#231917">норма в проєкті</text>
+  <rect x="20" y="46" width="130" height="52" rx="8" fill="#FFDBD1"/>
+  <rect x="20" y="104" width="130" height="52" rx="8" fill="#FFDBD1"/>
+  <rect x="20" y="162" width="130" height="52" rx="8" fill="#FFDBD1"/>
+  <rect x="20" y="220" width="130" height="52" rx="8" fill="#FFDBD1"/>
+  <text x="85" y="77" text-anchor="middle" font-size="13" font-weight="600" fill="#723523">Ситуація</text>
+  <text x="85" y="135" text-anchor="middle" font-size="13" font-weight="600" fill="#723523">Рішення</text>
+  <text x="85" y="193" text-anchor="middle" font-size="13" font-weight="600" fill="#723523">Чому</text>
+  <text x="85" y="251" text-anchor="middle" font-size="13" font-weight="600" fill="#723523">Перевірка</text>
+  <rect x="160" y="46" width="220" height="226" rx="8" fill="#FFFFFF" stroke="#D8C2BC" stroke-width="1.5"/>
+  <rect x="390" y="46" width="230" height="226" rx="8" fill="#FFFFFF" stroke="#D8C2BC" stroke-width="1.5"/>
+  <line x1="160" y1="101" x2="620" y2="101" stroke="#D8C2BC" stroke-width="1"/>
+  <line x1="160" y1="159" x2="620" y2="159" stroke="#D8C2BC" stroke-width="1"/>
+  <line x1="160" y1="217" x2="620" y2="217" stroke="#D8C2BC" stroke-width="1"/>
+  <text x="174" y="77" font-size="12" fill="#231917">стейк, 250 грамів</text>
+  <text x="174" y="128" font-size="12" fill="#231917">дві хвилини на бік,</text>
+  <text x="174" y="144" font-size="12" fill="#231917">п'ять хвилин відпочити</text>
+  <text x="174" y="193" font-size="12" fill="#231917">щоб сік не витік на дошку</text>
+  <text x="174" y="244" font-size="12" fill="#231917">54 градуси</text>
+  <text x="174" y="260" font-size="12" fill="#231917">за термометром</text>
+  <text x="404" y="77" font-size="12" fill="#231917">міграції бази даних</text>
+  <text x="404" y="128" font-size="12" fill="#231917">без down-методу; індексам —</text>
+  <text x="404" y="144" font-size="12" fill="#231917">явні назви за шаблоном</text>
+  <text x="404" y="186" font-size="12" fill="#231917">відкат зі знімка бази; автоназви</text>
+  <text x="404" y="202" font-size="12" fill="#231917">індексів уже зламали деплой</text>
+  <text x="404" y="244" font-size="12" fill="#231917">лінтер міграцій у CI</text>
+  <text x="404" y="260" font-size="12" fill="#231917">падає на порушенні</text>
+</svg>
+<figcaption>Схема 12.2. Чотири блоки норми: ті самі в картці на кухні і в нормі про міграції</figcaption>
+</figure>
+
+<p>У стайлгайді цієї книжки кожен рядок записаний так само: що було, на що поміняли, чому. Без «чому» я сам через два розділи не пам&rsquo;ятав би, навіщо заборонив слово.</p>
+<h2 id="_5">Де живе норма<a class="anchor-link" href="#_5" title="Permanent link">&para;</a></h2>
+<p>Одна й та сама норма може жити в чотирьох місцях, і від місця залежить, чи виконається вона без вас. Тест для кожного рівня один: що станеться з нормою, якщо завтра ви не прийдете?</p>
+<p><strong>У голові.</strong> Ви знаєте, як треба, і пояснюєте агентові щоразу. Норма є, але вона — ви. Щоразу з нуля: варіант, у якому шеф куштує кожну страву перед подачею гостю. Завтра без вас — норми немає.</p>
+<p><strong>У промпті.</strong> Ви скопіювали вдалу інструкцію собі в нотатки і вставляєте на початку сесії. Уже відтворюється — але лише вами і лише коли згадали. Блокнот шефа в кишені. Завтра без вас норми теж немає, але хоча б є текст, який можна знайти.</p>
+<p><strong>У проєкті.</strong> Файл пам&rsquo;яті проєкту, системний промпт у чаті, навик в агенті, README, який кажуть прочитати спершу, — усе це форми одного: тексту, який агент читає перед роботою. Тут норму читає кожна сесія і кожен колега — і це перший рівень, на якому норма виконується без вас. Папка карток на кухні.</p>
+<p><strong>У конструкції.</strong> Лінтер, тест, шаблон, перевірка в CI. Норма більше не текст, який можна прочитати й проігнорувати, — неприйнятний стан не проходить фізично. Термощуп у стейку, який пищить на п&rsquo;ятдесяти чотирьох градусах. Це послаблювачі з розділу 2, і тепер видно їхнє походження: кожен із них починався як норма в чиїйсь голові.</p>
+<p>Чи має кожна норма дійти до конструкції? Ні. Норма в конструкції коштує гнучкості — це бюджет контролю з розділу 2: затиснули один вимір — розтягнувся інший. Що жорсткіше правило, то дорожче його міняти. У конструкцію іде те, де помилка дорога і незворотна: дані, доступи, публічні інтерфейси. Тут і поріг «тричі» знижується: якщо помилка один раз зламала деплой, другого разу не чекають. Норми смаку — назви, стиль коментарів, порядок імпортів — можуть лишатися текстом. Жорстке внизу, м&rsquo;яке вгорі.</p>
+<figure class="book-scheme">
+<svg viewBox="0 0 640 330" role="img" aria-label="Чотири місця, де живе норма: голова, промпт, проєкт, конструкція; нижче порогу норма виконується без вас">
+  <defs>
+    <marker id="s3-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#85736E"/></marker>
+  </defs>
+  <rect x="0" y="0" width="640" height="330" fill="#FFFFFF"/>
+  <text x="290" y="30" text-anchor="middle" font-size="13" font-weight="600" fill="#231917">що станеться з нормою, якщо завтра ви не прийдете?</text>
+  <rect x="30" y="48" width="520" height="52" rx="8" fill="#FFFFFF" stroke="#D8C2BC" stroke-width="1.5"/>
+  <text x="48" y="79" font-size="14" font-weight="600" fill="#231917">У голові</text>
+  <text x="170" y="72" font-size="12" fill="#53433F">пояснюєте агентові щоразу</text>
+  <text x="170" y="88" font-size="12" fill="#8F4C38">норма — це ви; завтра її немає</text>
+  <rect x="30" y="108" width="520" height="52" rx="8" fill="#FFFFFF" stroke="#D8C2BC" stroke-width="1.5"/>
+  <text x="48" y="139" font-size="14" font-weight="600" fill="#231917">У промпті</text>
+  <text x="170" y="132" font-size="12" fill="#53433F">інструкція в нотатках, вставляєте самі</text>
+  <text x="170" y="148" font-size="12" fill="#8F4C38">лише ви і лише коли згадали</text>
+  <line x1="20" y1="178" x2="560" y2="178" stroke="#723523" stroke-width="1.5" stroke-dasharray="6 4"/>
+  <text x="290" y="172" text-anchor="middle" font-size="11" fill="#723523">нижче — норма виконується без вас</text>
+  <rect x="30" y="196" width="520" height="52" rx="8" fill="#FFDBD1"/>
+  <text x="48" y="227" font-size="14" font-weight="600" fill="#723523">У проєкті</text>
+  <text x="170" y="220" font-size="12" fill="#53433F">файл пам'яті, навик, README</text>
+  <text x="170" y="236" font-size="12" fill="#723523">читає кожна сесія і кожен колега</text>
+  <rect x="30" y="256" width="520" height="52" rx="8" fill="#8F4C38"/>
+  <text x="48" y="287" font-size="14" font-weight="600" fill="#FFFFFF">У конструкції</text>
+  <text x="170" y="280" font-size="12" fill="#FFDBD1">лінтер, тест, шаблон, перевірка в CI</text>
+  <text x="170" y="296" font-size="12" fill="#FFFFFF">неприйнятний стан не проходить</text>
+  <line x1="590" y1="60" x2="590" y2="298" stroke="#85736E" stroke-width="1.5" marker-end="url(#s3-arrow)"/>
+  <text x="608" y="180" text-anchor="middle" font-size="11" fill="#53433F" transform="rotate(90 608 180)">жорсткіше і дорожче міняти</text>
+</svg>
+<figcaption>Схема 12.3. Де живе норма: жорстке внизу, м'яке вгорі</figcaption>
+</figure>
+
+<p>Як виміряти, де зараз ваша практика на цій шкалі? Візьміть останні десять зауважень, які ви зробили агентові на рев&rsquo;ю, і поставте три питання. Скільки з них ви робили вже не вперше? Скільки з них записано так, що їх читає кожна сесія? Скільки перевіряється без вас? Три числа — і це профіль вашої нормативної бази. Коли я вперше порахував свій, вийшло: сім, нуль, нуль.</p>
+<h2 id="_6">Історія одного файлу з нормами<a class="anchor-link" href="#_6" title="Permanent link">&para;</a></h2>
+<p>Команда взяла на підтримку легасі-сервіс білінгу — той, який усі бояться чіпати.</p>
+<p><strong>Місяць перший.</strong> Рев&rsquo;ю коду, який пише агент, перетворюється на повторення. За тиждень я записав тридцять зауважень, і двадцять два з них — повтори п&rsquo;яти класів: зайва залежність замість утиліти проєкту, міграція з безіменним індексом, тест, що мокає базу, <code>print</code> замість логера, ендпоінт списку без пагінації. Наперед ми б їх не виділили — загубились би серед правил, написаних «про всяк випадок». П&rsquo;ять норм записуємо у файл пам&rsquo;яті проєкту.</p>
+<p><strong>Місяць другий.</strong> Зауважень за тиждень — шість замість тридцяти, і три з них — нові класи, які за місяць встигли повторитися: виклик платіжного шлюзу без таймауту, секрет у конфігу замість змінної оточення, нова фіча без фіча-атрибута. Записали і їх — у файлі вісім норм. Одну зняли: блок «чому» показав, що після переїзду в Kubernetes, де збирач логів читає все, що сервіс виводить у консоль, причини для норми про <code>print</code> більше немає. Лишилось сім. Дві з них переїхали в конструкцію — лінтер міграцій і перевірка залежностей у CI, — а п&rsquo;ять лишаються текстом і виконуються, бо агент читає файл на початку кожної сесії.</p>
+<p><strong>Місяць третій.</strong> Новий інженер першого дня зробив пул-реквест без жодного з семи зауважень. Файл пам&rsquo;яті він прочитати не встиг, а агент — прочитав.</p>
+<p>Це і є «норми виконуються без мене»: сім розрізнень переїхали з моєї голови в процес у вигляді норм, і тепер вони є в кожній сесії кожного, хто відкриє цей репозиторій.</p>
+<h2 id="_7">Велика кулінарна книга<a class="anchor-link" href="#_7" title="Permanent link">&para;</a></h2>
+<p>Анти-патерн цього розділу виглядає як прискорення.</p>
+<p>Команда бере «найкращий набір скілів» з GitHub — чотириста рядків, тисячі зірочок. Або копіює стайлгайд великої компанії. Або — інший бік того самого — сідає перед стартом і пише норми наперед, «як має бути»: двадцять правил на повтори, яких ще ніхто не бачив. Файл готовий у перший день. Виглядає як професіоналізм.</p>
+<p>За жодним із чотирьохсот рядків немає пройденого шляху: ні моменту «зустріли», ні «поміняли», ні «поміняли ще раз». Норма — відповідь на ваш клас ситуацій, який повторився; без реальних повторів це не норма, а бажання чи навіть припущення.</p>
+<p>Що відбувається далі — передбачувано. Агент виконує чужі рядки буквально: він не знає, що вони не ваші. Разом із чужими нормами приходять чужі дефекти — правило «завжди використовуй бібліотеку X» із проєкту, де для цього була причина, у вашому проєкті затягує залежність, яку ви ніколи не вибрали б. А власні повтори лишаються незаписаними, бо «у нас же є стайлгайд». Ознака проста: спитайте команду, від якого випадку захищає будь-який рядок файлу. Якщо ніхто не пам&rsquo;ятає — це рядок із чужої книги.</p>
+<p>У системній теорії є закономірність, яка пояснює, чому так виходить: людина в діяльності керується цінностями, які створила її ж практика. Практика народжує норми, а норми ведуть практику далі. Це те саме замкнене коло, з якого почався розділ.</p>
+<aside class="book-callout">У коло практики і норм не можна зайти збоку. Чужі норми без вашої практики — лише текст.</aside>
+
+<p>Скільки б дисципліни команда ні вклала у виконання чужих рядків, власних повторів це не додасть.</p>
+<figure class="book-scheme">
+<svg viewBox="0 0 640 280" role="img" aria-label="Замкнене коло: практика народжує норми, норми ведуть практику; чужа книга в коло не входить">
+  <defs>
+    <marker id="s4-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#8F4C38"/></marker>
+    <marker id="s4-arrow-grey" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#85736E"/></marker>
+  </defs>
+  <rect x="0" y="0" width="640" height="280" fill="#FFFFFF"/>
+  <path d="M175,108 A90,90 0 0 1 345,108" fill="none" stroke="#8F4C38" stroke-width="2" marker-end="url(#s4-arrow)"/>
+  <path d="M345,172 A90,90 0 0 1 175,172" fill="none" stroke="#8F4C38" stroke-width="2" marker-end="url(#s4-arrow)"/>
+  <text x="260" y="38" text-anchor="middle" font-size="12" fill="#53433F">повтори практики народжують норми</text>
+  <text x="260" y="254" text-anchor="middle" font-size="12" fill="#53433F">норми ведуть практику далі</text>
+  <rect x="115" y="122" width="110" height="36" rx="18" fill="#FFDBD1"/>
+  <text x="170" y="145" text-anchor="middle" font-size="14" font-weight="600" fill="#723523">практика</text>
+  <rect x="295" y="122" width="110" height="36" rx="18" fill="#8F4C38"/>
+  <text x="350" y="145" text-anchor="middle" font-size="14" font-weight="600" fill="#FFFFFF">норми</text>
+  <rect x="500" y="118" width="120" height="44" rx="8" fill="#F5E1A7"/>
+  <text x="560" y="145" text-anchor="middle" font-size="13" font-weight="600" fill="#231917">чужа книга</text>
+  <line x1="498" y1="140" x2="446" y2="140" stroke="#85736E" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#s4-arrow-grey)"/>
+  <line x1="436" y1="120" x2="436" y2="160" stroke="#723523" stroke-width="3"/>
+  <text x="500" y="186" font-size="11" fill="#53433F">у коло збоку не зайти:</text>
+  <text x="500" y="201" font-size="11" fill="#53433F">у книзі немає</text>
+  <text x="500" y="216" font-size="11" fill="#53433F">ваших повторів</text>
+</svg>
+<figcaption>Схема 12.4. Замкнене коло практики і норм</figcaption>
+</figure>
+
+<p>Лікується це не видаленням файлу. Спершу варто порахувати власні повтори, як у секції «Де живе норма»: взяти останні десять зауважень агентові і з&rsquo;ясувати, скільки з них повторювались, скільки вже записані і скільки перевіряються без вас. Потім чужий файл читається як список кандидатів: рядок лишається, якщо відповідає на повтор, який у вас справді був; решта переїжджає у «поки не траплялось» або зникає. Чужу книгу читати можна і варто — як джерело ідей, кожна з яких ще має заслужити місце повтором на вашій кухні. Що саме переноситься між проєктами, а що ні — розмова розділу 16.</p>
+<h2 id="_8">Нормативна база масштабується<a class="anchor-link" href="#_8" title="Permanent link">&para;</a></h2>
+<p>Агент читає нормативну базу до старту, і це його єдине «зрозуміти» перед роботою. Як збудувати агента на нормах, критеріях і контурі контролю — розділ 14.</p>
+<p>Команда — наступний рівень. Онбординг — це читання нормативної бази, і командна норма відрізняється від особистої одним: вона лишається, коли пішов той, хто її знайшов. Про це — розділ 17.</p>
+<p>Механіка на всіх рівнях одна: розрізнення, яке повторилось, переїжджає з голови в процес — і далі працює без вас.</p>
+<h2 id="_9">У вашому ремеслі<a class="anchor-link" href="#_9" title="Permanent link">&para;</a></h2>
+<p>Норми не знають, що таке код. Картка на кухні є в кожному ремеслі.</p>
+<p><strong>Текст.</strong> Редактор щоразу руками виправляє в тексті агента «управління» на «керування». Поки так, норма живе в голові редактора. Коли заміна записана в стайлгайд і агент читає його перед роботою, норма вже в проєкті. А коли скрипт сам проганяє готовий текст на заборонені слова, «управління» не пройде, навіть якщо редактор у відпустці. Стайлгайд цієї книжки виріс саме так.</p>
+<p><strong>Аналітика.</strong> Що таке «активний користувач»? Поки визначення не записане, три аналітики дадуть три різні числа, і кожен буде правий. Записане визначення метрики — це норма в проєкті: агент рахує за ним, а не вигадує своє. А коли поруч стоїть тест на дані, який падає, щойно хтось рахує інакше, норма спрацьовує сама, навіть якщо визначення ніхто не відкривав.</p>
+<p><strong>Дизайн.</strong> Дизайнер щоразу пише агентові: «бери тільки наші кнопки і відступи, кратні восьми». Поки так, норма живе в голові дизайнера. Коли ці правила записані в гайдлайн і агент читає його перед кожним макетом, норма вже в проєкті. А коли зібрана дизайн-система з готовими компонентами, іншої кнопки агент узяти просто не може, навіть якщо про правило ніхто не згадав.</p>
+<hr />
+<p>Наостанок — три питання до вашої практики.</p>
+<p>— Візьміть останні десять зауважень, які ви зробили агентові: скільки з них ви робили вже не вперше?</p>
+<p>— Яка норма у вашому проєкті виконається завтра, якщо ви не прийдете, — і яка не виконається?</p>
+<p>— І глибше: чи є у вашому файлі пам&rsquo;яті проєкту рядок, про який ніхто не пам&rsquo;ятає, від якого випадку він захищає?</p>
+<div class="subscribe-embed"><iframe src="https://kiosan.substack.com/embed?transparent=1" width="480" height="320" style="border: 0; background: transparent" title="Підписатися на розсилку" loading="lazy" frameborder="0" scrolling="no"></iframe></div>
+                <div class="check-items" data-page-key="part-3-activity/12-normative-base"><div class="check-items-header"><span class="check-items-title">Key Takeaways</span><span class="check-items-progress"></span></div><label class="check-item" data-index="0"><input type="checkbox" class="check-item-input" data-index="0"><span class="check-item-box"><svg class="check-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span><span class="check-item-text">Норма — записана реакція з інструкціями на клас ситуацій, які повторились у тебе. Без повторів позаду це не норма, а бажання.</span></label>
+<label class="check-item" data-index="1"><input type="checkbox" class="check-item-input" data-index="1"><span class="check-item-box"><svg class="check-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span><span class="check-item-text">Успіх, якого не записано, — випадок. Двічі — збіг. Тричі — клас ситуацій: пиши норму.</span></label>
+<label class="check-item" data-index="2"><input type="checkbox" class="check-item-input" data-index="2"><span class="check-item-box"><svg class="check-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span><span class="check-item-text">Норма без «чому» — інструкція: її виконують і після того, як причина зникла, і ніхто не помічає.</span></label>
+<label class="check-item" data-index="3"><input type="checkbox" class="check-item-input" data-index="3"><span class="check-item-box"><svg class="check-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span><span class="check-item-text">Колега читає норму раз і забуває. Агент читає її щоразу і виконує буквально — пиши для буквального читача.</span></label>
+<label class="check-item" data-index="4"><input type="checkbox" class="check-item-input" data-index="4"><span class="check-item-box"><svg class="check-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span><span class="check-item-text">Зрілість практики — не кількість норм, а скільки з них виконується без тебе.</span></label></div>
+                <nav class="page-nav"><a class="page-nav-link page-nav-prev" href="/variety/read/part-3-activity/10-activity-decomposition/"><span class="page-nav-label">← Попередня</span></a>
+<a class="page-nav-link page-nav-next" href="/variety/read/part-3-activity/13-control-degradation/"><span class="page-nav-label">Наступна →</span></a></nav>
+            </article>
+        </main>
+    </div>
+    <script>
+var SIDEBAR_WIDTH_KEY = 'essay-sidebar-width-system-for-ai-engineers';
+var SIDEBAR_COLLAPSED_KEY = 'essay-sidebar-collapsed-system-for-ai-engineers';
+var ESSAY_LOCAL_MODE = false;
+var ESSAY_PAGE_KEY = "uk/part-3-activity/12-normative-base";
+document.addEventListener('DOMContentLoaded', function() {
+  var sidebar = document.getElementById('sidebar');
+  var handle = document.getElementById('resize-handle');
+  var collapseBtn = document.getElementById('sidebar-collapse');
+  var expandBtn = document.getElementById('sidebar-expand');
+  var mobileToggle = document.getElementById('sidebar-toggle');
+  var html = document.documentElement;
+  var MIN_WIDTH = 200;
+  var MAX_WIDTH = 480;
+
+  // Desktop: collapse / expand
+  function setCollapsed(collapsed) {
+    if (collapsed) {
+      html.classList.add('sidebar-collapsed');
+    } else {
+      html.classList.remove('sidebar-collapsed');
+    }
+    if (typeof SIDEBAR_COLLAPSED_KEY !== 'undefined') {
+      localStorage.setItem(SIDEBAR_COLLAPSED_KEY, collapsed ? '1' : '0');
+    }
+  }
+
+  if (collapseBtn) {
+    collapseBtn.addEventListener('click', function() {
+      setCollapsed(true);
+    });
+  }
+
+  if (expandBtn) {
+    expandBtn.addEventListener('click', function() {
+      setCollapsed(false);
+    });
+  }
+
+  // Mobile: slide-in toggle
+  if (mobileToggle && sidebar) {
+    mobileToggle.addEventListener('click', function() {
+      sidebar.classList.toggle('open');
+    });
+
+    document.addEventListener('click', function(e) {
+      if (sidebar.classList.contains('open') &&
+          !sidebar.contains(e.target) &&
+          !mobileToggle.contains(e.target)) {
+        sidebar.classList.remove('open');
+      }
+    });
+  }
+
+  // Resizable sidebar (desktop only, when not collapsed)
+  if (handle && sidebar) {
+    var startX, startWidth;
+
+    handle.addEventListener('mousedown', function(e) {
+      if (html.classList.contains('sidebar-collapsed')) return;
+      e.preventDefault();
+      startX = e.clientX;
+      startWidth = sidebar.getBoundingClientRect().width;
+      handle.classList.add('active');
+      document.body.classList.add('resizing');
+
+      document.addEventListener('mousemove', onMouseMove);
+      document.addEventListener('mouseup', onMouseUp);
+    });
+
+    function onMouseMove(e) {
+      var newWidth = startWidth + (e.clientX - startX);
+      newWidth = Math.max(MIN_WIDTH, Math.min(newWidth, MAX_WIDTH));
+      html.style.setProperty('--sidebar-width', newWidth + 'px');
+    }
+
+    function onMouseUp() {
+      handle.classList.remove('active');
+      document.body.classList.remove('resizing');
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
+
+      var currentWidth = sidebar.getBoundingClientRect().width;
+      if (typeof SIDEBAR_WIDTH_KEY !== 'undefined') {
+        localStorage.setItem(SIDEBAR_WIDTH_KEY, Math.round(currentWidth));
+      }
+    }
+  }
+
+  // --- Check Items persistence ---
+  var checkContainers = document.querySelectorAll('.check-items');
+  if (checkContainers.length) {
+    initCheckItems(checkContainers);
+  }
+
+  function initCheckItems(containers) {
+    var isLocal = (typeof ESSAY_LOCAL_MODE !== 'undefined') && ESSAY_LOCAL_MODE;
+    var essayId = getMeta('essay-id');
+    var pageId = getMeta('essay-page-id');
+    var csrf = getMeta('csrf-token');
+
+    containers.forEach(function(container) {
+      var pageKey = container.getAttribute('data-page-key');
+      var inputs = container.querySelectorAll('.check-item-input');
+      var storageKey = 'essay-checks-' + pageKey;
+
+      // Load saved state
+      loadChecks(storageKey, essayId, pageId, csrf, isLocal, function(checked) {
+        if (checked && checked.length) {
+          inputs.forEach(function(input) {
+            var idx = parseInt(input.getAttribute('data-index'), 10);
+            if (checked.indexOf(idx) !== -1) {
+              input.checked = true;
+            }
+          });
+        }
+        updateProgress(container, inputs);
+      });
+
+      // Listen for changes
+      inputs.forEach(function(input) {
+        input.addEventListener('change', function() {
+          var checked = [];
+          inputs.forEach(function(inp) {
+            if (inp.checked) checked.push(parseInt(inp.getAttribute('data-index'), 10));
+          });
+          saveChecks(storageKey, essayId, pageId, csrf, isLocal, checked);
+          updateProgress(container, inputs);
+        });
+      });
+    });
+  }
+
+  function updateProgress(container, inputs) {
+    var total = inputs.length;
+    var checked = 0;
+    inputs.forEach(function(inp) { if (inp.checked) checked++; });
+    var el = container.querySelector('.check-items-progress');
+    if (el) {
+      el.textContent = checked + ' / ' + total;
+    }
+  }
+
+  function getMeta(name) {
+    var el = document.querySelector('meta[name="' + name + '"]');
+    return el ? el.content : null;
+  }
+
+  function loadChecks(storageKey, essayId, pageId, csrf, isLocal, callback) {
+    if (isLocal || !essayId) {
+      var raw = localStorage.getItem(storageKey);
+      callback(raw ? JSON.parse(raw) : []);
+      return;
+    }
+    var url = '/api/dynamic_data?essay_id=' + essayId + '&key=' + encodeURIComponent(storageKey);
+    if (pageId) url += '&page_id=' + pageId;
+    fetch(url, { headers: csrf ? { 'X-CSRF-Token': csrf } : {} })
+      .then(function(r) { return r.json(); })
+      .then(function(d) { callback(d.data ? d.data.checked : []); })
+      .catch(function() { callback([]); });
+  }
+
+  function saveChecks(storageKey, essayId, pageId, csrf, isLocal, checked) {
+    if (isLocal || !essayId) {
+      localStorage.setItem(storageKey, JSON.stringify(checked));
+      return;
+    }
+    var body = {
+      essay_id: essayId,
+      key: storageKey,
+      data: { checked: checked }
+    };
+    if (pageId) body.page_id = pageId;
+    fetch('/api/dynamic_data', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-Token': csrf || ''
+      },
+      body: JSON.stringify(body)
+    }).catch(function() {});
+  }
+});
+
+
+    </script>
+</body>
+</html>
