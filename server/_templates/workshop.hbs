@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="{{t.htmlLang}}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{pageTitle}}</title>
+
+  {{{metaTags}}}
+  {{{structuredData}}}
+
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="preload" href="/css/main.css?v=1237" as="style">
+  <link rel="stylesheet" href="/css/main.css?v=1237">
+  <link rel="stylesheet" href="/css/workshop.css?v=2">
+  <script async data-id="101511163" src="//static.getclicky.com/js"></script>
+</head>
+<body class="ws-body">
+  <div class="ws-stripe" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+
+  <main class="ws-page">
+    <header class="ws-top">
+      <a class="ws-top-home" href="{{homeHref}}">
+        <img src="/images/me.jpeg" alt="{{t.person.name}}">
+        <span>{{t.person.name}}</span>
+      </a>
+      {{> lang-switch}}
+    </header>
+
+    <!-- Hero -->
+    <section class="ws-hero">
+      <p class="ws-kicker">{{t.workshop.kicker}}</p>
+      <h1 class="ws-title">{{t.workshop.heroTitle}}</h1>
+      <p class="ws-lead">{{t.workshop.heroLead}}</p>
+      <ul class="ws-facts">
+        {{#each t.workshop.heroFacts}}<li>{{this}}</li>{{/each}}
+      </ul>
+      <p class="ws-cta-row"><a class="ws-button" href="#contact">{{t.workshop.heroCta}}</a></p>
+    </section>
+
+    <!-- Who it is for -->
+    <section class="ws-section">
+      <h2 class="ws-h2 ws-h2-lime">{{t.workshop.forHeading}}</h2>
+      {{#each t.workshop.forText}}<p>{{this}}</p>{{/each}}
+      <p class="ws-label">{{t.workshop.forDeptsLabel}}</p>
+      <ul class="ws-pills ws-pills-aqua">
+        {{#each t.workshop.depts}}<li>{{this}}</li>{{/each}}
+      </ul>
+    </section>
+
+    <!-- How the day goes -->
+    <section class="ws-section">
+      <h2 class="ws-h2 ws-h2-orange">{{t.workshop.howHeading}}</h2>
+      <p class="ws-muted">{{t.workshop.howIntro}}</p>
+      <ol class="ws-schedule">
+        {{#each t.workshop.schedule}}
+        <li>
+          <span class="ws-time">{{this.time}}</span>
+          <div class="ws-step">
+            <strong>{{this.title}}</strong>
+            {{#if this.text}}<p>{{this.text}}</p>{{/if}}
+          </div>
+        </li>
+        {{/each}}
+      </ol>
+      <p>{{t.workshop.toolsText}}</p>
+      <ul class="ws-pills ws-pills-blue">
+        {{#each t.workshop.tools}}<li>{{this}}</li>{{/each}}
+      </ul>
+    </section>
+
+    <!-- Where -->
+    <section class="ws-section">
+      <h2 class="ws-h2 ws-h2-lime">{{t.workshop.whereHeading}}</h2>
+      {{#each t.workshop.whereText}}<p>{{this}}</p>{{/each}}
+    </section>
+
+    <!-- What you leave with -->
+    <section class="ws-section ws-section-tint">
+      <h2 class="ws-h2 ws-h2-blue">{{t.workshop.resultHeading}}</h2>
+      <ul class="ws-results">
+        {{#each t.workshop.results}}<li>{{this}}</li>{{/each}}
+      </ul>
+    </section>
+
+    <!-- Host -->
+    <section class="ws-section">
+      <h2 class="ws-h2 ws-h2-magenta">{{t.workshop.hostHeading}}</h2>
+      <div class="ws-host">
+        <img class="ws-host-photo" src="/images/me.jpeg" alt="{{t.workshop.hostName}}" width="112" height="112" loading="lazy">
+        <div class="ws-host-text">
+          <p class="ws-host-name">{{t.workshop.hostName}}</p>
+          {{#each t.workshop.hostText}}<p>{{{this}}}</p>{{/each}}
+        </div>
+      </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="ws-section">
+      <h2 class="ws-h2 ws-h2-aqua">{{t.workshop.testimonialsHeading}}</h2>
+      {{#if t.workshop.testimonials.length}}
+      <div class="ws-quotes">
+        {{#each t.workshop.testimonials}}
+        <figure class="ws-quote">
+          <blockquote><p>{{this.quote}}</p></blockquote>
+          <figcaption><strong>{{this.name}}</strong>{{#if this.role}}<span>{{this.role}}</span>{{/if}}</figcaption>
+        </figure>
+        {{/each}}
+      </div>
+      {{else}}
+      <p class="ws-quotes-empty">{{t.workshop.testimonialsEmpty}}</p>
+      {{/if}}
+    </section>
+
+    <!-- Format, price and contact -->
+    <section class="ws-section" id="contact">
+      <h2 class="ws-h2 ws-h2-orange">{{t.workshop.priceHeading}}</h2>
+      <div class="ws-price">
+        <dl class="ws-price-facts">
+          {{#each t.workshop.priceFacts}}
+          <div><dt>{{this.[0]}}</dt><dd>{{this.[1]}}</dd></div>
+          {{/each}}
+        </dl>
+        <p class="ws-price-note">{{t.workshop.priceNote}}</p>
+        <div class="ws-contact">
+          <span class="ws-contact-label">{{t.workshop.contactLabel}}</span>
+          <span class="ws-contact-email">{{t.workshop.ctaEmail}}</span>
+        </div>
+      </div>
+    </section>
+
+    <footer class="ws-footer">
+      <a href="{{homeHref}}">{{t.person.name}}</a> · <a href="https://www.linkedin.com/in/obondar/">LinkedIn</a>
+    </footer>
+  </main>
+</body>
+</html>

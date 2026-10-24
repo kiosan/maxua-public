@@ -104,6 +104,7 @@ app.use('/images', express.static(path.join(__dirname, '../public/images'), {
 // Book promo page: /variety and /uk/variety — mounted BEFORE the static catch-all,
 // otherwise serve-static answers /variety with a 301 to /variety/ (public/variety/ is a directory).
 app.use('/', require('./routes/variety'));
+app.use('/', require('./routes/workshop'));
 
 // Catch-all fallback for other static files (e.g. favicon, robots.txt)
 app.use(express.static(path.join(__dirname, '../public')));

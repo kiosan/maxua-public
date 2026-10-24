@@ -46,7 +46,8 @@ function renderHome(lang, req, res) {
         uk: `/lang/uk?next=${encodeURIComponent(localizedPath('uk', '/'))}`,
         en: `/lang/en?next=${encodeURIComponent(localizedPath('en', '/'))}`
       },
-      varietyHref: localizedPath(lang, '/variety')
+      varietyHref: localizedPath(lang, '/variety'),
+      workshopHref: localizedPath(lang, '/workshop')
     });
 
     res.send(html);

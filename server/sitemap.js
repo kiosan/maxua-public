@@ -16,6 +16,8 @@ exports.handler = async (event, context) => {
       { url: '/uk', priority: '0.9', changefreq: 'weekly' },
       { url: '/variety', priority: '0.9', changefreq: 'weekly' },
       { url: '/uk/variety', priority: '0.9', changefreq: 'weekly' },
+      { url: '/workshop', priority: '0.8', changefreq: 'monthly' },
+      { url: '/uk/workshop', priority: '0.8', changefreq: 'monthly' },
       { url: '/about', priority: '0.8', changefreq: 'monthly' },
       { url: '/books', priority: '0.7', changefreq: 'weekly' },
     ];

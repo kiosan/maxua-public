@@ -1,0 +1,395 @@
+/* workshop.css — the AI Workshop landing (/workshop, /uk/workshop).
+ * Clean one-column page with an early-2000s palette: deep blue, orange,
+ * lime, aqua and a touch of magenta on white, Verdana for the text. */
+
+:root {
+  --ws-blue: #0052cc;
+  --ws-blue-deep: #003399;
+  --ws-orange: #ff6600;
+  --ws-orange-light: #ff8c33;
+  --ws-lime: #99cc00;
+  --ws-aqua: #00b2c8;
+  --ws-magenta: #d6007a;
+  --ws-ink: #1c2340;
+  --ws-muted: #5a6075;
+  --ws-tint: #eef4ff;
+  --ws-cream: #fff7cc;
+  --ws-line: #dfe5f2;
+}
+
+html:has(.ws-body) { scroll-behavior: smooth; }
+
+.ws-body {
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  color: var(--ws-ink);
+  background: #fff;
+}
+
+.ws-stripe {
+  display: flex;
+  height: 6px;
+  width: 100%;
+}
+.ws-stripe span { flex: 1; }
+.ws-stripe span:nth-child(1) { background: var(--ws-blue); }
+.ws-stripe span:nth-child(2) { background: var(--ws-orange); }
+.ws-stripe span:nth-child(3) { background: var(--ws-lime); }
+.ws-stripe span:nth-child(4) { background: var(--ws-aqua); }
+
+.ws-page {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 0 1rem 3rem;
+  font-size: 0.98rem;
+  line-height: 1.65;
+}
+
+.ws-page p { margin: 0 0 1rem; }
+.ws-page a { color: var(--ws-blue); }
+.ws-page a:hover { color: var(--ws-blue-deep); }
+
+/* ---- Top line: home link and the language switcher ----------------------- */
+
+.ws-top {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 1.5rem 0 2.5rem;
+  font-size: 0.85rem;
+}
+
+.ws-top-home {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  text-decoration: none;
+  font-weight: 700;
+  color: var(--ws-ink);
+}
+.ws-top-home img {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+.ws-top .lang-switch { margin-left: auto; }
+
+/* ---- Hero ----------------------------------------------------------------- */
+
+.ws-kicker {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #fff;
+  background: var(--ws-blue);
+  padding: 0.3rem 0.65rem;
+  border-radius: 3px;
+  margin-bottom: 1rem;
+}
+
+.ws-title {
+  font-size: 2.3rem;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  color: var(--ws-blue-deep);
+  margin: 0 0 1rem;
+}
+
+.ws-lead {
+  font-size: 1.15rem;
+  line-height: 1.6;
+  margin-bottom: 1.25rem;
+}
+
+.ws-facts {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.ws-facts li {
+  font-size: 0.85rem;
+  font-weight: 700;
+  padding: 0.35rem 0.8rem;
+  border-radius: 999px;
+  background: var(--ws-cream);
+  border: 1px solid #f0dc7a;
+}
+.ws-facts li:nth-child(2) { background: #effbd2; border-color: #c9e87a; }
+.ws-facts li:nth-child(3) { background: #ffe9d6; border-color: #ffbf8a; }
+
+/* ---- Button: the glossy Web 2.0 kind, toned down ------------------------- */
+
+.ws-cta-row { margin: 0; }
+
+.ws-button {
+  display: inline-block;
+  font-weight: 700;
+  color: #fff !important;
+  background: linear-gradient(180deg, var(--ws-orange-light), var(--ws-orange));
+  border: 1px solid #d95700;
+  border-radius: 6px;
+  padding: 0.75rem 1.4rem;
+  text-decoration: none;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.35) inset, 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+.ws-button:hover {
+  background: linear-gradient(180deg, #ff9a4d, #f26100);
+  text-decoration: none;
+}
+
+/* ---- Sections -------------------------------------------------------------- */
+
+.ws-section {
+  margin: 2.75rem 0 0;
+}
+
+.ws-section-tint {
+  background: var(--ws-tint);
+  padding: 1.5rem 1.5rem 0.75rem;
+  border-radius: 8px;
+  margin-left: -0.5rem;
+  margin-right: -0.5rem;
+}
+
+.ws-h2 {
+  font-size: 1.35rem;
+  margin: 0 0 1rem;
+  padding-bottom: 0.4rem;
+  position: relative;
+}
+.ws-h2::after {
+  content: "";
+  display: block;
+  width: 56px;
+  height: 4px;
+  margin-top: 0.4rem;
+  border-radius: 2px;
+  background: var(--ws-blue);
+}
+.ws-h2-lime::after { background: var(--ws-lime); }
+.ws-h2-orange::after { background: var(--ws-orange); }
+.ws-h2-aqua::after { background: var(--ws-aqua); }
+.ws-h2-magenta::after { background: var(--ws-magenta); }
+.ws-h2-blue::after { background: var(--ws-blue); }
+
+.ws-muted { color: var(--ws-muted); }
+.ws-label { margin-bottom: 0.5rem; font-weight: 700; }
+
+/* ---- Pills ---------------------------------------------------------------- */
+
+.ws-pills {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.ws-pills li {
+  font-size: 0.85rem;
+  padding: 0.3rem 0.75rem;
+  border-radius: 4px;
+}
+.ws-pills-aqua li { background: #dff7fa; color: #00687a; border: 1px solid #9fe1ea; }
+.ws-pills-blue li { background: var(--ws-blue); color: #fff; font-weight: 700; }
+
+/* ---- Schedule -------------------------------------------------------------- */
+
+.ws-schedule {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1.25rem;
+  border-left: 3px solid var(--ws-line);
+}
+.ws-schedule li {
+  display: flex;
+  gap: 1rem;
+  padding: 0.6rem 0 0.6rem 1rem;
+  position: relative;
+}
+.ws-schedule li::before {
+  content: "";
+  position: absolute;
+  left: -8px;
+  top: 1.05rem;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: var(--ws-orange);
+  border: 2px solid #fff;
+  box-shadow: 0 0 0 1px var(--ws-orange);
+}
+.ws-time {
+  flex: 0 0 5.5rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--ws-orange);
+  padding-top: 0.2rem;
+  white-space: nowrap;
+}
+.ws-step { flex: 1; min-width: 0; }
+.ws-step strong { display: block; }
+.ws-step p { margin: 0.15rem 0 0; color: var(--ws-muted); font-size: 0.93rem; }
+
+/* ---- Results checklist ---------------------------------------------------- */
+
+.ws-results {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1rem;
+}
+.ws-results li {
+  position: relative;
+  padding-left: 2rem;
+  margin-bottom: 0.8rem;
+}
+.ws-results li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.3rem;
+  width: 18px;
+  height: 18px;
+  border-radius: 3px;
+  background: var(--ws-lime);
+}
+.ws-results li::after {
+  content: "";
+  position: absolute;
+  left: 6px;
+  top: 0.42rem;
+  width: 5px;
+  height: 10px;
+  border: solid #fff;
+  border-width: 0 3px 3px 0;
+  transform: rotate(45deg);
+}
+
+/* ---- Host ---------------------------------------------------------------- */
+
+.ws-host {
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-start;
+}
+.ws-host-photo {
+  flex: 0 0 auto;
+  width: 112px;
+  height: 112px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid var(--ws-magenta);
+}
+.ws-host-text { flex: 1; min-width: 0; }
+.ws-host-name { font-weight: 700; font-size: 1.1rem; margin-bottom: 0.5rem; }
+
+/* ---- Testimonials ---------------------------------------------------------- */
+
+.ws-quotes {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1rem;
+}
+.ws-quote {
+  margin: 0;
+  padding: 1.25rem 1.25rem 1rem;
+  border: 1px solid var(--ws-line);
+  border-top: 4px solid var(--ws-aqua);
+  border-radius: 6px;
+  background: #fff;
+  position: relative;
+}
+.ws-quote blockquote { margin: 0; }
+.ws-quote blockquote p { margin: 0 0 0.75rem; }
+.ws-quote blockquote p::before { content: "«"; color: var(--ws-aqua); font-weight: 700; }
+.ws-quote blockquote p::after { content: "»"; color: var(--ws-aqua); font-weight: 700; }
+.ws-quote figcaption { font-size: 0.85rem; color: var(--ws-muted); }
+.ws-quote figcaption strong { color: var(--ws-ink); }
+.ws-quote figcaption span::before { content: " · "; }
+
+.ws-quotes-empty {
+  padding: 1.25rem;
+  border: 2px dashed var(--ws-line);
+  border-radius: 6px;
+  color: var(--ws-muted);
+  text-align: center;
+}
+
+/* ---- Price ---------------------------------------------------------------- */
+
+.ws-price {
+  background: var(--ws-cream);
+  border-left: 6px solid var(--ws-orange);
+  border-radius: 0 8px 8px 0;
+  padding: 1.5rem 1.5rem 1.5rem;
+}
+.ws-price-facts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem 1.5rem;
+  margin: 0 0 1.25rem;
+}
+.ws-price-facts div { margin: 0; }
+.ws-price-facts dt {
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ws-muted);
+}
+.ws-price-facts dd { margin: 0; font-weight: 700; font-size: 1.05rem; }
+.ws-price-note { margin-bottom: 1rem; }
+
+.ws-contact {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.4rem 0.75rem;
+  background: #fff;
+  border: 1px solid #f0dc7a;
+  border-radius: 6px;
+  padding: 0.9rem 1.1rem;
+}
+.ws-contact-label { font-weight: 700; }
+.ws-contact-email {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--ws-blue-deep);
+  user-select: all;
+  -webkit-user-select: all;
+  overflow-wrap: anywhere;
+}
+
+/* ---- Footer ---------------------------------------------------------------- */
+
+.ws-footer {
+  margin-top: 3rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--ws-line);
+  font-size: 0.85rem;
+  color: var(--ws-muted);
+}
+
+/* ---- Mobile ---------------------------------------------------------------- */
+
+@media (max-width: 600px) {
+  .ws-page { font-size: 0.95rem; }
+  .ws-title { font-size: 1.75rem; }
+  .ws-lead { font-size: 1.05rem; }
+  .ws-section-tint { margin-left: 0; margin-right: 0; padding: 1.25rem 1rem 0.5rem; }
+  .ws-schedule li { flex-direction: column; gap: 0.15rem; }
+  .ws-time { flex: none; }
+  .ws-host { flex-direction: column; gap: 1rem; }
+  .ws-host-photo { width: 88px; height: 88px; }
+  .ws-price-facts { grid-template-columns: 1fr; }
+  .ws-price { padding: 1.25rem 1rem; }
+  .ws-button { display: block; text-align: center; }
+  .ws-kicker { white-space: normal; line-height: 1.5; }
+  .ws-pills li, .ws-facts li { font-size: 0.82rem; }
+  .ws-contact { flex-direction: column; align-items: flex-start; }
+  .ws-section { margin-top: 2.25rem; }
+}
