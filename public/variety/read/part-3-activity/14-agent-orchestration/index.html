@@ -1,0 +1,1573 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Розділ 14. Оркестрація агентів — Необхідне різноманіття: системний метод роботи з AI</title>
+    <meta name="essay-page-key" content="uk/part-3-activity/14-agent-orchestration">
+    <script>
+    // Blocking: apply saved sidebar state before first paint to prevent layout jump
+    (function() {
+        var d = document.documentElement;
+        if (window.innerWidth <= 900) return;
+        var collapsed = localStorage.getItem('essay-sidebar-collapsed-system-for-ai-engineers') === '1';
+        if (collapsed) d.classList.add('sidebar-collapsed');
+        var w = localStorage.getItem('essay-sidebar-width-system-for-ai-engineers');
+        if (w && !collapsed) {
+            var px = Math.max(200, Math.min(parseInt(w, 10), 480));
+            d.style.setProperty('--sidebar-width', px + 'px');
+        }
+    })();
+    </script>
+    <style>
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v18/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuLyfAZ9hiA.woff2) format('woff2');
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v18/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuI6fAZ9hiA.woff2) format('woff2');
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v18/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuGKYAZ9hiA.woff2) format('woff2');
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v18/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuFuYAZ9hiA.woff2) format('woff2');
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/jetbrainsmono/v18/tDbY2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKxjPVmUsaaDhw.woff2) format('woff2');
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/jetbrainsmono/v18/tDbY2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKxTPVmUsaaDhw.woff2) format('woff2');
+}
+:root {
+  --md-primary: #4C662B;
+  --md-surface-tint: #4C662B;
+  --md-on-primary: #FFFFFF;
+  --md-primary-container: #CDEDA3;
+  --md-on-primary-container: #354E16;
+  --md-secondary: #586249;
+  --md-on-secondary: #FFFFFF;
+  --md-secondary-container: #DCE7C8;
+  --md-on-secondary-container: #404A33;
+  --md-tertiary: #386663;
+  --md-on-tertiary: #FFFFFF;
+  --md-tertiary-container: #BCECE7;
+  --md-on-tertiary-container: #1F4E4B;
+  --md-error: #BA1A1A;
+  --md-on-error: #FFFFFF;
+  --md-error-container: #FFDAD6;
+  --md-on-error-container: #93000A;
+  --md-background: #F9FAEF;
+  --md-on-background: #1A1C16;
+  --md-surface: #F9FAEF;
+  --md-on-surface: #1A1C16;
+  --md-surface-variant: #E1E4D5;
+  --md-on-surface-variant: #44483D;
+  --md-outline: #75796C;
+  --md-outline-variant: #C5C8BA;
+  --md-shadow: #000000;
+  --md-scrim: #000000;
+  --md-inverse-surface: #2F312A;
+  --md-inverse-on-surface: #F1F2E6;
+  --md-inverse-primary: #B1D18A;
+  --md-primary-fixed: #CDEDA3;
+  --md-on-primary-fixed: #102000;
+  --md-primary-fixed-dim: #B1D18A;
+  --md-on-primary-fixed-variant: #354E16;
+  --md-secondary-fixed: #DCE7C8;
+  --md-on-secondary-fixed: #151E0B;
+  --md-secondary-fixed-dim: #BFCBAD;
+  --md-on-secondary-fixed-variant: #404A33;
+  --md-tertiary-fixed: #BCECE7;
+  --md-on-tertiary-fixed: #00201E;
+  --md-tertiary-fixed-dim: #A0D0CB;
+  --md-on-tertiary-fixed-variant: #1F4E4B;
+  --md-surface-dim: #DADBD0;
+  --md-surface-bright: #F9FAEF;
+  --md-surface-container-lowest: #FFFFFF;
+  --md-surface-container-low: #F3F4E9;
+  --md-surface-container: #EEEFE3;
+  --md-surface-container-high: #E8E9DE;
+  --md-surface-container-highest: #E2E3D8;
+}
+pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.codehilite .hll { background-color: #ffffcc }
+.codehilite { background: #f8f8f8; }
+.codehilite .c { color: #3D7B7B; font-style: italic } /* Comment */
+.codehilite .err { border: 1px solid #F00 } /* Error */
+.codehilite .k { color: #008000; font-weight: bold } /* Keyword */
+.codehilite .o { color: #666 } /* Operator */
+.codehilite .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
+.codehilite .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
+.codehilite .cp { color: #9C6500 } /* Comment.Preproc */
+.codehilite .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
+.codehilite .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
+.codehilite .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
+.codehilite .gd { color: #A00000 } /* Generic.Deleted */
+.codehilite .ge { font-style: italic } /* Generic.Emph */
+.codehilite .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+.codehilite .gr { color: #E40000 } /* Generic.Error */
+.codehilite .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.codehilite .gi { color: #008400 } /* Generic.Inserted */
+.codehilite .go { color: #717171 } /* Generic.Output */
+.codehilite .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.codehilite .gs { font-weight: bold } /* Generic.Strong */
+.codehilite .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.codehilite .gt { color: #04D } /* Generic.Traceback */
+.codehilite .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.codehilite .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.codehilite .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.codehilite .kp { color: #008000 } /* Keyword.Pseudo */
+.codehilite .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.codehilite .kt { color: #B00040 } /* Keyword.Type */
+.codehilite .m { color: #666 } /* Literal.Number */
+.codehilite .s { color: #BA2121 } /* Literal.String */
+.codehilite .na { color: #687822 } /* Name.Attribute */
+.codehilite .nb { color: #008000 } /* Name.Builtin */
+.codehilite .nc { color: #00F; font-weight: bold } /* Name.Class */
+.codehilite .no { color: #800 } /* Name.Constant */
+.codehilite .nd { color: #A2F } /* Name.Decorator */
+.codehilite .ni { color: #717171; font-weight: bold } /* Name.Entity */
+.codehilite .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
+.codehilite .nf { color: #00F } /* Name.Function */
+.codehilite .nl { color: #767600 } /* Name.Label */
+.codehilite .nn { color: #00F; font-weight: bold } /* Name.Namespace */
+.codehilite .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.codehilite .nv { color: #19177C } /* Name.Variable */
+.codehilite .ow { color: #A2F; font-weight: bold } /* Operator.Word */
+.codehilite .w { color: #BBB } /* Text.Whitespace */
+.codehilite .mb { color: #666 } /* Literal.Number.Bin */
+.codehilite .mf { color: #666 } /* Literal.Number.Float */
+.codehilite .mh { color: #666 } /* Literal.Number.Hex */
+.codehilite .mi { color: #666 } /* Literal.Number.Integer */
+.codehilite .mo { color: #666 } /* Literal.Number.Oct */
+.codehilite .sa { color: #BA2121 } /* Literal.String.Affix */
+.codehilite .sb { color: #BA2121 } /* Literal.String.Backtick */
+.codehilite .sc { color: #BA2121 } /* Literal.String.Char */
+.codehilite .dl { color: #BA2121 } /* Literal.String.Delimiter */
+.codehilite .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.codehilite .s2 { color: #BA2121 } /* Literal.String.Double */
+.codehilite .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
+.codehilite .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.codehilite .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
+.codehilite .sx { color: #008000 } /* Literal.String.Other */
+.codehilite .sr { color: #A45A77 } /* Literal.String.Regex */
+.codehilite .s1 { color: #BA2121 } /* Literal.String.Single */
+.codehilite .ss { color: #19177C } /* Literal.String.Symbol */
+.codehilite .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.codehilite .fm { color: #00F } /* Name.Function.Magic */
+.codehilite .vc { color: #19177C } /* Name.Variable.Class */
+.codehilite .vg { color: #19177C } /* Name.Variable.Global */
+.codehilite .vi { color: #19177C } /* Name.Variable.Instance */
+.codehilite .vm { color: #19177C } /* Name.Variable.Magic */
+.codehilite .il { color: #666 } /* Literal.Number.Integer.Long */
+/* Reset & Base */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --sidebar-width: 272px;
+  --sidebar-collapsed-width: 0px;
+}
+
+html {
+  font-size: var(--md-base-size, 18px);
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--md-font-family, 'Inter', sans-serif);
+  font-weight: var(--md-body-weight, 400);
+  line-height: var(--md-line-height, 1.7);
+  color: var(--md-on-surface, #231917);
+  background: var(--md-background, #FFF8F6);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Layout */
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: var(--sidebar-width);
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--md-surface-container-low, #FFF1ED);
+  border-right: 1px solid var(--md-outline-variant, #D8C2BC);
+  z-index: 100;
+  transition: width 0.25s ease, transform 0.3s ease;
+  overflow: hidden;
+}
+
+/* Sidebar header */
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 1rem 0.75rem 1rem 1.25rem;
+  border-bottom: 1px solid var(--md-outline-variant, #D8C2BC);
+  flex-shrink: 0;
+}
+
+.sidebar-title {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--md-on-surface, #231917);
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+
+.sidebar-collapse-btn {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 0.375rem;
+  background: transparent;
+  color: var(--md-on-surface-variant, #53433F);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.sidebar-collapse-btn:hover {
+  background: var(--md-surface-container, #FCEAE5);
+  color: var(--md-on-surface, #231917);
+}
+
+/* Sidebar nav */
+.sidebar-nav {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 0.5rem 0;
+}
+
+.nav-tree {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.nav-tree .nav-tree {
+  padding-left: 0.5rem;
+  margin-left: 0.875rem;
+  border-left: 1px solid var(--md-outline-variant, #D8C2BC);
+}
+
+.nav-item {
+  position: relative;
+}
+
+.nav-item a,
+.nav-item .nav-label {
+  display: block;
+  padding: 0.375rem 0.75rem;
+  margin: 1px 0.5rem;
+  font-size: 0.8rem;
+  font-weight: 400;
+  color: var(--md-on-surface-variant, #53433F);
+  text-decoration: none;
+  transition: all 0.15s ease;
+  border-radius: 0.375rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.nav-item .nav-label {
+  color: var(--md-on-surface, #231917);
+  font-weight: 500;
+  cursor: default;
+}
+
+.nav-item a:hover {
+  color: var(--md-on-surface, #231917);
+  background: var(--md-surface-container, #FCEAE5);
+}
+
+.nav-item.active > a {
+  color: var(--md-on-primary-container, #723523);
+  font-weight: 500;
+  background: var(--md-primary-container, #FFDBD1);
+}
+
+/* Newsletter issues under a chapter */
+.nav-count {
+  display: inline-block;
+  min-width: 1.15rem;
+  padding: 0 0.35rem;
+  margin-left: 0.4rem;
+  font-size: 0.65rem;
+  line-height: 1.15rem;
+  text-align: center;
+  border-radius: 999px;
+  background: var(--md-surface-container, #FCEAE5);
+  color: var(--md-on-surface-variant, #53433F);
+  vertical-align: middle;
+}
+.nav-item.active > a .nav-count { background: rgba(255,255,255,0.6); }
+.nav-tree.nav-issues {
+  border-left-style: dashed;
+}
+.nav-issue a {
+  font-size: 0.74rem;
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+}
+.nav-issue a::before {
+  content: "✉";
+  margin-right: 0.35rem;
+  font-size: 0.7rem;
+  opacity: 0.7;
+}
+.nav-issue.nav-maxims a::before {
+  content: "\275D";
+}
+
+/* Maxims page (Substack Notes drafts) */
+.maxim {
+  margin: 0 0 1.6rem;
+  padding: 0 0 1.2rem;
+  border-bottom: 1px solid var(--md-outline-variant, #D8C2BC);
+}
+.maxim-text {
+  font-size: 1.05rem;
+  line-height: 1.55;
+  margin: 0 0 0.9rem;
+}
+.maxim-text .maxim-p { margin: 0 0 0.6rem; }
+.maxim-alt {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--md-on-surface-variant, #53433F);
+  margin: 0 0 0.5rem;
+  padding-left: 0.9rem;
+  border-left: 2px solid var(--md-outline-variant, #D8C2BC);
+}
+.maxim-alt .maxim-p { margin: 0 0 0.45rem; }
+.maxim-meta {
+  font-size: 0.72rem;
+  color: var(--md-outline, #85736E);
+  margin: 0;
+}
+
+.nav-item.active-parent > a {
+  color: var(--md-on-surface, #231917);
+  font-weight: 500;
+}
+
+/* Resize handle */
+.resize-handle {
+  position: absolute;
+  top: 0;
+  right: -3px;
+  width: 6px;
+  height: 100%;
+  cursor: col-resize;
+  z-index: 110;
+  transition: background 0.15s ease;
+}
+
+.resize-handle:hover,
+.resize-handle.active {
+  background: var(--md-primary, #8F4C38);
+  opacity: 0.3;
+}
+
+body.resizing {
+  cursor: col-resize;
+  user-select: none;
+}
+
+/* Sidebar expand button (visible when collapsed, desktop) */
+.sidebar-expand-btn {
+  display: none;
+  position: fixed;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 200;
+  width: 36px;
+  height: 36px;
+  align-items: center;
+  justify-content: center;
+  background: var(--md-surface, #FFF8F6);
+  border: 1px solid var(--md-outline-variant, #D8C2BC);
+  border-radius: 0.5rem;
+  cursor: pointer;
+  color: var(--md-on-surface-variant, #53433F);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  transition: all 0.15s ease;
+}
+
+.sidebar-expand-btn:hover {
+  background: var(--md-surface-container, #FCEAE5);
+  color: var(--md-on-surface, #231917);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+/* Collapsed state (set on <html>) */
+.sidebar-collapsed .sidebar {
+  width: 0;
+  border-right-color: transparent;
+}
+
+.sidebar-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1rem;
+  padding: 0.75rem 1.25rem;
+  border-top: 1px solid var(--md-outline-variant);
+  font-size: 0.8rem;
+}
+.sidebar-link {
+  color: var(--md-on-surface-variant);
+  text-decoration: none;
+}
+.sidebar-link:hover { color: var(--md-primary); text-decoration: underline; }
+
+.sidebar-collapsed .sidebar-header,
+.sidebar-collapsed .sidebar-links,
+.sidebar-collapsed .sidebar-nav,
+.sidebar-collapsed .resize-handle {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.sidebar-collapsed .sidebar-expand-btn {
+  display: flex;
+}
+
+.sidebar-collapsed .content {
+  margin-left: 0;
+}
+
+/* Mobile sidebar toggle */
+.sidebar-toggle {
+  display: none;
+  position: fixed;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 200;
+  width: 36px;
+  height: 36px;
+  align-items: center;
+  justify-content: center;
+  background: var(--md-surface, #FFF8F6);
+  border: 1px solid var(--md-outline-variant, #D8C2BC);
+  border-radius: 0.5rem;
+  cursor: pointer;
+  color: var(--md-on-surface-variant, #53433F);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+
+.sidebar-toggle:hover {
+  background: var(--md-surface-container, #FCEAE5);
+  color: var(--md-on-surface, #231917);
+}
+
+/* Content */
+.content {
+  margin-left: var(--sidebar-width);
+  flex: 1;
+  min-width: 0;
+  transition: margin-left 0.25s ease;
+}
+
+.article {
+  max-width: var(--md-max-width, 720px);
+  margin: 0 auto;
+  padding: var(--md-content-padding, 2rem);
+  padding-top: 3rem;
+  padding-bottom: 4rem;
+}
+
+/* Typography */
+.article h1 {
+  font-size: 2.25rem;
+  font-weight: var(--md-heading-weight, 700);
+  line-height: 1.2;
+  margin-bottom: 1.5rem;
+  color: var(--md-on-surface, #231917);
+  letter-spacing: -0.02em;
+}
+
+.article h2 {
+  font-size: 1.6rem;
+  font-weight: var(--md-heading-weight, 700);
+  line-height: 1.25;
+  margin-top: 3rem;
+  margin-bottom: 1rem;
+  color: var(--md-on-surface, #231917);
+  padding-bottom: 0.4rem;
+  border-bottom: 2px solid var(--md-primary-container, #FFDBD1);
+}
+
+.article h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1.3;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+  color: var(--md-on-surface, #231917);
+}
+
+.article h4 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.article p {
+  margin-bottom: 1.25rem;
+}
+
+.article a {
+  color: var(--md-primary, #8F4C38);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.article a:hover {
+  color: var(--md-on-primary-container, #723523);
+}
+
+/* Lists */
+.article ul, .article ol {
+  margin-bottom: 1.25rem;
+  padding-left: 1.5rem;
+}
+
+.article li {
+  margin-bottom: 0.35rem;
+}
+
+.article li > ul, .article li > ol {
+  margin-top: 0.35rem;
+  margin-bottom: 0;
+}
+
+/* Blockquote */
+.article blockquote {
+  border-left: 4px solid var(--md-primary, #8F4C38);
+  background: var(--md-primary-container, #FFDBD1);
+  padding: 1rem 1.25rem;
+  margin: 1.5rem 0;
+  border-radius: 0 0.5rem 0.5rem 0;
+  color: var(--md-on-primary-container, #723523);
+}
+
+.article blockquote p:last-child {
+  margin-bottom: 0;
+}
+
+/* Code */
+.article code {
+  font-family: var(--md-font-family-mono, 'JetBrains Mono', monospace);
+  font-size: 0.85em;
+  background: var(--md-surface-container, #FCEAE5);
+  padding: 0.15em 0.4em;
+  border-radius: 0.25rem;
+}
+
+.article pre {
+  margin: 1.5rem 0;
+  border-radius: 0.75rem;
+  overflow-x: auto;
+}
+
+.article .codehilite {
+  background: var(--md-surface-container-lowest, #FFFFFF);
+  border: 1px solid var(--md-outline-variant, #D8C2BC);
+  border-radius: 0.75rem;
+  padding: 1rem 1.25rem;
+  overflow-x: auto;
+  margin: 1.5rem 0;
+}
+
+.article .codehilite code {
+  background: none;
+  padding: 0;
+  font-size: 0.82em;
+}
+
+/* Tables */
+.article table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  font-size: 0.9rem;
+}
+
+.article th {
+  background: var(--md-surface-container, #FCEAE5);
+  font-weight: 600;
+  text-align: left;
+  padding: 0.75rem 1rem;
+  border-bottom: 2px solid var(--md-outline-variant, #D8C2BC);
+}
+
+.article td {
+  padding: 0.6rem 1rem;
+  border-bottom: 1px solid var(--md-surface-container, #FCEAE5);
+}
+
+/* Anchor links */
+.anchor-link {
+  font-size: 0.8em;
+  opacity: 0;
+  margin-left: 0.5rem;
+  text-decoration: none !important;
+  transition: opacity 0.15s;
+}
+
+.article h2:hover .anchor-link,
+.article h3:hover .anchor-link,
+.article h4:hover .anchor-link {
+  opacity: 0.5;
+}
+
+/* Footnotes */
+.footnote {
+  font-size: 0.85rem;
+  color: var(--md-on-surface-variant, #53433F);
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--md-outline-variant, #D8C2BC);
+}
+
+/* Images */
+.article img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+  margin: 1rem 0;
+}
+
+/* Horizontal rule */
+.article hr {
+  border: none;
+  border-top: 2px solid var(--md-surface-container, #FCEAE5);
+  margin: 2.5rem 0;
+}
+
+/* Check Items */
+.check-items {
+  margin-top: 2.5rem;
+  padding: 1.25rem;
+  background: var(--md-surface-container-low, #FFF1ED);
+  border: 1px solid var(--md-outline-variant, #D8C2BC);
+  border-radius: 0.75rem;
+}
+
+.check-items-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.625rem;
+  border-bottom: 1px solid var(--md-outline-variant, #D8C2BC);
+}
+
+.check-items-title {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--md-on-surface, #231917);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.check-items-progress {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--md-on-surface-variant, #53433F);
+}
+
+.check-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.625rem 0.5rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  user-select: none;
+}
+
+.check-item:hover {
+  background: var(--md-surface-container, #FCEAE5);
+}
+
+.check-item-input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.check-item-box {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  margin-top: 1px;
+  border: 2px solid var(--md-outline, #85736E);
+  border-radius: 0.3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  background: transparent;
+}
+
+.check-item-icon {
+  width: 14px;
+  height: 14px;
+  opacity: 0;
+  transform: scale(0.5);
+  transition: all 0.2s ease;
+  color: var(--md-on-primary, #FFFFFF);
+}
+
+.check-item-input:checked ~ .check-item-box {
+  background: var(--md-primary, #8F4C38);
+  border-color: var(--md-primary, #8F4C38);
+}
+
+.check-item-input:checked ~ .check-item-box .check-item-icon {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.check-item-text {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--md-on-surface, #231917);
+  transition: color 0.15s ease;
+}
+
+.check-item-input:checked ~ .check-item-text {
+  color: var(--md-on-surface-variant, #53433F);
+}
+
+/* Page Navigation (Prev / Next) */
+.page-nav {
+  display: flex;
+  gap: 1rem;
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--md-outline-variant, #D8C2BC);
+}
+
+.page-nav-link {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.875rem 1rem;
+  border: 1px solid var(--md-outline-variant, #D8C2BC);
+  border-radius: 0.625rem;
+  text-decoration: none;
+  transition: all 0.15s ease;
+  min-width: 0;
+}
+
+.page-nav-link:hover {
+  border-color: var(--md-primary, #8F4C38);
+  background: var(--md-surface-container-low, #FFF1ED);
+}
+
+.page-nav-next {
+  align-items: flex-end;
+  text-align: right;
+}
+
+.page-nav-disabled {
+  visibility: hidden;
+}
+
+.page-nav-label {
+  font-size: 0.7rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--md-on-surface-variant, #53433F);
+}
+
+.page-nav-title {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--md-on-surface, #231917);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.page-nav-link:hover .page-nav-title {
+  color: var(--md-primary, #8F4C38);
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .sidebar {
+    transform: translateX(-100%);
+    width: 280px !important;
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+    box-shadow: 4px 0 24px rgba(0,0,0,0.1);
+  }
+
+  .resize-handle,
+  .sidebar-collapse-btn,
+  .sidebar-expand-btn {
+    display: none !important;
+  }
+
+  .sidebar-toggle {
+    display: flex;
+  }
+
+  /* Hide desktop collapse state on mobile */
+  .sidebar-collapsed .sidebar {
+    width: 280px !important;
+  }
+
+  .sidebar-collapsed .sidebar-header,
+  .sidebar-collapsed .sidebar-nav {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .content {
+    margin-left: 0;
+  }
+
+  .sidebar-collapsed .content {
+    margin-left: 0;
+  }
+
+  .article {
+    padding: 1.25rem;
+    padding-top: 4rem;
+  }
+
+  .article h1 {
+    font-size: 1.75rem;
+  }
+
+  .article h2 {
+    font-size: 1.35rem;
+  }
+}
+
+/* Book schemes (inline SVG figures) */
+.book-scheme {
+  margin: 2rem 0;
+  text-align: center;
+}
+
+.book-scheme svg {
+  width: 100%;
+  max-width: 640px;
+  height: auto;
+}
+
+.book-scheme figcaption {
+  font-size: 0.8rem;
+  color: var(--md-on-surface-variant, #53433F);
+  margin-top: 0.5rem;
+}
+
+/* Nav progress badges (from progress/progress.json) */
+.nav-status {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  margin-left: 0.4rem;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+
+.nav-status-done {
+  background: var(--md-primary, #8F4C38);
+}
+
+.nav-status-wip {
+  background: transparent;
+  border: 1.5px solid var(--md-primary, #8F4C38);
+  box-sizing: border-box;
+}
+
+/* Book callout — одна сильна думка, винесена в окремий блок (pull quote) */
+.book-callout {
+  margin: 2.25rem 0;
+  padding: 0.4rem 0 0.4rem 1.4rem;
+  border-left: 3px solid var(--md-primary, #8F4C38);
+  font-size: 1.18em;
+  line-height: 1.55;
+  font-weight: 500;
+  color: var(--md-on-primary-container, #723523);
+}
+@media print {
+  .book-callout { break-inside: avoid; }
+}
+
+/* Substack subscribe embed on published chapter pages */
+/* Leanpub banner under the chapter title (public site only) */
+.leanpub-banner {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  margin: 1.5rem 0 2rem;
+  padding: 1rem 1.25rem;
+  border: 1px solid var(--md-outline-variant, #D8C2BC);
+  border-radius: 12px;
+  background: var(--md-surface-container-low, #FFF8F6);
+  color: inherit;
+  text-decoration: none;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+.leanpub-banner,
+.leanpub-banner:hover,
+.leanpub-banner:visited,
+.leanpub-banner span {
+  text-decoration: none !important;
+  border-bottom: 0 !important;
+  background-image: none !important;
+}
+.leanpub-banner:hover {
+  text-decoration: none;
+  box-shadow: 0 10px 28px -14px rgba(0, 0, 0, 0.35);
+  transform: translateY(-1px);
+}
+.leanpub-banner-cover {
+  flex: 0 0 auto;
+  width: 84px;
+  height: auto;
+  border-radius: 3px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15), 0 8px 18px -10px rgba(0, 0, 0, 0.4);
+  margin: 0 !important;
+}
+.leanpub-banner-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  min-width: 0;
+}
+.leanpub-banner-kicker {
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--md-on-surface-variant, #53433F);
+}
+.leanpub-banner-title {
+  font-weight: 600;
+  font-size: 1.05rem;
+  color: var(--md-on-surface, #231917);
+}
+.leanpub-banner-text {
+  font-size: 0.9rem;
+  line-height: 1.45;
+  color: var(--md-on-surface-variant, #53433F);
+}
+.leanpub-banner-button {
+  margin-top: 0.35rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--md-primary, #8F4C38);
+}
+@media (max-width: 520px) {
+  .leanpub-banner { gap: 0.9rem; padding: 0.85rem 1rem; }
+  .leanpub-banner-cover { width: 64px; }
+}
+
+.subscribe-embed {
+  margin: 1.75rem 0;
+  display: flex;
+  justify-content: center;
+}
+.subscribe-embed iframe {
+  max-width: 100%;
+}
+
+
+    </style>
+<script async data-id="101511163" src="//static.getclicky.com/js"></script>
+</head>
+<body>
+    <div class="layout">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <span class="sidebar-title">Необхідне різноманіття: системний метод роботи з AI</span>
+                <button class="sidebar-collapse-btn" id="sidebar-collapse" aria-label="Collapse sidebar">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="11 17 6 12 11 7"></polyline>
+                        <polyline points="18 17 13 12 18 7"></polyline>
+                    </svg>
+                </button>
+            </div>
+            <nav class="sidebar-nav">
+                <ul class="nav-tree" data-depth="0"><li class="nav-item">
+<a href="/variety/read/">Необхідне різноманіття</a>
+</li>
+<li class="nav-item">
+<a href="/variety/read/part-1-system/">Частина I. Система, якою ти насправді керуєш</a>
+<ul class="nav-tree" data-depth="1"><li class="nav-item">
+<a href="/variety/read/part-1-system/02-requisite-variety/">Розділ 2. Закон необхідного різноманіття</a>
+</li></ul>
+</li>
+<li class="nav-item">
+<a href="/variety/read/part-2-goals/">Частина II. Цілі та смак: що ти насправді просиш</a>
+<ul class="nav-tree" data-depth="1"><li class="nav-item">
+<a href="/variety/read/part-2-goals/06-goal-and-proxy/">Розділ 6. Ціль та її проксі</a>
+</li></ul>
+</li>
+<li class="nav-item">
+<a href="/variety/read/part-3-activity/">Частина III. Діяльність: метод щоденної роботи</a>
+<ul class="nav-tree" data-depth="1"><li class="nav-item">
+<a href="/variety/read/part-3-activity/10-activity-decomposition/">Розділ 10. Складові діяльності</a>
+</li>
+<li class="nav-item">
+<a href="/variety/read/part-3-activity/12-normative-base/">Розділ 12. Нормативна база</a>
+</li>
+<li class="nav-item">
+<a href="/variety/read/part-3-activity/13-control-degradation/">Розділ 13. Контроль, керованість, деградація</a>
+</li>
+<li class="nav-item active">
+<a href="/variety/read/part-3-activity/14-agent-orchestration/">Розділ 14. Оркестрація агентів</a>
+</li></ul>
+</li></ul>
+            </nav>
+            <div class="sidebar-links"><a class="sidebar-link sidebar-link-lang" href="/variety/read/en/" lang="en">English</a>
+<a class="sidebar-link sidebar-link-newsletter" href="https://kiosan.substack.com" target="_blank" rel="noopener">Розсилка ↗</a></div>
+            <div class="resize-handle" id="resize-handle"></div>
+        </aside>
+        <button class="sidebar-expand-btn" id="sidebar-expand" aria-label="Expand sidebar">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+        </button>
+        <button class="sidebar-toggle" id="sidebar-toggle" aria-label="Toggle sidebar">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+        </button>
+        <main class="content">
+            <article class="article">
+                <h1 id="14">Розділ 14. Оркестрація агентів<a class="anchor-link" href="#14" title="Permanent link">&para;</a></h1>
+<p><a class="leanpub-banner" href="https://leanpub.com/requisite-variety-ua" target="_blank" rel="noopener"><img class="leanpub-banner-cover" src="/images/variety-cover-uk-sm.png" width="280" height="400" alt="Обкладинка книжки «Необхідне різноманіття»" loading="lazy" decoding="async"><span class="leanpub-banner-body"><span class="leanpub-banner-kicker">Книжка на Leanpub</span><span class="leanpub-banner-title">Необхідне різноманіття</span><span class="leanpub-banner-text">Книжка пишеться відкрито. Купіть її раз — і отримуватимете нові розділи в PDF та EPUB у міру публікації.</span><span class="leanpub-banner-button">Придбати на Leanpub →</span></span></a></p>
+<p>Один агент — це початок. Ми даємо задачу, він читає код, пише, запускає тести і повертається з результатом. Усе, що книжка досі казала про сесію, — це про нього: межа контексту, проксі, норми, контур контролю.</p>
+<p>Переважно ми працюємо з декількома агентами. Один розкладає задачу на частини і роздає їх іншим, кожному з власним контекстом, часто паралельно і в окремих гілках. Хтось із них працює п&rsquo;ять хвилин, хтось — кілька годин без перерви. Результати повертаються, їх зводять докупи, і до вас приходить одне повідомлення: готово.</p>
+<p>Агента, який розподіляє роботу і збирає результати, далі я називаю <strong>оркестратором</strong>, а тих, кому він роздає частини, — <strong>субагентами</strong>. Слово «оркестрація» інженерія вже знає з Kubernetes, про який ішлося в розділі 13: система, що сама розподіляє і перезапускає сервіси на багатьох машинах. Також цього головного агента можна назвати контролером.</p>
+<p>Що змінилося для вас? Кроків стало в кілька разів більше, ніж ви здатні прочитати, і з них ви бачите лише останнє повідомлення. Хто в такій системі тримає ціль?</p>
+<p>Розділ 2 відповів би коротко: кожен новий агент додає машинного різноманіття, а ваше лишається тим самим — як у пастуха, якому до однієї отари додали ще дві. Розділ 13 зібрав контур контролю для одного агента; тут контурів кілька — і найцікавіше відбувається між ними.</p>
+<h2 id="_1">Копії — ще не система<a class="anchor-link" href="#_1" title="Permanent link">&para;</a></h2>
+<p>Перше, що хочеться зробити з агентами, — помножити їх. Один агент рев&rsquo;юває пул-реквест добре, три рев&rsquo;юватимуть утричі надійніше. Один шукає причину інциденту, п&rsquo;ятеро знайдуть її вп&rsquo;ятеро швидше.</p>
+<p>Звучить як арифметика, тільки арифметика тут інша.</p>
+<p>Три агенти на тій самій моделі, з тим самим системним промптом і тим самим контекстом — це не три перевірки, а одна, виконана тричі. У них та сама статистика, ті самі сліпі зони і та сама внутрішня ціль — правдоподібність, про яку був розділ 6. Помилку, якої не бачить перший, з великою ймовірністю не побачать і двоє інших. Разом вони дадуть не впевненість, а її відчуття: три «погоджено» замість одного.</p>
+<p>У системній теорії є правило: сукупність однакових елементів — множина, а не система, хоч скільки їх буде. Систему утворює різниця між елементами, і саме там, де вони взаємодіють. Однакові виконавці на одній справі не додають цілому нових властивостей.</p>
+<p>Що ж тоді додає? Різниця. Агент, який пише код, і агент, який його перевіряє, мають відрізнятися там, де це важливо для перевірки: інший контекст — рев&rsquo;ювер бачить специфікацію і тести, але не бачив міркувань автора; інші критерії; інколи інша модель. Субагенти, що шукають причину інциденту, корисні, коли кожен дивиться у своє джерело: один — у логи додатку, другий — у логи воркерів, третій — у метрики й історію деплоїв. Кожна така відмінність — розрізнення, якого не було в іншого.</p>
+<aside class="book-callout">Однаковий агент додає станів, які треба розрізнити, і не додає розрізнень. Різний — додає і те, й інше.</aside>
+
+<figure class="book-scheme">
+<svg viewBox="0 0 640 290" role="img" aria-label="Тікет «знижка для постійних клієнтів». Три рев'ювери з однаковим контекстом бачать одне й те саме і тричі кажуть «погоджено», не помітивши, що «постійний» не визначено. Три рев'ювери з різними контекстами — тікет і код, специфікація і норми, інтеграційні тести — і один із них зупиняє роботу питанням, що таке постійний клієнт">
+  <defs>
+    <marker id="s1-a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8F4C38"/></marker>
+  </defs>
+  <rect x="0" y="0" width="640" height="290" fill="#FFFFFF"/>
+  <text x="320" y="22" text-anchor="middle" font-size="12.5" font-weight="600" fill="#231917">тікет: «додати знижку для постійних клієнтів»</text>
+  <line x1="320" y1="34" x2="320" y2="282" stroke="#D8C2BC" stroke-width="1.5" stroke-dasharray="4 4"/>
+  <text x="157" y="50" text-anchor="middle" font-size="12" font-weight="600" fill="#53433F">три копії</text>
+  <text x="477" y="50" text-anchor="middle" font-size="12" font-weight="600" fill="#53433F">три різні</text>
+  <text x="64" y="76" text-anchor="middle" font-size="11" fill="#85736E">що бачить</text>
+  <text x="217" y="76" text-anchor="middle" font-size="11" fill="#85736E">що каже</text>
+  <text x="384" y="76" text-anchor="middle" font-size="11" fill="#85736E">що бачить</text>
+  <text x="537" y="76" text-anchor="middle" font-size="11" fill="#85736E">що каже</text>
+  <rect x="14" y="84" width="100" height="32" rx="8" fill="#FFF" stroke="#85736E" stroke-width="1.5"/>
+  <text x="64" y="104" text-anchor="middle" font-size="11.5" fill="#231917">тікет + код</text>
+  <line x1="116" y1="100" x2="130" y2="100" stroke="#8F4C38" stroke-width="1.5" marker-end="url(#s1-a)"/>
+  <rect x="134" y="84" width="166" height="32" rx="8" fill="#FFF" stroke="#85736E" stroke-width="1.5"/>
+  <text x="217" y="104" text-anchor="middle" font-size="11.5" fill="#231917">знижка є, тести проходять</text>
+  <rect x="14" y="124" width="100" height="32" rx="8" fill="#FFF" stroke="#85736E" stroke-width="1.5"/>
+  <text x="64" y="144" text-anchor="middle" font-size="11.5" fill="#231917">тікет + код</text>
+  <line x1="116" y1="140" x2="130" y2="140" stroke="#8F4C38" stroke-width="1.5" marker-end="url(#s1-a)"/>
+  <rect x="134" y="124" width="166" height="32" rx="8" fill="#FFF" stroke="#85736E" stroke-width="1.5"/>
+  <text x="217" y="144" text-anchor="middle" font-size="11.5" fill="#231917">знижка є, тести проходять</text>
+  <rect x="14" y="164" width="100" height="32" rx="8" fill="#FFF" stroke="#85736E" stroke-width="1.5"/>
+  <text x="64" y="184" text-anchor="middle" font-size="11.5" fill="#231917">тікет + код</text>
+  <line x1="116" y1="180" x2="130" y2="180" stroke="#8F4C38" stroke-width="1.5" marker-end="url(#s1-a)"/>
+  <rect x="134" y="164" width="166" height="32" rx="8" fill="#FFF" stroke="#85736E" stroke-width="1.5"/>
+  <text x="217" y="184" text-anchor="middle" font-size="11.5" fill="#231917">знижка є, тести проходять</text>
+  <line x1="217" y1="198" x2="217" y2="214" stroke="#8F4C38" stroke-width="2" marker-end="url(#s1-a)"/>
+  <rect x="134" y="218" width="166" height="32" rx="8" fill="#F5E1A7" stroke="#85736E" stroke-width="1.5"/>
+  <text x="217" y="238" text-anchor="middle" font-size="12" font-weight="600" fill="#231917">«погоджено» ×3</text>
+  <text x="157" y="268" text-anchor="middle" font-size="11.5" fill="#53433F">що таке «постійний» — не визначено,</text>
+  <text x="157" y="282" text-anchor="middle" font-size="11.5" fill="#53433F">і не бачить цього жоден із трьох</text>
+  <rect x="334" y="84" width="100" height="32" rx="8" fill="#FFF" stroke="#85736E" stroke-width="1.5"/>
+  <text x="384" y="104" text-anchor="middle" font-size="11.5" fill="#231917">тікет + код</text>
+  <line x1="436" y1="100" x2="450" y2="100" stroke="#8F4C38" stroke-width="1.5" marker-end="url(#s1-a)"/>
+  <rect x="454" y="84" width="166" height="32" rx="8" fill="#FFF" stroke="#85736E" stroke-width="1.5"/>
+  <text x="537" y="104" text-anchor="middle" font-size="11.5" fill="#231917">знижка є, тести проходять</text>
+  <rect x="334" y="124" width="100" height="32" rx="8" fill="#FFF" stroke="#85736E" stroke-width="1.5"/>
+  <text x="384" y="138" text-anchor="middle" font-size="11" fill="#231917">специфікація,</text>
+  <text x="384" y="151" text-anchor="middle" font-size="11" fill="#231917">норми команди</text>
+  <line x1="436" y1="140" x2="450" y2="140" stroke="#8F4C38" stroke-width="1.5" marker-end="url(#s1-a)"/>
+  <rect x="454" y="124" width="166" height="32" rx="8" fill="#FFDBD1" stroke="#8F4C38" stroke-width="1.5"/>
+  <text x="537" y="138" text-anchor="middle" font-size="11" fill="#723523">постійний — це підписка,</text>
+  <text x="537" y="151" text-anchor="middle" font-size="11" fill="#723523">а не кількість замовлень</text>
+  <rect x="334" y="164" width="100" height="32" rx="8" fill="#FFF" stroke="#85736E" stroke-width="1.5"/>
+  <text x="384" y="178" text-anchor="middle" font-size="11" fill="#231917">інтеграційні</text>
+  <text x="384" y="191" text-anchor="middle" font-size="11" fill="#231917">тести</text>
+  <line x1="436" y1="180" x2="450" y2="180" stroke="#8F4C38" stroke-width="1.5" marker-end="url(#s1-a)"/>
+  <rect x="454" y="164" width="166" height="32" rx="8" fill="#FFDBD1" stroke="#8F4C38" stroke-width="1.5"/>
+  <text x="537" y="184" text-anchor="middle" font-size="11.5" fill="#723523">тест на підписку падає</text>
+  <line x1="537" y1="198" x2="537" y2="214" stroke="#8F4C38" stroke-width="2" marker-end="url(#s1-a)"/>
+  <rect x="334" y="218" width="286" height="32" rx="8" fill="#FFDBD1" stroke="#8F4C38" stroke-width="1.5"/>
+  <text x="477" y="238" text-anchor="middle" font-size="12" font-weight="600" fill="#723523">зупинка: що таке постійний клієнт?</text>
+  <text x="477" y="268" text-anchor="middle" font-size="11.5" fill="#53433F">двоє з трьох дивились туди,</text>
+  <text x="477" y="282" text-anchor="middle" font-size="11.5" fill="#53433F">куди перший не дивився</text>
+</svg>
+<figcaption>Схема 14.1. Той самий пул-реквест: три рев'ювери з однаковим контекстом тричі пропускають одне й те саме, три з різним — зупиняють його</figcaption>
+</figure>
+
+<p>Однакових можна використати інакше — як прилад. Запустити ту саму задачу тричі і взяти не найкращу відповідь, а те, що збіглося у всіх трьох: так розділ 12 відділяв рішення від шуму. Але тоді це вже вимірювання, і розбіжність між прогонами показує, де шум.</p>
+<h2 id="_2">Ремонт із прорабом<a class="anchor-link" href="#_2" title="Permanent link">&para;</a></h2>
+<p>Уявимо ремонт квартири.</p>
+<p>Електрик, сантехнік, штукатур, плиточник. Кожен — майстер свого: електрик розведе проводку із заплющеними очима, плиточник покладе плитку шов у шов. Кожен працює у своїй кімнаті, своїм інструментом, у свій день. І кожен, якщо спитати, скаже, що зробив добре, — і не збреше.</p>
+<p>Закінчення робочого тижня. Штукатур учора вивів стіну в коридорі під фарбу. Сьогодні прийшов електрик і пробив у ній штробу під новий вимикач: перфоратор, пил на пів квартири, свіжа штукатурка шматками на підлозі. Сантехнік вивів трубу точно за своєю схемою — туди, де за кресленням дизайнера стоятиме шафа. Плиточник підняв підлогу у ванній на сантиметр вище, ніж розраховував той, хто замовляв двері, і двері тепер не зачиняються.</p>
+<p>Кожен зробив своє, а квартира не готова. Брак живе не в роботі когось із них, а на <strong>стиках</strong> — там, де робота одного стає основою для роботи іншого.</p>
+<p>Хто за це відповідає? Прораб. І добрий прораб не кладе плитку. Він не тримає перфоратор і не стоїть за спиною в електрика: почне — зробить одну кімнату, а решта стоятиме. Він тримає інше.</p>
+<p>Креслення — одне на всіх. Висота підлоги, місця розеток, де стоїть шафа: усе записано до того, як перший майстер увійшов у квартиру, і однаково для всіх. Електрик і плиточник можуть ніколи не зустрітися — у них є креслення.</p>
+<p>Порядок робіт. Спершу проводка й труби, потім штукатурка, потім плитка — бо кожен наступний шар закриває попередній.</p>
+<p>І приймання. На будівництві є документ із промовистою назвою — акт на приховані роботи. Поки проводку не закрили штукатуркою, її приймають: дивляться, міряють, фотографують. Потім стіна гладка, і що всередині, вже не видно. Перевірити, чи йде провід там, де намальовано, можна лише перфоратором. Прораб, який пропустив цей момент, проводки вже не побачить ніколи — тільки вимикачі на стіні.</p>
+<p>Креслення, порядок, приймання перед тим, як закрити, і стики, за які не відповідає жоден майстер окремо, — з цього складається робота прораба.</p>
+<h2 id="_3">Що видно нагору<a class="anchor-link" href="#_3" title="Permanent link">&para;</a></h2>
+<p>Прораб не стоїть за спиною в електрика не тому, що лінується: кроки нижнього рівня з рівня вище не видно.</p>
+<p>Між рівнями немає прямого зв&rsquo;язку. Вищий рівень впливає на нижній лише через ціле — через задачу, яку дав, і результат, який прийняв. Оркестратор дає субагентові задачу й отримує результат. Що субагент робив між ними — які файли відкрив, які гіпотези відкинув, що вирішив не перевіряти, — для оркестратора не існує. Для вас, ще на рівень вище, — тим паче.</p>
+<p>Можна спробувати пролізти крізь рівень і читати кожен крок кожного агента. Тоді оркестрації немає: є ви і купа кроків, яку ви читаєте самі, — той самий пастух з розділу 2, тільки отар тепер кілька. Оркестрація, де людина стежить за кожним кроком, від одного агента не відрізняється нічим, крім утоми.</p>
+<p>Звідси три наслідки.</p>
+<p>Перший: для рівня вище субагент — точка. Нагору доходить не робота, а стислий звіт про неї, і з цього звіту видно лише те, що відхилилось і про що домовились повідомити. Що саме має повернутися, задають до старту. Розділ 13 називав це видимим слідом, і тут він потрібен на кожному стику. Субагент, якому не сказали, що повертати, поверне «готово» — найкоротший правдоподібний звіт.</p>
+<p>Другий: ви бачите лише власні зв&rsquo;язки. Ваш зв&rsquo;язок — з оркестратором. Що оркестратор написав субагентові, що субагент відповів, що два субагенти залишили один одному в спільному файлі — ви не бачили. Розмови агентів між собою для вас так само невидимі, як домовленість електрика зі штукатуром, що «штробу потім затремо».</p>
+<p>Третій: кожен рівень коштує. Задачу треба розписати і роздати, результати — зібрати, звести і перевірити на стиках. Кожен проміжний рівень з&rsquo;їдає частину часу й токенів на цей перерозподіл, і що більше рівнів, то менша частка витраченого доходить до самої справи. Тому агентів має бути стільки, скільки в задачі справді є незалежних частин, і не більше. Оркестратор, який запускає десять субагентів на задачу з трьох частин, додає сім виконавців без власної частини — зате зі стиками до всіх інших.</p>
+<figure class="book-scheme">
+<svg viewBox="0 0 640 300" role="img" aria-label="Три рівні: ви, оркестратор, субагенти. Ви бачите лише свій зв'язок з оркестратором; розмови агентів між собою для вас невидимі">
+  <defs>
+    <marker id="s2-a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8F4C38"/></marker>
+  </defs>
+  <rect x="0" y="0" width="640" height="300" fill="#FFFFFF"/>
+  <rect x="270" y="16" width="100" height="34" rx="10" fill="#FFF" stroke="#85736E" stroke-width="1.5"/>
+  <text x="320" y="38" text-anchor="middle" font-size="13" font-weight="600" fill="#231917">ви</text>
+  <line x1="306" y1="52" x2="306" y2="104" stroke="#8F4C38" stroke-width="2" marker-end="url(#s2-a)"/>
+  <line x1="334" y1="104" x2="334" y2="52" stroke="#8F4C38" stroke-width="2" marker-end="url(#s2-a)"/>
+  <text x="298" y="82" text-anchor="end" font-size="11.5" fill="#53433F">задача</text>
+  <text x="342" y="82" text-anchor="start" font-size="11.5" fill="#53433F">«готово»</text>
+  <rect x="396" y="65" width="228" height="28" rx="8" fill="#FFDBD1" stroke="#8F4C38" stroke-width="1.5"/>
+  <text x="510" y="84" text-anchor="middle" font-size="11.5" font-weight="600" fill="#723523">єдиний зв'язок, який ви бачите</text>
+  <line x1="396" y1="79" x2="392" y2="79" stroke="#8F4C38" stroke-width="1.5" stroke-dasharray="3 3"/>
+  <rect x="250" y="106" width="140" height="36" rx="10" fill="#FFF" stroke="#85736E" stroke-width="1.5"/>
+  <text x="320" y="129" text-anchor="middle" font-size="13" fill="#231917">оркестратор</text>
+  <line x1="300" y1="144" x2="130" y2="212" stroke="#8F4C38" stroke-width="2" marker-start="url(#s2-a)" marker-end="url(#s2-a)"/>
+  <line x1="320" y1="144" x2="320" y2="212" stroke="#8F4C38" stroke-width="2" marker-start="url(#s2-a)" marker-end="url(#s2-a)"/>
+  <line x1="340" y1="144" x2="510" y2="212" stroke="#8F4C38" stroke-width="2" marker-start="url(#s2-a)" marker-end="url(#s2-a)"/>
+  <text x="330" y="182" text-anchor="start" font-size="11" fill="#53433F">задача ↓ звіт ↑</text>
+  <rect x="60" y="216" width="120" height="36" rx="10" fill="#FFF" stroke="#85736E" stroke-width="1.5"/>
+  <text x="120" y="239" text-anchor="middle" font-size="13" fill="#231917">субагент</text>
+  <rect x="260" y="216" width="120" height="36" rx="10" fill="#FFF" stroke="#85736E" stroke-width="1.5"/>
+  <text x="320" y="239" text-anchor="middle" font-size="13" fill="#231917">субагент</text>
+  <rect x="460" y="216" width="120" height="36" rx="10" fill="#FFF" stroke="#85736E" stroke-width="1.5"/>
+  <text x="520" y="239" text-anchor="middle" font-size="13" fill="#231917">субагент</text>
+  <line x1="182" y1="234" x2="258" y2="234" stroke="#85736E" stroke-width="1.5" stroke-dasharray="4 3"/>
+  <line x1="382" y1="234" x2="458" y2="234" stroke="#85736E" stroke-width="1.5" stroke-dasharray="4 3"/>
+  <text x="320" y="282" text-anchor="middle" font-size="12" fill="#53433F">що агенти сказали один одному — для вас невидиме</text>
+</svg>
+<figcaption>Схема 14.2. Що видно нагору: з кожного рівня видно лише власні зв'язки — задачу вниз і звіт угору</figcaption>
+</figure>
+
+<h2 id="_4">Проксі від проксі<a class="anchor-link" href="#_4" title="Permanent link">&para;</a></h2>
+<p>Розділ 6 описав ціль на трьох рівнях: у голові, у полі вводу і в оптимізації системи. Між першим і другим стоїть проксі — формулювання, яке ви написали замість цілі.</p>
+<p>В оркестрації поле вводу субагента пишете не ви. Його пише оркестратор: розкладає вашу задачу і для кожної частини формулює свою. Це <strong>проксі від проксі</strong>. Ви сформулювали ціль, оркестратор переказав її частинами, субагент оптимізує переказ. Якщо у вашому формулюванні було порожнє місце, оркестратор заповнить його правдоподібним — і роздасть це заповнення всім гілкам одразу.</p>
+<p>Помилка в системі агентів ходить у два боки. Згори донизу: припущення оркестратора йде в усі гілки, і кожна гілка додає до нього ще своє. Знизу догори: помилка однієї гілки піднімається разом з її результатом і входить у зібране ціле. Що більше гілок і рівнів, то більше місць, де помилка народжується, і довший шлях, який вона проходить без перевірки.</p>
+<figure class="book-scheme">
+<svg viewBox="0 0 640 350" role="img" aria-label="Ланцюжок: ціль у голові, ваша проксі, оркестратор, три проксі від проксі, три результати, зібране ціле. Порожнє місце згори розходиться всіма гілками, помилка однієї гілки входить у ціле">
+  <defs>
+    <marker id="s3-a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8F4C38"/></marker>
+  </defs>
+  <rect x="0" y="0" width="640" height="350" fill="#FFFFFF"/>
+  <rect x="240" y="14" width="160" height="32" rx="8" fill="#FFF" stroke="#85736E" stroke-width="1.5"/>
+  <text x="320" y="35" text-anchor="middle" font-size="12.5" fill="#231917">ціль у голові</text>
+  <line x1="320" y1="48" x2="320" y2="66" stroke="#8F4C38" stroke-width="2" marker-end="url(#s3-a)"/>
+  <rect x="240" y="70" width="160" height="32" rx="8" fill="#FFF" stroke="#85736E" stroke-width="1.5"/>
+  <text x="320" y="91" text-anchor="middle" font-size="12.5" fill="#231917">ваша проксі</text>
+  <circle cx="416" cy="86" r="6" fill="#FFF" stroke="#8F4C38" stroke-width="1.5" stroke-dasharray="2 2"/>
+  <text x="428" y="90" text-anchor="start" font-size="11.5" fill="#53433F">порожнє місце у формулюванні</text>
+  <line x1="320" y1="104" x2="320" y2="122" stroke="#8F4C38" stroke-width="2" marker-end="url(#s3-a)"/>
+  <rect x="240" y="126" width="160" height="32" rx="8" fill="#FFF" stroke="#85736E" stroke-width="1.5"/>
+  <text x="320" y="147" text-anchor="middle" font-size="12.5" fill="#231917">оркестратор</text>
+  <line x1="300" y1="160" x2="120" y2="186" stroke="#8F4C38" stroke-width="2" marker-end="url(#s3-a)"/>
+  <line x1="320" y1="160" x2="320" y2="186" stroke="#8F4C38" stroke-width="2" marker-end="url(#s3-a)"/>
+  <line x1="340" y1="160" x2="520" y2="186" stroke="#8F4C38" stroke-width="2" marker-end="url(#s3-a)"/>
+  <circle cx="210" cy="173" r="6" fill="#F5E1A7" stroke="#8F4C38" stroke-width="1.5"/>
+  <circle cx="320" cy="173" r="6" fill="#F5E1A7" stroke="#8F4C38" stroke-width="1.5"/>
+  <circle cx="430" cy="173" r="6" fill="#F5E1A7" stroke="#8F4C38" stroke-width="1.5"/>
+  <text x="20" y="150" text-anchor="start" font-size="11.5" fill="#53433F">згори донизу:</text>
+  <text x="20" y="166" text-anchor="start" font-size="11.5" fill="#53433F">одне припущення — в усі гілки</text>
+  <rect x="50" y="190" width="140" height="32" rx="8" fill="#FFF" stroke="#85736E" stroke-width="1.5"/>
+  <text x="120" y="211" text-anchor="middle" font-size="12.5" fill="#231917">проксі від проксі 1</text>
+  <rect x="220" y="190" width="200" height="32" rx="8" fill="#FFF" stroke="#85736E" stroke-width="1.5"/>
+  <text x="320" y="211" text-anchor="middle" font-size="12.5" fill="#231917">проксі від проксі 2</text>
+  <rect x="450" y="190" width="140" height="32" rx="8" fill="#FFF" stroke="#85736E" stroke-width="1.5"/>
+  <text x="520" y="211" text-anchor="middle" font-size="12.5" fill="#231917">проксі від проксі 3</text>
+  <line x1="120" y1="224" x2="120" y2="242" stroke="#8F4C38" stroke-width="2" marker-end="url(#s3-a)"/>
+  <line x1="320" y1="224" x2="320" y2="242" stroke="#8F4C38" stroke-width="2" marker-end="url(#s3-a)"/>
+  <line x1="520" y1="224" x2="520" y2="242" stroke="#8F4C38" stroke-width="2" marker-end="url(#s3-a)"/>
+  <rect x="50" y="246" width="140" height="32" rx="8" fill="#FFF" stroke="#85736E" stroke-width="1.5"/>
+  <text x="120" y="267" text-anchor="middle" font-size="12.5" fill="#231917">результат 1</text>
+  <rect x="210" y="246" width="220" height="32" rx="8" fill="#FFDBD1" stroke="#8F4C38" stroke-width="2"/>
+  <text x="320" y="267" text-anchor="middle" font-size="12" font-weight="600" fill="#723523">результат 2 — з помилкою</text>
+  <rect x="450" y="246" width="140" height="32" rx="8" fill="#FFF" stroke="#85736E" stroke-width="1.5"/>
+  <text x="520" y="267" text-anchor="middle" font-size="12.5" fill="#231917">результат 3</text>
+  <line x1="120" y1="280" x2="280" y2="304" stroke="#8F4C38" stroke-width="2" marker-end="url(#s3-a)"/>
+  <line x1="320" y1="280" x2="320" y2="304" stroke="#8F4C38" stroke-width="2" marker-end="url(#s3-a)"/>
+  <line x1="520" y1="280" x2="360" y2="304" stroke="#8F4C38" stroke-width="2" marker-end="url(#s3-a)"/>
+  <rect x="200" y="308" width="240" height="32" rx="8" fill="#FFDBD1" stroke="#8F4C38" stroke-width="2"/>
+  <text x="320" y="329" text-anchor="middle" font-size="12" font-weight="600" fill="#723523">зібране ціле — з помилкою</text>
+  <text x="620" y="316" text-anchor="end" font-size="11.5" fill="#53433F">знизу догори:</text>
+  <text x="620" y="332" text-anchor="end" font-size="11.5" fill="#53433F">помилка гілки входить у ціле</text>
+</svg>
+<figcaption>Схема 14.3. Проксі від проксі: порожнє місце згори розходиться всіма гілками, помилка гілки піднімається у зібране ціле</figcaption>
+</figure>
+
+<p>Звідси два правила.</p>
+<p>Перше: одна ціль на субагента. Розділ 13 показав, що агент із двома цілями — це дві лінії на один автомат. Задача, яку можна описати лише через «і заодно», — насправді дві задачі. Якщо цілей у системі більше, ніж часу й уваги, щоб довести кожну до кінця, результат не гарантований, хоч би що робили виконавці.</p>
+<p>Друге: <strong>спільну міру</strong> задає рівень вище. Результати двох субагентів можна порівняти і звести лише за мірою, однаковою для обох. Самі субагенти такої міри не мають: кожен міряє себе тим, що йому сказали. Тому критерії приймання пише рівень над ними і не віддає тим, кого ними міряють. Агент, який сам пише собі критерії і сам себе за ними приймає, буде прийнятий завжди.</p>
+<h2 id="_5">Що лишається диспетчерові<a class="anchor-link" href="#_5" title="Permanent link">&para;</a></h2>
+<p>Що ж робить людина, коли кроки робить не вона?</p>
+<p>Вона стає <strong>диспетчером</strong>: не наглядає за кроками, а розподіляє, приймає і зупиняє. Роботи тут не менше, ніж коли ви пишете код самі, просто вона інша, і жоден агент не зробить її замість вас.</p>
+<p>Тут діє та сама арифметика, що й у розділі 2. Той, хто організовує систему, мусить бути організований не гірше за неї. Якщо ви не здатні розкласти задачу на частини і назвати, як перевірити кожну, оркестратор теж не здатен — він лише вдаватиме, що здатен.</p>
+<p>Диспетчер тримає ціль, спільну міру, норми і точки зупинки — кожну з них до старту.</p>
+<p><strong>Ціль.</strong> Опис цілі з розділу 6 — до запуску: що хочу отримати і як перевірю. І одне питання перед стартом, яке з одним агентом можна пропустити, а з кількома — ні: чи взагалі можна отримати потрібне з того, що є? Якщо в репозиторії немає тестів на модуль, жоден набір субагентів не скаже, чи міграція його не зламала. До старту це видно за п&rsquo;ять хвилин, після — коли агенти вже відпрацювали кілька годин.</p>
+<p><strong>Спільна міра.</strong> Креслення прораба. Критерії приймання, однакові для всіх гілок: контракт між шарами, формат звіту кожного субагента, тест, який має пройти зібраний результат, а не кожна частина окремо. І ще — хто перевіряє стики: кожен субагент перевіряє свою частину, а стики не перевіряє ніхто, поки їх не доручили комусь окремо.</p>
+<p><strong>Норми.</strong> Нормативна база з розділу 12 — єдине «зрозуміти», яке є в кожного субагента до старту. Субагент не чув вашої розмови з оркестратором годину тому: що в його сесії — те і в грі, і більше нічого. Норма, яка живе лише у вашій розмові, до нього не доходить. А великий колектив без того, що його об&rsquo;єднує, розпадається на групи, кожна з яких робить своє. Спільний файл норм і є таким клеєм.</p>
+<p><strong>Точки зупинки.</strong> Акт на приховані роботи. Перед кожним кроком, після якого перевірити вже не вийде, — міграція на продакшн-базі, деплой, лист клієнтові, видалення гілки, — система зупиняється і чекає на людину. І правило за замовчуванням для кожного субагента: якщо не знаєш однозначно, що робити, — не роби, зупинись і поверни питання. Дія навмання збільшує розрив між потрібним і зробленим, зупинка — ні.</p>
+<p>Але зупинка коштує часу: питання йде нагору, відповідь — донизу, і поки вона йде, гілка стоїть. Тому зупинок має бути небагато, і стояти вони мають там, де помилка дорожча за чекання.</p>
+<aside class="book-callout">Диспетчер не робить жодного кроку. Він тримає те, чого не тримає жоден виконавець окремо.</aside>
+
+<figure class="book-scheme">
+<svg viewBox="0 0 640 250" role="img" aria-label="Чотири блоки, які диспетчер тримає до старту: ціль, спільна міра, норми, точки зупинки, з відповідниками в ремонті. Кроки під час роботи — не його">
+  <rect x="0" y="0" width="640" height="250" fill="#FFFFFF"/>
+  <line x1="20" y1="30" x2="620" y2="30" stroke="#D8C2BC" stroke-width="1.5" stroke-dasharray="4 4"/>
+  <rect x="268" y="18" width="104" height="24" rx="12" fill="#FFF"/>
+  <text x="320" y="35" text-anchor="middle" font-size="12" font-weight="600" fill="#8F4C38">до старту</text>
+  <rect x="20" y="54" width="140" height="44" rx="10" fill="#FFDBD1" stroke="#8F4C38" stroke-width="1.5"/>
+  <text x="90" y="81" text-anchor="middle" font-size="13" font-weight="600" fill="#723523">ціль</text>
+  <text x="90" y="120" text-anchor="middle" font-size="11.5" fill="#53433F">опис цілі: що хочу</text>
+  <text x="90" y="136" text-anchor="middle" font-size="11.5" fill="#53433F">отримати і як перевірю</text>
+  <rect x="170" y="54" width="140" height="44" rx="10" fill="#FFDBD1" stroke="#8F4C38" stroke-width="1.5"/>
+  <text x="240" y="81" text-anchor="middle" font-size="13" font-weight="600" fill="#723523">спільна міра</text>
+  <text x="240" y="120" text-anchor="middle" font-size="11.5" fill="#53433F">креслення прораба:</text>
+  <text x="240" y="136" text-anchor="middle" font-size="11.5" fill="#53433F">критерії, однакові для всіх</text>
+  <rect x="320" y="54" width="140" height="44" rx="10" fill="#FFDBD1" stroke="#8F4C38" stroke-width="1.5"/>
+  <text x="390" y="81" text-anchor="middle" font-size="13" font-weight="600" fill="#723523">норми</text>
+  <text x="390" y="120" text-anchor="middle" font-size="11.5" fill="#53433F">спільний файл норм</text>
+  <text x="390" y="136" text-anchor="middle" font-size="11.5" fill="#53433F">у кожній сесії</text>
+  <rect x="470" y="54" width="150" height="44" rx="10" fill="#FFDBD1" stroke="#8F4C38" stroke-width="1.5"/>
+  <text x="545" y="81" text-anchor="middle" font-size="13" font-weight="600" fill="#723523">точки зупинки</text>
+  <text x="545" y="120" text-anchor="middle" font-size="11.5" fill="#53433F">акт на приховані роботи:</text>
+  <text x="545" y="136" text-anchor="middle" font-size="11.5" fill="#53433F">перед незворотним кроком</text>
+  <line x1="20" y1="166" x2="620" y2="166" stroke="#D8C2BC" stroke-width="1.5" stroke-dasharray="4 4"/>
+  <rect x="258" y="154" width="124" height="24" rx="12" fill="#FFF"/>
+  <text x="320" y="171" text-anchor="middle" font-size="12" font-weight="600" fill="#85736E">під час роботи</text>
+  <rect x="250" y="190" width="140" height="36" rx="10" fill="#FFF" stroke="#D8C2BC" stroke-width="1.5"/>
+  <text x="320" y="213" text-anchor="middle" font-size="13" fill="#85736E">кроки</text>
+  <line x1="290" y1="209" x2="350" y2="209" stroke="#8F4C38" stroke-width="1.5"/>
+  <text x="400" y="213" text-anchor="start" font-size="11.5" fill="#53433F">роблять субагенти</text>
+  <text x="320" y="244" text-anchor="middle" font-size="12" fill="#8F4C38">чотири блоки — до старту; кроки — не його</text>
+</svg>
+<figcaption>Схема 14.4. Що тримає диспетчер: ціль, спільна міра, норми і точки зупинки — до старту; кроки — ні</figcaption>
+</figure>
+
+<p>Ще одне з розділу 13 — пружність. Субагент, який відповідає «так не вийде, і ось чому», цінніший за того, що на будь-яку задачу повертає «зроблено». З одним агентом заперечення ви почуєте самі. У системі агентів його треба передбачити: дати субагентові формат, у якому «ні» — законний результат, а не провал.</p>
+<p>А обсяг автономії системи агентів міряють так само, як одного агента в розділі 13: порціями — стільки роботи, скільки система робить за один захід до перевірки, — і зупинками, коли робота повернулась до людини. Тільки рахувати зупинки доводиться на кожній гілці окремо і на стиках окремо.</p>
+<h2 id="_6">Сімнадцять тисяч рядків<a class="anchor-link" href="#_6" title="Permanent link">&para;</a></h2>
+<p>Цю книжку я пишу з агентами, і кожен її розділ — невелика система агентів.</p>
+<p><strong>Перша спроба.</strong> Розділ 2 писав один агент за один вечір: чернетка, рев&rsquo;ю, полірування і три схеми — в одній сесії. Монографій, на логіці яких стоїть книжка, він не відкривав — переказував з пам&rsquo;яті. Рев&rsquo;ю робив той самий агент, що писав, і текст пройшов його легко: та сама статистика, ті самі сліпі зони. Схеми він намалював одразу, не спитавши, які потрібні. Зовні розділ був готовий, з позначкою «переглянуто й відполіровано».</p>
+<p>Наступного дня довелося переписувати секцію, де закономірність із практики була подана як закон збереження. А за наступні тижні я лишив на розділі п&rsquo;ятдесят дев&rsquo;ять правок. Агент справлявся з кожним кроком окремо. Бракувало іншої позиції: усе писалося і перевірялося з одного місця.</p>
+<p><strong>Друга спроба — цей розділ.</strong> Тепер розділ проходить через кількох агентів, і кожен відрізняється від інших там, де це важливо.</p>
+<p>Спершу — три агенти-читачі, паралельно, по одному на монографію: разом сімнадцять тисяч рядків розпізнаного російського тексту. У кожного свій контекст — лише його монографія, — і однаковий для всіх формат звіту: закономірність, її суть, дослівні цитати з номерами рядків. Формат і є спільною мірою: цитату з номером рядка можна перевірити за хвилину. Працювали вони від двох до п&rsquo;яти хвилин. Їхніх кроків не бачив ні я, ні оркестратор — лише конспекти, які лягли у файл і переживуть будь-яку сесію.</p>
+<p>Потім — зупинка. Оркестратор склав план розділу з трьома варіантами метафори, сценарію й анти-патерну, і без мого «так» текст не писався. Ремонт із прорабом — мій вибір із трьох.</p>
+<p>Далі моє рев&rsquo;ю, потім агент полірування зі свіжим контекстом та іншою моделлю. Схеми — знову через зупинку. Переклад англійською — окремим агентом і лише після схем, коли текст уже не зміниться: спершу проводка, потім штукатурка.</p>
+<p>Помилка з&rsquo;явилась на стику між оркестратором і читачами.</p>
+<p>Розписуючи задачу читачам, оркестратор вклав у неї власне припущення: попросив знайти в монографії, як дефекти передаються від вищих рівнів системи до нижчих. Цього формулювання я не бачив — це була його проксі для субагента. Читач повернув конспект із застереженням на самому початку: у джерелі дефекти передаються навпаки, знизу вгору. Інший читач написав, що слів «делегування» і «координація» в його монографії немає взагалі — нуль збігів, — і подав найближчі механізми окремо, позначивши, що це реконструкція, а не теза автора.</p>
+<p>Чому це спрацювало? У читача був інший контекст — сама монографія, а не розмова з оркестратором. І формат вимагав цитат із номерами рядків: правдоподібно переказати те, чого в тексті немає, з номером рядка не вийде. Різниця позицій і слід, який можна перевірити, — і хибна проксі зупинилась на першому ж стику, а не розійшлася по розділу.</p>
+<p>Мої кроки в цьому процесі — дві зупинки і рев&rsquo;ю. Жодного конспекту я цього разу не писав. На рев&rsquo;ю цього розділу я лишив шістнадцять правок — проти п&rsquo;ятдесяти дев&rsquo;яти на розділі 2. Але одна помилка, яку раніше я шукав би в тексті сам, до тексту вже не дійшла.</p>
+<h2 id="_7">Комітет із копій<a class="anchor-link" href="#_7" title="Permanent link">&para;</a></h2>
+<p>Анти-патерн цього розділу виглядає як ретельність.</p>
+<p>У команді налаштовано пайплайн із трьох агентів. Перший пише код за тікетом, другий рев&rsquo;юває пул-реквест, третій читає рев&rsquo;ю і ставить «погоджено». Та сама модель, той самий системний промпт, той самий контекст: тікет і код. Кожен пул-реквест проходить три перевірки. Люди бачать фінальне «погоджено» і мержать.</p>
+<p>Тікет каже: «додати знижку для постійних клієнтів». Перший агент вирішив, що постійний — це три замовлення за рік. Ніде цього не записано — це правдоподібне заповнення порожнього місця. Рев&rsquo;ювер перевіряє код проти тікета і погоджується: знижка є, тести проходять. Третій бачить, що рев&rsquo;ювер погодився. Те, що постійний клієнт у цій компанії — це клієнт із підпискою, а не з кількістю замовлень, не знав жоден із трьох: цього не було в контексті жодного.</p>
+<p>Скільки розрізнень додали другий і третій агенти? Майже жодного. Рев&rsquo;ювер з тим самим контекстом і тією самою статистикою бачить у коді те саме, що бачив автор, — і так само не бачить, що «постійний клієнт» ніде не визначено. Третій погоджує рев&rsquo;ю, яке написала копія автора. Активність висока: три агенти, тисячі токенів, докладні коментарі. А назовні — одне розрізнення, видане тричі, і за ним дві розмови агентів між собою, яких людина не бачила.</p>
+<p>Діагноз за законом цього розділу: копії — не система, а перевірка з тієї самої позиції — повтор. Розділ 13 описував практику, що з часом починає працювати сама на себе: багато запусків, та сама якість. Комітет із копій — той самий стан, тільки практика в нього не виродилась, а такою була побудована.</p>
+<p>Лікується це не четвертим агентом. Рев&rsquo;юверові — інший контекст: не лише тікет і код, а й специфікація, норми команди, історія схожих багів і окреме питання «що в тікеті не визначено?». На нього рев&rsquo;ювер мав би відповісти «що таке постійний клієнт?» — і зупинитись. Третьому агентові — інша міра: наприклад, інтеграційні тести, яких автор не запускав. Якщо іншої міри для нього немає, третій агент не потрібен: той, хто лише погоджує чуже погодження, з&rsquo;їдає ресурс і нічого не розрізняє.</p>
+<p>А «погоджено» перед тим, чого не відкотити, — мерж у головну гілку, деплой, — ставить людина, не агент. І кнопка «Тест» з розділу 13: навмисно підкласти в пул-реквест помилку і перевірити, чи зловить її хоч один із трьох агентів.</p>
+<h2 id="_8">Оркестрація масштабується<a class="anchor-link" href="#_8" title="Permanent link">&para;</a></h2>
+<p>З командою людей відбувається те саме. Тимлід, який читає кожен коміт кожного інженера, робить те саме, що людина, яка читає кожен крок агентів: команда є, а дивиться лише одна людина. І той самий комітет із копій — троє рев&rsquo;юверів з однаковим досвідом, які погоджують те, чого не розуміє ніхто з них.</p>
+<p>Фірма — ще рівень: керівник, до якого доходить лише «усе за планом», бачить відділи так само, як ви бачите субагентів, — точками.</p>
+<p>Коли практика справді готова до оркестрації, а коли це спроба перестрибнути стадію, — розмова розділу 15.</p>
+<h2 id="_9">У вашому ремеслі<a class="anchor-link" href="#_9" title="Permanent link">&para;</a></h2>
+<p>Стики є в кожному ремеслі, де роботу ділять на частини.</p>
+<p><strong>Текст.</strong> Три агенти паралельно пишуть три розділи інструкції. Кожен розділ гарний. Але той самий екран в одному зветься «панель», у другому «дашборд», у третьому «головна». Брак живе на стику. Спільна міра тут — глосарій, написаний до старту. Окремий агент перевіряє лише терміни між розділами.</p>
+<p><strong>Аналітика.</strong> П&rsquo;ять субагентів аналізують п&rsquo;ять джерел даних, оркестратор зводить висновки в звіт. Кожен висновок правдоподібний. Але «активний користувач» у двох джерелах означає різне, і звіт це приховує. Що вважати активним, вирішує той, хто ставив питання. Зупинка — перед тим, як звіт піде замовникові.</p>
+<p><strong>Дизайн.</strong> Три агенти генерують варіанти макета з того самого брифу. Виходять три версії того самого середнього. Різниця з&rsquo;являється, коли кожен отримує своє обмеження чи свій референс. Обрати з варіантів може лише той, у кого є критерії. Цього кроку не віддають тим, хто варіанти генерував.</p>
+<hr />
+<p>Наостанок — три питання до вашої практики.</p>
+<p>— Скільки агентів працює у вашій системі — і чим вони відрізняються один від одного, крім назви в конфігурації?</p>
+<p>— Що ваш оркестратор написав субагентам в останньому запуску? Якщо не знаєте — хто перевіряв цю проксі?</p>
+<p>— І глибше: який крок у вашому процесі — акт на приховані роботи, після якого перевірити вже не вийде? Хто його приймає?</p>
+<div class="subscribe-embed"><iframe src="https://kiosan.substack.com/embed?transparent=1" width="480" height="320" style="border: 0; background: transparent" title="Підписатися на розсилку" loading="lazy" frameborder="0" scrolling="no"></iframe></div>
+                <div class="check-items" data-page-key="part-3-activity/14-agent-orchestration"><div class="check-items-header"><span class="check-items-title">Key Takeaways</span><span class="check-items-progress"></span></div><label class="check-item" data-index="0"><input type="checkbox" class="check-item-input" data-index="0"><span class="check-item-box"><svg class="check-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span><span class="check-item-text">Десять однакових агентів — не система, а та сама помилка десять разів. Систему дає різниця між ними.</span></label>
+<label class="check-item" data-index="1"><input type="checkbox" class="check-item-input" data-index="1"><span class="check-item-box"><svg class="check-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span><span class="check-item-text">З агентом працюй через задачу і результат, а не через його кроки. Хто читає кожен крок, той повертається до одного агента — тільки з утомою за десятьох.</span></label>
+<label class="check-item" data-index="2"><input type="checkbox" class="check-item-input" data-index="2"><span class="check-item-box"><svg class="check-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span><span class="check-item-text">Кожна передача задачі — нова проксі. Порожнє місце на старті розходиться всіма гілками.</span></label>
+<label class="check-item" data-index="3"><input type="checkbox" class="check-item-input" data-index="3"><span class="check-item-box"><svg class="check-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span><span class="check-item-text">Що агенти сказали одне одному, ти не бачив. Що має повернутися нагору — задай до старту.</span></label>
+<label class="check-item" data-index="4"><input type="checkbox" class="check-item-input" data-index="4"><span class="check-item-box"><svg class="check-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span><span class="check-item-text">Диспетчер тримає ціль, спільну міру, норми і точки зупинки. Кроки — ні.</span></label></div>
+                <nav class="page-nav"><a class="page-nav-link page-nav-prev" href="/variety/read/part-3-activity/13-control-degradation/"><span class="page-nav-label">← Попередня</span></a>
+<span class="page-nav-link page-nav-next page-nav-disabled"></span></nav>
+            </article>
+        </main>
+    </div>
+    <script>
+var SIDEBAR_WIDTH_KEY = 'essay-sidebar-width-system-for-ai-engineers';
+var SIDEBAR_COLLAPSED_KEY = 'essay-sidebar-collapsed-system-for-ai-engineers';
+var ESSAY_LOCAL_MODE = false;
+var ESSAY_PAGE_KEY = "uk/part-3-activity/14-agent-orchestration";
+document.addEventListener('DOMContentLoaded', function() {
+  var sidebar = document.getElementById('sidebar');
+  var handle = document.getElementById('resize-handle');
+  var collapseBtn = document.getElementById('sidebar-collapse');
+  var expandBtn = document.getElementById('sidebar-expand');
+  var mobileToggle = document.getElementById('sidebar-toggle');
+  var html = document.documentElement;
+  var MIN_WIDTH = 200;
+  var MAX_WIDTH = 480;
+
+  // Desktop: collapse / expand
+  function setCollapsed(collapsed) {
+    if (collapsed) {
+      html.classList.add('sidebar-collapsed');
+    } else {
+      html.classList.remove('sidebar-collapsed');
+    }
+    if (typeof SIDEBAR_COLLAPSED_KEY !== 'undefined') {
+      localStorage.setItem(SIDEBAR_COLLAPSED_KEY, collapsed ? '1' : '0');
+    }
+  }
+
+  if (collapseBtn) {
+    collapseBtn.addEventListener('click', function() {
+      setCollapsed(true);
+    });
+  }
+
+  if (expandBtn) {
+    expandBtn.addEventListener('click', function() {
+      setCollapsed(false);
+    });
+  }
+
+  // Mobile: slide-in toggle
+  if (mobileToggle && sidebar) {
+    mobileToggle.addEventListener('click', function() {
+      sidebar.classList.toggle('open');
+    });
+
+    document.addEventListener('click', function(e) {
+      if (sidebar.classList.contains('open') &&
+          !sidebar.contains(e.target) &&
+          !mobileToggle.contains(e.target)) {
+        sidebar.classList.remove('open');
+      }
+    });
+  }
+
+  // Resizable sidebar (desktop only, when not collapsed)
+  if (handle && sidebar) {
+    var startX, startWidth;
+
+    handle.addEventListener('mousedown', function(e) {
+      if (html.classList.contains('sidebar-collapsed')) return;
+      e.preventDefault();
+      startX = e.clientX;
+      startWidth = sidebar.getBoundingClientRect().width;
+      handle.classList.add('active');
+      document.body.classList.add('resizing');
+
+      document.addEventListener('mousemove', onMouseMove);
+      document.addEventListener('mouseup', onMouseUp);
+    });
+
+    function onMouseMove(e) {
+      var newWidth = startWidth + (e.clientX - startX);
+      newWidth = Math.max(MIN_WIDTH, Math.min(newWidth, MAX_WIDTH));
+      html.style.setProperty('--sidebar-width', newWidth + 'px');
+    }
+
+    function onMouseUp() {
+      handle.classList.remove('active');
+      document.body.classList.remove('resizing');
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
+
+      var currentWidth = sidebar.getBoundingClientRect().width;
+      if (typeof SIDEBAR_WIDTH_KEY !== 'undefined') {
+        localStorage.setItem(SIDEBAR_WIDTH_KEY, Math.round(currentWidth));
+      }
+    }
+  }
+
+  // --- Check Items persistence ---
+  var checkContainers = document.querySelectorAll('.check-items');
+  if (checkContainers.length) {
+    initCheckItems(checkContainers);
+  }
+
+  function initCheckItems(containers) {
+    var isLocal = (typeof ESSAY_LOCAL_MODE !== 'undefined') && ESSAY_LOCAL_MODE;
+    var essayId = getMeta('essay-id');
+    var pageId = getMeta('essay-page-id');
+    var csrf = getMeta('csrf-token');
+
+    containers.forEach(function(container) {
+      var pageKey = container.getAttribute('data-page-key');
+      var inputs = container.querySelectorAll('.check-item-input');
+      var storageKey = 'essay-checks-' + pageKey;
+
+      // Load saved state
+      loadChecks(storageKey, essayId, pageId, csrf, isLocal, function(checked) {
+        if (checked && checked.length) {
+          inputs.forEach(function(input) {
+            var idx = parseInt(input.getAttribute('data-index'), 10);
+            if (checked.indexOf(idx) !== -1) {
+              input.checked = true;
+            }
+          });
+        }
+        updateProgress(container, inputs);
+      });
+
+      // Listen for changes
+      inputs.forEach(function(input) {
+        input.addEventListener('change', function() {
+          var checked = [];
+          inputs.forEach(function(inp) {
+            if (inp.checked) checked.push(parseInt(inp.getAttribute('data-index'), 10));
+          });
+          saveChecks(storageKey, essayId, pageId, csrf, isLocal, checked);
+          updateProgress(container, inputs);
+        });
+      });
+    });
+  }
+
+  function updateProgress(container, inputs) {
+    var total = inputs.length;
+    var checked = 0;
+    inputs.forEach(function(inp) { if (inp.checked) checked++; });
+    var el = container.querySelector('.check-items-progress');
+    if (el) {
+      el.textContent = checked + ' / ' + total;
+    }
+  }
+
+  function getMeta(name) {
+    var el = document.querySelector('meta[name="' + name + '"]');
+    return el ? el.content : null;
+  }
+
+  function loadChecks(storageKey, essayId, pageId, csrf, isLocal, callback) {
+    if (isLocal || !essayId) {
+      var raw = localStorage.getItem(storageKey);
+      callback(raw ? JSON.parse(raw) : []);
+      return;
+    }
+    var url = '/api/dynamic_data?essay_id=' + essayId + '&key=' + encodeURIComponent(storageKey);
+    if (pageId) url += '&page_id=' + pageId;
+    fetch(url, { headers: csrf ? { 'X-CSRF-Token': csrf } : {} })
+      .then(function(r) { return r.json(); })
+      .then(function(d) { callback(d.data ? d.data.checked : []); })
+      .catch(function() { callback([]); });
+  }
+
+  function saveChecks(storageKey, essayId, pageId, csrf, isLocal, checked) {
+    if (isLocal || !essayId) {
+      localStorage.setItem(storageKey, JSON.stringify(checked));
+      return;
+    }
+    var body = {
+      essay_id: essayId,
+      key: storageKey,
+      data: { checked: checked }
+    };
+    if (pageId) body.page_id = pageId;
+    fetch('/api/dynamic_data', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-Token': csrf || ''
+      },
+      body: JSON.stringify(body)
+    }).catch(function() {});
+  }
+});
+
+
+    </script>
+</body>
+</html>

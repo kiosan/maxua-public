@@ -1,0 +1,1575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 14. Agent Orchestration — Requisite Variety: A Systems Method for Working with AI</title>
+    <meta name="essay-page-key" content="en/part-3-activity/14-agent-orchestration">
+    <script>
+    // Blocking: apply saved sidebar state before first paint to prevent layout jump
+    (function() {
+        var d = document.documentElement;
+        if (window.innerWidth <= 900) return;
+        var collapsed = localStorage.getItem('essay-sidebar-collapsed-system-for-ai-engineers-en') === '1';
+        if (collapsed) d.classList.add('sidebar-collapsed');
+        var w = localStorage.getItem('essay-sidebar-width-system-for-ai-engineers-en');
+        if (w && !collapsed) {
+            var px = Math.max(200, Math.min(parseInt(w, 10), 480));
+            d.style.setProperty('--sidebar-width', px + 'px');
+        }
+    })();
+    </script>
+    <style>
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v18/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuLyfAZ9hiA.woff2) format('woff2');
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v18/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuI6fAZ9hiA.woff2) format('woff2');
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v18/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuGKYAZ9hiA.woff2) format('woff2');
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v18/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuFuYAZ9hiA.woff2) format('woff2');
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/jetbrainsmono/v18/tDbY2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKxjPVmUsaaDhw.woff2) format('woff2');
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/jetbrainsmono/v18/tDbY2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKxTPVmUsaaDhw.woff2) format('woff2');
+}
+:root {
+  --md-primary: #4C662B;
+  --md-surface-tint: #4C662B;
+  --md-on-primary: #FFFFFF;
+  --md-primary-container: #CDEDA3;
+  --md-on-primary-container: #354E16;
+  --md-secondary: #586249;
+  --md-on-secondary: #FFFFFF;
+  --md-secondary-container: #DCE7C8;
+  --md-on-secondary-container: #404A33;
+  --md-tertiary: #386663;
+  --md-on-tertiary: #FFFFFF;
+  --md-tertiary-container: #BCECE7;
+  --md-on-tertiary-container: #1F4E4B;
+  --md-error: #BA1A1A;
+  --md-on-error: #FFFFFF;
+  --md-error-container: #FFDAD6;
+  --md-on-error-container: #93000A;
+  --md-background: #F9FAEF;
+  --md-on-background: #1A1C16;
+  --md-surface: #F9FAEF;
+  --md-on-surface: #1A1C16;
+  --md-surface-variant: #E1E4D5;
+  --md-on-surface-variant: #44483D;
+  --md-outline: #75796C;
+  --md-outline-variant: #C5C8BA;
+  --md-shadow: #000000;
+  --md-scrim: #000000;
+  --md-inverse-surface: #2F312A;
+  --md-inverse-on-surface: #F1F2E6;
+  --md-inverse-primary: #B1D18A;
+  --md-primary-fixed: #CDEDA3;
+  --md-on-primary-fixed: #102000;
+  --md-primary-fixed-dim: #B1D18A;
+  --md-on-primary-fixed-variant: #354E16;
+  --md-secondary-fixed: #DCE7C8;
+  --md-on-secondary-fixed: #151E0B;
+  --md-secondary-fixed-dim: #BFCBAD;
+  --md-on-secondary-fixed-variant: #404A33;
+  --md-tertiary-fixed: #BCECE7;
+  --md-on-tertiary-fixed: #00201E;
+  --md-tertiary-fixed-dim: #A0D0CB;
+  --md-on-tertiary-fixed-variant: #1F4E4B;
+  --md-surface-dim: #DADBD0;
+  --md-surface-bright: #F9FAEF;
+  --md-surface-container-lowest: #FFFFFF;
+  --md-surface-container-low: #F3F4E9;
+  --md-surface-container: #EEEFE3;
+  --md-surface-container-high: #E8E9DE;
+  --md-surface-container-highest: #E2E3D8;
+}
+pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.codehilite .hll { background-color: #ffffcc }
+.codehilite { background: #f8f8f8; }
+.codehilite .c { color: #3D7B7B; font-style: italic } /* Comment */
+.codehilite .err { border: 1px solid #F00 } /* Error */
+.codehilite .k { color: #008000; font-weight: bold } /* Keyword */
+.codehilite .o { color: #666 } /* Operator */
+.codehilite .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
+.codehilite .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
+.codehilite .cp { color: #9C6500 } /* Comment.Preproc */
+.codehilite .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
+.codehilite .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
+.codehilite .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
+.codehilite .gd { color: #A00000 } /* Generic.Deleted */
+.codehilite .ge { font-style: italic } /* Generic.Emph */
+.codehilite .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+.codehilite .gr { color: #E40000 } /* Generic.Error */
+.codehilite .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.codehilite .gi { color: #008400 } /* Generic.Inserted */
+.codehilite .go { color: #717171 } /* Generic.Output */
+.codehilite .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.codehilite .gs { font-weight: bold } /* Generic.Strong */
+.codehilite .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.codehilite .gt { color: #04D } /* Generic.Traceback */
+.codehilite .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.codehilite .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.codehilite .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.codehilite .kp { color: #008000 } /* Keyword.Pseudo */
+.codehilite .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.codehilite .kt { color: #B00040 } /* Keyword.Type */
+.codehilite .m { color: #666 } /* Literal.Number */
+.codehilite .s { color: #BA2121 } /* Literal.String */
+.codehilite .na { color: #687822 } /* Name.Attribute */
+.codehilite .nb { color: #008000 } /* Name.Builtin */
+.codehilite .nc { color: #00F; font-weight: bold } /* Name.Class */
+.codehilite .no { color: #800 } /* Name.Constant */
+.codehilite .nd { color: #A2F } /* Name.Decorator */
+.codehilite .ni { color: #717171; font-weight: bold } /* Name.Entity */
+.codehilite .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
+.codehilite .nf { color: #00F } /* Name.Function */
+.codehilite .nl { color: #767600 } /* Name.Label */
+.codehilite .nn { color: #00F; font-weight: bold } /* Name.Namespace */
+.codehilite .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.codehilite .nv { color: #19177C } /* Name.Variable */
+.codehilite .ow { color: #A2F; font-weight: bold } /* Operator.Word */
+.codehilite .w { color: #BBB } /* Text.Whitespace */
+.codehilite .mb { color: #666 } /* Literal.Number.Bin */
+.codehilite .mf { color: #666 } /* Literal.Number.Float */
+.codehilite .mh { color: #666 } /* Literal.Number.Hex */
+.codehilite .mi { color: #666 } /* Literal.Number.Integer */
+.codehilite .mo { color: #666 } /* Literal.Number.Oct */
+.codehilite .sa { color: #BA2121 } /* Literal.String.Affix */
+.codehilite .sb { color: #BA2121 } /* Literal.String.Backtick */
+.codehilite .sc { color: #BA2121 } /* Literal.String.Char */
+.codehilite .dl { color: #BA2121 } /* Literal.String.Delimiter */
+.codehilite .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.codehilite .s2 { color: #BA2121 } /* Literal.String.Double */
+.codehilite .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
+.codehilite .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.codehilite .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
+.codehilite .sx { color: #008000 } /* Literal.String.Other */
+.codehilite .sr { color: #A45A77 } /* Literal.String.Regex */
+.codehilite .s1 { color: #BA2121 } /* Literal.String.Single */
+.codehilite .ss { color: #19177C } /* Literal.String.Symbol */
+.codehilite .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.codehilite .fm { color: #00F } /* Name.Function.Magic */
+.codehilite .vc { color: #19177C } /* Name.Variable.Class */
+.codehilite .vg { color: #19177C } /* Name.Variable.Global */
+.codehilite .vi { color: #19177C } /* Name.Variable.Instance */
+.codehilite .vm { color: #19177C } /* Name.Variable.Magic */
+.codehilite .il { color: #666 } /* Literal.Number.Integer.Long */
+/* Reset & Base */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --sidebar-width: 272px;
+  --sidebar-collapsed-width: 0px;
+}
+
+html {
+  font-size: var(--md-base-size, 18px);
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--md-font-family, 'Inter', sans-serif);
+  font-weight: var(--md-body-weight, 400);
+  line-height: var(--md-line-height, 1.7);
+  color: var(--md-on-surface, #231917);
+  background: var(--md-background, #FFF8F6);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Layout */
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: var(--sidebar-width);
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--md-surface-container-low, #FFF1ED);
+  border-right: 1px solid var(--md-outline-variant, #D8C2BC);
+  z-index: 100;
+  transition: width 0.25s ease, transform 0.3s ease;
+  overflow: hidden;
+}
+
+/* Sidebar header */
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 1rem 0.75rem 1rem 1.25rem;
+  border-bottom: 1px solid var(--md-outline-variant, #D8C2BC);
+  flex-shrink: 0;
+}
+
+.sidebar-title {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--md-on-surface, #231917);
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+
+.sidebar-collapse-btn {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 0.375rem;
+  background: transparent;
+  color: var(--md-on-surface-variant, #53433F);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.sidebar-collapse-btn:hover {
+  background: var(--md-surface-container, #FCEAE5);
+  color: var(--md-on-surface, #231917);
+}
+
+/* Sidebar nav */
+.sidebar-nav {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 0.5rem 0;
+}
+
+.nav-tree {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.nav-tree .nav-tree {
+  padding-left: 0.5rem;
+  margin-left: 0.875rem;
+  border-left: 1px solid var(--md-outline-variant, #D8C2BC);
+}
+
+.nav-item {
+  position: relative;
+}
+
+.nav-item a,
+.nav-item .nav-label {
+  display: block;
+  padding: 0.375rem 0.75rem;
+  margin: 1px 0.5rem;
+  font-size: 0.8rem;
+  font-weight: 400;
+  color: var(--md-on-surface-variant, #53433F);
+  text-decoration: none;
+  transition: all 0.15s ease;
+  border-radius: 0.375rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.nav-item .nav-label {
+  color: var(--md-on-surface, #231917);
+  font-weight: 500;
+  cursor: default;
+}
+
+.nav-item a:hover {
+  color: var(--md-on-surface, #231917);
+  background: var(--md-surface-container, #FCEAE5);
+}
+
+.nav-item.active > a {
+  color: var(--md-on-primary-container, #723523);
+  font-weight: 500;
+  background: var(--md-primary-container, #FFDBD1);
+}
+
+/* Newsletter issues under a chapter */
+.nav-count {
+  display: inline-block;
+  min-width: 1.15rem;
+  padding: 0 0.35rem;
+  margin-left: 0.4rem;
+  font-size: 0.65rem;
+  line-height: 1.15rem;
+  text-align: center;
+  border-radius: 999px;
+  background: var(--md-surface-container, #FCEAE5);
+  color: var(--md-on-surface-variant, #53433F);
+  vertical-align: middle;
+}
+.nav-item.active > a .nav-count { background: rgba(255,255,255,0.6); }
+.nav-tree.nav-issues {
+  border-left-style: dashed;
+}
+.nav-issue a {
+  font-size: 0.74rem;
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+}
+.nav-issue a::before {
+  content: "✉";
+  margin-right: 0.35rem;
+  font-size: 0.7rem;
+  opacity: 0.7;
+}
+.nav-issue.nav-maxims a::before {
+  content: "\275D";
+}
+
+/* Maxims page (Substack Notes drafts) */
+.maxim {
+  margin: 0 0 1.6rem;
+  padding: 0 0 1.2rem;
+  border-bottom: 1px solid var(--md-outline-variant, #D8C2BC);
+}
+.maxim-text {
+  font-size: 1.05rem;
+  line-height: 1.55;
+  margin: 0 0 0.9rem;
+}
+.maxim-text .maxim-p { margin: 0 0 0.6rem; }
+.maxim-alt {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--md-on-surface-variant, #53433F);
+  margin: 0 0 0.5rem;
+  padding-left: 0.9rem;
+  border-left: 2px solid var(--md-outline-variant, #D8C2BC);
+}
+.maxim-alt .maxim-p { margin: 0 0 0.45rem; }
+.maxim-meta {
+  font-size: 0.72rem;
+  color: var(--md-outline, #85736E);
+  margin: 0;
+}
+
+.nav-item.active-parent > a {
+  color: var(--md-on-surface, #231917);
+  font-weight: 500;
+}
+
+/* Resize handle */
+.resize-handle {
+  position: absolute;
+  top: 0;
+  right: -3px;
+  width: 6px;
+  height: 100%;
+  cursor: col-resize;
+  z-index: 110;
+  transition: background 0.15s ease;
+}
+
+.resize-handle:hover,
+.resize-handle.active {
+  background: var(--md-primary, #8F4C38);
+  opacity: 0.3;
+}
+
+body.resizing {
+  cursor: col-resize;
+  user-select: none;
+}
+
+/* Sidebar expand button (visible when collapsed, desktop) */
+.sidebar-expand-btn {
+  display: none;
+  position: fixed;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 200;
+  width: 36px;
+  height: 36px;
+  align-items: center;
+  justify-content: center;
+  background: var(--md-surface, #FFF8F6);
+  border: 1px solid var(--md-outline-variant, #D8C2BC);
+  border-radius: 0.5rem;
+  cursor: pointer;
+  color: var(--md-on-surface-variant, #53433F);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  transition: all 0.15s ease;
+}
+
+.sidebar-expand-btn:hover {
+  background: var(--md-surface-container, #FCEAE5);
+  color: var(--md-on-surface, #231917);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+/* Collapsed state (set on <html>) */
+.sidebar-collapsed .sidebar {
+  width: 0;
+  border-right-color: transparent;
+}
+
+.sidebar-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1rem;
+  padding: 0.75rem 1.25rem;
+  border-top: 1px solid var(--md-outline-variant);
+  font-size: 0.8rem;
+}
+.sidebar-link {
+  color: var(--md-on-surface-variant);
+  text-decoration: none;
+}
+.sidebar-link:hover { color: var(--md-primary); text-decoration: underline; }
+
+.sidebar-collapsed .sidebar-header,
+.sidebar-collapsed .sidebar-links,
+.sidebar-collapsed .sidebar-nav,
+.sidebar-collapsed .resize-handle {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.sidebar-collapsed .sidebar-expand-btn {
+  display: flex;
+}
+
+.sidebar-collapsed .content {
+  margin-left: 0;
+}
+
+/* Mobile sidebar toggle */
+.sidebar-toggle {
+  display: none;
+  position: fixed;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 200;
+  width: 36px;
+  height: 36px;
+  align-items: center;
+  justify-content: center;
+  background: var(--md-surface, #FFF8F6);
+  border: 1px solid var(--md-outline-variant, #D8C2BC);
+  border-radius: 0.5rem;
+  cursor: pointer;
+  color: var(--md-on-surface-variant, #53433F);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+
+.sidebar-toggle:hover {
+  background: var(--md-surface-container, #FCEAE5);
+  color: var(--md-on-surface, #231917);
+}
+
+/* Content */
+.content {
+  margin-left: var(--sidebar-width);
+  flex: 1;
+  min-width: 0;
+  transition: margin-left 0.25s ease;
+}
+
+.article {
+  max-width: var(--md-max-width, 720px);
+  margin: 0 auto;
+  padding: var(--md-content-padding, 2rem);
+  padding-top: 3rem;
+  padding-bottom: 4rem;
+}
+
+/* Typography */
+.article h1 {
+  font-size: 2.25rem;
+  font-weight: var(--md-heading-weight, 700);
+  line-height: 1.2;
+  margin-bottom: 1.5rem;
+  color: var(--md-on-surface, #231917);
+  letter-spacing: -0.02em;
+}
+
+.article h2 {
+  font-size: 1.6rem;
+  font-weight: var(--md-heading-weight, 700);
+  line-height: 1.25;
+  margin-top: 3rem;
+  margin-bottom: 1rem;
+  color: var(--md-on-surface, #231917);
+  padding-bottom: 0.4rem;
+  border-bottom: 2px solid var(--md-primary-container, #FFDBD1);
+}
+
+.article h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1.3;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+  color: var(--md-on-surface, #231917);
+}
+
+.article h4 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.article p {
+  margin-bottom: 1.25rem;
+}
+
+.article a {
+  color: var(--md-primary, #8F4C38);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.article a:hover {
+  color: var(--md-on-primary-container, #723523);
+}
+
+/* Lists */
+.article ul, .article ol {
+  margin-bottom: 1.25rem;
+  padding-left: 1.5rem;
+}
+
+.article li {
+  margin-bottom: 0.35rem;
+}
+
+.article li > ul, .article li > ol {
+  margin-top: 0.35rem;
+  margin-bottom: 0;
+}
+
+/* Blockquote */
+.article blockquote {
+  border-left: 4px solid var(--md-primary, #8F4C38);
+  background: var(--md-primary-container, #FFDBD1);
+  padding: 1rem 1.25rem;
+  margin: 1.5rem 0;
+  border-radius: 0 0.5rem 0.5rem 0;
+  color: var(--md-on-primary-container, #723523);
+}
+
+.article blockquote p:last-child {
+  margin-bottom: 0;
+}
+
+/* Code */
+.article code {
+  font-family: var(--md-font-family-mono, 'JetBrains Mono', monospace);
+  font-size: 0.85em;
+  background: var(--md-surface-container, #FCEAE5);
+  padding: 0.15em 0.4em;
+  border-radius: 0.25rem;
+}
+
+.article pre {
+  margin: 1.5rem 0;
+  border-radius: 0.75rem;
+  overflow-x: auto;
+}
+
+.article .codehilite {
+  background: var(--md-surface-container-lowest, #FFFFFF);
+  border: 1px solid var(--md-outline-variant, #D8C2BC);
+  border-radius: 0.75rem;
+  padding: 1rem 1.25rem;
+  overflow-x: auto;
+  margin: 1.5rem 0;
+}
+
+.article .codehilite code {
+  background: none;
+  padding: 0;
+  font-size: 0.82em;
+}
+
+/* Tables */
+.article table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  font-size: 0.9rem;
+}
+
+.article th {
+  background: var(--md-surface-container, #FCEAE5);
+  font-weight: 600;
+  text-align: left;
+  padding: 0.75rem 1rem;
+  border-bottom: 2px solid var(--md-outline-variant, #D8C2BC);
+}
+
+.article td {
+  padding: 0.6rem 1rem;
+  border-bottom: 1px solid var(--md-surface-container, #FCEAE5);
+}
+
+/* Anchor links */
+.anchor-link {
+  font-size: 0.8em;
+  opacity: 0;
+  margin-left: 0.5rem;
+  text-decoration: none !important;
+  transition: opacity 0.15s;
+}
+
+.article h2:hover .anchor-link,
+.article h3:hover .anchor-link,
+.article h4:hover .anchor-link {
+  opacity: 0.5;
+}
+
+/* Footnotes */
+.footnote {
+  font-size: 0.85rem;
+  color: var(--md-on-surface-variant, #53433F);
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--md-outline-variant, #D8C2BC);
+}
+
+/* Images */
+.article img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+  margin: 1rem 0;
+}
+
+/* Horizontal rule */
+.article hr {
+  border: none;
+  border-top: 2px solid var(--md-surface-container, #FCEAE5);
+  margin: 2.5rem 0;
+}
+
+/* Check Items */
+.check-items {
+  margin-top: 2.5rem;
+  padding: 1.25rem;
+  background: var(--md-surface-container-low, #FFF1ED);
+  border: 1px solid var(--md-outline-variant, #D8C2BC);
+  border-radius: 0.75rem;
+}
+
+.check-items-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.625rem;
+  border-bottom: 1px solid var(--md-outline-variant, #D8C2BC);
+}
+
+.check-items-title {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--md-on-surface, #231917);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.check-items-progress {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--md-on-surface-variant, #53433F);
+}
+
+.check-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.625rem 0.5rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  user-select: none;
+}
+
+.check-item:hover {
+  background: var(--md-surface-container, #FCEAE5);
+}
+
+.check-item-input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.check-item-box {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  margin-top: 1px;
+  border: 2px solid var(--md-outline, #85736E);
+  border-radius: 0.3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  background: transparent;
+}
+
+.check-item-icon {
+  width: 14px;
+  height: 14px;
+  opacity: 0;
+  transform: scale(0.5);
+  transition: all 0.2s ease;
+  color: var(--md-on-primary, #FFFFFF);
+}
+
+.check-item-input:checked ~ .check-item-box {
+  background: var(--md-primary, #8F4C38);
+  border-color: var(--md-primary, #8F4C38);
+}
+
+.check-item-input:checked ~ .check-item-box .check-item-icon {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.check-item-text {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--md-on-surface, #231917);
+  transition: color 0.15s ease;
+}
+
+.check-item-input:checked ~ .check-item-text {
+  color: var(--md-on-surface-variant, #53433F);
+}
+
+/* Page Navigation (Prev / Next) */
+.page-nav {
+  display: flex;
+  gap: 1rem;
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--md-outline-variant, #D8C2BC);
+}
+
+.page-nav-link {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.875rem 1rem;
+  border: 1px solid var(--md-outline-variant, #D8C2BC);
+  border-radius: 0.625rem;
+  text-decoration: none;
+  transition: all 0.15s ease;
+  min-width: 0;
+}
+
+.page-nav-link:hover {
+  border-color: var(--md-primary, #8F4C38);
+  background: var(--md-surface-container-low, #FFF1ED);
+}
+
+.page-nav-next {
+  align-items: flex-end;
+  text-align: right;
+}
+
+.page-nav-disabled {
+  visibility: hidden;
+}
+
+.page-nav-label {
+  font-size: 0.7rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--md-on-surface-variant, #53433F);
+}
+
+.page-nav-title {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--md-on-surface, #231917);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.page-nav-link:hover .page-nav-title {
+  color: var(--md-primary, #8F4C38);
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .sidebar {
+    transform: translateX(-100%);
+    width: 280px !important;
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+    box-shadow: 4px 0 24px rgba(0,0,0,0.1);
+  }
+
+  .resize-handle,
+  .sidebar-collapse-btn,
+  .sidebar-expand-btn {
+    display: none !important;
+  }
+
+  .sidebar-toggle {
+    display: flex;
+  }
+
+  /* Hide desktop collapse state on mobile */
+  .sidebar-collapsed .sidebar {
+    width: 280px !important;
+  }
+
+  .sidebar-collapsed .sidebar-header,
+  .sidebar-collapsed .sidebar-nav {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .content {
+    margin-left: 0;
+  }
+
+  .sidebar-collapsed .content {
+    margin-left: 0;
+  }
+
+  .article {
+    padding: 1.25rem;
+    padding-top: 4rem;
+  }
+
+  .article h1 {
+    font-size: 1.75rem;
+  }
+
+  .article h2 {
+    font-size: 1.35rem;
+  }
+}
+
+/* Book schemes (inline SVG figures) */
+.book-scheme {
+  margin: 2rem 0;
+  text-align: center;
+}
+
+.book-scheme svg {
+  width: 100%;
+  max-width: 640px;
+  height: auto;
+}
+
+.book-scheme figcaption {
+  font-size: 0.8rem;
+  color: var(--md-on-surface-variant, #53433F);
+  margin-top: 0.5rem;
+}
+
+/* Nav progress badges (from progress/progress.json) */
+.nav-status {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  margin-left: 0.4rem;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+
+.nav-status-done {
+  background: var(--md-primary, #8F4C38);
+}
+
+.nav-status-wip {
+  background: transparent;
+  border: 1.5px solid var(--md-primary, #8F4C38);
+  box-sizing: border-box;
+}
+
+/* Book callout — одна сильна думка, винесена в окремий блок (pull quote) */
+.book-callout {
+  margin: 2.25rem 0;
+  padding: 0.4rem 0 0.4rem 1.4rem;
+  border-left: 3px solid var(--md-primary, #8F4C38);
+  font-size: 1.18em;
+  line-height: 1.55;
+  font-weight: 500;
+  color: var(--md-on-primary-container, #723523);
+}
+@media print {
+  .book-callout { break-inside: avoid; }
+}
+
+/* Substack subscribe embed on published chapter pages */
+/* Leanpub banner under the chapter title (public site only) */
+.leanpub-banner {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  margin: 1.5rem 0 2rem;
+  padding: 1rem 1.25rem;
+  border: 1px solid var(--md-outline-variant, #D8C2BC);
+  border-radius: 12px;
+  background: var(--md-surface-container-low, #FFF8F6);
+  color: inherit;
+  text-decoration: none;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+.leanpub-banner,
+.leanpub-banner:hover,
+.leanpub-banner:visited,
+.leanpub-banner span {
+  text-decoration: none !important;
+  border-bottom: 0 !important;
+  background-image: none !important;
+}
+.leanpub-banner:hover {
+  text-decoration: none;
+  box-shadow: 0 10px 28px -14px rgba(0, 0, 0, 0.35);
+  transform: translateY(-1px);
+}
+.leanpub-banner-cover {
+  flex: 0 0 auto;
+  width: 84px;
+  height: auto;
+  border-radius: 3px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15), 0 8px 18px -10px rgba(0, 0, 0, 0.4);
+  margin: 0 !important;
+}
+.leanpub-banner-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  min-width: 0;
+}
+.leanpub-banner-kicker {
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--md-on-surface-variant, #53433F);
+}
+.leanpub-banner-title {
+  font-weight: 600;
+  font-size: 1.05rem;
+  color: var(--md-on-surface, #231917);
+}
+.leanpub-banner-text {
+  font-size: 0.9rem;
+  line-height: 1.45;
+  color: var(--md-on-surface-variant, #53433F);
+}
+.leanpub-banner-button {
+  margin-top: 0.35rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--md-primary, #8F4C38);
+}
+@media (max-width: 520px) {
+  .leanpub-banner { gap: 0.9rem; padding: 0.85rem 1rem; }
+  .leanpub-banner-cover { width: 64px; }
+}
+
+.subscribe-embed {
+  margin: 1.75rem 0;
+  display: flex;
+  justify-content: center;
+}
+.subscribe-embed iframe {
+  max-width: 100%;
+}
+
+
+    </style>
+<script async data-id="101511163" src="//static.getclicky.com/js"></script>
+</head>
+<body>
+    <div class="layout">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <span class="sidebar-title">Requisite Variety: A Systems Method for Working with AI</span>
+                <button class="sidebar-collapse-btn" id="sidebar-collapse" aria-label="Collapse sidebar">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="11 17 6 12 11 7"></polyline>
+                        <polyline points="18 17 13 12 18 7"></polyline>
+                    </svg>
+                </button>
+            </div>
+            <nav class="sidebar-nav">
+                <ul class="nav-tree" data-depth="0"><li class="nav-item">
+<a href="/variety/read/en/">Requisite Variety</a>
+</li>
+<li class="nav-item">
+<a href="/variety/read/en/part-1-system/">Part I. The system you actually control</a>
+<ul class="nav-tree" data-depth="1"><li class="nav-item">
+<a href="/variety/read/en/part-1-system/02-requisite-variety/">Chapter 2. The Law of Requisite Variety</a>
+</li></ul>
+</li>
+<li class="nav-item">
+<a href="/variety/read/en/part-2-goals/">Part II. Goals and taste: what you are really asking for</a>
+<ul class="nav-tree" data-depth="1"><li class="nav-item">
+<a href="/variety/read/en/part-2-goals/06-goal-and-proxy/">Chapter 6. A Goal and Its Proxy</a>
+</li></ul>
+</li>
+<li class="nav-item">
+<a href="/variety/read/en/part-3-activity/">Part III. Activity: the method of daily work</a>
+<ul class="nav-tree" data-depth="1"><li class="nav-item">
+<a href="/variety/read/en/part-3-activity/10-activity-decomposition/">Chapter 10. The Components of Activity</a>
+</li>
+<li class="nav-item">
+<a href="/variety/read/en/part-3-activity/12-normative-base/">Chapter 12. The Normative Base</a>
+</li>
+<li class="nav-item">
+<a href="/variety/read/en/part-3-activity/13-control-degradation/">Chapter 13. Control, Controllability, Degradation</a>
+</li>
+<li class="nav-item active">
+<a href="/variety/read/en/part-3-activity/14-agent-orchestration/">Chapter 14. Agent Orchestration</a>
+</li></ul>
+</li></ul>
+            </nav>
+            <div class="sidebar-links"><a class="sidebar-link sidebar-link-lang" href="/variety/read/" lang="uk">Українська</a>
+<a class="sidebar-link sidebar-link-newsletter" href="https://kiosan.substack.com" target="_blank" rel="noopener">Newsletter ↗</a></div>
+            <div class="resize-handle" id="resize-handle"></div>
+        </aside>
+        <button class="sidebar-expand-btn" id="sidebar-expand" aria-label="Expand sidebar">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+        </button>
+        <button class="sidebar-toggle" id="sidebar-toggle" aria-label="Toggle sidebar">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+        </button>
+        <main class="content">
+            <article class="article">
+                <h1 id="chapter-14-agent-orchestration">Chapter 14. Agent Orchestration<a class="anchor-link" href="#chapter-14-agent-orchestration" title="Permanent link">&para;</a></h1>
+<p><a class="leanpub-banner" href="https://leanpub.com/requisite-variety" target="_blank" rel="noopener"><img class="leanpub-banner-cover" src="/images/variety-cover-en-sm.png" width="280" height="400" alt="Requisite Variety — book cover" loading="lazy" decoding="async"><span class="leanpub-banner-body"><span class="leanpub-banner-kicker">The book on Leanpub</span><span class="leanpub-banner-title">Requisite Variety</span><span class="leanpub-banner-text">The book is written in the open. Buy it once and get every new chapter as PDF and EPUB as it&rsquo;s published.</span><span class="leanpub-banner-button">Get the book on Leanpub →</span></span></a></p>
+<p>One agent is the beginning. We give it a task; it reads the code, writes, runs the tests, and comes back with a result. Everything this book has said about a session so far is about that agent: the context boundary, the proxy, norms, the control loop.</p>
+<p>Mostly, though, we work with several agents. One breaks the task into parts and hands them to the others, each with its own context, often in parallel and on separate branches. Some of them work for five minutes, some for several hours without a pause. The results come back, get merged, and you receive a single message: done.</p>
+<p>The agent that distributes the work and collects the results I&rsquo;ll call the <strong>orchestrator</strong>; the ones it hands the parts to, <strong>subagents</strong>. Engineering already knows the word &ldquo;orchestration&rdquo; from Kubernetes, which came up in chapter 13: a system that distributes and restarts services across many machines on its own. You can also call this main agent a controller.</p>
+<p>What changed for you? There are now several times more steps than you could read, and of those you see only the last message. Who holds the goal in a system like that?</p>
+<p>Chapter 2 would answer briefly: every new agent adds machine variety, while yours stays the same — like the shepherd who had two more flocks added to his one. Chapter 13 assembled a control loop for a single agent; here there are several loops, and the most interesting part happens between them.</p>
+<h2 id="copies-are-not-yet-a-system">Copies are not yet a system<a class="anchor-link" href="#copies-are-not-yet-a-system" title="Permanent link">&para;</a></h2>
+<p>The first thing you want to do with agents is multiply them. One agent reviews a pull request well; three will review it three times as reliably. One looks for the cause of an incident; five will find it five times faster.</p>
+<p>Sounds like arithmetic — only the arithmetic here is different.</p>
+<p>Three agents on the same model, with the same system prompt and the same context, are not three checks but one check run three times. They have the same statistics, the same blind spots, and the same internal goal — plausibility, which chapter 6 was about. A mistake the first one doesn&rsquo;t see, the other two most likely won&rsquo;t see either. Together they produce not confidence but the feeling of it: three &ldquo;approved&rdquo; instead of one.</p>
+<p>Systems theory has a rule for this: a collection of identical elements is a set, not a system, however many there are. What makes a system is the difference between elements — and precisely where they interact. Identical performers on the same job add no new properties to the whole.</p>
+<p>So what does add them? Difference. The agent that writes the code and the agent that checks it have to differ where it matters for the check: a different context — the reviewer sees the specification and the tests but hasn&rsquo;t seen the author&rsquo;s reasoning; different criteria; sometimes a different model. Subagents hunting for the cause of an incident are useful when each looks at its own source: one at the application logs, the second at the worker logs, the third at the metrics and the deploy history. Every such difference is a distinction the other one didn&rsquo;t have.</p>
+<aside class="book-callout">An identical agent adds states that need distinguishing and adds no distinctions. A different one adds both.</aside>
+
+<figure class="book-scheme">
+<svg viewBox="0 0 640 290" role="img" aria-label="Ticket: add a discount for regular customers. Three reviewers with the same context see the same thing and say approved three times, missing that regular is undefined. Three reviewers with different contexts — ticket and code, specification and norms, integration tests — and one of them stops the work by asking what a regular customer is">
+  <defs>
+    <marker id="s1-a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8F4C38"/></marker>
+  </defs>
+  <rect x="0" y="0" width="640" height="290" fill="#FFFFFF"/>
+  <text x="320" y="22" text-anchor="middle" font-size="12.5" font-weight="600" fill="#231917">ticket: "add a discount for regular customers"</text>
+  <line x1="320" y1="34" x2="320" y2="282" stroke="#D8C2BC" stroke-width="1.5" stroke-dasharray="4 4"/>
+  <text x="157" y="50" text-anchor="middle" font-size="12" font-weight="600" fill="#53433F">three copies</text>
+  <text x="477" y="50" text-anchor="middle" font-size="12" font-weight="600" fill="#53433F">three different</text>
+  <text x="64" y="76" text-anchor="middle" font-size="11" fill="#85736E">what it sees</text>
+  <text x="217" y="76" text-anchor="middle" font-size="11" fill="#85736E">what it says</text>
+  <text x="384" y="76" text-anchor="middle" font-size="11" fill="#85736E">what it sees</text>
+  <text x="537" y="76" text-anchor="middle" font-size="11" fill="#85736E">what it says</text>
+  <rect x="14" y="84" width="100" height="32" rx="8" fill="#FFF" stroke="#85736E" stroke-width="1.5"/>
+  <text x="64" y="104" text-anchor="middle" font-size="11.5" fill="#231917">ticket + code</text>
+  <line x1="116" y1="100" x2="130" y2="100" stroke="#8F4C38" stroke-width="1.5" marker-end="url(#s1-a)"/>
+  <rect x="134" y="84" width="166" height="32" rx="8" fill="#FFF" stroke="#85736E" stroke-width="1.5"/>
+  <text x="217" y="104" text-anchor="middle" font-size="11.5" fill="#231917">discount is in, tests pass</text>
+  <rect x="14" y="124" width="100" height="32" rx="8" fill="#FFF" stroke="#85736E" stroke-width="1.5"/>
+  <text x="64" y="144" text-anchor="middle" font-size="11.5" fill="#231917">ticket + code</text>
+  <line x1="116" y1="140" x2="130" y2="140" stroke="#8F4C38" stroke-width="1.5" marker-end="url(#s1-a)"/>
+  <rect x="134" y="124" width="166" height="32" rx="8" fill="#FFF" stroke="#85736E" stroke-width="1.5"/>
+  <text x="217" y="144" text-anchor="middle" font-size="11.5" fill="#231917">discount is in, tests pass</text>
+  <rect x="14" y="164" width="100" height="32" rx="8" fill="#FFF" stroke="#85736E" stroke-width="1.5"/>
+  <text x="64" y="184" text-anchor="middle" font-size="11.5" fill="#231917">ticket + code</text>
+  <line x1="116" y1="180" x2="130" y2="180" stroke="#8F4C38" stroke-width="1.5" marker-end="url(#s1-a)"/>
+  <rect x="134" y="164" width="166" height="32" rx="8" fill="#FFF" stroke="#85736E" stroke-width="1.5"/>
+  <text x="217" y="184" text-anchor="middle" font-size="11.5" fill="#231917">discount is in, tests pass</text>
+  <line x1="217" y1="198" x2="217" y2="214" stroke="#8F4C38" stroke-width="2" marker-end="url(#s1-a)"/>
+  <rect x="134" y="218" width="166" height="32" rx="8" fill="#F5E1A7" stroke="#85736E" stroke-width="1.5"/>
+  <text x="217" y="238" text-anchor="middle" font-size="12" font-weight="600" fill="#231917">"approved" ×3</text>
+  <text x="157" y="268" text-anchor="middle" font-size="11.5" fill="#53433F">what "regular" means is undefined,</text>
+  <text x="157" y="282" text-anchor="middle" font-size="11.5" fill="#53433F">and none of the three sees it</text>
+  <rect x="334" y="84" width="100" height="32" rx="8" fill="#FFF" stroke="#85736E" stroke-width="1.5"/>
+  <text x="384" y="104" text-anchor="middle" font-size="11.5" fill="#231917">ticket + code</text>
+  <line x1="436" y1="100" x2="450" y2="100" stroke="#8F4C38" stroke-width="1.5" marker-end="url(#s1-a)"/>
+  <rect x="454" y="84" width="166" height="32" rx="8" fill="#FFF" stroke="#85736E" stroke-width="1.5"/>
+  <text x="537" y="104" text-anchor="middle" font-size="11.5" fill="#231917">discount is in, tests pass</text>
+  <rect x="334" y="124" width="100" height="32" rx="8" fill="#FFF" stroke="#85736E" stroke-width="1.5"/>
+  <text x="384" y="138" text-anchor="middle" font-size="11" fill="#231917">specification,</text>
+  <text x="384" y="151" text-anchor="middle" font-size="11" fill="#231917">team norms</text>
+  <line x1="436" y1="140" x2="450" y2="140" stroke="#8F4C38" stroke-width="1.5" marker-end="url(#s1-a)"/>
+  <rect x="454" y="124" width="166" height="32" rx="8" fill="#FFDBD1" stroke="#8F4C38" stroke-width="1.5"/>
+  <text x="537" y="138" text-anchor="middle" font-size="11" fill="#723523">regular = a subscription,</text>
+  <text x="537" y="151" text-anchor="middle" font-size="11" fill="#723523">not a number of orders</text>
+  <rect x="334" y="164" width="100" height="32" rx="8" fill="#FFF" stroke="#85736E" stroke-width="1.5"/>
+  <text x="384" y="178" text-anchor="middle" font-size="11" fill="#231917">integration</text>
+  <text x="384" y="191" text-anchor="middle" font-size="11" fill="#231917">tests</text>
+  <line x1="436" y1="180" x2="450" y2="180" stroke="#8F4C38" stroke-width="1.5" marker-end="url(#s1-a)"/>
+  <rect x="454" y="164" width="166" height="32" rx="8" fill="#FFDBD1" stroke="#8F4C38" stroke-width="1.5"/>
+  <text x="537" y="184" text-anchor="middle" font-size="11.5" fill="#723523">subscription test fails</text>
+  <line x1="537" y1="198" x2="537" y2="214" stroke="#8F4C38" stroke-width="2" marker-end="url(#s1-a)"/>
+  <rect x="334" y="218" width="286" height="32" rx="8" fill="#FFDBD1" stroke="#8F4C38" stroke-width="1.5"/>
+  <text x="477" y="238" text-anchor="middle" font-size="12" font-weight="600" fill="#723523">stop: what is a regular customer?</text>
+  <text x="477" y="268" text-anchor="middle" font-size="11.5" fill="#53433F">two of the three looked where</text>
+  <text x="477" y="282" text-anchor="middle" font-size="11.5" fill="#53433F">the first one didn't</text>
+</svg>
+<figcaption>Figure 14.1. The same pull request: three reviewers with the same context miss the same thing three times; three with different contexts stop it</figcaption>
+</figure>
+
+<p>Identical agents can be used differently — as an instrument. Run the same task three times and take not the best answer but what coincided in all three: that&rsquo;s how chapter 12 separated the decision from the noise. But then it&rsquo;s no longer three performers; it&rsquo;s a measurement, and the spread between runs shows where the noise is.</p>
+<h2 id="a-renovation-with-a-foreman">A renovation with a foreman<a class="anchor-link" href="#a-renovation-with-a-foreman" title="Permanent link">&para;</a></h2>
+<p>Imagine renovating an apartment.</p>
+<p>An electrician, a plumber, a plasterer, a tiler. Each a master of their trade: the electrician can run the wiring with their eyes closed, the tiler lays tile joint to joint. Each works in their own room, with their own tools, on their own day. And each, if asked, will say they did a good job — and won&rsquo;t be lying.</p>
+<p>End of the working week. Yesterday the plasterer finished the hallway wall, ready for paint. Today the electrician came and cut a channel through it for a new switch: a hammer drill, dust over half the apartment, fresh plaster in chunks on the floor. The plumber ran a pipe exactly according to their diagram — to the spot where, by the designer&rsquo;s drawing, a wardrobe will stand. The tiler raised the bathroom floor a centimeter higher than whoever ordered the doors had counted on, and now the doors don&rsquo;t close.</p>
+<p>Each did their part, and the apartment isn&rsquo;t finished. The defect doesn&rsquo;t live in anyone&rsquo;s work; it lives at the <strong>seams</strong> — where one person&rsquo;s work becomes the base for another&rsquo;s.</p>
+<p>Who&rsquo;s responsible for that? The foreman. And a good foreman doesn&rsquo;t lay tile. He doesn&rsquo;t hold the drill and doesn&rsquo;t stand behind the electrician&rsquo;s back: if he did, he&rsquo;d finish one room while the rest stood still. He holds something else.</p>
+<p>The drawing — one for everyone. Floor height, outlet positions, where the wardrobe stands: all written down before the first tradesman walked in, and the same for all. The electrician and the tiler may never meet — they have the drawing.</p>
+<p>The order of work. First wiring and pipes, then plaster, then tile — because each next layer covers the one before.</p>
+<p>And acceptance. Construction has a document with a telling name — the hidden-works sign-off: an inspection of what is about to be covered up. Before the wiring is sealed under plaster, it&rsquo;s accepted: looked at, measured, photographed. After that the wall is smooth, and what&rsquo;s inside can no longer be seen. Checking whether the wire runs where it&rsquo;s drawn would take a hammer drill. A foreman who missed that moment will never see the wiring again — only the switches on the wall.</p>
+<p>The drawing, the order, acceptance before covering up, and the seams no single tradesman answers for — that&rsquo;s what a foreman&rsquo;s job is made of.</p>
+<h2 id="whats-visible-from-above">What&rsquo;s visible from above<a class="anchor-link" href="#whats-visible-from-above" title="Permanent link">&para;</a></h2>
+<p>The foreman doesn&rsquo;t stand behind the electrician&rsquo;s back, and not out of laziness: the steps of the level below can&rsquo;t be seen from the level above.</p>
+<p>There&rsquo;s no direct link between levels. A higher level affects a lower one only through the whole — through the task it gave and the result it accepted. The orchestrator gives a subagent a task and gets a result back. What the subagent did in between — which files it opened, which hypotheses it discarded, what it decided not to check — doesn&rsquo;t exist for the orchestrator. For you, one more level up, even less so.</p>
+<p>You can try to climb through the level and read every step of every agent. Then there&rsquo;s no orchestration: there&rsquo;s you and a pile of steps you read yourself — the same shepherd from chapter 2, only now with several flocks. Orchestration where a human watches every step differs from a single agent in nothing but fatigue.</p>
+<p>Three consequences follow.</p>
+<p>First: to the level above, a subagent is a point. What reaches the top is not the work but a brief report on it, and from that report you see only what deviated and what was agreed to be reported. What exactly has to come back is set before the start. Chapter 13 called this the visible trace, and here it&rsquo;s needed at every seam. A subagent that wasn&rsquo;t told what to return will return &ldquo;done&rdquo; — the shortest plausible report.</p>
+<p>Second: you see only your own links. Your link is with the orchestrator. What the orchestrator wrote to a subagent, what the subagent replied, what two subagents left each other in a shared file — you never saw. Conversations between agents are as invisible to you as the deal between the electrician and the plasterer that &ldquo;we&rsquo;ll patch the channel later.&rdquo;</p>
+<p>Third: every level costs. The task has to be written up and handed out; the results collected, merged, and checked at the seams. Every intermediate level eats a share of time and tokens on this redistribution, and the more levels, the smaller the share of what&rsquo;s spent reaches the actual work. So there should be as many agents as the task has genuinely independent parts, and no more. An orchestrator that launches ten subagents on a three-part task adds seven performers with no part of their own — but with seams to all the others.</p>
+<figure class="book-scheme">
+<svg viewBox="0 0 640 300" role="img" aria-label="Three levels: you, the orchestrator, the subagents. You see only your own link with the orchestrator; conversations between agents are invisible to you">
+  <defs>
+    <marker id="s2-a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8F4C38"/></marker>
+  </defs>
+  <rect x="0" y="0" width="640" height="300" fill="#FFFFFF"/>
+  <rect x="270" y="16" width="100" height="34" rx="10" fill="#FFF" stroke="#85736E" stroke-width="1.5"/>
+  <text x="320" y="38" text-anchor="middle" font-size="13" font-weight="600" fill="#231917">you</text>
+  <line x1="306" y1="52" x2="306" y2="104" stroke="#8F4C38" stroke-width="2" marker-end="url(#s2-a)"/>
+  <line x1="334" y1="104" x2="334" y2="52" stroke="#8F4C38" stroke-width="2" marker-end="url(#s2-a)"/>
+  <text x="298" y="82" text-anchor="end" font-size="11.5" fill="#53433F">task</text>
+  <text x="342" y="82" text-anchor="start" font-size="11.5" fill="#53433F">"done"</text>
+  <rect x="396" y="65" width="228" height="28" rx="8" fill="#FFDBD1" stroke="#8F4C38" stroke-width="1.5"/>
+  <text x="510" y="84" text-anchor="middle" font-size="11.5" font-weight="600" fill="#723523">the only link you see</text>
+  <line x1="396" y1="79" x2="392" y2="79" stroke="#8F4C38" stroke-width="1.5" stroke-dasharray="3 3"/>
+  <rect x="250" y="106" width="140" height="36" rx="10" fill="#FFF" stroke="#85736E" stroke-width="1.5"/>
+  <text x="320" y="129" text-anchor="middle" font-size="13" fill="#231917">orchestrator</text>
+  <line x1="300" y1="144" x2="130" y2="212" stroke="#8F4C38" stroke-width="2" marker-start="url(#s2-a)" marker-end="url(#s2-a)"/>
+  <line x1="320" y1="144" x2="320" y2="212" stroke="#8F4C38" stroke-width="2" marker-start="url(#s2-a)" marker-end="url(#s2-a)"/>
+  <line x1="340" y1="144" x2="510" y2="212" stroke="#8F4C38" stroke-width="2" marker-start="url(#s2-a)" marker-end="url(#s2-a)"/>
+  <text x="330" y="182" text-anchor="start" font-size="11" fill="#53433F">task ↓ report ↑</text>
+  <rect x="60" y="216" width="120" height="36" rx="10" fill="#FFF" stroke="#85736E" stroke-width="1.5"/>
+  <text x="120" y="239" text-anchor="middle" font-size="13" fill="#231917">subagent</text>
+  <rect x="260" y="216" width="120" height="36" rx="10" fill="#FFF" stroke="#85736E" stroke-width="1.5"/>
+  <text x="320" y="239" text-anchor="middle" font-size="13" fill="#231917">subagent</text>
+  <rect x="460" y="216" width="120" height="36" rx="10" fill="#FFF" stroke="#85736E" stroke-width="1.5"/>
+  <text x="520" y="239" text-anchor="middle" font-size="13" fill="#231917">subagent</text>
+  <line x1="182" y1="234" x2="258" y2="234" stroke="#85736E" stroke-width="1.5" stroke-dasharray="4 3"/>
+  <line x1="382" y1="234" x2="458" y2="234" stroke="#85736E" stroke-width="1.5" stroke-dasharray="4 3"/>
+  <text x="320" y="282" text-anchor="middle" font-size="12" fill="#53433F">what the agents said to each other is invisible to you</text>
+</svg>
+<figcaption>Figure 14.2. What's visible from above: each level sees only its own links — the task down and the report up</figcaption>
+</figure>
+
+<h2 id="a-proxy-of-a-proxy">A proxy of a proxy<a class="anchor-link" href="#a-proxy-of-a-proxy" title="Permanent link">&para;</a></h2>
+<p>Chapter 6 described a goal on three levels: in your head, in the input field, and in the system&rsquo;s optimization. Between the first and the second stands the proxy — the wording you wrote in place of the goal.</p>
+<p>In orchestration, the subagent&rsquo;s input field isn&rsquo;t written by you. The orchestrator writes it: it breaks your task down and words its own for each part. This is <strong>a proxy of a proxy</strong>. You worded the goal, the orchestrator retold it in parts, the subagent optimizes the retelling. If your wording had a gap, the orchestrator fills it with something plausible — and hands that filling to every branch at once.</p>
+<p>In a system of agents, a mistake travels both ways. Top down: the orchestrator&rsquo;s assumption goes into every branch, and each branch adds its own on top. Bottom up: one branch&rsquo;s mistake rises along with its result and enters the assembled whole. The more branches and levels, the more places a mistake can be born, and the longer the path it travels unchecked.</p>
+<figure class="book-scheme">
+<svg viewBox="0 0 640 350" role="img" aria-label="Chain: goal in your head, your proxy, the orchestrator, three proxies of a proxy, three results, the assembled whole. A gap at the top spreads down every branch; one branch's mistake enters the whole">
+  <defs>
+    <marker id="s3-a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8F4C38"/></marker>
+  </defs>
+  <rect x="0" y="0" width="640" height="350" fill="#FFFFFF"/>
+  <rect x="240" y="14" width="160" height="32" rx="8" fill="#FFF" stroke="#85736E" stroke-width="1.5"/>
+  <text x="320" y="35" text-anchor="middle" font-size="12.5" fill="#231917">goal in your head</text>
+  <line x1="320" y1="48" x2="320" y2="66" stroke="#8F4C38" stroke-width="2" marker-end="url(#s3-a)"/>
+  <rect x="240" y="70" width="160" height="32" rx="8" fill="#FFF" stroke="#85736E" stroke-width="1.5"/>
+  <text x="320" y="91" text-anchor="middle" font-size="12.5" fill="#231917">your proxy</text>
+  <circle cx="416" cy="86" r="6" fill="#FFF" stroke="#8F4C38" stroke-width="1.5" stroke-dasharray="2 2"/>
+  <text x="428" y="90" text-anchor="start" font-size="11.5" fill="#53433F">a gap in the wording</text>
+  <line x1="320" y1="104" x2="320" y2="122" stroke="#8F4C38" stroke-width="2" marker-end="url(#s3-a)"/>
+  <rect x="240" y="126" width="160" height="32" rx="8" fill="#FFF" stroke="#85736E" stroke-width="1.5"/>
+  <text x="320" y="147" text-anchor="middle" font-size="12.5" fill="#231917">orchestrator</text>
+  <line x1="300" y1="160" x2="120" y2="186" stroke="#8F4C38" stroke-width="2" marker-end="url(#s3-a)"/>
+  <line x1="320" y1="160" x2="320" y2="186" stroke="#8F4C38" stroke-width="2" marker-end="url(#s3-a)"/>
+  <line x1="340" y1="160" x2="520" y2="186" stroke="#8F4C38" stroke-width="2" marker-end="url(#s3-a)"/>
+  <circle cx="210" cy="173" r="6" fill="#F5E1A7" stroke="#8F4C38" stroke-width="1.5"/>
+  <circle cx="320" cy="173" r="6" fill="#F5E1A7" stroke="#8F4C38" stroke-width="1.5"/>
+  <circle cx="430" cy="173" r="6" fill="#F5E1A7" stroke="#8F4C38" stroke-width="1.5"/>
+  <text x="20" y="142" text-anchor="start" font-size="11.5" fill="#53433F">top down:</text>
+  <text x="20" y="156" text-anchor="start" font-size="11.5" fill="#53433F">one assumption</text>
+  <text x="20" y="170" text-anchor="start" font-size="11.5" fill="#53433F">into every branch</text>
+  <rect x="50" y="190" width="140" height="32" rx="8" fill="#FFF" stroke="#85736E" stroke-width="1.5"/>
+  <text x="120" y="211" text-anchor="middle" font-size="12.5" fill="#231917">proxy of a proxy 1</text>
+  <rect x="220" y="190" width="200" height="32" rx="8" fill="#FFF" stroke="#85736E" stroke-width="1.5"/>
+  <text x="320" y="211" text-anchor="middle" font-size="12.5" fill="#231917">proxy of a proxy 2</text>
+  <rect x="450" y="190" width="140" height="32" rx="8" fill="#FFF" stroke="#85736E" stroke-width="1.5"/>
+  <text x="520" y="211" text-anchor="middle" font-size="12.5" fill="#231917">proxy of a proxy 3</text>
+  <line x1="120" y1="224" x2="120" y2="242" stroke="#8F4C38" stroke-width="2" marker-end="url(#s3-a)"/>
+  <line x1="320" y1="224" x2="320" y2="242" stroke="#8F4C38" stroke-width="2" marker-end="url(#s3-a)"/>
+  <line x1="520" y1="224" x2="520" y2="242" stroke="#8F4C38" stroke-width="2" marker-end="url(#s3-a)"/>
+  <rect x="50" y="246" width="140" height="32" rx="8" fill="#FFF" stroke="#85736E" stroke-width="1.5"/>
+  <text x="120" y="267" text-anchor="middle" font-size="12.5" fill="#231917">result 1</text>
+  <rect x="210" y="246" width="220" height="32" rx="8" fill="#FFDBD1" stroke="#8F4C38" stroke-width="2"/>
+  <text x="320" y="267" text-anchor="middle" font-size="12" font-weight="600" fill="#723523">result 2 — with a mistake</text>
+  <rect x="450" y="246" width="140" height="32" rx="8" fill="#FFF" stroke="#85736E" stroke-width="1.5"/>
+  <text x="520" y="267" text-anchor="middle" font-size="12.5" fill="#231917">result 3</text>
+  <line x1="120" y1="280" x2="280" y2="304" stroke="#8F4C38" stroke-width="2" marker-end="url(#s3-a)"/>
+  <line x1="320" y1="280" x2="320" y2="304" stroke="#8F4C38" stroke-width="2" marker-end="url(#s3-a)"/>
+  <line x1="520" y1="280" x2="360" y2="304" stroke="#8F4C38" stroke-width="2" marker-end="url(#s3-a)"/>
+  <rect x="190" y="308" width="260" height="32" rx="8" fill="#FFDBD1" stroke="#8F4C38" stroke-width="2"/>
+  <text x="320" y="329" text-anchor="middle" font-size="12" font-weight="600" fill="#723523">assembled whole — with a mistake</text>
+  <text x="620" y="318" text-anchor="end" font-size="11.5" fill="#53433F">bottom up:</text>
+  <text x="620" y="332" text-anchor="end" font-size="11.5" fill="#53433F">a branch's mistake</text>
+  <text x="620" y="346" text-anchor="end" font-size="11.5" fill="#53433F">enters the whole</text>
+</svg>
+<figcaption>Figure 14.3. A proxy of a proxy: a gap at the top spreads down every branch; a branch's mistake rises into the assembled whole</figcaption>
+</figure>
+
+<p>Two rules follow.</p>
+<p>First: one goal per subagent. Chapter 13 showed that an agent with two goals is two lines on one breaker. A task you can describe only with &ldquo;and while you&rsquo;re at it&rdquo; is really two tasks. If the system has more goals than time and attention to see each through, the result isn&rsquo;t guaranteed, whatever the performers do.</p>
+<p>Second: the <strong>common measure</strong> is set by the level above. Two subagents&rsquo; results can be compared and merged only by a measure that&rsquo;s the same for both. The subagents themselves don&rsquo;t have one: each measures itself by what it was told. So the acceptance criteria are written by the level above them and not handed to those who are measured by them. An agent that writes its own criteria and accepts itself by them will always be accepted.</p>
+<h2 id="whats-left-for-the-dispatcher">What&rsquo;s left for the dispatcher<a class="anchor-link" href="#whats-left-for-the-dispatcher" title="Permanent link">&para;</a></h2>
+<p>So what does the human do when the steps aren&rsquo;t theirs to take?</p>
+<p>They become the <strong>dispatcher</strong>: not supervising steps but distributing, accepting, and stopping. There&rsquo;s no less work here than when you write the code yourself — just different work, and no agent will do it for you.</p>
+<p>The same arithmetic as in chapter 2 applies. Whoever organizes a system has to be organized no worse than the system. If you can&rsquo;t break the task into parts and name how to check each one, the orchestrator can&rsquo;t either — it will only pretend it can.</p>
+<p>The dispatcher holds the goal, the common measure, the norms, and the stop points — each of them before the start.</p>
+<p><strong>The goal.</strong> The goal note from chapter 6 — before launch: what I want to get and how I&rsquo;ll check it. And one question before the start that you can skip with one agent but not with several: can what&rsquo;s needed be obtained at all from what&rsquo;s there? If the repository has no tests for a module, no set of subagents will tell you whether the migration broke it. Before the start, that&rsquo;s visible in five minutes; after — once the agents have already worked for several hours.</p>
+<p><strong>The common measure.</strong> The foreman&rsquo;s drawing. Acceptance criteria that are the same for every branch: the contract between layers, the report format for every subagent, the test the assembled result has to pass — not each part separately. And one more thing — who checks the seams: every subagent checks its own part, and nobody checks the seams until someone is given them specifically.</p>
+<p><strong>Norms.</strong> The normative base from chapter 12 is the only &ldquo;understand&rdquo; every subagent has before the start. A subagent didn&rsquo;t hear your conversation with the orchestrator an hour ago: what&rsquo;s in its session is what&rsquo;s in play, and nothing else. A norm that lives only in your conversation never reaches it. And a large team with nothing to hold it together breaks into groups, each doing its own thing. A shared file of norms is that glue.</p>
+<p><strong>Stop points.</strong> The hidden-works sign-off. Before every step after which checking is no longer possible — a migration on the production database, a deploy, an email to a client, deleting a branch — the system stops and waits for a human. And a default rule for every subagent: if you don&rsquo;t know for certain what to do — don&rsquo;t; stop and return the question. Acting at random widens the gap between what&rsquo;s needed and what&rsquo;s done; stopping doesn&rsquo;t.</p>
+<p>But a stop costs time: the question goes up, the answer comes down, and while it travels, the branch stands still. So stops should be few, and they should stand where a mistake costs more than the wait.</p>
+<aside class="book-callout">The dispatcher takes no step. They hold what no single performer holds.</aside>
+
+<figure class="book-scheme">
+<svg viewBox="0 0 640 250" role="img" aria-label="Four blocks the dispatcher holds before the start: goal, common measure, norms, stop points, with their renovation counterparts. The steps during the work are not the dispatcher's">
+  <rect x="0" y="0" width="640" height="250" fill="#FFFFFF"/>
+  <line x1="20" y1="30" x2="620" y2="30" stroke="#D8C2BC" stroke-width="1.5" stroke-dasharray="4 4"/>
+  <rect x="255" y="18" width="130" height="24" rx="12" fill="#FFF"/>
+  <text x="320" y="35" text-anchor="middle" font-size="12" font-weight="600" fill="#8F4C38">before the start</text>
+  <rect x="20" y="54" width="140" height="44" rx="10" fill="#FFDBD1" stroke="#8F4C38" stroke-width="1.5"/>
+  <text x="90" y="81" text-anchor="middle" font-size="13" font-weight="600" fill="#723523">goal</text>
+  <text x="90" y="120" text-anchor="middle" font-size="11.5" fill="#53433F">goal note: what I want</text>
+  <text x="90" y="136" text-anchor="middle" font-size="11.5" fill="#53433F">to get and how I'll check</text>
+  <rect x="170" y="54" width="140" height="44" rx="10" fill="#FFDBD1" stroke="#8F4C38" stroke-width="1.5"/>
+  <text x="240" y="81" text-anchor="middle" font-size="13" font-weight="600" fill="#723523">common measure</text>
+  <text x="240" y="120" text-anchor="middle" font-size="11.5" fill="#53433F">the foreman's drawing:</text>
+  <text x="240" y="136" text-anchor="middle" font-size="11.5" fill="#53433F">criteria the same for all</text>
+  <rect x="320" y="54" width="140" height="44" rx="10" fill="#FFDBD1" stroke="#8F4C38" stroke-width="1.5"/>
+  <text x="390" y="81" text-anchor="middle" font-size="13" font-weight="600" fill="#723523">norms</text>
+  <text x="390" y="120" text-anchor="middle" font-size="11.5" fill="#53433F">a shared file of norms</text>
+  <text x="390" y="136" text-anchor="middle" font-size="11.5" fill="#53433F">in every session</text>
+  <rect x="470" y="54" width="150" height="44" rx="10" fill="#FFDBD1" stroke="#8F4C38" stroke-width="1.5"/>
+  <text x="545" y="81" text-anchor="middle" font-size="13" font-weight="600" fill="#723523">stop points</text>
+  <text x="545" y="120" text-anchor="middle" font-size="11.5" fill="#53433F">hidden-works sign-off:</text>
+  <text x="545" y="136" text-anchor="middle" font-size="11.5" fill="#53433F">before an irreversible step</text>
+  <line x1="20" y1="166" x2="620" y2="166" stroke="#D8C2BC" stroke-width="1.5" stroke-dasharray="4 4"/>
+  <rect x="255" y="154" width="130" height="24" rx="12" fill="#FFF"/>
+  <text x="320" y="171" text-anchor="middle" font-size="12" font-weight="600" fill="#85736E">during the work</text>
+  <rect x="250" y="190" width="140" height="36" rx="10" fill="#FFF" stroke="#D8C2BC" stroke-width="1.5"/>
+  <text x="320" y="213" text-anchor="middle" font-size="13" fill="#85736E">steps</text>
+  <line x1="290" y1="209" x2="350" y2="209" stroke="#8F4C38" stroke-width="1.5"/>
+  <text x="400" y="213" text-anchor="start" font-size="11.5" fill="#53433F">done by subagents</text>
+  <text x="320" y="244" text-anchor="middle" font-size="12" fill="#8F4C38">four blocks before the start; the steps aren't theirs</text>
+</svg>
+<figcaption>Figure 14.4. What the dispatcher holds: goal, common measure, norms, and stop points — before the start; the steps — no</figcaption>
+</figure>
+
+<p>One more thing from chapter 13 — springiness. A subagent that answers &ldquo;that won&rsquo;t work, and here&rsquo;s why&rdquo; is worth more than one that returns &ldquo;done&rdquo; to any task. With one agent you&rsquo;ll hear the objection yourself. In a system of agents it has to be designed in: give the subagent a format in which &ldquo;no&rdquo; is a legitimate result, not a failure.</p>
+<p>And the scope of autonomy of a system of agents is measured the same way as for a single agent in chapter 13: in portions — as much work as the system does in one go before a check — and in stops, when the work came back to a human. Only now the stops have to be counted on every branch separately and at the seams separately.</p>
+<h2 id="seventeen-thousand-lines">Seventeen thousand lines<a class="anchor-link" href="#seventeen-thousand-lines" title="Permanent link">&para;</a></h2>
+<p>I write this book with agents, and every chapter of it is a small system of agents.</p>
+<p><strong>First attempt.</strong> Chapter 2 was written by one agent in one evening: draft, review, polish, and three figures — in a single session. The monographs whose logic the book stands on it never opened — it retold them from memory. The review was done by the same agent that wrote, and the text passed it easily: same statistics, same blind spots. It drew the figures right away, without asking which were needed. From the outside, the chapter was ready, marked &ldquo;reviewed and polished.&rdquo;</p>
+<p>The next day I had to rewrite a section where a regularity from practice was presented as a conservation law. And over the following weeks I left fifty-nine edits on the chapter. The agent handled every step on its own. What was missing was another position: everything was written and checked from one place.</p>
+<p><strong>Second attempt — this chapter.</strong> Now a chapter passes through several agents, and each differs from the others where it matters.</p>
+<p>First — three reader agents, in parallel, one per monograph: seventeen thousand lines of OCR&rsquo;d Russian text between them. Each with its own context — only its monograph — and a report format that was the same for all: the regularity, its essence, verbatim quotes with line numbers. The format is the common measure: a quote with a line number can be checked in a minute. They worked for two to five minutes each. Neither I nor the orchestrator saw their steps — only the notes, which went into a file and will outlive any session.</p>
+<p>Then — a stop. The orchestrator drew up a plan for the chapter with three candidates each for the metaphor, the scenario, and the anti-pattern, and without my &ldquo;yes&rdquo; no text was written. The renovation with a foreman was my pick of the three.</p>
+<p>Then my review; then a polishing agent with a fresh context and a different model. Figures — through a stop again. The English translation — by a separate agent, and only after the figures, when the text will no longer change: first the wiring, then the plaster.</p>
+<p>The mistake appeared at the seam between the orchestrator and the readers.</p>
+<p>Writing up the task for the readers, the orchestrator put its own assumption into it: it asked them to find in the monograph how defects pass from higher levels of a system to lower ones. I never saw that wording — it was the orchestrator&rsquo;s proxy for the subagent. The reader returned notes with a caveat at the very top: in the source, defects pass the other way, from the bottom up. Another reader wrote that the words &ldquo;delegation&rdquo; and &ldquo;coordination&rdquo; don&rsquo;t appear in its monograph at all — zero matches — and listed the nearest mechanisms separately, marked as a reconstruction, not the author&rsquo;s claim.</p>
+<p>Why did it work? The reader had a different context — the monograph itself, not the conversation with the orchestrator. And the format demanded quotes with line numbers: you can&rsquo;t plausibly retell something that isn&rsquo;t in the text and attach a line number to it. A difference in position and a trace that can be checked — and the false proxy stopped at the first seam instead of spreading through the chapter.</p>
+<p>My steps in this process — two stops and a review. I didn&rsquo;t write a single set of notes this time. On review I left sixteen edits on this chapter — against fifty-nine on chapter 2. But one mistake I would earlier have hunted for in the text myself never reached the text.</p>
+<h2 id="a-committee-of-copies">A committee of copies<a class="anchor-link" href="#a-committee-of-copies" title="Permanent link">&para;</a></h2>
+<p>This chapter&rsquo;s anti-pattern looks like thoroughness.</p>
+<p>A team has set up a pipeline of three agents. The first writes code from a ticket, the second reviews the pull request, the third reads the review and marks it &ldquo;approved.&rdquo; Same model, same system prompt, same context: the ticket and the code. Every pull request passes three checks. People see the final &ldquo;approved&rdquo; and merge.</p>
+<p>The ticket says: &ldquo;add a discount for regular customers.&rdquo; The first agent decided that regular means three orders a year. It&rsquo;s written nowhere — it&rsquo;s a plausible filling of a gap. The reviewer checks the code against the ticket and agrees: the discount is there, the tests pass. The third sees that the reviewer agreed. That in this company a regular customer is one with a subscription, not one with a number of orders, none of the three knew: it wasn&rsquo;t in any of their contexts.</p>
+<p>How many distinctions did the second and third agents add? Almost none. A reviewer with the same context and the same statistics sees in the code what the author saw — and likewise fails to see that &ldquo;regular customer&rdquo; is defined nowhere. The third approves a review written by a copy of the author. Activity is high: three agents, thousands of tokens, detailed comments. And on the outside — one distinction, issued three times, and behind it two conversations between agents that no human saw.</p>
+<p>Diagnosis by this chapter&rsquo;s law: copies are not a system, and a check from the same position is a repeat. Chapter 13 described a practice that over time starts working for itself: many runs, the same quality. The committee of copies is the same state — only the practice didn&rsquo;t degrade into it; it was built that way.</p>
+<p>The cure isn&rsquo;t a fourth agent. The reviewer gets a different context: not just the ticket and the code but the specification, the team&rsquo;s norms, the history of similar bugs, and a separate question — &ldquo;what does the ticket leave undefined?&rdquo; To that the reviewer should have answered &ldquo;what is a regular customer?&rdquo; — and stopped. The third agent gets a different measure: integration tests, say, which the author didn&rsquo;t run. If there&rsquo;s no other measure for it, the third agent isn&rsquo;t needed: one that merely approves someone else&rsquo;s approval eats resources and distinguishes nothing.</p>
+<p>And the &ldquo;approved&rdquo; before anything that can&rsquo;t be rolled back — a merge into the main branch, a deploy — is given by a human, not an agent. Plus the Test button from chapter 13: deliberately plant a bug in a pull request and see whether at least one of the three agents catches it.</p>
+<h2 id="orchestration-scales">Orchestration scales<a class="anchor-link" href="#orchestration-scales" title="Permanent link">&para;</a></h2>
+<p>The same thing happens with a team of people. A team lead who reads every commit of every engineer does what a human reading every agent&rsquo;s step does: the team exists, but only one person is looking. And the same committee of copies — three reviewers with the same experience approving what none of them understands.</p>
+<p>A company is one more level: an executive who receives only &ldquo;everything&rsquo;s on plan&rdquo; sees departments the way you see subagents — as points.</p>
+<p>When a practice is genuinely ready for orchestration, and when it&rsquo;s an attempt to skip a stage — that&rsquo;s the conversation of chapter 15.</p>
+<h2 id="in-your-craft">In your craft<a class="anchor-link" href="#in-your-craft" title="Permanent link">&para;</a></h2>
+<p>Seams exist in every craft where work is divided into parts.</p>
+<p><strong>Text.</strong> Three agents write three chapters of a manual in parallel. Each chapter is good. But the same screen is called &ldquo;the panel&rdquo; in one, &ldquo;the dashboard&rdquo; in the second, &ldquo;the home page&rdquo; in the third. The defect lives at the seam. The common measure here is a glossary written before the start. A separate agent checks only the terms across chapters.</p>
+<p><strong>Analytics.</strong> Five subagents analyze five data sources; the orchestrator merges the conclusions into a report. Every conclusion is plausible. But &ldquo;active user&rdquo; means different things in two of the sources, and the report hides that. What counts as active is decided by whoever asked the question. The stop — before the report goes to the client.</p>
+<p><strong>Design.</strong> Three agents generate layout variants from the same brief. You get three versions of the same average. Difference appears when each gets its own constraint or its own reference. Only someone with criteria can choose among the variants. That step isn&rsquo;t handed to those who generated them.</p>
+<hr />
+<p>To close — three questions for your practice.</p>
+<p>— How many agents work in your system — and how do they differ from one another, apart from the name in the config?</p>
+<p>— What did your orchestrator write to the subagents on the last run? If you don&rsquo;t know — who checked that proxy?</p>
+<p>— And deeper: which step in your process is the hidden-works sign-off, after which checking is no longer possible? Who accepts it?</p>
+<div class="subscribe-embed"><iframe src="https://kiosan.substack.com/embed?transparent=1" width="480" height="320" style="border: 0; background: transparent" title="Subscribe to the newsletter" loading="lazy" frameborder="0" scrolling="no"></iframe></div>
+                <div class="check-items" data-page-key="part-3-activity/14-agent-orchestration"><div class="check-items-header"><span class="check-items-title">Key Takeaways</span><span class="check-items-progress"></span></div><label class="check-item" data-index="0"><input type="checkbox" class="check-item-input" data-index="0"><span class="check-item-box"><svg class="check-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span><span class="check-item-text">Ten identical agents are not a system — they're the same mistake ten times. What makes a system is the difference between them.</span></label>
+<label class="check-item" data-index="1"><input type="checkbox" class="check-item-input" data-index="1"><span class="check-item-box"><svg class="check-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span><span class="check-item-text">Work with an agent through the task and the result, not through its steps. Whoever reads every step is back to a single agent — with the fatigue of ten.</span></label>
+<label class="check-item" data-index="2"><input type="checkbox" class="check-item-input" data-index="2"><span class="check-item-box"><svg class="check-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span><span class="check-item-text">Every handoff of a task is a new proxy. A gap at the start spreads down every branch.</span></label>
+<label class="check-item" data-index="3"><input type="checkbox" class="check-item-input" data-index="3"><span class="check-item-box"><svg class="check-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span><span class="check-item-text">What the agents said to each other, you never saw. What has to come back up — set it before the start.</span></label>
+<label class="check-item" data-index="4"><input type="checkbox" class="check-item-input" data-index="4"><span class="check-item-box"><svg class="check-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span><span class="check-item-text">The dispatcher holds the goal, the common measure, the norms, and the stop points. Not the steps.</span></label></div>
+                <nav class="page-nav"><a class="page-nav-link page-nav-prev" href="/variety/read/en/part-3-activity/13-control-degradation/"><span class="page-nav-label">← Previous</span></a>
+<span class="page-nav-link page-nav-next page-nav-disabled"></span></nav>
+            </article>
+        </main>
+    </div>
+    <script>
+var SIDEBAR_WIDTH_KEY = 'essay-sidebar-width-system-for-ai-engineers-en';
+var SIDEBAR_COLLAPSED_KEY = 'essay-sidebar-collapsed-system-for-ai-engineers-en';
+var ESSAY_LOCAL_MODE = false;
+var ESSAY_PAGE_KEY = "en/part-3-activity/14-agent-orchestration";
+document.addEventListener('DOMContentLoaded', function() {
+  var sidebar = document.getElementById('sidebar');
+  var handle = document.getElementById('resize-handle');
+  var collapseBtn = document.getElementById('sidebar-collapse');
+  var expandBtn = document.getElementById('sidebar-expand');
+  var mobileToggle = document.getElementById('sidebar-toggle');
+  var html = document.documentElement;
+  var MIN_WIDTH = 200;
+  var MAX_WIDTH = 480;
+
+  // Desktop: collapse / expand
+  function setCollapsed(collapsed) {
+    if (collapsed) {
+      html.classList.add('sidebar-collapsed');
+    } else {
+      html.classList.remove('sidebar-collapsed');
+    }
+    if (typeof SIDEBAR_COLLAPSED_KEY !== 'undefined') {
+      localStorage.setItem(SIDEBAR_COLLAPSED_KEY, collapsed ? '1' : '0');
+    }
+  }
+
+  if (collapseBtn) {
+    collapseBtn.addEventListener('click', function() {
+      setCollapsed(true);
+    });
+  }
+
+  if (expandBtn) {
+    expandBtn.addEventListener('click', function() {
+      setCollapsed(false);
+    });
+  }
+
+  // Mobile: slide-in toggle
+  if (mobileToggle && sidebar) {
+    mobileToggle.addEventListener('click', function() {
+      sidebar.classList.toggle('open');
+    });
+
+    document.addEventListener('click', function(e) {
+      if (sidebar.classList.contains('open') &&
+          !sidebar.contains(e.target) &&
+          !mobileToggle.contains(e.target)) {
+        sidebar.classList.remove('open');
+      }
+    });
+  }
+
+  // Resizable sidebar (desktop only, when not collapsed)
+  if (handle && sidebar) {
+    var startX, startWidth;
+
+    handle.addEventListener('mousedown', function(e) {
+      if (html.classList.contains('sidebar-collapsed')) return;
+      e.preventDefault();
+      startX = e.clientX;
+      startWidth = sidebar.getBoundingClientRect().width;
+      handle.classList.add('active');
+      document.body.classList.add('resizing');
+
+      document.addEventListener('mousemove', onMouseMove);
+      document.addEventListener('mouseup', onMouseUp);
+    });
+
+    function onMouseMove(e) {
+      var newWidth = startWidth + (e.clientX - startX);
+      newWidth = Math.max(MIN_WIDTH, Math.min(newWidth, MAX_WIDTH));
+      html.style.setProperty('--sidebar-width', newWidth + 'px');
+    }
+
+    function onMouseUp() {
+      handle.classList.remove('active');
+      document.body.classList.remove('resizing');
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
+
+      var currentWidth = sidebar.getBoundingClientRect().width;
+      if (typeof SIDEBAR_WIDTH_KEY !== 'undefined') {
+        localStorage.setItem(SIDEBAR_WIDTH_KEY, Math.round(currentWidth));
+      }
+    }
+  }
+
+  // --- Check Items persistence ---
+  var checkContainers = document.querySelectorAll('.check-items');
+  if (checkContainers.length) {
+    initCheckItems(checkContainers);
+  }
+
+  function initCheckItems(containers) {
+    var isLocal = (typeof ESSAY_LOCAL_MODE !== 'undefined') && ESSAY_LOCAL_MODE;
+    var essayId = getMeta('essay-id');
+    var pageId = getMeta('essay-page-id');
+    var csrf = getMeta('csrf-token');
+
+    containers.forEach(function(container) {
+      var pageKey = container.getAttribute('data-page-key');
+      var inputs = container.querySelectorAll('.check-item-input');
+      var storageKey = 'essay-checks-' + pageKey;
+
+      // Load saved state
+      loadChecks(storageKey, essayId, pageId, csrf, isLocal, function(checked) {
+        if (checked && checked.length) {
+          inputs.forEach(function(input) {
+            var idx = parseInt(input.getAttribute('data-index'), 10);
+            if (checked.indexOf(idx) !== -1) {
+              input.checked = true;
+            }
+          });
+        }
+        updateProgress(container, inputs);
+      });
+
+      // Listen for changes
+      inputs.forEach(function(input) {
+        input.addEventListener('change', function() {
+          var checked = [];
+          inputs.forEach(function(inp) {
+            if (inp.checked) checked.push(parseInt(inp.getAttribute('data-index'), 10));
+          });
+          saveChecks(storageKey, essayId, pageId, csrf, isLocal, checked);
+          updateProgress(container, inputs);
+        });
+      });
+    });
+  }
+
+  function updateProgress(container, inputs) {
+    var total = inputs.length;
+    var checked = 0;
+    inputs.forEach(function(inp) { if (inp.checked) checked++; });
+    var el = container.querySelector('.check-items-progress');
+    if (el) {
+      el.textContent = checked + ' / ' + total;
+    }
+  }
+
+  function getMeta(name) {
+    var el = document.querySelector('meta[name="' + name + '"]');
+    return el ? el.content : null;
+  }
+
+  function loadChecks(storageKey, essayId, pageId, csrf, isLocal, callback) {
+    if (isLocal || !essayId) {
+      var raw = localStorage.getItem(storageKey);
+      callback(raw ? JSON.parse(raw) : []);
+      return;
+    }
+    var url = '/api/dynamic_data?essay_id=' + essayId + '&key=' + encodeURIComponent(storageKey);
+    if (pageId) url += '&page_id=' + pageId;
+    fetch(url, { headers: csrf ? { 'X-CSRF-Token': csrf } : {} })
+      .then(function(r) { return r.json(); })
+      .then(function(d) { callback(d.data ? d.data.checked : []); })
+      .catch(function() { callback([]); });
+  }
+
+  function saveChecks(storageKey, essayId, pageId, csrf, isLocal, checked) {
+    if (isLocal || !essayId) {
+      localStorage.setItem(storageKey, JSON.stringify(checked));
+      return;
+    }
+    var body = {
+      essay_id: essayId,
+      key: storageKey,
+      data: { checked: checked }
+    };
+    if (pageId) body.page_id = pageId;
+    fetch('/api/dynamic_data', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-Token': csrf || ''
+      },
+      body: JSON.stringify(body)
+    }).catch(function() {});
+  }
+});
+
+
+    </script>
+</body>
+</html>
