@@ -1,0 +1,1487 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Розділ 8. Різноманіття проти слопу — Необхідне різноманіття: системний метод роботи з AI</title>
+    <meta name="essay-page-key" content="uk/part-2-goals/08-variety-vs-slop">
+    <script>
+    // Blocking: apply saved sidebar state before first paint to prevent layout jump
+    (function() {
+        var d = document.documentElement;
+        if (window.innerWidth <= 900) return;
+        var collapsed = localStorage.getItem('essay-sidebar-collapsed-system-for-ai-engineers') === '1';
+        if (collapsed) d.classList.add('sidebar-collapsed');
+        var w = localStorage.getItem('essay-sidebar-width-system-for-ai-engineers');
+        if (w && !collapsed) {
+            var px = Math.max(200, Math.min(parseInt(w, 10), 480));
+            d.style.setProperty('--sidebar-width', px + 'px');
+        }
+    })();
+    </script>
+    <style>
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v18/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuLyfAZ9hiA.woff2) format('woff2');
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v18/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuI6fAZ9hiA.woff2) format('woff2');
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v18/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuGKYAZ9hiA.woff2) format('woff2');
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v18/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuFuYAZ9hiA.woff2) format('woff2');
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/jetbrainsmono/v18/tDbY2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKxjPVmUsaaDhw.woff2) format('woff2');
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/jetbrainsmono/v18/tDbY2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKxTPVmUsaaDhw.woff2) format('woff2');
+}
+:root {
+  --md-primary: #4C662B;
+  --md-surface-tint: #4C662B;
+  --md-on-primary: #FFFFFF;
+  --md-primary-container: #CDEDA3;
+  --md-on-primary-container: #354E16;
+  --md-secondary: #586249;
+  --md-on-secondary: #FFFFFF;
+  --md-secondary-container: #DCE7C8;
+  --md-on-secondary-container: #404A33;
+  --md-tertiary: #386663;
+  --md-on-tertiary: #FFFFFF;
+  --md-tertiary-container: #BCECE7;
+  --md-on-tertiary-container: #1F4E4B;
+  --md-error: #BA1A1A;
+  --md-on-error: #FFFFFF;
+  --md-error-container: #FFDAD6;
+  --md-on-error-container: #93000A;
+  --md-background: #F9FAEF;
+  --md-on-background: #1A1C16;
+  --md-surface: #F9FAEF;
+  --md-on-surface: #1A1C16;
+  --md-surface-variant: #E1E4D5;
+  --md-on-surface-variant: #44483D;
+  --md-outline: #75796C;
+  --md-outline-variant: #C5C8BA;
+  --md-shadow: #000000;
+  --md-scrim: #000000;
+  --md-inverse-surface: #2F312A;
+  --md-inverse-on-surface: #F1F2E6;
+  --md-inverse-primary: #B1D18A;
+  --md-primary-fixed: #CDEDA3;
+  --md-on-primary-fixed: #102000;
+  --md-primary-fixed-dim: #B1D18A;
+  --md-on-primary-fixed-variant: #354E16;
+  --md-secondary-fixed: #DCE7C8;
+  --md-on-secondary-fixed: #151E0B;
+  --md-secondary-fixed-dim: #BFCBAD;
+  --md-on-secondary-fixed-variant: #404A33;
+  --md-tertiary-fixed: #BCECE7;
+  --md-on-tertiary-fixed: #00201E;
+  --md-tertiary-fixed-dim: #A0D0CB;
+  --md-on-tertiary-fixed-variant: #1F4E4B;
+  --md-surface-dim: #DADBD0;
+  --md-surface-bright: #F9FAEF;
+  --md-surface-container-lowest: #FFFFFF;
+  --md-surface-container-low: #F3F4E9;
+  --md-surface-container: #EEEFE3;
+  --md-surface-container-high: #E8E9DE;
+  --md-surface-container-highest: #E2E3D8;
+}
+pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.codehilite .hll { background-color: #ffffcc }
+.codehilite { background: #f8f8f8; }
+.codehilite .c { color: #3D7B7B; font-style: italic } /* Comment */
+.codehilite .err { border: 1px solid #F00 } /* Error */
+.codehilite .k { color: #008000; font-weight: bold } /* Keyword */
+.codehilite .o { color: #666 } /* Operator */
+.codehilite .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
+.codehilite .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
+.codehilite .cp { color: #9C6500 } /* Comment.Preproc */
+.codehilite .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
+.codehilite .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
+.codehilite .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
+.codehilite .gd { color: #A00000 } /* Generic.Deleted */
+.codehilite .ge { font-style: italic } /* Generic.Emph */
+.codehilite .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+.codehilite .gr { color: #E40000 } /* Generic.Error */
+.codehilite .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.codehilite .gi { color: #008400 } /* Generic.Inserted */
+.codehilite .go { color: #717171 } /* Generic.Output */
+.codehilite .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.codehilite .gs { font-weight: bold } /* Generic.Strong */
+.codehilite .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.codehilite .gt { color: #04D } /* Generic.Traceback */
+.codehilite .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.codehilite .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.codehilite .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.codehilite .kp { color: #008000 } /* Keyword.Pseudo */
+.codehilite .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.codehilite .kt { color: #B00040 } /* Keyword.Type */
+.codehilite .m { color: #666 } /* Literal.Number */
+.codehilite .s { color: #BA2121 } /* Literal.String */
+.codehilite .na { color: #687822 } /* Name.Attribute */
+.codehilite .nb { color: #008000 } /* Name.Builtin */
+.codehilite .nc { color: #00F; font-weight: bold } /* Name.Class */
+.codehilite .no { color: #800 } /* Name.Constant */
+.codehilite .nd { color: #A2F } /* Name.Decorator */
+.codehilite .ni { color: #717171; font-weight: bold } /* Name.Entity */
+.codehilite .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
+.codehilite .nf { color: #00F } /* Name.Function */
+.codehilite .nl { color: #767600 } /* Name.Label */
+.codehilite .nn { color: #00F; font-weight: bold } /* Name.Namespace */
+.codehilite .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.codehilite .nv { color: #19177C } /* Name.Variable */
+.codehilite .ow { color: #A2F; font-weight: bold } /* Operator.Word */
+.codehilite .w { color: #BBB } /* Text.Whitespace */
+.codehilite .mb { color: #666 } /* Literal.Number.Bin */
+.codehilite .mf { color: #666 } /* Literal.Number.Float */
+.codehilite .mh { color: #666 } /* Literal.Number.Hex */
+.codehilite .mi { color: #666 } /* Literal.Number.Integer */
+.codehilite .mo { color: #666 } /* Literal.Number.Oct */
+.codehilite .sa { color: #BA2121 } /* Literal.String.Affix */
+.codehilite .sb { color: #BA2121 } /* Literal.String.Backtick */
+.codehilite .sc { color: #BA2121 } /* Literal.String.Char */
+.codehilite .dl { color: #BA2121 } /* Literal.String.Delimiter */
+.codehilite .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.codehilite .s2 { color: #BA2121 } /* Literal.String.Double */
+.codehilite .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
+.codehilite .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.codehilite .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
+.codehilite .sx { color: #008000 } /* Literal.String.Other */
+.codehilite .sr { color: #A45A77 } /* Literal.String.Regex */
+.codehilite .s1 { color: #BA2121 } /* Literal.String.Single */
+.codehilite .ss { color: #19177C } /* Literal.String.Symbol */
+.codehilite .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.codehilite .fm { color: #00F } /* Name.Function.Magic */
+.codehilite .vc { color: #19177C } /* Name.Variable.Class */
+.codehilite .vg { color: #19177C } /* Name.Variable.Global */
+.codehilite .vi { color: #19177C } /* Name.Variable.Instance */
+.codehilite .vm { color: #19177C } /* Name.Variable.Magic */
+.codehilite .il { color: #666 } /* Literal.Number.Integer.Long */
+/* Reset & Base */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --sidebar-width: 272px;
+  --sidebar-collapsed-width: 0px;
+}
+
+html {
+  font-size: var(--md-base-size, 18px);
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--md-font-family, 'Inter', sans-serif);
+  font-weight: var(--md-body-weight, 400);
+  line-height: var(--md-line-height, 1.7);
+  color: var(--md-on-surface, #231917);
+  background: var(--md-background, #FFF8F6);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Layout */
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: var(--sidebar-width);
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--md-surface-container-low, #FFF1ED);
+  border-right: 1px solid var(--md-outline-variant, #D8C2BC);
+  z-index: 100;
+  transition: width 0.25s ease, transform 0.3s ease;
+  overflow: hidden;
+}
+
+/* Sidebar header */
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 1rem 0.75rem 1rem 1.25rem;
+  border-bottom: 1px solid var(--md-outline-variant, #D8C2BC);
+  flex-shrink: 0;
+}
+
+.sidebar-title {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--md-on-surface, #231917);
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+
+.sidebar-collapse-btn {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 0.375rem;
+  background: transparent;
+  color: var(--md-on-surface-variant, #53433F);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.sidebar-collapse-btn:hover {
+  background: var(--md-surface-container, #FCEAE5);
+  color: var(--md-on-surface, #231917);
+}
+
+/* Sidebar nav */
+.sidebar-nav {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 0.5rem 0;
+}
+
+.nav-tree {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.nav-tree .nav-tree {
+  padding-left: 0.5rem;
+  margin-left: 0.875rem;
+  border-left: 1px solid var(--md-outline-variant, #D8C2BC);
+}
+
+.nav-item {
+  position: relative;
+}
+
+.nav-item a,
+.nav-item .nav-label {
+  display: block;
+  padding: 0.375rem 0.75rem;
+  margin: 1px 0.5rem;
+  font-size: 0.8rem;
+  font-weight: 400;
+  color: var(--md-on-surface-variant, #53433F);
+  text-decoration: none;
+  transition: all 0.15s ease;
+  border-radius: 0.375rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.nav-item .nav-label {
+  color: var(--md-on-surface, #231917);
+  font-weight: 500;
+  cursor: default;
+}
+
+.nav-item a:hover {
+  color: var(--md-on-surface, #231917);
+  background: var(--md-surface-container, #FCEAE5);
+}
+
+.nav-item.active > a {
+  color: var(--md-on-primary-container, #723523);
+  font-weight: 500;
+  background: var(--md-primary-container, #FFDBD1);
+}
+
+/* Newsletter issues under a chapter */
+.nav-count {
+  display: inline-block;
+  min-width: 1.15rem;
+  padding: 0 0.35rem;
+  margin-left: 0.4rem;
+  font-size: 0.65rem;
+  line-height: 1.15rem;
+  text-align: center;
+  border-radius: 999px;
+  background: var(--md-surface-container, #FCEAE5);
+  color: var(--md-on-surface-variant, #53433F);
+  vertical-align: middle;
+}
+.nav-item.active > a .nav-count { background: rgba(255,255,255,0.6); }
+.nav-tree.nav-issues {
+  border-left-style: dashed;
+}
+.nav-issue a {
+  font-size: 0.74rem;
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+}
+.nav-issue a::before {
+  content: "✉";
+  margin-right: 0.35rem;
+  font-size: 0.7rem;
+  opacity: 0.7;
+}
+.nav-issue.nav-maxims a::before {
+  content: "\275D";
+}
+
+/* Maxims page (Substack Notes drafts) */
+.maxim {
+  margin: 0 0 1.6rem;
+  padding: 0 0 1.2rem;
+  border-bottom: 1px solid var(--md-outline-variant, #D8C2BC);
+}
+.maxim-text {
+  font-size: 1.05rem;
+  line-height: 1.55;
+  margin: 0 0 0.9rem;
+}
+.maxim-text .maxim-p { margin: 0 0 0.6rem; }
+.maxim-alt {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--md-on-surface-variant, #53433F);
+  margin: 0 0 0.5rem;
+  padding-left: 0.9rem;
+  border-left: 2px solid var(--md-outline-variant, #D8C2BC);
+}
+.maxim-alt .maxim-p { margin: 0 0 0.45rem; }
+.maxim-meta {
+  font-size: 0.72rem;
+  color: var(--md-outline, #85736E);
+  margin: 0;
+}
+
+.nav-item.active-parent > a {
+  color: var(--md-on-surface, #231917);
+  font-weight: 500;
+}
+
+/* Resize handle */
+.resize-handle {
+  position: absolute;
+  top: 0;
+  right: -3px;
+  width: 6px;
+  height: 100%;
+  cursor: col-resize;
+  z-index: 110;
+  transition: background 0.15s ease;
+}
+
+.resize-handle:hover,
+.resize-handle.active {
+  background: var(--md-primary, #8F4C38);
+  opacity: 0.3;
+}
+
+body.resizing {
+  cursor: col-resize;
+  user-select: none;
+}
+
+/* Sidebar expand button (visible when collapsed, desktop) */
+.sidebar-expand-btn {
+  display: none;
+  position: fixed;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 200;
+  width: 36px;
+  height: 36px;
+  align-items: center;
+  justify-content: center;
+  background: var(--md-surface, #FFF8F6);
+  border: 1px solid var(--md-outline-variant, #D8C2BC);
+  border-radius: 0.5rem;
+  cursor: pointer;
+  color: var(--md-on-surface-variant, #53433F);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  transition: all 0.15s ease;
+}
+
+.sidebar-expand-btn:hover {
+  background: var(--md-surface-container, #FCEAE5);
+  color: var(--md-on-surface, #231917);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+/* Collapsed state (set on <html>) */
+.sidebar-collapsed .sidebar {
+  width: 0;
+  border-right-color: transparent;
+}
+
+.sidebar-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1rem;
+  padding: 0.75rem 1.25rem;
+  border-top: 1px solid var(--md-outline-variant);
+  font-size: 0.8rem;
+}
+.sidebar-link {
+  color: var(--md-on-surface-variant);
+  text-decoration: none;
+}
+.sidebar-link:hover { color: var(--md-primary); text-decoration: underline; }
+
+.sidebar-collapsed .sidebar-header,
+.sidebar-collapsed .sidebar-links,
+.sidebar-collapsed .sidebar-nav,
+.sidebar-collapsed .resize-handle {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.sidebar-collapsed .sidebar-expand-btn {
+  display: flex;
+}
+
+.sidebar-collapsed .content {
+  margin-left: 0;
+}
+
+/* Mobile sidebar toggle */
+.sidebar-toggle {
+  display: none;
+  position: fixed;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 200;
+  width: 36px;
+  height: 36px;
+  align-items: center;
+  justify-content: center;
+  background: var(--md-surface, #FFF8F6);
+  border: 1px solid var(--md-outline-variant, #D8C2BC);
+  border-radius: 0.5rem;
+  cursor: pointer;
+  color: var(--md-on-surface-variant, #53433F);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+
+.sidebar-toggle:hover {
+  background: var(--md-surface-container, #FCEAE5);
+  color: var(--md-on-surface, #231917);
+}
+
+/* Content */
+.content {
+  margin-left: var(--sidebar-width);
+  flex: 1;
+  min-width: 0;
+  transition: margin-left 0.25s ease;
+}
+
+.article {
+  max-width: var(--md-max-width, 720px);
+  margin: 0 auto;
+  padding: var(--md-content-padding, 2rem);
+  padding-top: 3rem;
+  padding-bottom: 4rem;
+}
+
+/* Typography */
+.article h1 {
+  font-size: 2.25rem;
+  font-weight: var(--md-heading-weight, 700);
+  line-height: 1.2;
+  margin-bottom: 1.5rem;
+  color: var(--md-on-surface, #231917);
+  letter-spacing: -0.02em;
+}
+
+.article h2 {
+  font-size: 1.6rem;
+  font-weight: var(--md-heading-weight, 700);
+  line-height: 1.25;
+  margin-top: 3rem;
+  margin-bottom: 1rem;
+  color: var(--md-on-surface, #231917);
+  padding-bottom: 0.4rem;
+  border-bottom: 2px solid var(--md-primary-container, #FFDBD1);
+}
+
+.article h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1.3;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+  color: var(--md-on-surface, #231917);
+}
+
+.article h4 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.article p {
+  margin-bottom: 1.25rem;
+}
+
+.article a {
+  color: var(--md-primary, #8F4C38);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.article a:hover {
+  color: var(--md-on-primary-container, #723523);
+}
+
+/* Lists */
+.article ul, .article ol {
+  margin-bottom: 1.25rem;
+  padding-left: 1.5rem;
+}
+
+.article li {
+  margin-bottom: 0.35rem;
+}
+
+.article li > ul, .article li > ol {
+  margin-top: 0.35rem;
+  margin-bottom: 0;
+}
+
+/* Blockquote */
+.article blockquote {
+  border-left: 4px solid var(--md-primary, #8F4C38);
+  background: var(--md-primary-container, #FFDBD1);
+  padding: 1rem 1.25rem;
+  margin: 1.5rem 0;
+  border-radius: 0 0.5rem 0.5rem 0;
+  color: var(--md-on-primary-container, #723523);
+}
+
+.article blockquote p:last-child {
+  margin-bottom: 0;
+}
+
+/* Code */
+.article code {
+  font-family: var(--md-font-family-mono, 'JetBrains Mono', monospace);
+  font-size: 0.85em;
+  background: var(--md-surface-container, #FCEAE5);
+  padding: 0.15em 0.4em;
+  border-radius: 0.25rem;
+}
+
+.article pre {
+  margin: 1.5rem 0;
+  border-radius: 0.75rem;
+  overflow-x: auto;
+}
+
+.article .codehilite {
+  background: var(--md-surface-container-lowest, #FFFFFF);
+  border: 1px solid var(--md-outline-variant, #D8C2BC);
+  border-radius: 0.75rem;
+  padding: 1rem 1.25rem;
+  overflow-x: auto;
+  margin: 1.5rem 0;
+}
+
+.article .codehilite code {
+  background: none;
+  padding: 0;
+  font-size: 0.82em;
+}
+
+/* Tables */
+.article table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  font-size: 0.9rem;
+}
+
+.article th {
+  background: var(--md-surface-container, #FCEAE5);
+  font-weight: 600;
+  text-align: left;
+  padding: 0.75rem 1rem;
+  border-bottom: 2px solid var(--md-outline-variant, #D8C2BC);
+}
+
+.article td {
+  padding: 0.6rem 1rem;
+  border-bottom: 1px solid var(--md-surface-container, #FCEAE5);
+}
+
+/* Anchor links */
+.anchor-link {
+  font-size: 0.8em;
+  opacity: 0;
+  margin-left: 0.5rem;
+  text-decoration: none !important;
+  transition: opacity 0.15s;
+}
+
+.article h2:hover .anchor-link,
+.article h3:hover .anchor-link,
+.article h4:hover .anchor-link {
+  opacity: 0.5;
+}
+
+/* Footnotes */
+.footnote {
+  font-size: 0.85rem;
+  color: var(--md-on-surface-variant, #53433F);
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--md-outline-variant, #D8C2BC);
+}
+
+/* Images */
+.article img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+  margin: 1rem 0;
+}
+
+/* Horizontal rule */
+.article hr {
+  border: none;
+  border-top: 2px solid var(--md-surface-container, #FCEAE5);
+  margin: 2.5rem 0;
+}
+
+/* Check Items */
+.check-items {
+  margin-top: 2.5rem;
+  padding: 1.25rem;
+  background: var(--md-surface-container-low, #FFF1ED);
+  border: 1px solid var(--md-outline-variant, #D8C2BC);
+  border-radius: 0.75rem;
+}
+
+.check-items-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.625rem;
+  border-bottom: 1px solid var(--md-outline-variant, #D8C2BC);
+}
+
+.check-items-title {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--md-on-surface, #231917);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.check-items-progress {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--md-on-surface-variant, #53433F);
+}
+
+.check-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.625rem 0.5rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  user-select: none;
+}
+
+.check-item:hover {
+  background: var(--md-surface-container, #FCEAE5);
+}
+
+.check-item-input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.check-item-box {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  margin-top: 1px;
+  border: 2px solid var(--md-outline, #85736E);
+  border-radius: 0.3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  background: transparent;
+}
+
+.check-item-icon {
+  width: 14px;
+  height: 14px;
+  opacity: 0;
+  transform: scale(0.5);
+  transition: all 0.2s ease;
+  color: var(--md-on-primary, #FFFFFF);
+}
+
+.check-item-input:checked ~ .check-item-box {
+  background: var(--md-primary, #8F4C38);
+  border-color: var(--md-primary, #8F4C38);
+}
+
+.check-item-input:checked ~ .check-item-box .check-item-icon {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.check-item-text {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--md-on-surface, #231917);
+  transition: color 0.15s ease;
+}
+
+.check-item-input:checked ~ .check-item-text {
+  color: var(--md-on-surface-variant, #53433F);
+}
+
+/* Page Navigation (Prev / Next) */
+.page-nav {
+  display: flex;
+  gap: 1rem;
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--md-outline-variant, #D8C2BC);
+}
+
+.page-nav-link {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.875rem 1rem;
+  border: 1px solid var(--md-outline-variant, #D8C2BC);
+  border-radius: 0.625rem;
+  text-decoration: none;
+  transition: all 0.15s ease;
+  min-width: 0;
+}
+
+.page-nav-link:hover {
+  border-color: var(--md-primary, #8F4C38);
+  background: var(--md-surface-container-low, #FFF1ED);
+}
+
+.page-nav-next {
+  align-items: flex-end;
+  text-align: right;
+}
+
+.page-nav-disabled {
+  visibility: hidden;
+}
+
+.page-nav-label {
+  font-size: 0.7rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--md-on-surface-variant, #53433F);
+}
+
+.page-nav-title {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--md-on-surface, #231917);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.page-nav-link:hover .page-nav-title {
+  color: var(--md-primary, #8F4C38);
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .sidebar {
+    transform: translateX(-100%);
+    width: 280px !important;
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+    box-shadow: 4px 0 24px rgba(0,0,0,0.1);
+  }
+
+  .resize-handle,
+  .sidebar-collapse-btn,
+  .sidebar-expand-btn {
+    display: none !important;
+  }
+
+  .sidebar-toggle {
+    display: flex;
+  }
+
+  /* Hide desktop collapse state on mobile */
+  .sidebar-collapsed .sidebar {
+    width: 280px !important;
+  }
+
+  .sidebar-collapsed .sidebar-header,
+  .sidebar-collapsed .sidebar-nav {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .content {
+    margin-left: 0;
+  }
+
+  .sidebar-collapsed .content {
+    margin-left: 0;
+  }
+
+  .article {
+    padding: 1.25rem;
+    padding-top: 4rem;
+  }
+
+  .article h1 {
+    font-size: 1.75rem;
+  }
+
+  .article h2 {
+    font-size: 1.35rem;
+  }
+}
+
+/* Book schemes (inline SVG figures) */
+.book-scheme {
+  margin: 2rem 0;
+  text-align: center;
+}
+
+.book-scheme svg {
+  width: 100%;
+  max-width: 640px;
+  height: auto;
+}
+
+.book-scheme figcaption {
+  font-size: 0.8rem;
+  color: var(--md-on-surface-variant, #53433F);
+  margin-top: 0.5rem;
+}
+
+/* Nav progress badges (from progress/progress.json) */
+.nav-status {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  margin-left: 0.4rem;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+
+.nav-status-done {
+  background: var(--md-primary, #8F4C38);
+}
+
+.nav-status-wip {
+  background: transparent;
+  border: 1.5px solid var(--md-primary, #8F4C38);
+  box-sizing: border-box;
+}
+
+/* Book callout — одна сильна думка, винесена в окремий блок (pull quote) */
+.book-callout {
+  margin: 2.25rem 0;
+  padding: 0.4rem 0 0.4rem 1.4rem;
+  border-left: 3px solid var(--md-primary, #8F4C38);
+  font-size: 1.18em;
+  line-height: 1.55;
+  font-weight: 500;
+  color: var(--md-on-primary-container, #723523);
+}
+@media print {
+  .book-callout { break-inside: avoid; }
+}
+
+/* Substack subscribe embed on published chapter pages */
+/* Leanpub banner under the chapter title (public site only) */
+.leanpub-banner {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  margin: 1.5rem 0 2rem;
+  padding: 1rem 1.25rem;
+  border: 1px solid var(--md-outline-variant, #D8C2BC);
+  border-radius: 12px;
+  background: var(--md-surface-container-low, #FFF8F6);
+  color: inherit;
+  text-decoration: none;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+.leanpub-banner,
+.leanpub-banner:hover,
+.leanpub-banner:visited,
+.leanpub-banner span {
+  text-decoration: none !important;
+  border-bottom: 0 !important;
+  background-image: none !important;
+}
+.leanpub-banner:hover {
+  text-decoration: none;
+  box-shadow: 0 10px 28px -14px rgba(0, 0, 0, 0.35);
+  transform: translateY(-1px);
+}
+.leanpub-banner-cover {
+  flex: 0 0 auto;
+  width: 84px;
+  height: auto;
+  border-radius: 3px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15), 0 8px 18px -10px rgba(0, 0, 0, 0.4);
+  margin: 0 !important;
+}
+.leanpub-banner-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  min-width: 0;
+}
+.leanpub-banner-kicker {
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--md-on-surface-variant, #53433F);
+}
+.leanpub-banner-title {
+  font-weight: 600;
+  font-size: 1.05rem;
+  color: var(--md-on-surface, #231917);
+}
+.leanpub-banner-text {
+  font-size: 0.9rem;
+  line-height: 1.45;
+  color: var(--md-on-surface-variant, #53433F);
+}
+.leanpub-banner-button {
+  margin-top: 0.35rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--md-primary, #8F4C38);
+}
+@media (max-width: 520px) {
+  .leanpub-banner { gap: 0.9rem; padding: 0.85rem 1rem; }
+  .leanpub-banner-cover { width: 64px; }
+}
+
+.subscribe-embed {
+  margin: 1.75rem 0;
+  display: flex;
+  justify-content: center;
+}
+.subscribe-embed iframe {
+  max-width: 100%;
+}
+
+
+    </style>
+<script async data-id="101511163" src="//static.getclicky.com/js"></script>
+</head>
+<body>
+    <div class="layout">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <span class="sidebar-title">Необхідне різноманіття: системний метод роботи з AI</span>
+                <button class="sidebar-collapse-btn" id="sidebar-collapse" aria-label="Collapse sidebar">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="11 17 6 12 11 7"></polyline>
+                        <polyline points="18 17 13 12 18 7"></polyline>
+                    </svg>
+                </button>
+            </div>
+            <nav class="sidebar-nav">
+                <ul class="nav-tree" data-depth="0"><li class="nav-item">
+<a href="/variety/read/">Необхідне різноманіття</a>
+</li>
+<li class="nav-item">
+<a href="/variety/read/part-1-system/">Частина I. Система, якою ти насправді керуєш</a>
+<ul class="nav-tree" data-depth="1"><li class="nav-item">
+<a href="/variety/read/part-1-system/02-requisite-variety/">Розділ 2. Закон необхідного різноманіття</a>
+</li></ul>
+</li>
+<li class="nav-item">
+<a href="/variety/read/part-2-goals/">Частина II. Цілі та смак: що ти насправді просиш</a>
+<ul class="nav-tree" data-depth="1"><li class="nav-item">
+<a href="/variety/read/part-2-goals/06-goal-and-proxy/">Розділ 6. Ціль та її проксі</a>
+</li>
+<li class="nav-item active">
+<a href="/variety/read/part-2-goals/08-variety-vs-slop/">Розділ 8. Різноманіття проти слопу</a>
+</li></ul>
+</li>
+<li class="nav-item">
+<a href="/variety/read/part-3-activity/">Частина III. Діяльність: метод щоденної роботи</a>
+<ul class="nav-tree" data-depth="1"><li class="nav-item">
+<a href="/variety/read/part-3-activity/10-activity-decomposition/">Розділ 10. Складові діяльності</a>
+</li>
+<li class="nav-item">
+<a href="/variety/read/part-3-activity/12-normative-base/">Розділ 12. Нормативна база</a>
+</li>
+<li class="nav-item">
+<a href="/variety/read/part-3-activity/13-control-degradation/">Розділ 13. Контроль, керованість, деградація</a>
+</li>
+<li class="nav-item">
+<a href="/variety/read/part-3-activity/14-agent-orchestration/">Розділ 14. Оркестрація агентів</a>
+</li></ul>
+</li></ul>
+            </nav>
+            <div class="sidebar-links"><a class="sidebar-link sidebar-link-lang" href="/variety/read/en/" lang="en">English</a>
+<a class="sidebar-link sidebar-link-newsletter" href="https://kiosan.substack.com" target="_blank" rel="noopener">Розсилка ↗</a></div>
+            <div class="resize-handle" id="resize-handle"></div>
+        </aside>
+        <button class="sidebar-expand-btn" id="sidebar-expand" aria-label="Expand sidebar">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+        </button>
+        <button class="sidebar-toggle" id="sidebar-toggle" aria-label="Toggle sidebar">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+        </button>
+        <main class="content">
+            <article class="article">
+                <h1 id="8">Розділ 8. Різноманіття проти слопу<a class="anchor-link" href="#8" title="Permanent link">&para;</a></h1>
+<p><a class="leanpub-banner" href="https://leanpub.com/requisite-variety-ua" target="_blank" rel="noopener"><img class="leanpub-banner-cover" src="/images/variety-cover-uk-sm.png" width="280" height="400" alt="Обкладинка книжки «Необхідне різноманіття»" loading="lazy" decoding="async"><span class="leanpub-banner-body"><span class="leanpub-banner-kicker">Книжка на Leanpub</span><span class="leanpub-banner-title">Необхідне різноманіття</span><span class="leanpub-banner-text">Книжка пишеться відкрито. Купіть її раз — і отримуватимете нові розділи в PDF та EPUB у міру публікації.</span><span class="leanpub-banner-button">Придбати на Leanpub →</span></span></a></p>
+<p>Слоп ми впізнаємо раніше, ніж дочитуємо. README, що починається з «This project is a…», а далі Installation, Usage, Contributing. Пост у LinkedIn із трьома абзацами і закликом наприкінці. Архітектурна схема з окремим сервісом, чергою і трьома воркерами. Помилок у цих текстах зазвичай немає. Що ж ми тоді впізнаємо?</p>
+<p>Те, що це міг написати будь-хто. А отже — ніхто.</p>
+<p>У розділі 6 я зупинився на тому, що модель обирає з розподілу, і без вашого втручання відповідь падає в його верхівку, як кулька на дно лунки. Тепер — чим це обертається для якості і як із середини розподілу виростає слоп.</p>
+<h2 id="_1">Стан спокою<a class="anchor-link" href="#_1" title="Permanent link">&para;</a></h2>
+<p>Мова моделі — статистика. Кожне наступне слово вона бере з розподілу ймовірних продовжень, і в цього розподілу є найгустіше місце: те, що в навчальних даних траплялося найчастіше. Для запиту «рецепт української страви» найгустіше місце — борщ. Для «архітектури сервісу сповіщень» — черга і воркери. Для «напиши README» — Installation, Usage, Contributing.</p>
+<p>Уявімо дзвін нормального розподілу. Його верхівка — найстійкіший стан моделі: там найбільше ваги, туди тяжіє кожен крок, зроблений без зовнішнього втручання. І стан цей самопідтримний: типове слово робить імовірнішим типове наступне, типовий перший абзац тягне за собою типовий другий. Що довше текст іде сам, то менше варіантів у нього лишається.</p>
+<p>Це і є <strong>слоп</strong>: результат із верхівки розподілу, який не відрізняється від результату на будь-який інший запит того самого класу. Це рух до середнього без жодного зовнішнього поштовху. Для читача слоп — нуль інформації: усе, що в ньому є, він уже бачив, а те, заради чого відкривав текст, туди не потрапило.</p>
+<aside class="book-callout">Слоп — не помилка моделі. Це її стан спокою.</aside>
+
+<p>Звідси неприємний наслідок: слоп не лікується кращою моделлю. Краща модель зазвичай точніше знає, що є типовим, тому її верхівка гостріша, і відповідь потрапляє туди ще впевненіше. Коли ми чекаємо нової версії, щоб «нарешті писала не так сіро», ми чекаємо на гостріший дзвін.</p>
+<h2 id="_2">Регресія до сірого<a class="anchor-link" href="#_2" title="Permanent link">&para;</a></h2>
+<p>Фотоапарат в автоматичному режимі робить те саме, і там це видно оком.</p>
+<p>Усередині камери сидить експонометр. Він міряє світло від сцени і виставляє витримку й діафрагму так, щоб кадр у середньому вийшов середньо-сірим, бо так його калібрували: світ у середньому сірий. Для більшості сцен це правда, і автомат дає пристойний кадр.</p>
+<p>Уявімо сніг на сонці. Автомат бачить багато світла, вирішує, що сцена пересвічена, і затемнює кадр: сніг виходить сірий. Нічна вулиця: автомат бачить темряву, вирішує, що світла бракує, і витягує сцену до середнього: ніч виходить сіра, з розмитими ліхтарями. Прилад не зламаний, а працює рівно так, як сконструйований: повертає будь-яку сцену до середнього.</p>
+<p>Фотограф знає те, чого прилад знати не може: «це сніг, і він має бути білим». Одне коліщатко — експокорекція «+2» — і сніг білий. Це різноманіття фотографа, внесене в автомат: прилад розрізняє лише кількість світла, людина розрізняє сніг.</p>
+<p>З оглядового майданчика автомат дає кадр, однаковий у кожного туриста: та сама точка, та сама вежа, та сама усереднена експозиція. Ніхто не помилився. Просто в кадрі не було нічого від людини, яка натиснула кнопку.</p>
+<p>А там, де фотограф втручається, з&rsquo;являється ціна. Витягнути тіні, підняти чутливість — і в кадрі з&rsquo;являється шум: зерно, якого на автоматі не було. І добрі кадри з ручних налаштувань не трапляються з першого натискання: фотограф знімає двісті і відбирає три.</p>
+<h2 id="_3">Єдине, чого немає в розподілі<a class="anchor-link" href="#_3" title="Permanent link">&para;</a></h2>
+<p>Тепер закон Ешбі з розділу 2 у застосуванні до якості.</p>
+<p>Усе, що є в розподілі моделі, є в ньому для всіх. Це спільне: ті самі статті, ті самі README, ті самі лендинги. Коли ваш запит не містить нічого, крім назви задачі, модель має лише спільне і повертає спільне. Результат, відмінний від типового, може прийти лише з того, чого в розподілі немає. А немає в ньому рівно одного — вас: вашого контексту — ця команда, цей читач, цей сервер, — ваших обмежень і вашого смаку, того, що ви відкинете, не пояснюючи.</p>
+<p>Арифметика та сама, що в розділі 2, тільки тепер про якість: результат не може відрізнятися від типового більше, ніж різноманіття, яке ви внесли понад те, що модель уже має. Внесли нуль — отримали верхівку.</p>
+<figure class="book-scheme">
+<svg viewBox="0 0 640 230" role="img" aria-label="Усе, що є в розподілі, спільне; зсунути вихід може лише те, чого в розподілі немає">
+  <defs>
+    <marker id="s1-brown" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8F4C38"/></marker>
+  </defs>
+  <rect x="0" y="0" width="640" height="230" fill="#FFFFFF"/>
+  <rect x="30" y="30" width="380" height="160" rx="12" fill="#F1DFDA" stroke="#85736E" stroke-width="1.5"/>
+  <text x="220" y="58" text-anchor="middle" font-size="14" font-weight="600" fill="#231917">У РОЗПОДІЛІ — спільне для всіх</text>
+  <text x="220" y="80" text-anchor="middle" font-size="11.5" fill="#53433F">статті · README · лендинги · «найкращі практики»</text>
+  <circle cx="220" cy="128" r="7" fill="#8F4C38"/>
+  <circle cx="220" cy="128" r="16" fill="none" stroke="#8F4C38" stroke-width="1" stroke-dasharray="3 3"/>
+  <text x="220" y="166" text-anchor="middle" font-size="12" font-weight="600" fill="#723523">верхівка: слоп</text>
+  <text x="220" y="181" text-anchor="middle" font-size="11" fill="#53433F">вихід, коли від вас нічого не внесено</text>
+  <rect x="480" y="50" width="130" height="120" rx="12" fill="#FFDBD1" stroke="#8F4C38" stroke-width="1.5"/>
+  <text x="545" y="78" text-anchor="middle" font-size="14" font-weight="600" fill="#231917">ВАШЕ</text>
+  <text x="545" y="102" text-anchor="middle" font-size="12" fill="#53433F">контекст</text>
+  <text x="545" y="122" text-anchor="middle" font-size="12" fill="#53433F">обмеження</text>
+  <text x="545" y="142" text-anchor="middle" font-size="12" fill="#53433F">смак</text>
+  <line x1="476" y1="110" x2="414" y2="110" stroke="#8F4C38" stroke-width="2" marker-end="url(#s1-brown)"/>
+  <text x="320" y="214" text-anchor="middle" font-size="12" fill="#8F4C38">єдине, чого в розподілі немає, — і єдине, що зсуває вихід</text>
+</svg>
+<figcaption>Схема 8.1. Усе, що є в розподілі, спільне; зсунути вихід може лише те, чого в ньому немає</figcaption>
+</figure>
+
+<p>В усереднення є і буквальна картинка. Якщо змішати на палітрі всі фарби, вийде бурий. Фарби не погані: кожна окремо яскрава. Бурий — це те, що лишається спільного в усіх кольорах разом. Текст, зібраний з усього, що написали про цю тему, бурий з тієї самої причини.</p>
+<p>Є спокуса обійти це проханням: «будь оригінальним», «зроби цікавіше», «напиши нестандартно». Але у прохання бути оригінальним є своя верхівка — типова оригінальність: несподівана метафора, яку ви вже десять разів бачили, «уявіть світ, у якому…», три крапки для інтриги. Ви попросили модель внести різноманіття замість вас і отримали найімовірніше різноманіття.</p>
+<p>Тому слоп — діагноз <strong>оператора</strong>, а не результату. Оператор тут — ви разом із тим, як ви зібрали свою зв&rsquo;язку, тобто зв&rsquo;язка в дії: що дали в контекст, які поставили обмеження, за чим відбирали. За результатом можна відновити того, хто його зробив. Якщо вас як оператора можна замінити будь-ким, вихід буде як у будь-кого. Коли ваш README нічим не відрізняється від README сусіднього проєкту, сірий не README. Сірим був промпт, у якому не було нічого вашого.</p>
+<p>Лишається робоче питання: що означає «краще»? «Добре» і «погано» існують лише для когось, з якоїсь позиції і заради якоїсь цілі. Без них у будь-якому наборі рішень саме собою виділяється лише одне — найстійкіше. Коли критеріїв немає, вибір за замовчуванням робить розподіл, і «краще» означає «типовіше». Звідки беруться критерії і як вони складаються в систему цінностей — розділ 9.</p>
+<h2 id="_4">Прийняти, зрізати, посунути<a class="anchor-link" href="#_4" title="Permanent link">&para;</a></h2>
+<p>З верхівкою можна працювати трьома способами, і обирати між ними — ваша робота.</p>
+<p><strong>Прийняти верхівку.</strong> Іноді типове і є ціль. Переклад інтерфейсу: ви хочете найзвичніший зворот. Скрипт міграції, конфіг сервера, повідомлення коміту, шаблонний лист про зміну тарифу — усе, де несподіванка коштує дорожче за сірість. Тут слоп — чеснота: передбачуваний і дешевий. Умова одна: верхівку обирають, вона не трапляється сама, поки ви не дивитеся. Перед задачею — питання собі: мені тут потрібна верхівка?</p>
+<p><strong>Зрізати верхівку.</strong> Коли типове не підходить, зону звужують, і зрізати можна з двох боків.</p>
+<p>Перший бік — заборонити. Список заборонених зворотів у стайлгайді. «Не борщ і не вареники» в запиті на рецепт. «Без окремого сервісу і без черги» в запиті на архітектуру. Заборона прибирає саму верхівку, і модель змушена спуститися з неї туди, де їй менш звично.</p>
+<p>Другий бік — вказати точно, що потрібно, і тим самим вибрати на дзвоні одну вузьку ділянку. Замість «української страви» — «борщ по-полтавськи, на буряковому квасі, з галушками». Замість «користувача» — черговий інженер о третій ночі, якому треба перезапустити сервіс і знайти логи. Замість «у нашому стилі» — добірка зразків, на які рівняємося. Точна вказівка лишає з усього дзвона один шматок, і всередині цього шматка модель знову дає найтиповіше: найзвичніший полтавський борщ. Часто саме це й потрібно, і тоді точна вказівка — найдешевший спосіб отримати результат.</p>
+<p>Усе це — послаблювачі з розділу 2, і правило для них те саме: де можна, робити структурно. Лінтер на заборонені звороти перевірить їх і тоді, коли ви про них забули; шаблон із готовими блоками не дасть моделі повернутися до «користувача». Ціна в обох випадках одна: зона стає вужчою, але ви лишилися на тому самому дзвоні, і несподіванок звідти не буде.</p>
+<p><strong>Посунути дзвін.</strong> Третій спосіб — замість зрізати верхівку, посунути весь розподіл так далеко, що верхівка сама падає на місце, де ніхто не був. «Рецепт української страви» дає борщ. «Українська страва для астронавтів на Місяці» — борщу там уже немає: невагомість, без крихт, довге зберігання. «Українська страва, яку їли б на кораблі Магеллана в протоці Дрейка» — солонина, сухарі, те, що не псується пів року. «Українська страва для лемурів на Суматрі в шістдесятих» — тут я навіть не вгадаю, і саме в цьому суть. Перетин кількох контекстів — місце, де статистика тонка: готового там немає, і моделі доводиться складати з частин замість діставати ціле.</p>
+<figure class="book-scheme">
+<svg viewBox="0 0 640 300" role="img" aria-label="Дзвін розподілу і три способи працювати з верхівкою: прийняти, зрізати, посунути">
+  <defs>
+    <marker id="s2-gray" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#85736E"/></marker>
+    <marker id="s2-brown" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8F4C38"/></marker>
+    <pattern id="s2-hatch" patternUnits="userSpaceOnUse" width="6" height="6" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="6" stroke="#8F4C38" stroke-width="1.5"/></pattern>
+    <clipPath id="s2-clip"><path d="M60,229.5 L64,228.9 L68,228.1 L72,227.2 L76,226.1 L80,224.9 L84,223.4 L88,221.7 L92,219.7 L96,217.3 L100,214.7 L104,211.7 L108,208.3 L112,204.6 L116,200.4 L120,195.8 L124,190.7 L128,185.3 L132,179.4 L136,173.1 L140,166.5 L144,159.6 L148,152.4 L152,145.0 L156,137.5 L160,130.0 L164,122.5 L168,115.1 L172,108.0 L176,101.2 L180,94.8 L184,89.0 L188,83.9 L192,79.4 L196,75.8 L200,73.0 L204,71.1 L208,70.1 L212,70.1 L216,71.1 L220,73.0 L224,75.8 L228,79.4 L232,83.9 L236,89.0 L240,94.8 L244,101.2 L248,108.0 L252,115.1 L256,122.5 L260,130.0 L264,137.5 L268,145.0 L272,152.4 L276,159.6 L280,166.5 L284,173.1 L288,179.4 L292,185.3 L296,190.7 L300,195.8 L304,200.4 L308,204.6 L312,208.3 L316,211.7 L320,214.7 L324,217.3 L328,219.7 L332,221.7 L336,223.4 L340,224.9 L344,226.1 L348,227.2 L352,228.1 L356,228.9 L360,229.5 L364,230.0 L368,230.4 L370,232 L60,232 Z"/></clipPath>
+  </defs>
+  <rect x="0" y="0" width="640" height="300" fill="#FFFFFF"/>
+  <line x1="40" y1="232" x2="610" y2="232" stroke="#85736E" stroke-width="1.5" marker-end="url(#s2-gray)"/>
+  <text x="608" y="250" text-anchor="end" font-size="11" fill="#53433F">варіанти відповіді</text>
+  <line x1="40" y1="232" x2="40" y2="30" stroke="#85736E" stroke-width="1.5" marker-end="url(#s2-gray)"/>
+  <text x="48" y="40" font-size="11" fill="#53433F">імовірність</text>
+  <path d="M60,229.5 L64,228.9 L68,228.1 L72,227.2 L76,226.1 L80,224.9 L84,223.4 L88,221.7 L92,219.7 L96,217.3 L100,214.7 L104,211.7 L108,208.3 L112,204.6 L116,200.4 L120,195.8 L124,190.7 L128,185.3 L132,179.4 L136,173.1 L140,166.5 L144,159.6 L148,152.4 L152,145.0 L156,137.5 L160,130.0 L164,122.5 L168,115.1 L172,108.0 L176,101.2 L180,94.8 L184,89.0 L188,83.9 L192,79.4 L196,75.8 L200,73.0 L204,71.1 L208,70.1 L212,70.1 L216,71.1 L220,73.0 L224,75.8 L228,79.4 L232,83.9 L236,89.0 L240,94.8 L244,101.2 L248,108.0 L252,115.1 L256,122.5 L260,130.0 L264,137.5 L268,145.0 L272,152.4 L276,159.6 L280,166.5 L284,173.1 L288,179.4 L292,185.3 L296,190.7 L300,195.8 L304,200.4 L308,204.6 L312,208.3 L316,211.7 L320,214.7 L324,217.3 L328,219.7 L332,221.7 L336,223.4 L340,224.9 L344,226.1 L348,227.2 L352,228.1 L356,228.9 L360,229.5 L364,230.0 L368,230.4 L370,232 L60,232 Z" fill="#F1DFDA" stroke="#85736E" stroke-width="1.5"/>
+  <rect x="60" y="60" width="310" height="44" fill="url(#s2-hatch)" clip-path="url(#s2-clip)"/>
+  <rect x="252" y="113" width="24" height="119" fill="#F5E1A7" stroke="#8F4C38" stroke-width="1" clip-path="url(#s2-clip)"/>
+  <line x1="278" y1="125" x2="298" y2="109" stroke="#8F4C38" stroke-width="1"/>
+  <text x="300" y="105" font-size="11" fill="#53433F">вказати точно:</text>
+  <text x="300" y="119" font-size="11" fill="#53433F">одна вузька ділянка</text>
+  <line x1="150" y1="104" x2="270" y2="104" stroke="#8F4C38" stroke-width="1.5" stroke-dasharray="5 4"/>
+  <text x="144" y="96" text-anchor="end" font-size="11" fill="#53433F">заборонити:</text>
+  <text x="144" y="110" text-anchor="end" font-size="11" fill="#53433F">верхівку зрізано</text>
+  <circle cx="210" cy="70" r="5" fill="#8F4C38"/>
+  <text x="210" y="56" text-anchor="middle" font-size="12" font-weight="600" fill="#723523">верхівка: слоп</text>
+  <path d="M320,225.9 L324,224.9 L328,223.7 L332,222.4 L336,221.0 L340,219.3 L344,217.5 L348,215.6 L352,213.4 L356,211.0 L360,208.4 L364,205.6 L368,202.5 L372,199.3 L376,195.9 L380,192.3 L384,188.4 L388,184.5 L392,180.3 L396,176.1 L400,171.7 L404,167.3 L408,162.9 L412,158.4 L416,154.0 L420,149.6 L424,145.4 L428,141.4 L432,137.5 L436,133.9 L440,130.6 L444,127.6 L448,125.0 L452,122.7 L456,120.9 L460,119.5 L464,118.5 L468,118.1 L472,118.1 L476,118.5 L480,119.5 L484,120.9 L488,122.7 L492,125.0 L496,127.6 L500,130.6 L504,133.9 L508,137.5 L512,141.4 L516,145.4 L520,149.6 L524,154.0 L528,158.4 L532,162.9 L536,167.3 L540,171.7 L544,176.1 L548,180.3 L552,184.5 L556,188.4 L560,192.3 L564,195.9 L568,199.3 L572,202.5 L576,205.6 L580,208.4 L584,211.0 L588,213.4 L592,215.6 L596,217.5 L600,219.3 L604,221.0 L608,222.4 L610,232 L320,232 Z" fill="#FFDBD1" fill-opacity="0.7" stroke="#8F4C38" stroke-width="1.5" stroke-dasharray="6 4"/>
+  <circle cx="470" cy="118" r="5" fill="#8F4C38"/>
+  <path d="M222,66 C320,30 420,60 462,110" fill="none" stroke="#8F4C38" stroke-width="1.5" marker-end="url(#s2-brown)"/>
+  <text x="350" y="46" text-anchor="middle" font-size="12" font-weight="600" fill="#723523">рамка</text>
+  <text x="470" y="150" text-anchor="middle" font-size="11" fill="#53433F">нова верхівка там,</text>
+  <text x="470" y="164" text-anchor="middle" font-size="11" fill="#53433F">де ще ніхто не був</text>
+  <text x="140" y="254" text-anchor="middle" font-size="12" font-weight="600" fill="#231917">прийняти</text>
+  <text x="140" y="269" text-anchor="middle" font-size="11" fill="#53433F">коли типове і є ціль</text>
+  <text x="140" y="283" text-anchor="middle" font-size="11" fill="#53433F">переклад, конфіг, коміт</text>
+  <text x="300" y="254" text-anchor="middle" font-size="12" font-weight="600" fill="#231917">зрізати</text>
+  <text x="300" y="269" text-anchor="middle" font-size="11" fill="#53433F">заборонити типове («не борщ»)</text>
+  <text x="300" y="283" text-anchor="middle" font-size="11" fill="#53433F">або вибрати одну ділянку</text>
+  <text x="470" y="254" text-anchor="middle" font-size="12" font-weight="600" fill="#231917">посунути</text>
+  <text x="470" y="269" text-anchor="middle" font-size="11" fill="#53433F">рамка з перетину контекстів;</text>
+  <text x="470" y="283" text-anchor="middle" font-size="11" fill="#53433F">статистика тонка — перевірок більше</text>
+</svg>
+<figcaption>Схема 8.2. Дзвін розподілу і три способи працювати з верхівкою: прийняти, зрізати, посунути</figcaption>
+</figure>
+
+<p>Набір умов, які ви ставите, — це <strong>рамка</strong>, і вона ваша. Місяць, протока Дрейка, лемури — це ваше різноманіття, і воно покриває все, що модель здатна «придумати» всередині рамки: що б вона не склала, ви знаєте, навіщо тут Місяць, і здатні оцінити, чи вийшло. Різноманіття моделі працює на вас.</p>
+<p>Ціна теж є, і вона та сама, що у фотографа з піднятою чутливістю: де статистика тонка, там шум. Модель може складати впевнено і там, де складати нема з чого, тож перевірок після посунутого дзвона потрібно більше. Це та сама залежність свободи і контролю з розділу 2: що далі від верхівки, то більше уваги треба на перевірку. І є одна дія, спільна для всіх трьох способів.</p>
+<p><strong>Відбирати, а не приймати.</strong> Усі три способи тримаються на одному: ви обираєте з кількох варіантів. Попросіть три замість одного, і розкид між відповідями моделі, який в одному варіанті виглядав випадковістю, стає шкалою для порівняння. Відбір — місце, де в роботу входить смак: ви відкидаєте два варіанти, і саме в тому, за що відкинули, живе ваш критерій. Фотограф із двохсот кадрів лишає три — так він працює.</p>
+<figure class="book-scheme">
+<svg viewBox="0 0 640 270" role="img" aria-label="Перший кадр: один варіант іде в публікацію; відбір: три варіанти, критерії, обраний">
+  <defs>
+    <marker id="s3-gray" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#85736E"/></marker>
+  </defs>
+  <rect x="0" y="0" width="640" height="270" fill="#FFFFFF"/>
+  <text x="30" y="30" font-size="12" font-weight="600" fill="#723523">Перший кадр</text>
+<rect x="30" y="42" width="110" height="40" rx="8" fill="#F1DFDA" stroke="#85736E" stroke-width="1.5"/>
+<text x="85.0" y="66.5" text-anchor="middle" font-size="12" font-weight="600" fill="#231917">промпт</text>
+<line x1="144" y1="62" x2="196" y2="62" stroke="#85736E" stroke-width="1.5" marker-end="url(#s3-gray)"/>
+<rect x="200" y="42" width="130" height="40" rx="8" fill="#F1DFDA" stroke="#85736E" stroke-width="1.5"/>
+<text x="265.0" y="60.5" text-anchor="middle" font-size="12" font-weight="600" fill="#231917">варіант 1</text>
+<text x="265.0" y="76.0" text-anchor="middle" font-size="10.5" fill="#53433F">з верхівки</text>
+<line x1="334" y1="62" x2="386" y2="62" stroke="#85736E" stroke-width="1.5" marker-end="url(#s3-gray)"/>
+<rect x="390" y="42" width="120" height="40" rx="8" fill="#F1DFDA" stroke="#85736E" stroke-width="1.5"/>
+<text x="450.0" y="66.5" text-anchor="middle" font-size="12" font-weight="600" fill="#231917">публікація</text>
+<text x="530" y="66" font-size="11" fill="#53433F">критерію не було</text>
+<line x1="30" y1="104" x2="610" y2="104" stroke="#D8C2BC" stroke-width="1"/>
+<text x="30" y="128" font-size="12" font-weight="600" fill="#723523">Відбір</text>
+<rect x="30" y="170" width="110" height="40" rx="8" fill="#F1DFDA" stroke="#85736E" stroke-width="1.5"/>
+<text x="85.0" y="194.5" text-anchor="middle" font-size="12" font-weight="600" fill="#231917">промпт</text>
+<line x1="144" y1="190" x2="196" y2="154" stroke="#85736E" stroke-width="1.5" marker-end="url(#s3-gray)"/>
+<rect x="200" y="138" width="130" height="32" rx="8" fill="#F1DFDA" stroke="#85736E" stroke-width="1.5"/>
+<text x="265.0" y="158.5" text-anchor="middle" font-size="12" font-weight="600" fill="#231917">варіант 1</text>
+<text x="340" y="158" font-size="10.5" fill="#53433F">відкинуто</text>
+<line x1="144" y1="190" x2="196" y2="192" stroke="#85736E" stroke-width="1.5" marker-end="url(#s3-gray)"/>
+<rect x="200" y="176" width="130" height="32" rx="8" fill="#F1DFDA" stroke="#85736E" stroke-width="1.5"/>
+<text x="265.0" y="196.5" text-anchor="middle" font-size="12" font-weight="600" fill="#231917">варіант 2</text>
+<text x="340" y="196" font-size="10.5" fill="#53433F">відкинуто</text>
+<line x1="144" y1="190" x2="196" y2="230" stroke="#85736E" stroke-width="1.5" marker-end="url(#s3-gray)"/>
+<rect x="200" y="214" width="130" height="32" rx="8" fill="#FFDBD1" stroke="#8F4C38" stroke-width="1.5"/>
+<text x="265.0" y="234.5" text-anchor="middle" font-size="12" font-weight="600" fill="#231917">варіант 3</text>
+<text x="340" y="234" font-size="10.5" fill="#53433F">обрано</text>
+<line x1="400" y1="190" x2="446" y2="190" stroke="#8F4C38" stroke-width="1.5" marker-end="url(#s3-gray)"/>
+<rect x="450" y="160" width="160" height="60" rx="8" fill="#FFDBD1" stroke="#8F4C38" stroke-width="1.5"/>
+<text x="530.0" y="188.5" text-anchor="middle" font-size="12" font-weight="600" fill="#231917">критерії</text>
+<text x="530.0" y="204.0" text-anchor="middle" font-size="10.5" fill="#53433F">за що відкинули два</text>
+<text x="530" y="240" text-anchor="middle" font-size="10.5" fill="#53433F">стає критерієм на наступний раз</text>
+<text x="530" y="150" text-anchor="middle" font-size="12" font-weight="600" fill="#723523">тут входить смак</text>
+</svg>
+<figcaption>Схема 8.3. Перший кадр і відбір: критерій з'являється лише там, де є з чого обирати</figcaption>
+</figure>
+
+<p>Той самий прийом рятує й тоді, коли різноманіття бракує вам самим, бо галузь не ваша. Тоді просіть у моделі карту замість відповіді: «які є підходи до цієї задачі, назви п&rsquo;ять, і для кожного — умови, коли він доречний». Модель покаже ширше, ніж одну верхівку, хоча й ці п&rsquo;ять будуть найтиповішими п&rsquo;ятьма. Вибір лишається за вами — за вашою ціллю, якої модель не знає. Ви позичили різноманіття на карту, але не на вибір.</p>
+<p>І окремо для тексту. Редагування — окрема складова діяльності (розділ 10), і промпт «покращ» її не замінює. Згенерувати і перевірити — різні складові, і коли ви просите модель «зроби краще», ви знову віддаєте їй те, що мало бути вашим: критерій. Редакторський прохід із власним чеклистом — заборонені звороти, перше речення, кінець без резюме — це і є ваші ручні налаштування, як у фотографа, який не довіряє автомату.</p>
+<h2 id="_5">Борщ в архітектурі<a class="anchor-link" href="#_5" title="Permanent link">&para;</a></h2>
+<p>Сценарій із проєктування — ділянки, де слоп живе роками.</p>
+<p><strong>Спроба перша.</strong> Задача: продукту потрібні сповіщення, листи і пуші про події в акаунті. Я відкрив Claude Code і написав: «Запропонуй архітектуру сервісу сповіщень». Відповідь прийшла за хвилину, і я міг би написати її сам, не читаючи: окремий мікросервіс, черга повідомлень між ним і основним додатком, воркери, що читають чергу, ретраї з наростаючою паузою, окрема черга для невдалих, шаблони, окрема база, дашборд доставки. Усе правильно. Кожен пункт — елемент із тисячі статей про архітектуру системи сповіщень, а разом вони — борщ: страва, яку подають, коли треба напевно показати українську кухню.</p>
+<p>Що не так? З архітектурою — нічого. Не так з оператором: у запиті не було нас. Скільки нас, що в нас уже є, скільки сповіщень на день, що станеться, якщо одне загубиться. Модель заповнила порожнє місце найзвичнішим, так само, як у розділі 6 вона заповнювала порожнє місце в «поправ тест».</p>
+<p><strong>Спроба друга.</strong> Рамка. Нас двоє інженерів. Є Postgres, і нічого іншого не додаємо: ні черги, ні окремого сервісу. Сповіщень десять тисяч на день, а не десять мільйонів. Критерій один, але жорсткий: якщо процес впаде посередині, жодне сповіщення не має ні загубитися, ні піти двічі. І прохання: три варіанти, від найпростішого.</p>
+<p>Найпростіший варіант і став рішенням: таблиця сповіщень зі статусом у тій самій базі; воркер у тому самому процесі, який раз на хвилину бере кілька десятків невідправлених рядків із блокуванням, щоб дві копії додатку не взяли один рядок; ключ ідемпотентності на кожен запис, який перевіряє провайдер листів і пушів, щоб повторна відправка після падіння не пішла двічі. Жодної нової інфраструктури. Цієї схеми на верхівці немає: статті про сповіщення пишуть для десяти мільйонів. А для десяти тисяч вона краща за канонічну. Окремий сервіс і чергу треба деплоїти, моніторити й лагодити, коли вони впадуть, а лагодити їх нам двом.</p>
+<p>Модель та сама, задача та сама. Змінилося одне: у другому запиті був наш контекст і наші реальні потреби.</p>
+<h2 id="_6">Та сама механіка в дизайні<a class="anchor-link" href="#_6" title="Permanent link">&para;</a></h2>
+<p>У дизайні слоп видно ще краще, ніж у коді, бо його не треба читати.</p>
+<p>«Зроби лендинг для нашого продукту» дає сторінку, яку ви впізнаєте за секунду: великий заголовок, градієнт, три картки з іконками, ряд логотипів «нам довіряють», кнопка. Це лендинг з верхівки. Він не поганий, він такий, як у всіх.</p>
+<p>Посунути дзвін тут означає скласти рамку з того, чого на одному лендингу ще не було разом. Продукт — сервіс для невеликих майстерень? Тоді: «лендинг як розворот інструкції до плівкового фотоапарата сімдесятих: нумеровані схеми, один акцентний колір, жодних карток і градієнтів, три кроки замість переваг». Комбінація виглядає дивно, і саме тому перший же варіант не схожий на жоден лендинг, який ви бачили. Чи він добрий? Ось тут і працює рамка: ви її склали, ви знаєте, навіщо інструкція і чому три кроки, тому вам є чим міряти. Далі відбір: три варіанти, два відкинути, в третьому поправити те, за що ледь не відкинули.</p>
+<p>У дизайні несподівана комбінація — звична техніка: стиль, помножений на матеріал і на епоху. Модель лише робить перебір комбінацій дешевим. Різноманіття, яке на верхівці давало «кожен лендинг», на перетині контекстів дає те, чого не було ніде. Але оцінити це може лише той, хто склав рамку.</p>
+<h2 id="_7">Перший кадр<a class="anchor-link" href="#_7" title="Permanent link">&para;</a></h2>
+<p>Цей анти-патерн росте з довіри до моделі.</p>
+<p>Виглядає так: один промпт, перший варіант, публікація. Пост, документ, сторінка, презентація — те, що модель видала за перший раз, іде у світ, іноді з двома виправленими словами. І автор щиро вважає, що працював із моделлю.</p>
+<p>За конструкцією перший варіант — найімовірніший. Це саме верхівка: те, що модель видала б будь-кому, хто написав ці самі слова. Без відбору й без критеріїв результат належить розподілу. У промпті не було нічого вашого, і ваше ім&rsquo;я під текстом — єдине, чим цей текст відрізняється від середньостатистичного.</p>
+<p>У цього анти-патерну є друга стадія, яка виглядає як виправлення. Результат здається сірим, і автор пише: «зроби цікавіше». Другий варіант справді інакший — з верхівки типової оригінальності: ефектний перший рядок, несподіване порівняння, яке ви вже бачили, заклик наприкінці. Автор публікує другий варіант і вважає справу зробленою. Різноманіття ж у систему так і не зайшло: обидва рази він просив модель додати те, що мав додати сам.</p>
+<p>Лікується це відбором. Вибирати з трьох. Назвати, за що відкинули два, і це стає критерієм на наступний раз. Пройти редакторським чеклистом. І спитати себе найпростіше: якби цей текст написав будь-хто інший, що в ньому лишилося б від мене? Якщо нічого — це ще не ваш текст.</p>
+<h2 id="_8">Верхівка на всіх рівнях<a class="anchor-link" href="#_8" title="Permanent link">&para;</a></h2>
+<p>Дзвін не зникає з масштабом. Три агенти з того самого контексту, з яких один пише, другий рев&rsquo;юває, а третій погоджує, — це та сама верхівка тричі: у розділі 14 це зветься комітетом із копій. Команда, в якої кожен дизайн-документ на одне лице, бо всі починають з того самого шаблону й того самого промпту. Продукт, що виглядає як кожен продукт у своїй категорії, бо його збирали з найкращих практик, не додавши нічого свого. На кожному рівні діагноз той самий: якщо оператора можна замінити будь-ким, вихід буде як у будь-кого.</p>
+<h2 id="_9">У вашому ремеслі<a class="anchor-link" href="#_9" title="Permanent link">&para;</a></h2>
+<p><strong>Текст.</strong> Ваш голос — єдине, чого немає в розподілі. Зафіксуйте його в тексті: добірка зразків, список заборонених зворотів, три правила ритму. Це зрізає верхівку. Редакторський прохід робіть окремо від генерації, зі своїм чеклистом. Перший варіант не публікуйте.</p>
+<p><strong>Аналітика.</strong> «Огляд ринку» з верхівки — найправдоподібніший у світі огляд, який не допомагає жодному рішенню. Рамка тут — рішення, яке огляд має підтримати, і те, що ви вже знаєте самі. Якщо галузь не ваша, просіть карту підходів, а не висновок. Висновок обирайте самі.</p>
+<p><strong>Дизайн.</strong> «Зроби красиво» — найкоротший шлях на верхівку. Замість оцінки «красиво» дайте напрям. Додайте стек обмежень: сітку, палітру, заборонені прийоми. Несподівана комбінація контекстів посуває дзвін. І відбір із варіантів — головна творча дія.</p>
+<hr />
+<p>Наостанок — три питання до вашої практики.</p>
+<p>— Згадайте останній текст, який ви опублікували з першого варіанта: якби його написав будь-хто інший, що в ньому лишилося б від вас?</p>
+<p>— Де у вашій роботі верхівка доречна, і чи обрали ви її свідомо, чи вона трапилася сама?</p>
+<p>— Яку рамку ви можете поставити завтра, щоб верхівка впала туди, де ще ніхто не був, і чи вистачить вашого різноманіття оцінити, що з неї вийшло?</p>
+<div class="subscribe-embed"><iframe src="https://kiosan.substack.com/embed?transparent=1" width="480" height="320" style="border: 0; background: transparent" title="Підписатися на розсилку" loading="lazy" frameborder="0" scrolling="no"></iframe></div>
+                <div class="check-items" data-page-key="part-2-goals/08-variety-vs-slop"><div class="check-items-header"><span class="check-items-title">Key Takeaways</span><span class="check-items-progress"></span></div><label class="check-item" data-index="0"><input type="checkbox" class="check-item-input" data-index="0"><span class="check-item-box"><svg class="check-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span><span class="check-item-text">Слоп — не помилка моделі, а її стан спокою: верхівка розподілу, куди відповідь скочується, коли ніхто не тримає.</span></label>
+<label class="check-item" data-index="1"><input type="checkbox" class="check-item-input" data-index="1"><span class="check-item-box"><svg class="check-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span><span class="check-item-text">Усе, що є в розподілі, — спільне. Те, що відрізняється від типового, приходить лише з того, чого в розподілі немає: з твого контексту, смаку й обмежень.</span></label>
+<label class="check-item" data-index="2"><input type="checkbox" class="check-item-input" data-index="2"><span class="check-item-box"><svg class="check-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span><span class="check-item-text">Слоп — діагноз оператора, не результату: якщо тебе можна замінити будь-ким, вихід буде як у будь-кого.</span></label>
+<label class="check-item" data-index="3"><input type="checkbox" class="check-item-input" data-index="3"><span class="check-item-box"><svg class="check-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span><span class="check-item-text">Верхівку можна прийняти, зрізати або посунути. Переклад хоче верхівки, архітектура — ні; обирай свідомо.</span></label>
+<label class="check-item" data-index="4"><input type="checkbox" class="check-item-input" data-index="4"><span class="check-item-box"><svg class="check-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span><span class="check-item-text">Перший варіант — найімовірніший за конструкцією. Відбір із кількох за критеріями — місце, де в роботу входить смак.</span></label></div>
+                <nav class="page-nav"><a class="page-nav-link page-nav-prev" href="/variety/read/part-2-goals/06-goal-and-proxy/"><span class="page-nav-label">← Попередня</span></a>
+<a class="page-nav-link page-nav-next" href="/variety/read/part-3-activity/"><span class="page-nav-label">Наступна →</span></a></nav>
+            </article>
+        </main>
+    </div>
+    <script>
+var SIDEBAR_WIDTH_KEY = 'essay-sidebar-width-system-for-ai-engineers';
+var SIDEBAR_COLLAPSED_KEY = 'essay-sidebar-collapsed-system-for-ai-engineers';
+var ESSAY_LOCAL_MODE = false;
+var ESSAY_PAGE_KEY = "uk/part-2-goals/08-variety-vs-slop";
+document.addEventListener('DOMContentLoaded', function() {
+  var sidebar = document.getElementById('sidebar');
+  var handle = document.getElementById('resize-handle');
+  var collapseBtn = document.getElementById('sidebar-collapse');
+  var expandBtn = document.getElementById('sidebar-expand');
+  var mobileToggle = document.getElementById('sidebar-toggle');
+  var html = document.documentElement;
+  var MIN_WIDTH = 200;
+  var MAX_WIDTH = 480;
+
+  // Desktop: collapse / expand
+  function setCollapsed(collapsed) {
+    if (collapsed) {
+      html.classList.add('sidebar-collapsed');
+    } else {
+      html.classList.remove('sidebar-collapsed');
+    }
+    if (typeof SIDEBAR_COLLAPSED_KEY !== 'undefined') {
+      localStorage.setItem(SIDEBAR_COLLAPSED_KEY, collapsed ? '1' : '0');
+    }
+  }
+
+  if (collapseBtn) {
+    collapseBtn.addEventListener('click', function() {
+      setCollapsed(true);
+    });
+  }
+
+  if (expandBtn) {
+    expandBtn.addEventListener('click', function() {
+      setCollapsed(false);
+    });
+  }
+
+  // Mobile: slide-in toggle
+  if (mobileToggle && sidebar) {
+    mobileToggle.addEventListener('click', function() {
+      sidebar.classList.toggle('open');
+    });
+
+    document.addEventListener('click', function(e) {
+      if (sidebar.classList.contains('open') &&
+          !sidebar.contains(e.target) &&
+          !mobileToggle.contains(e.target)) {
+        sidebar.classList.remove('open');
+      }
+    });
+  }
+
+  // Resizable sidebar (desktop only, when not collapsed)
+  if (handle && sidebar) {
+    var startX, startWidth;
+
+    handle.addEventListener('mousedown', function(e) {
+      if (html.classList.contains('sidebar-collapsed')) return;
+      e.preventDefault();
+      startX = e.clientX;
+      startWidth = sidebar.getBoundingClientRect().width;
+      handle.classList.add('active');
+      document.body.classList.add('resizing');
+
+      document.addEventListener('mousemove', onMouseMove);
+      document.addEventListener('mouseup', onMouseUp);
+    });
+
+    function onMouseMove(e) {
+      var newWidth = startWidth + (e.clientX - startX);
+      newWidth = Math.max(MIN_WIDTH, Math.min(newWidth, MAX_WIDTH));
+      html.style.setProperty('--sidebar-width', newWidth + 'px');
+    }
+
+    function onMouseUp() {
+      handle.classList.remove('active');
+      document.body.classList.remove('resizing');
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
+
+      var currentWidth = sidebar.getBoundingClientRect().width;
+      if (typeof SIDEBAR_WIDTH_KEY !== 'undefined') {
+        localStorage.setItem(SIDEBAR_WIDTH_KEY, Math.round(currentWidth));
+      }
+    }
+  }
+
+  // --- Check Items persistence ---
+  var checkContainers = document.querySelectorAll('.check-items');
+  if (checkContainers.length) {
+    initCheckItems(checkContainers);
+  }
+
+  function initCheckItems(containers) {
+    var isLocal = (typeof ESSAY_LOCAL_MODE !== 'undefined') && ESSAY_LOCAL_MODE;
+    var essayId = getMeta('essay-id');
+    var pageId = getMeta('essay-page-id');
+    var csrf = getMeta('csrf-token');
+
+    containers.forEach(function(container) {
+      var pageKey = container.getAttribute('data-page-key');
+      var inputs = container.querySelectorAll('.check-item-input');
+      var storageKey = 'essay-checks-' + pageKey;
+
+      // Load saved state
+      loadChecks(storageKey, essayId, pageId, csrf, isLocal, function(checked) {
+        if (checked && checked.length) {
+          inputs.forEach(function(input) {
+            var idx = parseInt(input.getAttribute('data-index'), 10);
+            if (checked.indexOf(idx) !== -1) {
+              input.checked = true;
+            }
+          });
+        }
+        updateProgress(container, inputs);
+      });
+
+      // Listen for changes
+      inputs.forEach(function(input) {
+        input.addEventListener('change', function() {
+          var checked = [];
+          inputs.forEach(function(inp) {
+            if (inp.checked) checked.push(parseInt(inp.getAttribute('data-index'), 10));
+          });
+          saveChecks(storageKey, essayId, pageId, csrf, isLocal, checked);
+          updateProgress(container, inputs);
+        });
+      });
+    });
+  }
+
+  function updateProgress(container, inputs) {
+    var total = inputs.length;
+    var checked = 0;
+    inputs.forEach(function(inp) { if (inp.checked) checked++; });
+    var el = container.querySelector('.check-items-progress');
+    if (el) {
+      el.textContent = checked + ' / ' + total;
+    }
+  }
+
+  function getMeta(name) {
+    var el = document.querySelector('meta[name="' + name + '"]');
+    return el ? el.content : null;
+  }
+
+  function loadChecks(storageKey, essayId, pageId, csrf, isLocal, callback) {
+    if (isLocal || !essayId) {
+      var raw = localStorage.getItem(storageKey);
+      callback(raw ? JSON.parse(raw) : []);
+      return;
+    }
+    var url = '/api/dynamic_data?essay_id=' + essayId + '&key=' + encodeURIComponent(storageKey);
+    if (pageId) url += '&page_id=' + pageId;
+    fetch(url, { headers: csrf ? { 'X-CSRF-Token': csrf } : {} })
+      .then(function(r) { return r.json(); })
+      .then(function(d) { callback(d.data ? d.data.checked : []); })
+      .catch(function() { callback([]); });
+  }
+
+  function saveChecks(storageKey, essayId, pageId, csrf, isLocal, checked) {
+    if (isLocal || !essayId) {
+      localStorage.setItem(storageKey, JSON.stringify(checked));
+      return;
+    }
+    var body = {
+      essay_id: essayId,
+      key: storageKey,
+      data: { checked: checked }
+    };
+    if (pageId) body.page_id = pageId;
+    fetch('/api/dynamic_data', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-Token': csrf || ''
+      },
+      body: JSON.stringify(body)
+    }).catch(function() {});
+  }
+});
+
+
+    </script>
+</body>
+</html>
