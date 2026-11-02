@@ -1035,6 +1035,12 @@ body.resizing {
 .subscribe-embed iframe {
   max-width: 100%;
 }
+.subscribe-embed-kit {
+  display: block;
+  max-width: 480px;
+  margin-left: auto;
+  margin-right: auto;
+}
 
 
     </style>
@@ -1258,7 +1264,7 @@ body.resizing {
 <p>The same technique rescues you when it&rsquo;s you who lacks the variety, because the field isn&rsquo;t yours. Then ask the model for a map instead of an answer: &ldquo;what approaches are there to this task — name five, and for each, the conditions under which it fits.&rdquo; The model will show more than a single peak, though these five will be the most typical five. The choice stays with you — with your goal, which the model doesn&rsquo;t know. You borrowed variety for the map, but not for the choice.</p>
 <p>And a separate word about text. Editing is a separate component of activity (Chapter 10), and the prompt &ldquo;improve it&rdquo; doesn&rsquo;t replace it. Generate and verify are different components, and when you ask the model to &ldquo;make it better,&rdquo; you&rsquo;re once again handing it what should have been yours: the criterion. An editing pass with a checklist of your own — banned phrases, the first sentence, an ending without a summary — is your manual settings, like the photographer who doesn&rsquo;t trust the automatic.</p>
 <h2 id="borscht-in-architecture">Borscht in architecture<a class="anchor-link" href="#borscht-in-architecture" title="Permanent link">&para;</a></h2>
-<p>A scenario from design work — the territory where slop lives for years.</p>
+<p>A scenario from software design — one of the fields where slop has lived for years.</p>
 <p><strong>First attempt.</strong> The task: the product needs notifications — emails and pushes about events in the account. I opened Claude Code and wrote: &ldquo;Propose an architecture for a notification service.&rdquo; The answer came in a minute, and I could have written it myself without reading it: a separate microservice, a message queue between it and the main app, workers reading the queue, retries with a growing pause, a separate queue for failures, templates, a separate database, a delivery dashboard. All correct. Every item is an element from a thousand articles on notification-system architecture, and together they are borscht: the dish you serve when you need to be sure you&rsquo;ve shown Ukrainian cuisine.</p>
 <p>What&rsquo;s wrong? With the architecture — nothing. What&rsquo;s wrong is the operator: there was none of us in the request. How many of us there are, what we already have, how many notifications a day, what happens if one gets lost. The model filled the blank with the most ordinary thing, the same way it filled the blank in &ldquo;fix the test&rdquo; in Chapter 6.</p>
 <p><strong>Second attempt.</strong> A frame. There are two of us engineers. There is Postgres, and we add nothing else: no queue, no separate service. Ten thousand notifications a day, not ten million. One criterion, but a hard one: if the process dies midway, no notification may be lost or go out twice. And a request: three variants, starting from the simplest.</p>
@@ -1286,7 +1292,7 @@ body.resizing {
 <p>— Recall the last text you published from the first variant: if anyone else had written it, what in it would be left of you?</p>
 <p>— Where in your work is the peak the right choice — and did you choose it deliberately, or did it just happen?</p>
 <p>— What frame could you put up tomorrow so that the peak lands where no one has been — and will your variety be enough to judge what came out of it?</p>
-<div class="subscribe-embed"><iframe src="https://kiosan.substack.com/embed?transparent=1" width="480" height="320" style="border: 0; background: transparent" title="Subscribe to the newsletter" loading="lazy" frameborder="0" scrolling="no"></iframe></div>
+<div class="subscribe-embed subscribe-embed-kit"><script async data-uid="71d9f3a792" src="https://awesome-composer-2263.kit.com/71d9f3a792/index.js"></script></div>
                 <div class="check-items" data-page-key="part-2-goals/08-variety-vs-slop"><div class="check-items-header"><span class="check-items-title">Key Takeaways</span><span class="check-items-progress"></span></div><label class="check-item" data-index="0"><input type="checkbox" class="check-item-input" data-index="0"><span class="check-item-box"><svg class="check-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span><span class="check-item-text">Slop is not the model's mistake but its resting state: the peak of the distribution, where the answer rolls when nobody is holding it.</span></label>
 <label class="check-item" data-index="1"><input type="checkbox" class="check-item-input" data-index="1"><span class="check-item-box"><svg class="check-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span><span class="check-item-text">Everything in the distribution is shared. What differs from the typical comes only from what the distribution lacks: your context, your taste, your constraints.</span></label>
 <label class="check-item" data-index="2"><input type="checkbox" class="check-item-input" data-index="2"><span class="check-item-box"><svg class="check-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span><span class="check-item-text">Slop is a diagnosis of the operator, not of the output: if you can be replaced by anyone, the output will be anyone's.</span></label>

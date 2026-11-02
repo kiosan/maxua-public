@@ -1035,6 +1035,12 @@ body.resizing {
 .subscribe-embed iframe {
   max-width: 100%;
 }
+.subscribe-embed-kit {
+  display: block;
+  max-width: 480px;
+  margin-left: auto;
+  margin-right: auto;
+}
 
 
     </style>
@@ -1258,7 +1264,7 @@ body.resizing {
 <p>Той самий прийом рятує й тоді, коли різноманіття бракує вам самим, бо галузь не ваша. Тоді просіть у моделі карту замість відповіді: «які є підходи до цієї задачі, назви п&rsquo;ять, і для кожного — умови, коли він доречний». Модель покаже ширше, ніж одну верхівку, хоча й ці п&rsquo;ять будуть найтиповішими п&rsquo;ятьма. Вибір лишається за вами — за вашою ціллю, якої модель не знає. Ви позичили різноманіття на карту, але не на вибір.</p>
 <p>І окремо для тексту. Редагування — окрема складова діяльності (розділ 10), і промпт «покращ» її не замінює. Згенерувати і перевірити — різні складові, і коли ви просите модель «зроби краще», ви знову віддаєте їй те, що мало бути вашим: критерій. Редакторський прохід із власним чеклистом — заборонені звороти, перше речення, кінець без резюме — це і є ваші ручні налаштування, як у фотографа, який не довіряє автомату.</p>
 <h2 id="_5">Борщ в архітектурі<a class="anchor-link" href="#_5" title="Permanent link">&para;</a></h2>
-<p>Сценарій із проєктування — ділянки, де слоп живе роками.</p>
+<p>Сценарій із проєктування софту — сфери, де слоп живе роками.</p>
 <p><strong>Спроба перша.</strong> Задача: продукту потрібні сповіщення, листи і пуші про події в акаунті. Я відкрив Claude Code і написав: «Запропонуй архітектуру сервісу сповіщень». Відповідь прийшла за хвилину, і я міг би написати її сам, не читаючи: окремий мікросервіс, черга повідомлень між ним і основним додатком, воркери, що читають чергу, ретраї з наростаючою паузою, окрема черга для невдалих, шаблони, окрема база, дашборд доставки. Усе правильно. Кожен пункт — елемент із тисячі статей про архітектуру системи сповіщень, а разом вони — борщ: страва, яку подають, коли треба напевно показати українську кухню.</p>
 <p>Що не так? З архітектурою — нічого. Не так з оператором: у запиті не було нас. Скільки нас, що в нас уже є, скільки сповіщень на день, що станеться, якщо одне загубиться. Модель заповнила порожнє місце найзвичнішим, так само, як у розділі 6 вона заповнювала порожнє місце в «поправ тест».</p>
 <p><strong>Спроба друга.</strong> Рамка. Нас двоє інженерів. Є Postgres, і нічого іншого не додаємо: ні черги, ні окремого сервісу. Сповіщень десять тисяч на день, а не десять мільйонів. Критерій один, але жорсткий: якщо процес впаде посередині, жодне сповіщення не має ні загубитися, ні піти двічі. І прохання: три варіанти, від найпростішого.</p>
@@ -1286,7 +1292,7 @@ body.resizing {
 <p>— Згадайте останній текст, який ви опублікували з першого варіанта: якби його написав будь-хто інший, що в ньому лишилося б від вас?</p>
 <p>— Де у вашій роботі верхівка доречна, і чи обрали ви її свідомо, чи вона трапилася сама?</p>
 <p>— Яку рамку ви можете поставити завтра, щоб верхівка впала туди, де ще ніхто не був, і чи вистачить вашого різноманіття оцінити, що з неї вийшло?</p>
-<div class="subscribe-embed"><iframe src="https://kiosan.substack.com/embed?transparent=1" width="480" height="320" style="border: 0; background: transparent" title="Підписатися на розсилку" loading="lazy" frameborder="0" scrolling="no"></iframe></div>
+<div class="subscribe-embed subscribe-embed-kit"><script async data-uid="71d9f3a792" src="https://awesome-composer-2263.kit.com/71d9f3a792/index.js"></script></div>
                 <div class="check-items" data-page-key="part-2-goals/08-variety-vs-slop"><div class="check-items-header"><span class="check-items-title">Key Takeaways</span><span class="check-items-progress"></span></div><label class="check-item" data-index="0"><input type="checkbox" class="check-item-input" data-index="0"><span class="check-item-box"><svg class="check-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span><span class="check-item-text">Слоп — не помилка моделі, а її стан спокою: верхівка розподілу, куди відповідь скочується, коли ніхто не тримає.</span></label>
 <label class="check-item" data-index="1"><input type="checkbox" class="check-item-input" data-index="1"><span class="check-item-box"><svg class="check-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span><span class="check-item-text">Усе, що є в розподілі, — спільне. Те, що відрізняється від типового, приходить лише з того, чого в розподілі немає: з твого контексту, смаку й обмежень.</span></label>
 <label class="check-item" data-index="2"><input type="checkbox" class="check-item-input" data-index="2"><span class="check-item-box"><svg class="check-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span><span class="check-item-text">Слоп — діагноз оператора, не результату: якщо тебе можна замінити будь-ким, вихід буде як у будь-кого.</span></label>
