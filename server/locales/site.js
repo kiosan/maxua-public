@@ -134,7 +134,7 @@ const en = {
     readPrimary: { href: '/variety/read/en/', lang: 'en', text: 'Read the chapters in English →' },
     readSecondary: { href: '/variety/read/', lang: 'uk', text: 'Читати розділи українською →' },
     subscribeHeading: 'Get new chapters and essays',
-    subscribeText: 'English essays land in the Requisite Variety section of my newsletter; Ukrainian chapters — in the main feed. Pick what you need.',
+    subscribeText: 'Subscribe to the newsletter.',
     subscribeIframeTitle: 'Subscribe to the newsletter'
   }
 };
@@ -269,7 +269,7 @@ const uk = {
     readPrimary: { href: '/variety/read/', lang: 'uk', text: 'Читати розділи українською →' },
     readSecondary: { href: '/variety/read/en/', lang: 'en', text: 'Read the chapters in English →' },
     subscribeHeading: 'Нові розділи — на пошту',
-    subscribeText: 'Українські розділи виходять в основній стрічці моєї розсилки; англійські есеї — в секції Requisite Variety. Обирайте, що потрібно.',
+    subscribeText: 'Підписатись на розсилку.',
     subscribeIframeTitle: 'Підписатися на розсилку'
   }
 };
