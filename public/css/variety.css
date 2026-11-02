@@ -178,15 +178,9 @@
   margin-bottom: 1.25rem;
 }
 
-.variety-substack {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 1rem;
-}
-
-.variety-substack iframe {
-  display: block;
-  max-width: 100%;
+.variety-kit {
+  max-width: 480px;
+  margin: 0 auto 1rem;
 }
 
 /* ---- Mobile -------------------------------------------------------------- */
